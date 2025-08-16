@@ -1,0 +1,143 @@
+<?php
+abstract class Table{
+    private const TABLE ='';
+    private const UNIQUE_KEY_COLUMN='';
+    protected const DEFAULT_ORDER_BY='';
+    protected const STR_COLUMNS=[];
+    protected const INT_COLUMNS=[];
+    public $record_exists = false;
+
+    // __toString可能なインスタンスとしてクォート済みテーブル名を取得する
+    public static function QuotedTable(string $table_name = ''){
+        return new MkSqlQuotedTable($table_name?:static::TABLE);
+    }
+    // 文字列内に展開できるようにテーブル名を取得する
+    public function tableName(){ return static::TABLE;}
+
+    public static function getAll(PDO $pdo, bool $show_disabled=false, string|null $order_by=null){
+        if($order_by===null){ $order_by=static::DEFAULT_ORDER_BY; }
+        self::checkTableName();
+        $sql="SELECT * FROM `".static::TABLE."`";
+        if($show_disabled===false){
+            $sql.=" WHERE `is_enabled`=1";
+        }
+        if($order_by!==''){
+            $sql.=" ORDER BY {$order_by}";
+        }
+        $sql .= ";";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    private static function checkTableName(){
+        if(static::TABLE==''){ throw new ErrorException('テーブル名未設定');}
+    }
+    /**
+     * 1つのカラムをユニークキーで取得
+     */
+    public static function getColumnByUniqueKey(
+        PDO $pdo,
+        string $unique_key_colUmn,
+        $id,
+        string $column_name,
+        int $pdo_param_mode=PDO::PARAM_STR
+    ) {
+        $result = self::getByUniqueKey($pdo, $unique_key_colUmn, $id, $pdo_param_mode);
+        if(isset($result[$column_name])){
+            return $result[$column_name];
+        }
+        return null;
+    }
+    /**
+     * staticのテーブルのUNIQUE_KEYで取得
+     * @param PDO $pdo
+     * @param string|int $id
+     */
+    public static function getById(PDO $pdo, $id, $pdo_param_mode=PDO::PARAM_STR){
+        if(static::UNIQUE_KEY_COLUMN==''){ throw new ErrorException('カラム名未設定');}
+        return self::getByUniqueKey($pdo, static::UNIQUE_KEY_COLUMN, $id, $pdo_param_mode);
+    }
+    /**
+     * staticのテーブルからユニークキーで取得
+     * @param PDO $pdo
+     * @param string $unique_key_colUmn
+     * @param string|int $unique_key_value
+     */
+    public static function getByUniqueKey(
+        PDO $pdo, 
+        string $unique_key_colUmn,
+        $unique_key_value,
+        int $pdo_param_mode=PDO::PARAM_STR
+    ) {
+        self::checkTableName();
+        $sql="SELECT * FROM `".static::TABLE."` WHERE `$unique_key_colUmn` LIKE :unique_key LIMIT 1;";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':unique_key', $unique_key_value, $pdo_param_mode);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    /**
+     * メンバ変数と共通の名前のカラムを配列で指定して一括バインド
+     */
+    protected function BindValuesFromThis($stmt, array $targets,$mode){
+        foreach($targets as $val){
+            $stmt->bindValue(":{$val}", $this->{$val}, $mode);
+        }
+        return $stmt;
+    }
+    /**
+     * 定数STR_COLUMNSとINT_COLUMNSに存在する名前のパラメータでINSERT
+     */
+    protected function InsertExecFromThisProp(PDO $pdo, array $excluded_columns=[]){
+        $columns=array_merge(static::STR_COLUMNS,static::INT_COLUMNS);
+        // AUTO_INCREMENTで入れるキーを除外
+        $excluded_columns[]=static::UNIQUE_KEY_COLUMN;
+        $columns=array_diff($columns,$excluded_columns);
+        $sql=SqlMake::InsertSql(static::TABLE,$columns);
+        $stmt = $pdo->prepare($sql);
+        $stmt=$this->BindValuesFromThis($stmt, array_diff(static::STR_COLUMNS,$excluded_columns),PDO::PARAM_STR);
+        $stmt=$this->BindValuesFromThis($stmt, array_diff(static::INT_COLUMNS,$excluded_columns),PDO::PARAM_INT);
+        try{
+            $stmt->execute();
+            return true;
+        }catch (Exception $e){
+            echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
+            return false;
+        }
+    }
+    /**
+     * Auto Incrementの1つのカラムをユニークキーとするテーブルに簡易INSERT
+     * STR_COLUMNS＋INT_COLUMNSと一致するパラメータがクラスに必要
+     * UNIQUE_KEY_COLUMNのみ除外してINSERTを実行する
+     */
+    protected function SimpleInsertExec(PDO $pdo, array $excluded_columns=[]){
+        $excluded_columns[]=static::UNIQUE_KEY_COLUMN;
+        $result = self::InsertExecFromThisProp($pdo,$excluded_columns);
+        return $result;
+    }
+    /**
+     * 「UNIQUE_KEY_COLUMNとそれ以外」の構成の簡易INSERT
+     * STR_COLUMNS＋INT_COLUMNSおよび致するパラメータがクラスに必要
+     */
+    protected function SimpleUpdateExec(PDO $pdo, array $excluded_columns=[]){
+        $columns=array_merge(static::STR_COLUMNS,static::INT_COLUMNS);
+
+        // UPDATE対象からはユニークキーを取り除く（※WHERE文に使うためバインドからは取り除かない）
+        $update_set_columns=array_diff($columns,[static::UNIQUE_KEY_COLUMN],$excluded_columns);
+        $sql=SqlMake::UpdateSqlWhereRaw(
+            static::TABLE,$update_set_columns,
+            "`".static::UNIQUE_KEY_COLUMN."`=:".static::UNIQUE_KEY_COLUMN
+        );
+        $stmt = $pdo->prepare($sql);
+        $stmt=$this->BindValuesFromThis($stmt, array_diff(static::STR_COLUMNS,$excluded_columns),PDO::PARAM_STR);
+        $stmt=$this->BindValuesFromThis($stmt, array_diff(static::INT_COLUMNS,$excluded_columns),PDO::PARAM_INT);
+        try{
+            $stmt->execute();
+        }catch (Exception $e){
+            echo "<pre>"; print_r($stmt->debugDumpParams());echo "</pre>";
+            echo "<pre>"; print_r($e);echo "</pre>";
+            return false;
+        }
+        return true;
+    }
+}

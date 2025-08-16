@@ -1,0 +1,35 @@
+table.race_list tr.race_grade_1 td.grade,
+table.race_list_date tr.race_grade_1 td.grade,
+table.syutsuba td.race_grade_1 .ib.grade,
+.page_title .ib.race_grade_1,
+.race_header .ib.race_grade_1,
+.grade.block_g1
+{
+	background-color:#3251bc; color:#FFFFFF;
+}
+table.race_list tr.race_grade_2 td.grade,
+table.race_list_date tr.race_grade_2 td.grade,
+table.syutsuba td.race_grade_2 .ib.grade,
+.page_title .ib.race_grade_2,
+.race_header .ib.race_grade_2,
+.grade.block_g2
+{
+	background-color:#c53131; color:#FFFFFF;
+}
+table.race_list tr.race_grade_3 td.grade,
+table.race_list_date tr.race_grade_3 td.grade,
+table.syutsuba td.race_grade_3 .ib.grade,
+.page_title .ib.race_grade_3,
+.race_header .ib.race_grade_3,
+.grade.block_g3 {
+	background-color:#58af4a; color:#FFFFFF;
+}
+table.syutsuba td.race_grade_4 .ib.grade,
+table.syutsuba td.race_grade_l .ib.grade,
+table.syutsuba td.race_grade_op .ib.grade,
+.race_header .ib.race_grade_l,
+.race_header .ib.race_grade_op,
+table.syutsuba td.race_grade_none .ib.grade
+{ background-color:#FFFFFF; }
+
+.ib.grade {border:solid 1px #CCC;}

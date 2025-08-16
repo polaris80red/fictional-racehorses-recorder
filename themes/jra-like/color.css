@@ -1,0 +1,71 @@
+a:link { color: #0000ee; }
+
+.race_header .race_number { background-color: green; }
+
+table.horse_base_data {
+    border-collapse: separate;
+    border: none;
+}
+table.horse_base_data th {
+    background-color: #eaeade;
+    border: none;
+}
+table.horse_base_data td {
+    background-color: #f3f3f3;
+    border: none;
+}
+
+table.horse_search th {
+    background-color: #eaeade;
+    border: solid #dfdfd3 1px;
+}
+table.horse_search td {
+    background-color: #f3f3f3;
+    border: solid #dfdfd3 1px;
+}
+
+.result_1st { background-color:#f5e0e0; }
+.result_2nd { background-color:#d7ecf6; }
+.result_3rd { background-color:#dcf0d4; }
+
+table.race_results th,
+table.horse_history th,
+table.syutsuba th,
+table.horse_search_results th,
+table.race_list th,
+table.race_list_date th
+{
+    background-color: #37474f;
+    color:#FFFFFF;
+}
+
+table.race_results th,  table.race_results td,
+table.horse_history th, table.horse_history td,
+table.syutsuba th,     table.syutsuba td,
+table.horse_search_results th, table.horse_search_results td,
+table.race_list th, table.race_list td,
+table.race_list_date th, table.race_list_date td
+{
+    border-color: #999999;
+}
+table.race_results th a:link,
+table.horse_history th a:link,
+table.syutsuba th a:link,
+table.horse_search_results th a:link
+{
+    color: #a5cdfc;
+}
+table.horse_search_results th a.selected_order
+{
+    color: #e3fca5;
+    text-decoration: none;
+}
+
+/* 枠順色 */
+.waku_2 { background-color:#222222; color:#FFFFFF; }
+.waku_3 { background-color:#c62927; color:#FFFFFF; }
+.waku_4 { background-color:#1973cd; color:#FFFFFF; }
+.waku_5 { background-color:#ffeb3b; }
+.waku_6 { background-color:#2f7d32; color:#FFFFFF; }
+.waku_7 { background-color:#ffa927;}
+.waku_8 { background-color:#f8bbd0; }

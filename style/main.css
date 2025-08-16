@@ -1,0 +1,153 @@
+html, body { margin: 0;padding: 0; }
+body { background-color:#EEEEEE; }
+header {
+	margin: 0;
+	background-color: #CCFFCC;
+	padding: 4px 8px 4px;
+}
+main {
+	margin: 0;
+	padding: 8px;
+	background-color: #FFF;
+}
+footer {
+	margin: 0;
+	padding: 2px 8px 0;
+}
+.no-css-fallback { display: none; }
+
+.nowrap { white-space: nowrap; }
+.floatLeft { float: left; }
+.floatRight { float: right; }
+.clear { clear: both; }
+
+.display_none{ display: none; }
+h1.page_title {
+	font-size:1.4em;
+	margin-top:0.1em;
+	margin-bottom:0;
+}
+h2{
+	font-size:1.3em;
+	margin-top:0.1em;
+	margin-bottom:0;
+}
+.race_header .race_number {
+	min-width: 2em;
+	text-align: center;
+	font-size: 1.3em;
+	line-height: 1.8em;
+	height: 2em;
+	padding: 4px 8px;
+	margin-right: 8px;
+	background-color: green;
+	color: #FFFFFF;
+}
+.race_header .race_grade_and_name {
+	font-size: 1.2em;
+}
+
+table{
+	border-collapse:collapse;
+}
+/* フォームテーブル */
+table.edit-form-table {margin-bottom: 4px;}
+.edit-form-table,
+.edit-form-table tr,
+.edit-form-table th,
+.edit-form-table td
+{
+	border:solid 1px #333;
+}
+.edit-form-table th {
+	background-color: #EEE;
+	padding-left:0.3em;
+	padding-right:0.3em;
+	font-size: 0.9em;
+}
+table.horse_base_data
+,table.race_list_date
+{
+	font-size: 90%;
+}
+table.horse_history
+,table.race_list
+,table.horse_search_results
+,table.race_results
+,table.horse_search
+{
+	font-size: 80%;
+}
+table.horse_history th,
+table.horse_base_data th,
+table.race_list th,
+table.race_list_date th,
+table.race_results th,
+table.horse_search_results th,
+table.horse_search th
+{ background-color: #DDDDDD; }
+table, tr, th, td{
+	border:solid 1px #333;
+}
+table.horse_search td{
+	padding: 0;
+}
+table.syutsuba
+{
+	font-size: 75%;
+}
+table.syutsuba .horse_name {
+	font-size:1.2em;
+	font-weight:bold;
+}
+table.syutsuba .race_name {
+	font-size:1.2em;
+	font-weight:bold;
+}
+table.syutsuba .result_number {
+	font-size:1.5em;
+	font-weight:bold;
+	text-align: center;
+}
+table.syutsuba.sps .result_number {
+    border:solid 1px #333;
+}
+
+th,td{
+	padding-left:0.3em;
+	padding-right:0.3em;
+}
+td.in_input{
+	padding:0;
+}
+.horse_history td a,
+.race_list td a,
+.race_list_date td a,
+.horse_search_results td a,
+.syutsuba td a,
+.race_results td a
+{
+	text-decoration: none;
+}
+
+.page_title .ib.grade, 
+.race_header .ib.grade {
+	display: inline-block;
+	padding-left:0.3em;
+	padding-right:0.3em;
+	min-width: 1.5em;
+	text-align: center;
+}
+
+table.horse_search_results th a.selected_order
+{
+	text-decoration: underline;
+}
+
+.waku_2 { background-color:#000000; color:#FFFFFF; }
+.waku_3 { background-color:red; color:#FFFFFF; }
+.waku_4 { background-color:blue; color:#FFFFFF; }
+.waku_5 { background-color:yellow; }
+.waku_6 { background-color:green; color:#FFFFFF; }
+.waku_7 { background-color:orange;}
+.waku_8 { background-color:pink; }

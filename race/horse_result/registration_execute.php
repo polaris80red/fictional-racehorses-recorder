@@ -1,0 +1,258 @@
+<?php
+session_start();
+require_once dirname(__DIR__,2).'/libs/init.php';
+defineAppRootRelPath(2);
+$page=new Page(2);
+$setting=new Setting();
+$page->setSetting($setting);
+$page->title="レース結果詳細・登録実行";
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
+$is_error=0;
+$error_msgs=[];
+
+$input = new RaceResultDetail();
+$is_edit_mode = 0;
+if(filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOLEAN)){
+    $is_edit_mode = 1;
+}
+$input->race_results_id=filter_input(INPUT_POST,'race_id');
+$input->horse_id=filter_input(INPUT_POST,'horse_id');
+
+$next_race_id=filter_input(INPUT_POST,'next_race_id');
+$next_race=null;
+
+$input->setDataByForm(INPUT_POST);
+do{
+    if(!(new FormCsrfToken())->isValid()){
+        Elog::error($page->title.": CSRFトークンエラー");
+        $error_msgs[]="登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）";
+        break;
+    }
+    if($input->race_results_id==""){
+        $is_error=1;
+        $error_msgs[]="レースIDなし。";
+        break;
+    }
+    if($input->horse_id==""){
+        $is_error=1;
+        $error_msgs[]="競走馬IDなし。";
+        break;
+    }
+    if($input->result_number==0){
+        //$is_error=1;
+        //$error_msgs[]="着順未指定。";
+        //break;
+    }
+    
+    $pdo= getPDO();
+    $old_horse_result= new RaceResultDetail();
+    $old_horse_result->setDataById(
+        $pdo,
+        $input->race_results_id,
+        $input->horse_id);
+
+    if($is_edit_mode==1){
+        if(!$old_horse_result->record_exists){
+            $error_msgs[]="対象のレース結果が存在しません。";
+            break;
+        }
+
+        $input->UpdateExec($pdo);
+    }else{
+        if($old_horse_result->record_exists){
+            $is_error=1;
+            $error_msgs[]="結果が既に存在します";
+            break;
+        }
+        $horse=new Horse();
+        $horse->setDataById($pdo, $input->horse_id);
+        $race=new RaceResults($pdo, $input->race_results_id);
+        if(!$race->record_exists){
+            $is_error=1;
+            $error_msgs[]="存在しないレースID";
+            break;
+        }
+        if(!$horse->record_exists){
+            $is_error=1;
+            $error_msgs[]="存在しない競走馬ID";
+            break;
+        }
+        $pdo->beginTransaction();
+        try{
+            $result = $input->InsertExec($pdo);
+            // 空き区間への追加なら未登録数を減算
+            if($next_race_id!=''){
+                $next_race=new RaceResultDetail();
+                $next_race->setDataById($pdo,$next_race_id,$input->horse_id);
+                if($next_race->record_exists){
+                    $next_race->SubtractionNonRegisteredPrevRaceNumber($pdo);
+                }
+            }
+            $pdo->commit();
+        }catch(Exception $e){
+            $pdo->rollBack();
+            $page->debug_dump_var[]=$e;
+            $page->printCommonErrorPage();
+        }
+    }
+}while(false);
+
+?><!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>結果登録</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <?php $page->printBaseStylesheetLinks(); ?>
+<style>
+</style>
+</head>
+<body>
+<header>
+<?php $page->printHeaderNavigation(); ?>
+<h1 class="page_title"><?php echo $page->title; ?><?php echo ($is_edit_mode?"(編集)":"") ?></h1>
+</header>
+<main id="content">
+<hr class="no-css-fallback">
+<?php
+if($is_error!==0){
+    echo '<div style="border:solid 1px red;">';
+    echo implode("<br>\n",$error_msgs);
+    echo "</div>";
+}
+?>
+<form action="" method="post">
+<input type="hidden" name="is_edit_mode" value="<?php echo ($is_edit_mode)?1:0; ?>">
+<table class="edit-form-table floatLeft" style="margin-right: 4px;">
+<tr>
+    <th>レースID</th><td><?php echo $input->race_results_id; ?></td>
+</tr>
+<tr>
+    <th>競走馬ID</th><td><?php echo $input->horse_id; ?></td>
+</tr>
+<tr>
+    <th>着順</th><td><?php echo $input->result_number; ?>着</td>
+</tr>
+<tr>
+    <th>着順表示順</th><td><?php echo $input->result_order; ?></td>
+</tr>
+<tr>
+    <th>特殊結果</th><td><?php echo $input->result_text; ?></td>
+</tr>
+<tr>
+    <th>降着前入線順</th><td><?php echo $input->result_before_demotion?:''; ?></td>
+</tr>
+<tr>
+    <th>登録区分</th><td><?php
+switch($input->is_registration_only){
+    case 1:
+        echo "通常";
+        break;
+    case 2:
+        echo "出走決定前まで";
+        break;    
+}
+?></td>
+</tr>
+<tr>
+    <th>枠番</th><td><?php echo ifZero2Empty($input->frame_number); ?>枠</td>
+</tr>
+<tr>
+    <th>馬番</th><td><?php echo ifZero2Empty($input->horse_number); ?>番</td>
+</tr>
+<tr>
+    <th>斤量</th><td><?php echo $input->handicap; ?>kg</td>
+</tr>
+<tr>
+    <th>着差</th><td><?php echo $input->margin; ?></td>
+</tr>
+<tr>
+    <th>コーナー<br>通過順位</th>
+    <td><?php
+        print ($input->corner_1?$input->corner_1.'-':'');
+        print ($input->corner_2?$input->corner_2.'-':'');
+        print ($input->corner_3?$input->corner_3.'-':'');
+        print $input->corner_4;
+    ?></td>
+</tr>
+<tr>
+    <th>単勝人気</th><td><?php echo ifZero2Empty($input->favourite); ?></td>
+</tr>
+<tr>
+    <th>収得賞金</th><td><?php echo $input->syuutoku; ?>万円</td>
+</tr>
+<tr>
+    <th>性別</th>
+    <td><?php
+switch($input->sex){
+    case 0:
+        echo "元の値";
+        break;
+    case 1:
+        echo "牡";
+        break;    
+    case 3:
+        echo "せん";
+        break;    
+}
+?></td>
+</tr>
+<tr>
+    <th>所属上書</th><td><?php echo $input->tc; ?></td>
+</tr>
+<tr>
+    <th>調教国上書</th><td><?php echo $input->training_country; ?></td>
+</tr>
+<tr>
+    <th>地方所属</th>
+    <td><?php
+switch($input->is_affliationed_nar){
+    case 1:
+        echo "[地]";
+        break;
+    case 2:
+        echo "(地)";
+        break;    
+}
+?></td>
+</tr>
+</table>
+<table class="edit-form-table floatLeft">
+<tr>
+    <th colspan="2">今週の注目レース</th>
+</tr>
+<tr>
+    <th>(火)</th>
+    <td><textarea readonly><?php print_h($input->jra_thisweek_horse_1); ?></textarea></td>
+</tr>
+<tr>
+    <th>(木)</th>
+    <td><textarea readonly><?php print_h($input->jra_thisweek_horse_2); ?></textarea></td>
+</tr>
+<tr>
+    <th>並び順</th>
+    <td><?php echo $input->jra_thisweek_horse_sort_number; ?></td>
+</tr>
+<tr><th colspan="2">スペシャル出馬表紹介</th></tr>
+<tr>
+    <td colspan="2"><textarea readonly><?php print_h($input->jra_sps_comment); ?></textarea></td>
+</tr>
+</table>
+</form>
+<div style="clear: both;"><?php
+$url_suffix = $input->is_registration_only?'&show_registration_only=true':'';
+?>
+<a href="<?php echo $page->getRaceResultUrl($input->race_results_id).$url_suffix; ?>">レース結果</a>
+｜<a href="<?php echo APP_ROOT_REL_PATH ?>race/j_thisweek.php?race_id=<?php echo $input->race_results_id.$url_suffix;?>">出走馬情報</a>
+｜<a href="<?php echo APP_ROOT_REL_PATH ?>race/j_thisweek_sps.php?race_id=<?php echo $input->race_results_id;?>">SP出馬表</a><br>
+<a href="<?php echo APP_ROOT_REL_PATH ?>horse/?horse_id=<?php echo $input->horse_id.$url_suffix;?>">馬データ</a><br>
+</div>
+<hr class="no-css-fallback">
+</main>
+<footer>
+<?php $page->printFooterHomeLink(false); ?>
+</footer>
+</body>
+</html>

@@ -1,0 +1,32 @@
+a:link { color: #0033aa; }
+
+.race_header .race_number { background-color: #3251bc; }
+
+.result_1st,
+.favourite_1,
+table.syutsuba td.result_1st span.result_number
+{ background-color:#ffef7f; }
+
+.result_2nd,
+.favourite_2,
+table.syutsuba td.result_2nd span.result_number
+{ background-color:#cbdeff; }
+
+.result_3rd,
+.favourite_3,
+table.syutsuba td.result_3rd span.result_number
+{ background-color:#efc79f; }
+
+table.syutsuba td span.result_number { background-color:#eeeeee; }
+
+table.syutsuba td.result_1st { background-color:#fffbe5; }
+table.syutsuba td.result_2nd { background-color:#f5fbff; }
+table.syutsuba td.result_3rd { background-color:#fff8f8; }
+
+.waku_2 { background-color:#000000; color:#FFFFFF; }
+.waku_3 { background-color:red; color:#FFFFFF; }
+.waku_4 { background-color:blue; color:#FFFFFF; }
+.waku_5 { background-color:yellow; }
+.waku_6 { background-color:green; color:#FFFFFF; }
+.waku_7 { background-color:orange;}
+.waku_8 { background-color:pink; }

@@ -1,0 +1,57 @@
+a:link { color: #0033aa; }
+
+td span.result_number {
+	display:inline-block;
+	margin-top:1px;
+	min-width:2.25em;
+	padding-left:0.2em;
+	padding-right:0.2em;
+	border:solid 1px #cccccc;
+}
+
+.horse_history .race_grade_1 .grade,
+.horse_history .race_grade_1 .race_name,
+.result_1st,
+.favourite_1,
+table.syutsuba td.result_1st span.result_number
+{
+	background-color:#ffef7f;
+	color:#000000;
+}
+
+.horse_history .race_grade_2 .grade,
+.horse_history .race_grade_2 .race_name,
+.result_2nd,
+.favourite_2,
+table.syutsuba td.result_2nd span.result_number
+{
+	background-color:#cbdeff;
+	color:#000000;
+}
+
+.horse_history .race_grade_3 .grade,
+.horse_history .race_grade_3 .race_name,
+.result_3rd,
+.favourite_3,
+table.syutsuba td.result_3rd span.result_number
+{
+	background-color:#efc79f;
+	color:#000000;
+}
+table.syutsuba td span.result_number { background-color:#eeeeee; }
+
+table.syutsuba .grade.block_ls{ background-color:#757575; color:#FFFFFF; }
+table.syutsuba .grade.block_op{ background-color:#757575; color:#FFFFFF; }
+
+table.syutsuba td.result_1st { background-color:#fffbe5; }
+table.syutsuba td.result_2nd { background-color:#f5fbff; }
+table.syutsuba td.result_3rd { background-color:#fff8f8; }
+
+/* 枠順色 */
+.waku_2 { background-color:#000000; color:#FFFFFF; }
+.waku_3 { background-color:red; color:#FFFFFF; }
+.waku_4 { background-color:blue; color:#FFFFFF; }
+.waku_5 { background-color:yellow; }
+.waku_6 { background-color:green; color:#FFFFFF; }
+.waku_7 { background-color:orange;}
+.waku_8 { background-color:pink; }

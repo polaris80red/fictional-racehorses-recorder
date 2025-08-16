@@ -1,0 +1,61 @@
+/* グレード色 */
+table.race_list     tr.race_grade_1 td.grade,
+table.race_list_date tr.race_grade_1 td.grade,
+table.horse_history tr.race_grade_1 td.grade,
+table.syutsuba td.race_grade_1 .ib.grade,
+.page_title .ib.race_grade_1,
+.grade.block_g1
+{ background-color:blue; color:#FFFFFF; }
+
+table.race_list     tr.race_grade_2 td.grade,
+table.race_list_date tr.race_grade_2 td.grade,
+table.horse_history tr.race_grade_2 td.grade,
+table.syutsuba td.race_grade_2 .ib.grade,
+.page_title .ib.race_grade_2,
+.grade.block_g2
+{ background-color:red; color:#FFFFFF; }
+
+table.race_list     tr.race_grade_3 td.grade,
+table.race_list_date tr.race_grade_3 td.grade,
+table.horse_history tr.race_grade_3 td.grade,
+table.syutsuba td.race_grade_3 .ib.grade,
+.page_title .ib.race_grade_3,
+.grade.block_g3
+{ background-color:#33FF00; }
+
+table.race_list     tr.race_grade_l td.grade,
+table.race_list_date tr.race_grade_l td.grade,
+table.horse_history tr.race_grade_l td.grade,
+table.syutsuba td.race_grade_4 .ib.grade,
+table.syutsuba td.race_grade_l .ib.grade,
+.page_title .ib.race_grade_4,
+.page_title .ib.race_grade_l,
+.grade.block_ls
+{ background-color:#CCCCCC; }
+
+table.race_list     tr.race_grade_op td.grade,
+table.race_list_date tr.race_grade_op td.grade,
+table.horse_history tr.race_grade_op td.grade,
+table.syutsuba td.race_grade_op .ib.grade,
+.page_title .ib.race_grade_op,
+.grade.block_op
+{ background-color:#CCCCCC; }
+
+table.syutsuba td.race_grade_none .ib.grade
+{ background-color:#FFFFFF; }
+
+.result_1st { background-color:#ffff66; }
+.result_2nd { background-color:#bbeeff; }
+.result_3rd { background-color:#ffbb66; }
+table.syutsuba td.result_1st { background-color:#ffff99; }
+table.syutsuba td.result_2nd { background-color:#bbeeff; }
+table.syutsuba td.result_3rd { background-color:#ffcc8d; }
+
+/* 枠順色 */
+.waku_2 { background-color:#000000; color:#FFFFFF; }
+.waku_3 { background-color:red; color:#FFFFFF; }
+.waku_4 { background-color:blue; color:#FFFFFF; }
+.waku_5 { background-color:yellow; }
+.waku_6 { background-color:green; color:#FFFFFF; }
+.waku_7 { background-color:orange;}
+.waku_8 { background-color:pink; }
