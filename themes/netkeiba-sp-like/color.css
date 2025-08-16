@@ -1,4 +1,7 @@
 a:link { color: #0033aa; }
+header {
+	background-color: #8eb7ff;
+}
 
 .race_header .race_number { background-color: #3251bc; }
 
