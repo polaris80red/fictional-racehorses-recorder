@@ -269,7 +269,6 @@ class Setting{
         $json=json_encode($this->getSettingArray(),JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
         file_put_contents($path,$json);        
     }
-    public $year_suffix=''; // 年だけ表記する歳の年suffix
     public $year_month_separator='';
     //日付形式の部分
     public $date_format_part=[
@@ -309,7 +308,6 @@ class Setting{
     protected function setConstLikeParam(){
         switch($this->year_view_mode){
             case self::YEAR_VIEW_MODE_DEFAULT:
-                $this->year_suffix='年';
                 $this->date_format_part['year_suffix']='年';
                 $this->date_format_part['ymt']=[
                     'ya_suffix'=>'年',
@@ -319,7 +317,6 @@ class Setting{
                 $this->date_format_part['am']['ya_m_separator']='';
                 break;
             case self::YEAR_VIEW_MODE_KI:
-                $this->year_suffix='期';
                 $this->date_format_part['ymd']['ya_m_separator']=' ';
                 $this->date_format_part['ymt']['ya_m_separator']=' ';
                 $this->date_format_part['ymt']['m_suffix']='月';
@@ -336,7 +333,7 @@ class Setting{
                 $this->date_format_part['ym']['m_suffix']='月';
                 break;
             default:
-                $this->year_suffix='';
+                break;
         }
         switch($this->age_view_mode){
             case self::AGE_VIEW_MODE_UMAMUSUME:
