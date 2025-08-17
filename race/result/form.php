@@ -32,7 +32,7 @@ if($is_edit_mode==0 && $race_id==''){
 $world_list=World::getAll($pdo);
 $sex_category_list=RaceCategorySex::getAll($pdo);
 $age_category_list=RaceCategoryAge::getAll($pdo);
-$race_course_list_results=RaceCourse::getAll($pdo);
+$race_course_list_results=RaceCourse::getForSelectbox($pdo);
 
 $race_course_list=[];
 if(count($race_course_list_results)>0){
