@@ -105,7 +105,7 @@ foreach ($table_data as $data) {
         continue;
     }
     if(empty($data['jra_thisweek_horse_1'])&&empty($data['jra_thisweek_horse_2'])&&$data['jra_thisweek_horse_sort_number']==0){ continue; }
-?><section style="border: solid 1px #CCC; padding: 0.2em 0.5em; max-width: 940px;">
+?><section style="border: solid 1px #CCC; padding: 0.2em 0.5em; max-width: 940px;margin-top: 8px;">
 <div><?php if(false && $page->is_editable): ?>
 <a href="<?php echo $page->to_app_root_path; ?>race/horse_jra_article/form.php?race_id=<?php echo $race_id;?>&horse_id=<?php echo $data['horse_id'];?>">■</a>
 <?php else: ?>■ <?php endif; ?>
