@@ -313,11 +313,12 @@ foreach ($race_history as $data) {
         $month=$data['w_month'];
     }
     $day=is_null($datetime)?0:(int)$datetime->format('d');
-    $date_str=$setting->getHorseRaceHistoryDate(
-        $data['year'],$month,$day,
-        $data['umm_month_turn'],
-        $data['year']-$horse->birth_year
-    );
+    $date_str=$setting->getRaceListDate([
+        'year'=>$data['year'],
+        'month'=>$month,
+        'day'=>$month,$day,
+        'turn'=>$data['umm_month_turn'],
+        'age'=>$data['year']-$horse->birth_year]);
     $url = '';
     if($setting->horse_record_date==='umm'){
         if($data['umm_month_turn']>0){
