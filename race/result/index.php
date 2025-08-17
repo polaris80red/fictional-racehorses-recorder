@@ -44,8 +44,8 @@ $session->login_return_url='race/result/?race_id='.$race_id;
 $race_access_history=(new RaceAccessHistory())->set($race_id)->saveToSession();
 
 $week_data=RaceWeek::getById($pdo,$race->week_id);
-$week_month=$week_data['month'];
-$turn=$week_data['umm_month_turn'];
+$week_month=$week_data['month']??null;
+$turn=$week_data['umm_month_turn']??null;
 
 ?><!DOCTYPE html>
 <html lang="ja">

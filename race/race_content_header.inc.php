@@ -4,9 +4,9 @@ $day=($race->date == null || $race->is_tmp_date)?null:(new DateTime($race->date)
 $week=(new RaceWeek())->getById($pdo,$race->week_id);
 $umdb_date = $setting->getRaceListDate([
     'year'=>$race->year,
-    'month'=>($race->date == null || $race->is_tmp_date || $setting->horse_record_date==='umm')?$week['month']:$race->month,
+    'month'=>(($race->date == null || $race->is_tmp_date || $setting->horse_record_date==='umm')&& isset($week['month']))?$week['month']:$race->month,
     'day'=>$day,
-    'turn'=>$week_data['umm_month_turn']
+    'turn'=>$week_data['umm_month_turn']??null
 ]);
 $grade_obj=RaceGrade::getByRaceResultsKey($pdo,$race->grade);
 
