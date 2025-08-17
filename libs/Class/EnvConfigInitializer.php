@@ -19,6 +19,11 @@ class EnvConfigInitializer {
         define('ALLOW_REMOTE_EDITOR_LOGIN',
             filter_var($cfg['ALLOW_REMOTE_EDITOR_LOGIN'],FILTER_VALIDATE_BOOL));
 
+        // phpMyAdmin設定 URLがない場合は強制的にオフにする
+        define('PHPMYADMIN_URL',$cfg['PHPMYADMIN_URL']);
+        $show_phpmyadmin_link=filter_var($cfg['SHOW_PHPMYADMIN_LINK'],FILTER_VALIDATE_BOOL);
+        define('SHOW_PHPMYADMIN_LINK',PHPMYADMIN_URL===''?false:$show_phpmyadmin_link);
+
         define('STORAGE_DIR',$cfg['STORAGE_DIR']);
         define('SETTING_JSON_FILE_PATH',$cfg['SETTING_JSON_FILE_PATH']);
 

@@ -23,6 +23,10 @@ $cfg['ALLOW_REMOTE_EDITOR_LOGIN']=false;
  *  true    :リモートIPアドレスからのログインを許可します
  */
 
+// 管理ユーザー向けにphpMyAdmin画面へのリンクを表示する（XAMPPによるローカル環境向け）
+$cfg['SHOW_PHPMYADMIN_LINK'] =true;
+$cfg['PHPMYADMIN_URL'] ='/phpmyadmin/';
+
 // 各種ファイル保存先
 $cfg['STORAGE_DIR']             =APP_ROOT_DIR.'/storage';
 $cfg['SETTING_JSON_FILE_PATH']  =$cfg['STORAGE_DIR'].'/tmp/setting.latest.json';
