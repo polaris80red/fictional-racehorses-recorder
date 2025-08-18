@@ -43,7 +43,7 @@ class FormCsrfToken {
     }
 
     /**
-     * SESSIONとPOSTのトークンを比較し、セッションから破棄して結果を返す
+     * SESSIONとPOSTのトークンを比較
      */
     public function isValid(): bool
     {
