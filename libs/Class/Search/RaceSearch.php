@@ -525,7 +525,7 @@ class RaceSearch extends Search{
         ORDER BY
         `year` ASC,
         IFNULL(w.`month`,r.`month`) ASC,
-        w.`sort_number` DESC,
+        w.`sort_number` ASC,
         `date` ASC,
         `race_course_name` ASC, `race_number` ASC {$limit_offset_part};
         END;
