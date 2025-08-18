@@ -15,6 +15,11 @@ $new_race_result_id=(string)filter_input(INPUT_POST,'new_race_id');
 $pdo= getPDO();
 # 対象取得
 do{
+    if(!(new FormCsrfToken())->isValid()){
+        Elog::error($page->title.": CSRFトークンエラー|".__FILE__);
+        $page->addErrorMsg("入力フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
+        break;
+    }
     if($race_result_id==''){
         $page->addErrorMsg('元レースID未入力');
     }

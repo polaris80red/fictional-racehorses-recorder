@@ -81,6 +81,7 @@ if($page->error_exists){
     <td><?php printHiddenAndText('new_horse_id',$new_horse_id); ?></td>
 </tr>
 </table>
+<?php (new FormCsrfToken())->printHiddenInputTag(); ?>
 <hr>
 <label style="border:1px solid #999; padding-right:0.3em;" class="font_red"><input id="confirm_check" type="checkbox" name="delete_confirm_check" value="1">このチェックを入れて実行</label><br>
 <hr>
