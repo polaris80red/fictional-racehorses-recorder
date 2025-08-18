@@ -12,8 +12,10 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-
-$race_course=RaceCourse::getAll($pdo,true);
+$search_page=max(filter_input(INPUT_GET,'page',FILTER_VALIDATE_INT),1);
+//$race_course=RaceCourse::getAll($pdo,true);
+$race_course_table=new RaceCourse();
+$race_course = $race_course_table->getPage($pdo,$search_page);
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -38,6 +40,11 @@ $race_course=RaceCourse::getAll($pdo,true);
 </header>
 <main id="content">
 <hr class="no-css-fallback">
+<?php
+$prev_tag=new MkTagA("[前へ]",($race_course_table->prev_page?('?page='.$race_course_table->prev_page):''));
+$next_tag=new MkTagA("[次へ]",($race_course_table->next_page?('?page='.$race_course_table->next_page):''));
+?>
+<?=$prev_tag;?>｜<?=$next_tag;?>
 <table>
 <tr>
     <th>ID</th>
@@ -63,6 +70,7 @@ $race_course=RaceCourse::getAll($pdo,true);
 </tr>
 <?php endforeach; ?>
 </table>
+<?=$prev_tag;?>｜<?=$next_tag;?>
 <hr>
 [ <a href="./form.php"><?php print $base_title; ?>設定新規登録</a> ]
 <hr class="no-css-fallback">
