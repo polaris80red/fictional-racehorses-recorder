@@ -149,7 +149,7 @@ $world_list=World::getAll($pdo);
     <td><select name="affiliation_id">
     <option value=""></option>
     <?php
-$affiliation_list=Affiliation::getAll($pdo);
+$affiliation_list=Affiliation::getForSelectbox($pdo);
 $affiliation_name_list=[];
 if(count($affiliation_list)>0){
     foreach($affiliation_list as $row){
