@@ -19,6 +19,7 @@ if($input_id>0){
 }
 $race_course->unique_name=filter_input(INPUT_POST,'unique_name');
 $race_course->short_name=filter_input(INPUT_POST,'short_name');
+$race_course->short_name_m=filter_input(INPUT_POST,'short_name_m');
 $race_course->sort_number=intOrNull(filter_input(INPUT_POST,'sort_number'));
 $race_course->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
 $race_course->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;

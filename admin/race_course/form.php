@@ -62,8 +62,16 @@ if($input_id>0){
 </tr>
 <tr>
     <th>短縮名</th>
-    <td class="in_input"><input type="text" name="short_name" class="required" value="<?php print $race_course->short_name; ?>" required></td>
+    <td class="in_input"><input type="text" name="short_name" class="required" value="<?php print $race_course->short_name; ?>" placeholder="空ならキー名称を使用" required></td>
 </tr>
+<tr>
+    <th rowspan="2">短縮名2</th>
+    <td class="in_input"><input type="text" name="short_name_m" value="<?php print $race_course->short_name_m; ?>" placeholder="空ならメイン略称を使用"></td>
+</tr>
+<tr>
+    <td>出馬表等用の国名1文字でない略称</td>
+</tr>
+
 <tr>
     <th>表示順</th>
     <td class="in_input"><input type="number" name="sort_number" value="<?php print $race_course->sort_number; ?>" placeholder="昇順"></td>

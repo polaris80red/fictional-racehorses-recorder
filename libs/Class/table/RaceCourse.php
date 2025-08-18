@@ -11,6 +11,7 @@ class RaceCourse extends Table{
     protected const STR_COLUMNS=[
         'unique_name',
         'short_name',
+        'short_name_m',
     ];
     protected const DEFAULT_ORDER_BY
     ='`sort_number` IS NULL, `sort_number` ASC, `id` ASC';
@@ -18,6 +19,7 @@ class RaceCourse extends Table{
     public $id                  =0;
     public $unique_name         ='';
     public $short_name          ='';
+    public $short_name_m        =null;
     public $sort_number         =null;
     public $show_in_select_box  =1;
     public $is_enabled          =1;

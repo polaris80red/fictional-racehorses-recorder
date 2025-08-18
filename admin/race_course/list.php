@@ -50,9 +50,10 @@ $next_tag=new MkTagA("[次へ]",($race_course_table->next_page?('?page='.$race_c
     <th>ID</th>
     <th>キー名</th>
     <th>略名</th>
+    <th>略名2(出馬表向け)</th>
     <th>表示順補正</th>
-    <th>選択肢</th>
-    <th>選択肢</th>
+    <th>セレクト表示</th>
+    <th>論理削除</th>
     <th></th>
 </tr>
 <?php foreach($race_course as $row): ?>
@@ -63,6 +64,7 @@ $next_tag=new MkTagA("[次へ]",($race_course_table->next_page?('?page='.$race_c
     <td><?php print $row['id']; ?></td>
     <td><?php print_h($row['unique_name']); ?></td>
     <td><?php print $row['short_name']; ?></td>
+    <td><?php print $row['short_name_m']; ?></td>
     <td><?php print $row['sort_number']; ?></td>
     <td><?php print $row['show_in_select_box']?'表示':'非表示'; ?></td>
     <td><?php print $row['is_enabled']?'表示':'非表示'; ?></td>

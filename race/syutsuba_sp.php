@@ -219,7 +219,10 @@ foreach($data['horse_results'] as $prev_race){
         }
         echo "<span>{$date_line}</span>";
         //echo "<span>".$r->year.".".str_pad($r->month,2,'0',STR_PAD_LEFT).".xx"."</span>";
-        echo "<span style=\"display:inline-block;float:right;\">"." {$r->race_course_name}"."</span>";
+        $course_name = $r->race_course_name;
+        if(!empty($r->race_course_short_name)){ $course_name=$r->race_course_short_name; }
+        if(!empty($r->race_course_short_name_m)){ $course_name=$r->race_course_short_name_m; }
+        echo "<span style=\"display:inline-block;float:right;\">"." {$course_name}"."</span>";
         echo "</div>\n";
 
         echo "<div>";

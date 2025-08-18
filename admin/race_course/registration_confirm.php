@@ -19,6 +19,7 @@ if($id>0){
 }
 $race_course->unique_name=filter_input(INPUT_POST,'unique_name');
 $race_course->short_name=filter_input(INPUT_POST,'short_name');
+$race_course->short_name_m=filter_input(INPUT_POST,'short_name_m');
 $race_course->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
 $race_course->sort_number=filter_input(INPUT_POST,'sort_number');
 if($race_course->sort_number===''){
@@ -95,6 +96,10 @@ if($id>0){
 <tr>
     <th>短縮名</th>
     <td><?php HTPrint::HiddenAndText('short_name',$race_course->short_name); ?></td>
+</tr>
+<tr>
+    <th>短縮名2</th>
+    <td><?php HTPrint::HiddenAndText('short_name_m',$race_course->short_name_m); ?></td>
 </tr>
 <tr>
     <th>表示順補正</th>
