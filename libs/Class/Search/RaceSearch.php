@@ -519,7 +519,7 @@ class RaceSearch extends Search{
         FROM `{$tbl}` AS r
         LEFT JOIN `{$week_tbl}` as w ON r.week_id=w.id
         LEFT JOIN `{$age_tbl}` as age ON r.age_category_id=age.id
-        LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.race_results_key AND g.is_enabled=1
+        LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.unique_name AND g.is_enabled=1
         LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1
         {$sql_where}
         ORDER BY

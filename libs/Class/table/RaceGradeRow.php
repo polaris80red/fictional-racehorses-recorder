@@ -6,7 +6,7 @@ class RaceGradeRow {
         'is_enabled',
     ];
     public const STR_COLUMNS=[
-        'race_results_key',
+        'unique_name',
         'grade_name',
         'short_name',
         'search_grade',
@@ -14,7 +14,7 @@ class RaceGradeRow {
         'css_class_suffix',
     ];
     public $id;
-    public $race_results_key;
+    public $unique_name;
     public $grade_name;
     public $short_name;
     public $search_grade;

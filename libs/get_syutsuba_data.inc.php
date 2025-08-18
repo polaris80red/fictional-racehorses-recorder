@@ -66,7 +66,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
             `RR`.`date`<:race_date
             AND
             `RR_Detail`.`is_registration_only`= 0
-        LEFT JOIN `{$grade_tbl}` as g ON RR.grade=g.race_results_key
+        LEFT JOIN `{$grade_tbl}` as g ON RR.grade=g.unique_name
         WHERE
             `RR_Detail`.`horse_id`=:horse_id
         ORDER BY

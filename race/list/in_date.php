@@ -40,7 +40,7 @@ $sql.=",g.short_name as grade_short_name";
 $sql.=",g.css_class_suffix as grade_css_class_suffix";
 $sql.=" FROM `{$r_results_tbl}` AS `r`";
 $sql.=" LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name";
-$sql.=" LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.race_results_key";
+$sql.=" LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.unique_name";
 $where_parts=[
     "`date`=:date",
     "`is_tmp_date`=0"

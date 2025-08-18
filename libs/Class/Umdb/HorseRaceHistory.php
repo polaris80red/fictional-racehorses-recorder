@@ -78,7 +78,7 @@ class HorseRaceHistory implements Iterator{
             FROM `{$race_results_detail_tbl}` AS `RR_Detail`
             LEFT JOIN `{$race_results_tbl}` AS `r` ON `r`.`race_id`=`RR_Detail`.`race_results_id`
             LEFT JOIN `{$race_week_tbl}` AS w ON `r`.`week_id` = w.id
-            LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.race_results_key
+            LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.unique_name
             LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1
             WHERE `RR_Detail`.`horse_id`=:horse_id
             ORDER BY

@@ -72,7 +72,7 @@ r.*
 FROM {$r_results_tbl} AS r
 LEFT JOIN {$race_week_tbl} AS w ON r.`week_id`= w.id
 LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name
-LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.race_results_key
+LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.unique_name
 END;
 $sql_where_and_parts=["`year`=:year"];
 if($week_id>0){
