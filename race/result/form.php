@@ -35,9 +35,11 @@ $age_category_list=RaceCategoryAge::getAll($pdo);
 $race_course_list_results=RaceCourse::getForSelectbox($pdo);
 
 $race_course_list=[];
+$show_race_corse_select=false;
 if(count($race_course_list_results)>0){
+    $show_race_corse_select=true;
     foreach($race_course_list_results as $row){
-        $race_course_list[]=$row['short_name'];
+        $race_course_list[]=$row['unique_name'];
     }
 }
 ?><!DOCTYPE html>
@@ -98,10 +100,11 @@ if($is_edit_mode){
 <tr>
     <th>競馬場</th>
     <td class="in_input">
+<?php $target_exists=false; ?>
+<?php if($show_race_corse_select): ?>
 <select name="race_course_name_select" style="width:5em;height:2em;" onchange="clearElmVal('*[name=race_course_name]');">
 <?php
     echo '<option value=""></option>'."\n";
-    $target_exists=false;
     foreach($race_course_list as $race_course_name){
         echo '<option value="'.$race_course_name,'"'.(($race_course_name==$race->race_course_name)?' selected ':'').'>';
         if($race_course_name==$race->race_course_name){$target_exists=true;}
@@ -109,10 +112,13 @@ if($is_edit_mode){
         echo '</option>'."\n";
     }
 ?></select>／
+<?php else: ?>
+<?php echo (MkTagInput::Hidden('race_course_name_select')); ?>
+<?php endif; ?>
         <input type="text" name="race_course_name" style="width:4em;" value="<?php echo $target_exists?"":$race->race_course_name; ?>" placeholder="競馬場" onchange="clearElmVal('*[name=race_course_name_select]');">
         <input type="number" name="race_number" style="width:3em;" value="<?php echo ($race->race_number?:""); ?>" placeholder="R">R
     </td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=race_course_name]');clearElmVal('*[name=race_course_name_select]');clearElmVal('*[name=race_number]');"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=race_course_name]');clearElmVal('*[name=race_number]');clearElmVal('*[name=race_course_name_select]');"></td>
 </tr>
 <tr>
     <th>距離</th>
