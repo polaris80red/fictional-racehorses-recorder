@@ -507,6 +507,7 @@ class RaceSearch extends Search{
         $week_tbl=RaceWeek::TABLE;
         $age_tbl=RaceCategoryAge::TABLE;
         $grade_tbl=RaceGrade::TABLE;
+        $course_mst_tbl=RaceCourse::TABLE;
         $sql=<<<END
         SELECT
             r.*
@@ -514,10 +515,12 @@ class RaceSearch extends Search{
             ,w.umm_month_turn
             ,g.short_name as grade_short_name
             ,g.css_class_suffix as grade_css_class_suffix
+            ,c.short_name as race_course_mst_short_name
         FROM `{$tbl}` AS r
         LEFT JOIN `{$week_tbl}` as w ON r.week_id=w.id
         LEFT JOIN `{$age_tbl}` as age ON r.age_category_id=age.id
         LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.race_results_key
+        LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1
         {$sql_where}
         ORDER BY
         `year` ASC,

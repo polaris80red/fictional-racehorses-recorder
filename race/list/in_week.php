@@ -71,7 +71,7 @@ r.*
 ,g.css_class_suffix as grade_css_class_suffix
 FROM {$r_results_tbl} AS r
 LEFT JOIN {$race_week_tbl} AS w ON r.`week_id`= w.id
-LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.name
+LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name
 LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.race_results_key
 END;
 $sql_where_and_parts=["`year`=:year"];
@@ -97,7 +97,7 @@ if(!$show_disabled){ $sql_where_and_parts[]="r.`is_enabled`=1"; }
 $sql.=" WHERE ".implode(' AND ',$sql_where_and_parts);
 $sql_order_parts=[
     "w.`umm_month_turn` ASC",
-    "w.`sort_number` DESC",
+    "w.`sort_number` ASC",
     "`date` ASC",
     "`is_jra` DESC",
     "`is_nar` DESC",

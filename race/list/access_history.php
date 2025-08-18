@@ -30,6 +30,7 @@ $race_history = (new RaceAccessHistory())->toArray();
 $horse_tbl=Horse::TABLE;
 $r_results_tbl=RaceResults::TABLE;
 $week_tbl=RaceWeek::TABLE;
+$course_mst_tbl=RaceCourse::TABLE;
 $binder=new StatementBinder();
 
 $where_parts=[];
@@ -53,7 +54,7 @@ $sql_where=" WHERE ".implode(' AND ',$where_parts);
 $sql_order_parts=[
     "`year` ASC",
     "IFNULL(w.`month`,r.`month`) ASC",
-    "w.`sort_number` DESC",
+    "w.`sort_number` ASC",
     "`date` ASC",
     "`race_course_name` ASC, `race_number` ASC",
     "`race_id` ASC",
@@ -67,9 +68,11 @@ SELECT
     ,w.umm_month_turn
     ,g.short_name as grade_short_name
     ,g.css_class_suffix as grade_css_class_suffix
+    ,c.short_name as race_course_mst_short_name
 FROM `{$r_results_tbl}` AS r
 LEFT JOIN `{$week_tbl}` as w ON r.week_id=w.id
 LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.race_results_key
+LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1
 {$sql_where}
 ORDER BY
 {$sql_order_by};
@@ -97,6 +100,7 @@ try{
 td:nth-child(4){
     text-align:center;
 }
+td.race_course_name { text-align: center; }
 .disabled_row{ background-color: #ccc; }
 </style>
 </head>
@@ -201,14 +205,16 @@ foreach($table_data as $data){
         }
         echo "<td>".(new MkTagA($date_str,$date_url))."</td>";
     }
-    $a_tag=new MkTagA($data['race_course_name']);
+    $race_course_show_name = $data['race_course_mst_short_name']??$data['race_course_name'];
+    $a_tag=new MkTagA($race_course_show_name);
     if($datetime!==null){
         $a_tag->href($page->getDateRaceListUrl(
             $datetime,
             ['race_course_name'=>$data['race_course_name']]
         ));
+        $a_tag->title($data['race_course_name']);
     }
-    echo "<td>{$a_tag}</td>";
+    echo "<td class=\"race_course_name\">{$a_tag}</td>";
     echo "<td>{$data['course_type']}{$data['distance']}</td>";
     echo "<td class=\"grade\">".($data['grade_short_name']??$data['grade'])."</td>";
     echo "<td>";

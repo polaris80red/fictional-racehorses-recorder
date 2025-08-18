@@ -27,6 +27,7 @@ class HorseRaceHistoryRow{
         'is_tmp_date',
         'w_month',
         'umm_month_turn',
+        'race_course_mst_short_name',
         'grade_short_name',
         'grade_css_class_suffix',
         'is_registration_only',
@@ -79,6 +80,8 @@ class HorseRaceHistoryRow{
     public $grade_short_name;
     public $grade_css_class_suffix;
 
+    // 競馬場マスタから使用するデータ
+    public $race_course_mst_short_name;
 
     // 1・2着馬
     public $r_horse_id;

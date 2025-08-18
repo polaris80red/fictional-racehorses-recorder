@@ -52,6 +52,7 @@ class HorseRaceHistory implements Iterator{
             $race_results_detail_tbl=RaceResultDetail::TABLE;
             $race_week_tbl=RaceWeek::TABLE;
             $grade_tbl=RaceGrade::TABLE;
+            $course_mst_tbl=RaceCourse::TABLE;
             $sql=<<<END
             SELECT
             `r`.`date`
@@ -73,10 +74,12 @@ class HorseRaceHistory implements Iterator{
             ,w.umm_month_turn
             ,g.short_name as grade_short_name
             ,g.css_class_suffix as grade_css_class_suffix
+            ,c.short_name as race_course_mst_short_name
             FROM `{$race_results_detail_tbl}` AS `RR_Detail`
             LEFT JOIN `{$race_results_tbl}` AS `r` ON `r`.`race_id`=`RR_Detail`.`race_results_id`
             LEFT JOIN `{$race_week_tbl}` AS w ON `r`.`week_id` = w.id
             LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.race_results_key
+            LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1
             WHERE `RR_Detail`.`horse_id`=:horse_id
             ORDER BY
             `r`.`year` {$date_order},

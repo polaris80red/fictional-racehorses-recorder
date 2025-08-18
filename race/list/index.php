@@ -46,6 +46,7 @@ if($year!==''){
 td:nth-child(4){
     text-align:center;
 }
+td.race_course_name { text-align: center; }
 .disabled_row{ background-color: #ccc; }
 </style>
 </head>
@@ -141,14 +142,16 @@ foreach($table_data as $data){
         echo "<td>".(new MkTagA($date_str,$date_url))."</td>";
     }
     // 競馬場カラム
-    $a_tag=new MkTagA($data['race_course_name']);
+    $race_course_show_name = $data['race_course_mst_short_name']??$data['race_course_name'];
+    $a_tag=new MkTagA($race_course_show_name);
     if($datetime!==null){
         $a_tag->href($page->getDateRaceListUrl(
             $datetime,
             ['race_course_name'=>$data['race_course_name']]
         ));
+        $a_tag->title($data['race_course_name']);
     }
-    echo "<td>{$a_tag}</td>";
+    echo "<td class=\"race_course_name\">{$a_tag}</td>";
     echo "<td>{$data['course_type']}{$data['distance']}</td>";
     echo "<td class=\"grade\">".($data['grade_short_name']??$data['grade'])."</td>";
     echo "<td>";

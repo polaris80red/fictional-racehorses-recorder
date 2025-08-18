@@ -86,6 +86,7 @@ $sex_str=sex2String($horse->sex);
 .disabled_row{ background-color: #dddddd; }
 
 td.track_condition{ text-align:center; }
+td.race_course_name { text-align: center; }
 td.grade{ text-align:center; }
 td.number_of_starters{ text-align:right; }
 td.frame_number{ text-align:center; }
@@ -330,14 +331,16 @@ foreach ($race_history as $data) {
     $date_str=(new MkTagA($date_str,$url))->get();
     echo "<td>{$date_str}</td>";
 
-    $a_tag=new MkTagA($data['race_course_name']);
+    $race_course_show_name = $data['race_course_mst_short_name']??$data['race_course_name'];
+    $a_tag=new MkTagA($race_course_show_name);
     if($datetime!==null){
         $a_tag->href($page->getDateRaceListUrl(
             $datetime,
             ['race_course_name'=>$data['race_course_name']]
         ));
+        $a_tag->title($data['race_course_name']);
     }
-    echo "<td class=\"race_course\">{$a_tag}</td>";
+    echo "<td class=\"race_course_name\">{$a_tag}</td>";
     echo "<td class=\"distance\">{$data['course_type']}{$data['distance']}</td>";
     echo "<td class=\"track_condition\">{$data['track_condition']}</td>";
 
