@@ -3,9 +3,14 @@ class SurrogateKeyGenerator {
     public const TABLE = 'sys_surrogate_key_generator';
     public $last_insert_id=null;
     private $pdo;
-    public function __construct(PDO $pdo)
+    private $prefix;
+
+    private $id_parts=[];
+    private int $retry_counter=0;
+    public function __construct(PDO $pdo,$prefix='')
     {
         $this->pdo=$pdo;
+        $this->prefix=$prefix;
     }
     public function Increment(){
         $date_time_str=(new DateTime())->format("Y-m-d H:i:s");
@@ -58,50 +63,24 @@ class SurrogateKeyGenerator {
             }
         }
     }
-    public function generateId(int $world_id,$target=''){
-        $world=new World($this->pdo,$world_id);
-        if($world->record_exists===false){
-            Elog::error(__CLASS__."：有効なワールドID未設定");
-            exit;
-        }
-        $id_parts=[];
-        $id_parts[0]=$world->auto_id_prefix;
+    public function retryId(){
+        $this->id_parts[3]="-".dechex(++$this->retry_counter);
+        return implode('',$this->id_parts);
+    }
+    public function generateId(){
+        $this->id_parts=[];
+        $this->id_parts[0]=$this->prefix;
         if(AUTO_ID_DATE_PART_FORMAT!==''){
-            $id_parts[0].=(new DateTime())->format(AUTO_ID_DATE_PART_FORMAT);
+            $this->id_parts[0].=(new DateTime())->format(AUTO_ID_DATE_PART_FORMAT);
         }
-        $id_parts[1]= AUTO_ID_DATE_NUMBER_SEPARATOR;
-        $this->Increment();
-        $last_id_hex=dechex($this->last_insert_id);
+        $this->id_parts[1]= AUTO_ID_DATE_NUMBER_SEPARATOR;
+        $last_id_hex=dechex($this->Increment());
         if(AUTO_ID_NUMBER_MIN_LENGTH > 1){
-            $id_parts[2] = str_pad($last_id_hex,AUTO_ID_NUMBER_MIN_LENGTH,0,STR_PAD_LEFT);
+            $this->id_parts[2] = str_pad($last_id_hex,AUTO_ID_NUMBER_MIN_LENGTH,0,STR_PAD_LEFT);
         }else{
-            $id_parts[2] = $last_id_hex;
+            $this->id_parts[2] = $last_id_hex;
         }
-        $id_parts[3] ='';// 重複時に組み込むダミー部分
-
-        // 不適切なタイミングでリセットした場合の重複対策
-        $i=0;
-        do{
-            $id=implode('',$id_parts);
-            if($target==='horse'){
-                $horse_id_exists=(new Horse())->setDataById($this->pdo,$id);
-                if(!$horse_id_exists){
-                    if($i>0){ Elog::debug("競走馬自動ID重複調整：{$i}, {$id}"); }
-                    break;
-                }
-            }else if($target==='race'){
-                $race_id_exists=(new RaceResults())->setDataById($this->pdo,$id);
-                if(!$race_id_exists){
-                    if($i>0){ Elog::debug("レース自動ID重複調整：{$i}, {$id}"); }
-                    break;
-                }
-            }else{
-                echo "エラー：種類未設定";
-                Elog::error(__CLASS__."：ID種類未設定エラー");
-                exit;
-            }
-            $id_parts[3]="-".dechex(++$i);
-        }while( $i<256 );
-        return $id;
+        $this->id_parts[3] ='';
+        return implode('',$this->id_parts);
     }
 }

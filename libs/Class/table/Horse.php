@@ -133,9 +133,22 @@ class Horse extends Table{
         ,'affiliation_id','tc','training_country','is_affliationed_nar'
         ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','search_text','sort_number','is_enabled'];
         $sql=SqlMake::InsertSql(self::TABLE,$columns);
+
         if($this->horse_id==''){
-            $skey_gen=new SurrogateKeyGenerator($pdo);
-            $this->horse_id=$skey_gen->generateId($this->world_id,'horse');
+            // IDがない場合生成処理
+            $world=new World($pdo,$this->world_id);
+            $skey_gen=new SurrogateKeyGenerator($pdo,$world->auto_id_prefix);
+            $id=$skey_gen->generateId();
+            do {
+                $duplicate_check_tgt=new self();
+                $duplicate_check_tgt->setDataById($pdo,$id);
+                if(!$duplicate_check_tgt->record_exists){
+                    // 重複していなければ成功してループ離脱
+                    break;
+                }
+                $id=$skey_gen->retryId();
+            } while(true);
+            $this->horse_id=$id;
         }
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);

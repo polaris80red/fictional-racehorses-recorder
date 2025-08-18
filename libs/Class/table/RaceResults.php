@@ -162,8 +162,19 @@ class RaceResults extends Table{
         $insert_columns[]=self::UNIQUE_KEY_COLUMN;
         $sql=SqlMake::InsertSql(self::TABLE,$insert_columns);
         if($this->race_id==''){
-            $skey_gen=new SurrogateKeyGenerator($pdo);
-            $this->race_id=$skey_gen->generateId($this->world_id,'race');
+            // IDがない場合生成処理
+            $world=new World($pdo,$this->world_id);
+            $skey_gen=new SurrogateKeyGenerator($pdo,$world->auto_id_prefix);
+            $id=$skey_gen->generateId();
+            do {
+                $duplicate_check_tgt=new self($pdo,$id);
+                if(!$duplicate_check_tgt->record_exists){
+                    // 重複していなければ成功してループ離脱
+                    break;
+                }
+                $id=$skey_gen->retryId();
+            } while(true);
+            $this->race_id=$id;
         }
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
