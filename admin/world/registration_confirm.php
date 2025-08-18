@@ -7,13 +7,15 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="ワールド登録：内容確認";
 
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
 $pdo=getPDO();
 $input_world_id=filter_input(INPUT_POST,'world_id',FILTER_VALIDATE_INT);
 $world=new World();
 if($input_world_id>0){
     $world->getDataById($pdo,$input_world_id);
 }
-
 $world->name=filter_input(INPUT_POST,'name');
 $world->use_exact_date=filter_input(INPUT_POST,'use_exact_date');
 $world->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
@@ -100,6 +102,7 @@ if($input_world_id>0){
     <td><?php HTPrint::HiddenAndText('sort_priority',$world->auto_id_prefix); ?></td>
 </tr>
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>
+<?php (new FormCsrfToken())->printHiddenInputTag(); ?>
 </table>
 <?php if($world->id===0){ HTPrint::Hidden('is_enabled',1); } ?>
 </form>

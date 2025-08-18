@@ -7,6 +7,9 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="ワールド登録：処理実行";
 
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
 $pdo=getPDO();
 $input_world_id=filter_input(INPUT_POST,'world_id',FILTER_VALIDATE_INT);
 $world=new World();
@@ -20,6 +23,12 @@ $world->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:
 
 $error_exists=false;
 do{
+    if(!(new FormCsrfToken())->isValid()){
+        $error_exists=true;
+        Elog::error($page->title.": CSRFトークンエラー|".__FILE__);
+        $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
+        break;
+    }
     if($input_world_id>0 && !$world->record_exists){
         $error_exists=true;
         $page->debug_dump_var[]=['POST'=>$_POST];

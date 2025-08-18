@@ -8,6 +8,9 @@ $page->setSetting($setting);
 $base_title="テーマ";
 $page->title="{$base_title}設定一覧";
 
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
 $pdo=getPDO();
 
 $themes=Themes::getAll($pdo,true);

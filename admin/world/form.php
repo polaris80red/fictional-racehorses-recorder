@@ -7,6 +7,9 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="ワールド登録";
 
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
 $pdo=getPDO();
 $input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 $world=new World();

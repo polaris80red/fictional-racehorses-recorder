@@ -8,6 +8,9 @@ $page->setSetting($setting);
 $base_title="テーマ";
 $page->title="{$base_title}設定登録：内容確認";
 
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
 $pdo=getPDO();
 $input_id=filter_input(INPUT_POST,'theme_id',FILTER_VALIDATE_INT);
 $theme=new Themes();
@@ -111,6 +114,7 @@ if($input_id>0){
 </tr>
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>
 </table>
+<?php (new FormCsrfToken())->printHiddenInputTag(); ?>
 </form>
 <hr class="no-css-fallback">
 </main>

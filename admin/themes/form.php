@@ -8,6 +8,9 @@ $page->setSetting($setting);
 $base_title="テーマ";
 $page->title="{$base_title}設定登録";
 
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
 $pdo=getPDO();
 $input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 $theme=new Themes();

@@ -7,6 +7,9 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="ワールド一覧";
 
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
 $pdo=getPDO();
 
 $world_list=World::getAll($pdo,true);

@@ -8,6 +8,9 @@ $page->setSetting($setting);
 $base_title="ストーリー";
 $page->title="{$base_title}設定登録：内容確認";
 
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
 $pdo=getPDO();
 $input_id=filter_input(INPUT_POST,'story_id',FILTER_VALIDATE_INT);
 $story=new WorldStory();
@@ -102,6 +105,7 @@ if($input_id>0){
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>
 </table>
 <textarea name="config_json" style="min-width: 25em;min-height: 20em;" readonly><?php print($story->getConfigJsonEncodeText()); ?></textarea>
+<?php (new FormCsrfToken())->printHiddenInputTag(); ?>
 </form>
 <hr class="no-css-fallback">
 </main>
