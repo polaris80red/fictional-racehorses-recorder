@@ -21,7 +21,7 @@ class FormCsrfToken {
     /**
      * CSRFトークンを生成してセッションにセットする
      */
-    public function generateToken(): void
+    protected function generateToken(): void
     {
         $this->new_token=bin2hex(random_bytes(32));
         $_SESSION[self::TOKEN_KEY]=$this->new_token;
