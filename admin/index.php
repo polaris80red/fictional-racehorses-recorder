@@ -29,6 +29,7 @@ if(!$session->is_logined()){
     <li><?php echo (new MkTagA("システム設定",APP_ROOT_REL_PATH.'setting/')); ?></li>
     <li><?php echo (new MkTagA("ワールド設定",APP_ROOT_REL_PATH.'admin/world/list.php')); ?></li>
     <li><?php echo (new MkTagA("ストーリー設定",APP_ROOT_REL_PATH.'admin/world_story/list.php')); ?></li>
+    <li><?php echo (new MkTagA("競馬場マスタ設定",APP_ROOT_REL_PATH.'admin/race_course/list.php')); ?></li>
     <li><?php echo (new MkTagA("テーマ設定",APP_ROOT_REL_PATH.'admin/themes/list.php')); ?></li>
 <?php if($pma_link->isAvailable()): ?>
     <li><?php echo (new MkTagA("phpMyAdmin：データベースのエクスポート",$pma_link->getDbExportUrl())); ?></li>
