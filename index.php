@@ -57,7 +57,7 @@ $year_max=min($setting->year_select_max,$year_min+20,2050);
 <hr class="no-css-fallback">
 </main>
 <footer>
-<a href="<?php echo APP_ROOT_REL_PATH; ?>setting/">[設定]</a>
+<?php $page->printFooterHomeLink(); ?>
 </footer>
 </body>
 </html>

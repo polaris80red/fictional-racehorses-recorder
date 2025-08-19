@@ -17,6 +17,10 @@ if(!$session->is_logined()){
     <title><?php $page->printTitle(); ?></title>
     <meta charset="UTF-8">
     <?php $page->printBaseStylesheetLinks(); ?>
+<style>
+    th { background-color: #EEE; }
+    td a { text-decoration: none; }
+</style>
 </head>
 <body>
 <header>
@@ -25,16 +29,35 @@ if(!$session->is_logined()){
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<ul>
-    <li><?php echo (new MkTagA("システム設定",APP_ROOT_REL_PATH.'setting/')); ?></li>
-    <li><?php echo (new MkTagA("ワールド設定",APP_ROOT_REL_PATH.'admin/world/list.php')); ?></li>
-    <li><?php echo (new MkTagA("ストーリー設定",APP_ROOT_REL_PATH.'admin/world_story/list.php')); ?></li>
-    <li><?php echo (new MkTagA("競馬場マスタ設定",APP_ROOT_REL_PATH.'admin/race_course/list.php')); ?></li>
-    <li><?php echo (new MkTagA("テーマ設定",APP_ROOT_REL_PATH.'admin/themes/list.php')); ?></li>
-<?php if($pma_link->isAvailable()): ?>
-    <li><?php echo (new MkTagA("phpMyAdmin：データベースのエクスポート",$pma_link->getDbExportUrl())); ?></li>
-<?php endif; ?>
-</ul>
+<table>
+    <tr>
+        <th>項目</th>
+        <th>概要</th>
+    </tr>
+    <tr>
+        <td><?=(new MkTagA("表示設定",APP_ROOT_REL_PATH.'setting/'));?></td>
+        <td>表示対象のワールドや年の範囲・日付形式などを設定します</td>
+    </tr>
+    <tr>
+        <td><?=(new MkTagA("ワールド設定",APP_ROOT_REL_PATH.'admin/world/list.php'));?></td>
+        <td>レース・競走馬の所属先を作成・管理します</td>
+    </tr>
+    <tr>
+        <td><?=(new MkTagA("ストーリー設定",APP_ROOT_REL_PATH.'admin/world_story/list.php'));?></td>
+        <td>表示設定の保存先になる項目を管理します</td>
+    </tr>
+    <tr>
+        <td><?=(new MkTagA("競馬場マスタ管理",APP_ROOT_REL_PATH.'admin/race_course/list.php'));?></td>
+        <td>競馬場データを管理します</td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+    </tr>
+    <tr>
+        <td><?=(new MkTagA("テーマ設定",APP_ROOT_REL_PATH.'admin/themes/list.php'));?></td>
+        <td>配色CSSファイルの保存先を作成・管理します</td>
+    </tr>
+</table>
 <hr class="no-css-fallback">
 </main>
 <footer>
