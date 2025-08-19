@@ -154,13 +154,12 @@ $grades=RaceGrade::getForSelectbox($pdo);
 ?>
         <select name="grade_select" style="width:5em;height:2em;" onchange="clearElmVal('*[name=grade]');">
 <?php
-    $grade_list=['G1','G2','G3','重賞','L','OP','3勝','2勝','1勝','未勝','新馬'];
     echo '<option value=""></option>'."\n";
     $target_exists=false;
     foreach($grades as $row){
         echo '<option value="'.$row['unique_name'],'"'.(($row['unique_name']==$race->grade)?' selected ':'').'>';
         if($row['unique_name']==$race->grade){$target_exists=true;}
-        echo $row['short_name'];
+        echo $row['short_name']?:$row['unique_name'];
         echo '</option>'."\n";
     }
 ?></select>／

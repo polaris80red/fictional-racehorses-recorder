@@ -344,7 +344,7 @@ foreach ($race_history as $data) {
     echo "<td class=\"distance\">{$data['course_type']}{$data['distance']}</td>";
     echo "<td class=\"track_condition\">{$data['track_condition']}</td>";
 
-    echo "<td class=\"grade\">".($data['grade_short_name']??$data['grade'])."</td>";
+    echo "<td class=\"grade\">".(($data['grade_short_name']??'')?:$data['grade'])."</td>";
     echo "<td class=\"race_name\">";
     echo '<a href="'.$page->getRaceResultUrl($data['race_id']).$race_url_add_param.'" title="'.h($data['race_name'].($data['caption']?'：'.$data['caption']:'')).'">';
     echo h($data['race_name']);

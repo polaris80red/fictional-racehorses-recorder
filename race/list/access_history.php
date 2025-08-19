@@ -216,7 +216,7 @@ foreach($table_data as $data){
     }
     echo "<td class=\"race_course_name\">{$a_tag}</td>";
     echo "<td>{$data['course_type']}{$data['distance']}</td>";
-    echo "<td class=\"grade\">".($data['grade_short_name']??$data['grade'])."</td>";
+    echo "<td class=\"grade\">".(($data['grade_short_name']??'')?:$data['grade'])."</td>";
     echo "<td>";
     echo '<a href="'.$page->getRaceResultUrl($data['race_id']).'" title="'.$data['race_name'].($data['caption']?'：'.$data['caption']:'').'">';
     echo $data['race_name'];

@@ -203,7 +203,7 @@ foreach($table_data as $data){
     echo "<td>".$data['race_course_short_name']??$data['race_course_name']."</td>";
     echo "<td>".($data['race_number']?:"")."</td>";
     echo "<td>{$data['course_type']}{$data['distance']}</td>";
-    echo "<td class=\"grade\">".($data['grade_short_name']??$data['grade'])."</td>";
+    echo "<td class=\"grade\">".(($data['grade_short_name']??'')?:$data['grade'])."</td>";
     echo "<td>";
     $a_tag=new MkTagA($data['race_name'],$page->getRaceResultUrl($data['race_id']));
     $a_tag->title($data['race_name'].($data['caption']?'：'.$data['caption']:''));
