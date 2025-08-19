@@ -246,7 +246,7 @@ $url=$this->to_app_root_path."race/list/access_history.php";
     public function printFooterHomeLink($is_enabled=true){
         echo "<div class=\"footer_navigation\">";
         if($is_enabled){
-            echo '<a href="'.$this->to_app_root_path.'">[HOME]</a> <a href="'.$this->to_app_root_path.'/admin.">[管理画面]</a>';
+            echo '<a href="'.$this->to_app_root_path.'">[HOME]</a> <a href="'.$this->to_app_root_path.'/admin">[管理画面]</a>';
         }else{
             echo '<a>[HOME]</a>';
         }
