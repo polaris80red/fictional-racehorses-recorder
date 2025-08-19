@@ -109,6 +109,13 @@ if($input_id>0){
 <tr><td colspan="2" style="text-align: right;"><input type="submit" value="登録内容確認"></td></tr>
 </table>
 </form>
+<?php if($race_course->record_exists): ?>
+<hr>
+<div style="text-align: right;">
+※ キー名称はレース側の競馬場も一括更新するため専用画面で変更してください<br>
+[ <a href="./update_unique_name/form.php?<?=(new UrlParams(['u_name'=>$race_course->unique_name]));?>">キー名称一括変換</a> ]
+</div>
+<?php endif; ?>
 <hr class="no-css-fallback">
 </main>
 <footer>
