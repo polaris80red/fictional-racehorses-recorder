@@ -61,7 +61,7 @@ if($input_id>0){
 </tr>
 <tr>
     <th rowspan="2">キー名称</th>
-    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?php print $race_course->unique_name; ?>"<?=($race_course->record_exists?' readonly':'')?> required></td>
+    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?php print $race_course->unique_name; ?>"<?=(($race_course->record_exists||$input_name)?' readonly':'')?> required></td>
 </tr>
 <tr>
     <td>レースの競馬場名が<br>有効な競馬場マスタの上記に一致すると<br>表示順や略名での表示を適用します</td></tr>
