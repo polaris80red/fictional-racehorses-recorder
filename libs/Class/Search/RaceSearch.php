@@ -470,18 +470,45 @@ class RaceSearch extends Search{
         // ▽グレード
         $grade_where_parts=(function($flags){
             $parts=[];
-            //if($flags->hasFlag(self::Grade_G1)){ $parts[]="`grade` LIKE 'G1' OR `grade` LIKE 'Jpn1'";}
-            if($flags->hasFlag(self::Grade_G1)){ $parts[]="g.search_grade LIKE 'G1'";}
-            if($flags->hasFlag(self::Grade_G2)){ $parts[]="g.search_grade LIKE 'G2'";}
-            if($flags->hasFlag(self::Grade_G3)){ $parts[]="g.search_grade LIKE 'G3'";}
-            if($flags->hasFlag(self::Grade_G)) { $parts[]="g.search_grade LIKE '重賞'";}
-            if($flags->hasFlag(self::Grade_L)) { $parts[]="g.search_grade LIKE 'L'";}
-            if($flags->hasFlag(self::Grade_OP)){ $parts[]="g.search_grade LIKE 'OP'";}
-            if($flags->hasFlag(self::Grade_W1)){ $parts[]="g.search_grade LIKE '1勝'";}
-            if($flags->hasFlag(self::Grade_W2)){ $parts[]="g.search_grade LIKE '2勝'";}
-            if($flags->hasFlag(self::Grade_W3)){ $parts[]="g.search_grade LIKE '3勝'";}
+            if($flags->hasFlag(self::Grade_G1)){
+                $parts[]="g.search_grade LIKE 'G1'";
+                $parts[]="`grade` LIKE 'G1'";
+            }
+            if($flags->hasFlag(self::Grade_G2)){
+                $parts[]="g.search_grade LIKE 'G2'";
+                $parts[]="`grade` LIKE 'G2'";
+            }
+            if($flags->hasFlag(self::Grade_G3)){
+                $parts[]="g.search_grade LIKE 'G3'";
+                $parts[]="`grade` LIKE 'G3'";
+            }
+            if($flags->hasFlag(self::Grade_G)) {
+                $parts[]="g.search_grade LIKE '重賞'";
+                $parts[]="`grade` LIKE '重賞'";
+            }
+            if($flags->hasFlag(self::Grade_L)) {
+                $parts[]="g.search_grade LIKE 'L'";
+                $parts[]="`grade` LIKE 'L'";
+            }
+            if($flags->hasFlag(self::Grade_OP)){
+                $parts[]="g.search_grade LIKE 'OP'";
+                $parts[]="`grade` LIKE 'OP'";
+            }
+            if($flags->hasFlag(self::Grade_W1)){
+                $parts[]="g.search_grade LIKE '1勝'";
+                $parts[]="`grade` LIKE '1勝'";
+            }
+            if($flags->hasFlag(self::Grade_W2)){
+                $parts[]="g.search_grade LIKE '2勝'";
+                $parts[]="`grade` LIKE '2勝'";
+            }
+            if($flags->hasFlag(self::Grade_W3)){
+                $parts[]="g.search_grade LIKE '3勝'";
+                $parts[]="`grade` LIKE '3勝'";
+            }
             if($flags->hasFlag(self::Grade_Maiden)){
                 $parts[]="g.search_grade LIKE '未勝' OR g.search_grade LIKE '新馬'";
+                $parts[]="`grade` LIKE '未勝' OR `grade` LIKE '新馬'";
             }
             return $parts;
         })(new FlagChecker($this->grade));
