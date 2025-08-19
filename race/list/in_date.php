@@ -38,6 +38,7 @@ $race_course_tbl = RaceCourse::QuotedTable();
 $sql ="SELECT `r`.*";
 $sql.=",g.short_name as grade_short_name";
 $sql.=",g.css_class_suffix as grade_css_class_suffix";
+$sql.=",c.short_name as race_course_short_name";
 $sql.=" FROM `{$r_results_tbl}` AS `r`";
 $sql.=" LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name";
 $sql.=" LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.unique_name";
@@ -179,7 +180,7 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
 ?><hr>
 [ <?php echo (new MkTagA('全て','?'.$url_params->toString([],['is_jra_only','race_course_name']))); ?>｜
 <?php echo (new MkTagA('中央競馬',$is_jra_only?'':('?'.$url_params->toString(['is_jra_only'=>true],['race_course_name'])))); ?>
-<?php if($race_course_name){echo "｜".mb_convert_kana($race_course_name,'KV');} ?>
+<?php if($race_course_name){echo "｜".$race_course_name;} ?>
  ]
 <table class="race_list_date">
 <tr><th>場</th><th>R</th><th>距離</th><th>格付</th><th>名称</th><th>1着馬</th><th>2着馬</th><th>3着馬</th></tr><?php
@@ -199,7 +200,7 @@ foreach($table_data as $data){
     if($data['is_enabled']===0){ $class->add('disabled_row'); }
     echo "<tr class=\"".$class."\">";
     #echo $data['date']."\t";
-    echo "<td>{$data['race_course_name']}</td>";
+    echo "<td>".$data['race_course_short_name']??$data['race_course_name']."</td>";
     echo "<td>".($data['race_number']?:"")."</td>";
     echo "<td>{$data['course_type']}{$data['distance']}</td>";
     echo "<td class=\"grade\">".($data['grade_short_name']??$data['grade'])."</td>";

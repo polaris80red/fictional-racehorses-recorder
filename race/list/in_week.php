@@ -69,6 +69,7 @@ r.*
 ,w.umm_month_turn
 ,g.short_name as grade_short_name
 ,g.css_class_suffix as grade_css_class_suffix
+,c.short_name as race_course_short_name
 FROM {$r_results_tbl} AS r
 LEFT JOIN {$race_week_tbl} AS w ON r.`week_id`= w.id
 LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name
@@ -260,7 +261,7 @@ foreach($table_data as $data){
         echo (new DateTime($data['date']))->format('m/d');
     }
     echo "</td>";
-    echo "<td>{$data['race_course_name']}</td>";
+    echo "<td>".$data['race_course_short_name']??$data['race_course_name']."</td>";
     echo "<td>".($data['race_number']?:"")."</td>";
     echo "<td>{$data['course_type']}{$data['distance']}</td>";
     echo "<td class=\"grade\">".($data['grade_short_name']??$data['grade'])."</td>";
