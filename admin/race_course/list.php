@@ -27,10 +27,9 @@ $race_course = $race_course_table->getPage($pdo,$search_page);
     <?php $page->printScriptLink('js/functions.js'); ?>
 <style>
     th { background-color: #EEE;}
-    select{
-        height: 2em;
-    }
     tr.disabled { background-color: #EEE; }
+    td.col_sort_number { text-align: right; }
+    td a { text-decoration: none; }
 </style>
 </head>
 <body>
@@ -51,9 +50,9 @@ $next_tag   =new MkTagA("[次へ]",($race_course_table->has_next_page?('?page='.
     <th>ID</th>
     <th>キー名</th>
     <th>略名</th>
-    <th>略名2(出馬表向け)</th>
-    <th>表示順補正</th>
-    <th>セレクト表示</th>
+    <th>略名2<br>(出馬表向け)</th>
+    <th>表示順<br>補正</th>
+    <th>セレクト<br>表示</th>
     <th>論理削除</th>
     <th></th>
 </tr>
@@ -66,16 +65,17 @@ $next_tag   =new MkTagA("[次へ]",($race_course_table->has_next_page?('?page='.
     <td><?php print_h($row['unique_name']); ?></td>
     <td><?php print $row['short_name']; ?></td>
     <td><?php print $row['short_name_m']; ?></td>
-    <td><?php print $row['sort_number']; ?></td>
+    <td class="col_sort_number"><?php print $row['sort_number']; ?></td>
     <td><?php print $row['show_in_select_box']?'表示':'非表示'; ?></td>
-    <td><?php print $row['is_enabled']?'表示':'非表示'; ?></td>
+    <td><?php print $row['is_enabled']?'有効':'無効化中'; ?></td>
     <td><?php (new MkTagA('編',$url))->print(); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>
 <?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
 <hr>
-[ <a href="./form.php"><?php print $base_title; ?>設定新規登録</a> ]
+[ <a href="./form.php"><?php print $base_title; ?>設定新規登録</a> ]<br>
+[ <a href="./unregistered_list.php">マスタ未登録の競馬場を確認・登録</a> ]
 <hr class="no-css-fallback">
 </main>
 <footer>

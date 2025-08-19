@@ -13,6 +13,7 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+$input_name=filter_input(INPUT_GET,'name');
 $race_course=new RaceCourse();
 $s_setting=new Setting(false);
 if($input_id>0){
@@ -22,6 +23,8 @@ if($input_id>0){
     }else{
         $race_course->id=0;
     }
+}else if($input_name){
+    $race_course->unique_name=$input_name;
 }
 
 ?><!DOCTYPE html>
@@ -57,12 +60,14 @@ if($input_id>0){
     ?></td>
 </tr>
 <tr>
-    <th>キー名称</th>
-    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?php print $race_course->unique_name; ?>" required></td>
+    <th rowspan="2">キー名称</th>
+    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?php print $race_course->unique_name; ?>"<?=($race_course->record_exists?' readonly':'')?> required></td>
 </tr>
 <tr>
+    <td>レースの競馬場名が<br>有効な競馬場マスタの上記に一致すると<br>表示順や略名での表示を適用します</td></tr>
+<tr>
     <th>短縮名</th>
-    <td class="in_input"><input type="text" name="short_name" class="required" value="<?php print $race_course->short_name; ?>" placeholder="空ならキー名称を使用" required></td>
+    <td class="in_input"><input type="text" name="short_name" value="<?php print $race_course->short_name; ?>" placeholder="空ならキー名称を使用"></td>
 </tr>
 <tr>
     <th rowspan="2">短縮名2</th>
@@ -89,16 +94,16 @@ if($input_id>0){
     </td>
 </tr>
 <tr>
-    <th>選択肢</th>
+    <th>論理削除状態</th>
     <td>
         <label><?php
         $radio=new MkTagInputRadio('is_enabled',1,$race_course->is_enabled);
         $radio->print();
-        ?>表示</label><br>
+        ?>有効</label><br>
         <label><?php
         $radio->value(0)->checkedIf($race_course->is_enabled)
         ->disabled($race_course->id>0?false:true)->print();
-        ?>非表示</label>
+        ?>無効化中</label>
     </td>
 </tr>
 <tr><td colspan="2" style="text-align: right;"><input type="submit" value="登録内容確認"></td></tr>
