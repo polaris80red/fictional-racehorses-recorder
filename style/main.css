@@ -16,6 +16,9 @@ footer {
 }
 .no-css-fallback { display: none; }
 
+.header_navigation a { text-decoration: none; }
+.footer_navigation a { text-decoration: none; }
+
 .nowrap { white-space: nowrap; }
 .floatLeft { float: left; }
 .floatRight { float: right; }

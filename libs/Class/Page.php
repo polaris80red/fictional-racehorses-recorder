@@ -164,7 +164,7 @@ class Page{
     }
     public function printHeaderNavigation(){
         $pref=$this->to_app_root_path;
-?><div style="width:70%;float:left;">
+?><div class="header_navigation"><div style="width:70%;float:left;">
 <a href="<?php echo $pref; ?>">[HOME]</a>
 <a href="<?php echo $this->to_horse_search_path; ?>">[競走馬検索]</a>
 <a href="<?php echo $this->to_race_list_path; ?>?set_by_session=true">[レース検索]</a>
@@ -191,6 +191,7 @@ $url=$this->to_app_root_path."race/list/access_history.php";
 <a href="<?php echo $pref; ?>sign-out.php" class="nowrap">[ログアウト]</a>
 <?php endif; ?>
 </div><!-- /float_right -->
+</div>
 <div style="clear:both"></div>
 <?php
     }
@@ -243,11 +244,13 @@ $url=$this->to_app_root_path."race/list/access_history.php";
         return $url;
     }
     public function printFooterHomeLink($is_enabled=true){
+        echo "<div class=\"footer_navigation\">";
         if($is_enabled){
-            echo '<a href="'.$this->to_app_root_path.'">[HOME]</a>';
+            echo '<a href="'.$this->to_app_root_path.'">[HOME]</a> <a href="'.$this->to_app_root_path.'/admin.">[管理画面]</a>';
         }else{
             echo '<a>[HOME]</a>';
         }
+        echo "</div>";
     }
     public function exitToHome(){
         header("Location: {$this->to_app_root_path}");
