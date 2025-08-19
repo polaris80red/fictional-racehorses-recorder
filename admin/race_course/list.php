@@ -41,10 +41,11 @@ $race_course = $race_course_table->getPage($pdo,$search_page);
 <main id="content">
 <hr class="no-css-fallback">
 <?php
-$prev_tag=new MkTagA("[前へ]",($race_course_table->prev_page?('?page='.$race_course_table->prev_page):''));
-$next_tag=new MkTagA("[次へ]",($race_course_table->next_page?('?page='.$race_course_table->next_page):''));
+$first_tag  =new MkTagA("[最初]",($race_course_table->current_page>2?('?page=1'):''));
+$prev_tag   =new MkTagA("[前へ]",($race_course_table->current_page>1?('?page='.($race_course_table->current_page-1)):''));
+$next_tag   =new MkTagA("[次へ]",($race_course_table->has_next_page?('?page='.($race_course_table->current_page+1)):''));
 ?>
-<?=$prev_tag;?>｜<?=$next_tag;?>
+<?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
 <table>
 <tr>
     <th>ID</th>
@@ -72,7 +73,7 @@ $next_tag=new MkTagA("[次へ]",($race_course_table->next_page?('?page='.$race_c
 </tr>
 <?php endforeach; ?>
 </table>
-<?=$prev_tag;?>｜<?=$next_tag;?>
+<?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
 <hr>
 [ <a href="./form.php"><?php print $base_title; ?>設定新規登録</a> ]
 <hr class="no-css-fallback">

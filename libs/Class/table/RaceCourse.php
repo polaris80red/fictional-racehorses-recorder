@@ -25,8 +25,7 @@ class RaceCourse extends Table{
     public $is_enabled          =1;
     
     public $current_page=1;
-    public $prev_page;
-    public $next_page;
+    public $has_next_page=false;
     public $one_page_record_num=25;
 
     public function __construct(PDO|null $pdo=null, int $key=0){
@@ -65,8 +64,6 @@ class RaceCourse extends Table{
         $sql_parts[]="WHERE 1";
         $sql_parts[]="ORDER BY ".self::DEFAULT_ORDER_BY;
         $this->current_page = $current_page;
-        $this->next_page = $current_page+1;
-        $this->prev_page = ($current_page>1)?($current_page-1):null;
         $sql_parts[]="LIMIT {$this->one_page_record_num}";
         if($current_page>1){
             $offset = $this->one_page_record_num * (max($current_page,1)-1);
@@ -76,7 +73,10 @@ class RaceCourse extends Table{
         $stmt->execute();
         $data=$stmt->fetchAll(PDO::FETCH_ASSOC);
         if($data===false){return false;}
-        if(count($data) < $this->one_page_record_num){ $this->next_page=null; }
+        // 1ページの件数に達していれば次のページがある可能性がある判定
+        if(count($data) >= $this->one_page_record_num){
+            $this->has_next_page=true;
+        }
         return $data;
     }
 }
