@@ -5,7 +5,7 @@ defineAppRootRelPath(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
-$base_title="テーマ";
+$base_title="競馬場マスタ";
 $page->title="{$base_title}設定登録：処理実行";
 
 $session=new Session();
