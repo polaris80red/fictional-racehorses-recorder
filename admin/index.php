@@ -47,8 +47,15 @@ if(!$session->is_logined()){
         <td>表示設定の保存先になる項目を管理します</td>
     </tr>
     <tr>
+        <td colspan="2"></td>
+    </tr>
+    <tr>
         <td><?=(new MkTagA("競馬場マスタ管理",APP_ROOT_REL_PATH.'admin/race_course/list.php'));?></td>
         <td>競馬場データを管理します</td>
+    </tr>
+    <tr>
+        <td><?=(new MkTagA("レース格付マスタ管理",APP_ROOT_REL_PATH.'admin/race_grade/list.php'));?></td>
+        <td></td>
     </tr>
     <tr>
         <td colspan="2"></td>
