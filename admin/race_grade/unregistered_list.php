@@ -66,7 +66,7 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
 <table>
 <tr>
     <th>競馬場名称</th>
-    <th colspan="1">リンク</th>
+    <th colspan="2">リンク</th>
 </tr>
 <?php foreach($table_data as $row): ?>
 <tr class="">
@@ -75,6 +75,7 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
 ?>
     <td><?=$row['grade'];?></td>
     <td><a href="./form.php?name=<?=urlencode($row['grade']);?>">マスタ登録</a></td>
+    <td><a href="./update_unique_name/form.php?u_name=<?=urlencode($row['grade']);?>">レース結果を変換</a></td>
 </tr>
 <?php endforeach; ?>
 </table>

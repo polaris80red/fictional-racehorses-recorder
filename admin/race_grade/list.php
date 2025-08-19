@@ -54,7 +54,7 @@ $next_tag   =new MkTagA("[次へ]",($race_grade_table->has_next_page?('?page='.(
     <th>表示順<br>補正</th>
     <th>セレクト<br>表示</th>
     <th>論理削除</th>
-    <th colspan="1"></th>
+    <th colspan="2"></th>
 </tr>
 <?php foreach($race_grade as $row): ?>
 <tr class="<?php print($row->is_enabled?:"disabled"); ?>">
@@ -70,6 +70,7 @@ $next_tag   =new MkTagA("[次へ]",($race_grade_table->has_next_page?('?page='.(
     <td><?=h($row->show_in_select_box?'表示':'非表示');?></td>
     <td><?=h($row->is_enabled?'有効':'無効化中');?></td>
     <td><?php (new MkTagA('編集',"./form.php?id={$row->id}"))->print(); ?></td>
+    <td><?php (new MkTagA('改名',"./update_unique_name/form.php?u_name={$row->unique_name}"))->print(); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>

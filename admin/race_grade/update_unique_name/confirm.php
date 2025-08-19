@@ -1,0 +1,96 @@
+<?php
+session_start();
+require_once dirname(__DIR__,3).'/libs/init.php';
+defineAppRootRelPath(3);
+$page=new Page(3);
+$setting=new Setting();
+$page->setSetting($setting);
+$page->title="レース格付マスタ｜キー名称の一括変更：確認";
+$session=new Session();
+if(!Session::is_logined()){ $page->exitToHome(); }
+
+$u_name=(string)filter_input(INPUT_POST,'u_name');
+$new_unique_name=trim((string)filter_input(INPUT_POST,'new_unique_name'));
+
+$pdo= getPDO();
+# 対象取得
+do{
+    if($u_name==''){
+        $page->addErrorMsg('変換対象の名称が未入力');
+    }
+    if($new_unique_name==''){
+        $page->addErrorMsg('新しい名称が未入力');
+    }
+    if($page->error_exists){ break; }
+}while(false);
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
+$updater=new IdUpdater($pdo,$u_name,$new_unique_name);
+?><!DOCTYPE html>
+<html>
+<head>
+    <title><?php echo $page->title; ?></title>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <?php $page->printBaseStylesheetLinks(); ?>
+    <?php $page->printJqueryResource(); ?>
+<style>
+.font_red{
+    color:#FF0000;
+}
+</style>
+</head>
+<body>
+<header>
+<?php $page->printHeaderNavigation(); ?>
+<h1 class="page_title"><?php echo $page->title; ?></h1>
+</header>
+<main id="content">
+<hr class="no-css-fallback">
+<form action="execute.php" method="post">
+<?php
+$new_id_exists=$updater->new_id_exists(RaceGrade::TABLE,'unique_name');
+if($new_id_exists){
+    echo "新名称[{$new_unique_name}]のグレードは既にマスタに存在します。<br>";
+    echo "マスタの名称は変更せず、旧名称に該当するレースを新名称のレースに紐づけます。";
+}
+?>
+<table class="edit-form-table">
+<tr>
+    <th>置換前</th>
+    <td><?php HTPrint::HiddenAndText('u_name',$u_name); ?></td>
+</tr>
+<tr>
+    <th>置換後</th>
+    <td><?php HTPrint::HiddenAndText('new_unique_name',$new_unique_name); ?></td>
+</tr>
+</table>
+<?php (new FormCsrfToken())->printHiddenInputTag(); ?>
+<hr>
+<label style="border:1px solid #999; padding-right:0.3em;" class="font_red"><input id="confirm_check" type="checkbox" name="delete_confirm_check" value="1">このチェックを入れて実行</label><br>
+<hr>
+<input id="submit_btn" type="submit" value="処理実行" disabled>
+<script>
+$(function() {
+    //チェックボックス操作時
+    $('#confirm_check').click(function(){
+    if($(this).prop('checked')) {
+        $('#submit_btn').removeAttr('disabled').removeProp('disabled').addClass('font_red');
+        $(this).parent().removeClass('font_red');
+    } else {
+        $('#submit_btn').attr('disabled',true).prop('disabled',true).removeClass('font_red');
+        $(this).parent().addClass('font_red');
+    }
+    });
+});
+</script>
+</form>
+<hr class="no-css-fallback">
+</main>
+<footer>
+<?php $page->printFooterHomeLink(false); ?>
+</footer>
+</body>
+</html>

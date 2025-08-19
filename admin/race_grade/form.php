@@ -134,6 +134,10 @@ if($input_id==0){
 </form>
 <?php if($race_grade->id): ?>
 <hr>
+<div style="text-align: right;">
+※ キー名称はレース側のグレードも一括更新するため専用画面で変更してください<br>
+[ <a href="./update_unique_name/form.php?<?=(new UrlParams(['u_name'=>$race_grade->unique_name]));?>">キー名称一括変換</a> ]
+</div>
 <?php endif; ?>
 <hr class="no-css-fallback">
 </main>
