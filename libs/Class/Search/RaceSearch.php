@@ -374,7 +374,12 @@ class RaceSearch extends Search{
                 $race_course_parts[]=":race_course_{$key}";
                 $pre_bind->add(":race_course_{$key}", $val, PDO::PARAM_STR);
             }
-            $where_parts[]="`race_course_name` IN (".implode(', ',$race_course_parts).")";
+            $whrer_or_parts=[
+                "`race_course_name` IN (".implode(', ',$race_course_parts).")",
+                "c.`short_name` IN (".implode(', ',$race_course_parts).")",
+                "c.`short_name_m` IN (".implode(', ',$race_course_parts).")",
+            ];
+            $where_parts[]="(".implode(' OR ',$whrer_or_parts).")";
         }
 
         $distance_array=[];
@@ -516,6 +521,7 @@ class RaceSearch extends Search{
             ,g.short_name as grade_short_name
             ,g.css_class_suffix as grade_css_class_suffix
             ,c.short_name as race_course_mst_short_name
+            ,c.short_name_m as race_course_mst_short_name_m
         FROM `{$tbl}` AS r
         LEFT JOIN `{$week_tbl}` as w ON r.week_id=w.id
         LEFT JOIN `{$age_tbl}` as age ON r.age_category_id=age.id
