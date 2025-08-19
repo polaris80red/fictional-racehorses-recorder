@@ -75,7 +75,8 @@ $next_tag   =new MkTagA("[次へ]",($race_grade_table->has_next_page?('?page='.(
 </table>
 <?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
 <hr>
-[ <a href="./form.php"><?php print $base_title; ?>設定新規登録</a> ]
+[ <a href="./form.php"><?php print $base_title; ?>設定新規登録</a> ]<br>
+[ <a href="./unregistered_list.php">マスタ未登録のグレードを確認・登録</a> ]
 <hr class="no-css-fallback">
 </main>
 <footer>

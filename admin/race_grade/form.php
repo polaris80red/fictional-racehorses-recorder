@@ -65,7 +65,7 @@ if($input_id==0){
 </tr>
 <tr>
     <th rowspan="1">キー名称</th>
-    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?php print $race_grade->unique_name; ?>"<?=($race_grade->id?' readonly':'')?> required></td>
+    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?php print $race_grade->unique_name; ?>"<?=(($race_grade->id||$input_name)?' readonly':'')?> required></td>
 </tr>
 <tr>
     <th>短縮名</th>
