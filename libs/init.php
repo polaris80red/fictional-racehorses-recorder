@@ -19,6 +19,12 @@ spl_autoload_register(function ($class_name) {
         require_once $path;
         return;
     }
+    // Traitディレクトリ直下
+    $path=__DIR__.'/Trait/'.$class_name . '.php';
+    if(file_exists($path)){
+        require_once $path;
+        return;
+    }
     // Commonディレクトリのクラス
     $path=__DIR__.'/Class/Common/'.$class_name . '.php';
     if(file_exists($path)){
