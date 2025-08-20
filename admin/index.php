@@ -58,6 +58,10 @@ if(!$session->is_logined()){
         <td></td>
     </tr>
     <tr>
+        <td><?=(new MkTagA("所属マスタ管理",APP_ROOT_REL_PATH.'admin/affiliation/list.php'));?></td>
+        <td></td>
+    </tr>
+    <tr>
         <td colspan="2"></td>
     </tr>
     <tr>
