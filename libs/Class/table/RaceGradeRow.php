@@ -1,5 +1,5 @@
 <?php
-class RaceGradeRow {
+class RaceGradeRow extends TableRow {
     public const INT_COLUMNS=[
         'id',
         'sort_number',
@@ -22,17 +22,4 @@ class RaceGradeRow {
     public $sort_number;
     public $show_in_select_box=1;
     public $is_enabled=1;
-    /**
-     * 行相当の配列からこのオブジェクトにセットする
-     */
-    public function setFromArray(array $input_row){
-        $columns=self::getRowNames();
-        foreach($columns as $col){
-            $this->{$col}=$input_row[$col];
-        }
-        return $this;
-    }
-    public static function getRowNames(){
-        return array_merge(self::INT_COLUMNS,self::STR_COLUMNS);
-    }
 }
