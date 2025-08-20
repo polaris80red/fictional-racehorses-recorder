@@ -43,11 +43,10 @@ do{
         $page->addErrorMsg("{$base_title}設定名称未設定");
         break;
     }
-    if($race_course->short_name===''){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定略称未設定");
-        break;
+    $name_check_obj=new RaceCourse();
+    $name_check_obj->getByUniqueName($pdo,$race_course->unique_name);
+    if(!$id && $name_check_obj->record_exists){
+        $page->addErrorMsg("キー名 '{$race_course->unique_name}' は既に存在します");
     }
 }while(false);
 if($error_exists){

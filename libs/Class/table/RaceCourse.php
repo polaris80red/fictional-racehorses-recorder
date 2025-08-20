@@ -45,6 +45,17 @@ class RaceCourse extends Table{
         }
         return $result;
     }
+    public function getByUniqueName(PDO $pdo, $unique_name){
+        $result = self::getByUniqueKey($pdo,'unique_name',$unique_name,PDO::PARAM_STR);
+        if(!$result){ return false; }
+        $this->record_exists=true;
+
+        $column_names=array_merge(self::INT_COLUMNS,self::STR_COLUMNS);
+        foreach($column_names as $col){
+            $this->{$col}=$result[$col];
+        }
+        return $result;
+    }
     public function InsertExec(PDO $pdo){
         return $this->SimpleInsertExec($pdo);
     }

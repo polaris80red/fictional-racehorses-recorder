@@ -32,25 +32,21 @@ $race_course->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BO
 $error_exists=false;
 do{
     if($id>0 && !$race_course->record_exists){
-        $error_exists=true;
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
     }
     if($race_course->unique_name===''){
-        $error_exists=true;
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定名称未設定");
         break;
     }
-    if($race_course->short_name===''){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定短縮名未設定");
-        break;
+    $name_check_obj=new RaceCourse();
+    $name_check_obj->getByUniqueName($pdo,$race_course->unique_name);
+    if(!$id && $name_check_obj->record_exists){
+        $page->addErrorMsg("キー名 '{$race_course->unique_name}' は既に存在します");
     }
-
 }while(false);
-if($error_exists){
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
