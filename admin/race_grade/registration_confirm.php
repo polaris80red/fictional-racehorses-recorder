@@ -35,18 +35,19 @@ $race_grade->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOO
 $error_exists=false;
 do{
     if($id>0 && $check_race_grade===false){
-        $error_exists=true;
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
     }
     if($race_grade->unique_name===''){
-        $error_exists=true;
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定｜キー名称未設定");
         break;
     }
+    if(!$id && false!=RaceGrade::getByUniqueName($pdo,$race_grade->unique_name)){
+        $page->addErrorMsg("キー名 '{$race_grade->unique_name}' は既に存在します");
+    }
 }while(false);
-if($error_exists){
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }

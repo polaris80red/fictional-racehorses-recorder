@@ -8,7 +8,7 @@ $umdb_date = $setting->getRaceListDate([
     'day'=>$day,
     'turn'=>$week_data['umm_month_turn']??null
 ]);
-$grade_obj=RaceGrade::getByRaceResultsKey($pdo,$race->grade);
+$grade_obj=RaceGrade::getByUniqueName($pdo,$race->grade);
 
 $a_tag=new MkTagA($umdb_date->getLimitedString(null,'year_or_age_suffix'));
 $a_tag->setStyle('text-decoration','none');

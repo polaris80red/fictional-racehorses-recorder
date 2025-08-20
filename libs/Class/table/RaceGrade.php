@@ -17,7 +17,7 @@ class RaceGrade extends Table{
         return (new RaceGradeRow())->setFromArray($result);
     }
 
-    public static function getByRaceResultsKey(PDO $pdo, $id){
+    public static function getByUniqueName(PDO $pdo, $id){
         $result = self::getByUniqueKey($pdo,'unique_name',$id,PDO::PARAM_STR);
         if($result==false){
             return false;
