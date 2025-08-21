@@ -88,15 +88,15 @@ if($input_id==0){
 </tr>
 <tr>
     <th>名称</th>
-    <td class="in_input"><input type="text" name="name" class="required" value="<?php print $form_item->name; ?>"></td>
+    <td class="in_input"><input type="text" name="name" value="<?php print $form_item->name; ?>"></td>
 </tr>
 <tr>
     <th>2字名</th>
-    <td class="in_input"><input type="text" name="short_name_2" class="required" value="<?php print $form_item->short_name_2; ?>"></td>
+    <td class="in_input"><input type="text" name="short_name_2" value="<?php print $form_item->short_name_2; ?>"></td>
 </tr>
 <tr>
     <th>擬人化用</th>
-    <td class="in_input"><input type="text" name="name_umamusume" class="required" value="<?php print $form_item->name_umamusume; ?>"></td>
+    <td class="in_input"><input type="text" name="name_umamusume" value="<?php print $form_item->name_umamusume; ?>"></td>
 </tr>
 <tr>
     <th>表示順補正</th>
