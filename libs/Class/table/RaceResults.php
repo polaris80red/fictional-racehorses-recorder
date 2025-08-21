@@ -149,6 +149,10 @@ class RaceResults extends Table{
             }
         }
         $this->week_id=filter_input(INPUT_POST,'week_id',FILTER_VALIDATE_INT);
+        if($this->week_id==0){
+            $this->error_msgs[]='週未設定';
+            $this->error_exists=true;
+        }
 
         $this->sort_number=filter_input(INPUT_POST,'sort_number');
         $this->is_enabled=filter_input(INPUT_POST,'is_enabled');
