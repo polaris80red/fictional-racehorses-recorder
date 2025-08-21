@@ -13,8 +13,8 @@ class RaceCourse extends Table{
         'short_name',
         'short_name_m',
     ];
-    protected const DEFAULT_ORDER_BY
-    ='`sort_number` IS NULL, `sort_number` ASC, `id` ASC';
+    protected const DEFAULT_ORDER_BY ='`sort_number` IS NULL, `sort_number` ASC, `id` ASC';
+    public const ROW_CLASS = RaceCourseRow::class;
 
     public $id                  =0;
     public $unique_name         ='';
@@ -23,10 +23,6 @@ class RaceCourse extends Table{
     public $sort_number         =null;
     public $show_in_select_box  =1;
     public $is_enabled          =1;
-    
-    public $current_page=1;
-    public $has_next_page=false;
-    public $one_page_record_num=25;
 
     public function __construct(PDO|null $pdo=null, int $key=0){
         if(!is_null($pdo)&& $key>0){
@@ -69,25 +65,5 @@ class RaceCourse extends Table{
         $stmt = $pdo->prepare(implode(" ",$sql_parts));
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    public function getPage($pdo, $current_page=1){
-        $sql_parts[]="SELECT * FROM ".self::QuotedTable();
-        $sql_parts[]="WHERE 1";
-        $sql_parts[]="ORDER BY ".self::DEFAULT_ORDER_BY;
-        $this->current_page = $current_page;
-        $sql_parts[]="LIMIT {$this->one_page_record_num}";
-        if($current_page>1){
-            $offset = $this->one_page_record_num * (max($current_page,1)-1);
-            $sql_parts[]="OFFSET {$offset};";
-        }
-        $stmt = $pdo->prepare(implode(" ",$sql_parts));
-        $stmt->execute();
-        $data=$stmt->fetchAll(PDO::FETCH_ASSOC);
-        if($data===false){return false;}
-        // 1ページの件数に達していれば次のページがある可能性がある判定
-        if(count($data) >= $this->one_page_record_num){
-            $this->has_next_page=true;
-        }
-        return $data;
     }
 }

@@ -13,9 +13,9 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $search_page=max(filter_input(INPUT_GET,'page',FILTER_VALIDATE_INT),1);
-//$race_course=RaceCourse::getAll($pdo,true);
+$show_disabled=filter_input(INPUT_GET,'show_disabled',FILTER_VALIDATE_BOOL);
 $race_course_table=new RaceCourse();
-$race_course = $race_course_table->getPage($pdo,$search_page);
+$race_course = $race_course_table->getPage($pdo,$search_page,$show_disabled);
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -28,6 +28,8 @@ $race_course = $race_course_table->getPage($pdo,$search_page);
 <style>
     th { background-color: #EEE;}
     tr.disabled { background-color: #EEE; }
+    td.select_box_disabled { background-color: #EEE; }
+
     td.col_sort_number { text-align: right; }
     td a { text-decoration: none; }
 </style>
@@ -40,9 +42,10 @@ $race_course = $race_course_table->getPage($pdo,$search_page);
 <main id="content">
 <hr class="no-css-fallback">
 <?php
-$first_tag  =new MkTagA("[最初]",($race_course_table->current_page>2?('?page=1'):''));
-$prev_tag   =new MkTagA("[前へ]",($race_course_table->current_page>1?('?page='.($race_course_table->current_page-1)):''));
-$next_tag   =new MkTagA("[次へ]",($race_course_table->has_next_page?('?page='.($race_course_table->current_page+1)):''));
+$url_param =new UrlParams(['show_disabled'=>$show_disabled]);
+$first_tag =new MkTagA("[最初]",($race_course_table->current_page>2?('?'.$url_param->toString(['page'=>1])):''));
+$prev_tag  =new MkTagA("[前へ]",($race_course_table->current_page>1?('?'.$url_param->toString(['page'=>$race_course_table->current_page-1])):''));
+$next_tag  =new MkTagA("[次へ]",($race_course_table->has_next_page?('?'.$url_param->toString(['page'=>$race_course_table->current_page+1])):''));
 ?>
 <?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
 <table>
@@ -53,23 +56,23 @@ $next_tag   =new MkTagA("[次へ]",($race_course_table->has_next_page?('?page='.
     <th>略名2<br>(出馬表向け)</th>
     <th>表示順<br>補正</th>
     <th>セレクト<br>表示</th>
-    <th>論理削除</th>
+    <th>論理削除<br><?=(new MkTagA('表示切替',"?show_disabled=".($show_disabled?'0':'1')));?></th>
     <th colspan="2"></th>
 </tr>
 <?php foreach($race_course as $row): ?>
-<tr class="<?php print($row['is_enabled']?:"disabled"); ?>">
+<tr class="<?php print($row->is_enabled?:"disabled"); ?>">
 <?php
-    $url="./form.php?id={$row['id']}";
+    $url="./form.php?id={$row->id}";
 ?>
-    <td><?php print $row['id']; ?></td>
-    <td><?php print_h($row['unique_name']); ?></td>
-    <td><?php print $row['short_name']; ?></td>
-    <td><?php print $row['short_name_m']; ?></td>
-    <td class="col_sort_number"><?php print $row['sort_number']; ?></td>
-    <td><?php print $row['show_in_select_box']?'表示':'非表示'; ?></td>
-    <td><?php print $row['is_enabled']?'有効':'無効化中'; ?></td>
-    <td><?php (new MkTagA('編集',"./form.php?id={$row['id']}"))->print(); ?></td>
-    <td><?php (new MkTagA('改名',"./update_unique_name/form.php?u_name={$row['unique_name']}"))->print(); ?></td>
+    <td><?php print $row->id; ?></td>
+    <td><?php print_h($row->unique_name); ?></td>
+    <td><?php print $row->short_name; ?></td>
+    <td><?php print $row->short_name_m; ?></td>
+    <td class="col_sort_number"><?php print $row->sort_number; ?></td>
+    <td class="<?=$row->show_in_select_box?'':'select_box_disabled'?>"><?php print $row->show_in_select_box?'表示':'非表示'; ?></td>
+    <td><?php print $row->is_enabled?'有効':'無効化中'; ?></td>
+    <td><?php (new MkTagA('編集',"./form.php?id={$row->id}"))->print(); ?></td>
+    <td><?php (new MkTagA('改名',"./update_unique_name/form.php?u_name={$row->unique_name}"))->print(); ?></td>
 </tr>
 <?php endforeach; ?>
 </table>
