@@ -65,7 +65,7 @@ if($input_id==0){
 </tr>
 <tr>
     <th>名称</th>
-    <td class="in_input"><input type="text" name="name" class="required" value="<?php print $form_item->name; ?>"></td>
+    <td class="in_input"><input type="text" name="name" class="required" required value="<?php print $form_item->name; ?>"></td>
 </tr>
 <tr>
     <th>3字名</th>
