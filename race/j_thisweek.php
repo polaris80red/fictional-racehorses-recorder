@@ -36,8 +36,8 @@ if(!$race->record_exists){
     exit;
 }
 $week_data=RaceWeek::getById($pdo,$race->week_id);
-$week_month=$week_data['month'];
-$turn=$week_data['umm_month_turn'];
+$week_month=$week_data->month;
+$turn=$week_data->umm_month_turn;
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>

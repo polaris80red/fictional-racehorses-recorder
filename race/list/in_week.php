@@ -30,7 +30,7 @@ if($month){ $url_params->set('month',$month);}
 if($week_id){
     $url_params->set('week',$week_id);
     $week=RaceWeek::getById($pdo,$week_id);
-    $month=$week['month'];
+    $month=$week->month;
 }
 if($umm_month_turn){ $url_params->set('turn',$umm_month_turn);}
 if($show_disabled){ $url_params->set('show_disabled',true);}

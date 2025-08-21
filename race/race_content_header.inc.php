@@ -4,9 +4,9 @@ $day=($race->date == null || $race->is_tmp_date)?null:(new DateTime($race->date)
 $week=(new RaceWeek())->getById($pdo,$race->week_id);
 $umdb_date = $setting->getRaceListDate([
     'year'=>$race->year,
-    'month'=>(($race->date == null || $race->is_tmp_date || $setting->horse_record_date==='umm')&& isset($week['month']))?$week['month']:$race->month,
+    'month'=>(($race->date == null || $race->is_tmp_date || $setting->horse_record_date==='umm')&& isset($week->month))?$week->month:$race->month,
     'day'=>$day,
-    'turn'=>$week_data['umm_month_turn']??null
+    'turn'=>$week_data->umm_month_turn??null
 ]);
 $grade_obj=RaceGrade::getByUniqueName($pdo,$race->grade);
 
@@ -20,9 +20,9 @@ $a_tag->setStyle('text-decoration','none');
 if((
     $setting->horse_record_date==='umm' ||
     $race->date == null || $race->is_tmp_date)&&
-    ($week!==false && !empty($week['id']) && !empty($week['umm_month_turn']))){
+    ($week!==false && !empty($week->id) && !empty($week->umm_month_turn))){
     // ウマ娘モードか仮日付で、有効な週が設定されているとターンで表示
-    $urlparam="year={$race->year}&month={$week['month']}&turn={$week['umm_month_turn']}";
+    $urlparam="year={$race->year}&month={$week->month}&turn={$week->umm_month_turn}";
     $a_tag->href(APP_ROOT_REL_PATH."race/list/in_week.php?$urlparam");
     $a_tag->title("同ターンのレース");
 }else if($race->date != null && !$race->is_tmp_date){

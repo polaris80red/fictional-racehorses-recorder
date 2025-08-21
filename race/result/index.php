@@ -44,8 +44,8 @@ $session->login_return_url='race/result/?race_id='.$race_id;
 $race_access_history=(new RaceAccessHistory())->set($race_id)->saveToSession();
 
 $week_data=RaceWeek::getById($pdo,$race->week_id);
-$week_month=$week_data['month']??null;
-$turn=$week_data['umm_month_turn']??null;
+$week_month=$week_data->month??null;
+$turn=$week_data->umm_month_turn??null;
 
 ?><!DOCTYPE html>
 <html lang="ja">
@@ -319,8 +319,8 @@ if(!$race->is_tmp_date){
 }
 print $a_tag;
 $week=(new RaceWeek())->getById($pdo,$race->week_id);
-if($week!==false && !empty($week['id']) && !empty($week['umm_month_turn'])){
-    $urlparam="year={$race->year}&month={$week['month']}&turn={$week['umm_month_turn']}";
+if($week!==false && !empty($week->id) && !empty($week->umm_month_turn)){
+    $urlparam="year={$race->year}&month={$week->month}&turn={$week->umm_month_turn}";
     ?>｜<a href="<?php echo $page->to_app_root_path ?>race/list/in_week.php?<?php echo $urlparam; ?>" style="">同ターン</a><?php    
 }
 ?>
