@@ -1,9 +1,9 @@
 <?php
 class RaceGrade extends Table{
     public const TABLE = 'mst_race_grade';
-    public const UNIQUE_KEY_COLUMN="unique_name";
-    protected const DEFAULT_ORDER_BY
-    ='`sort_number` IS NULL, `sort_number` ASC, `id` ASC';
+    public const UNIQUE_KEY_COLUMN="id";
+    protected const DEFAULT_ORDER_BY ='`sort_number` IS NULL, `sort_number` ASC, `id` ASC';
+    public const ROW_CLASS = RaceGradeRow::class;
 
     public $current_page=1;
     public $has_next_page=false;
@@ -14,7 +14,7 @@ class RaceGrade extends Table{
         if($result==false){
             return false;
         }
-        return (new RaceGradeRow())->setFromArray($result);
+        return (new (static::ROW_CLASS))->setFromArray($result);
     }
 
     public static function getByUniqueName(PDO $pdo, $id){
@@ -37,9 +37,11 @@ class RaceGrade extends Table{
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function getPage($pdo, $current_page=1){
+    public function getPage($pdo, $current_page=1, $show_disabled=false){
         $sql_parts[]="SELECT * FROM ".self::QuotedTable();
-        $sql_parts[]="WHERE 1";
+        if(!$show_disabled){
+            $sql_parts[]="WHERE `is_enabled`=1";
+        }
         $sql_parts[]="ORDER BY ".self::DEFAULT_ORDER_BY;
         $this->current_page = $current_page;
         $sql_parts[]="LIMIT {$this->one_page_record_num}";
@@ -49,58 +51,15 @@ class RaceGrade extends Table{
         }
         $stmt = $pdo->prepare(implode(" ",$sql_parts));
         $stmt->execute();
-        //$data=$stmt->fetchAll(PDO::FETCH_ASSOC);
         $results=[];
         $count=0;
         while(($row=$stmt->fetch())!=false){
             $count++;
-            $results[]=(new RaceGradeRow())->setFromArray($row);
+            $results[]=(new (static::ROW_CLASS))->setFromArray($row);
         }
         if($count >= $this->one_page_record_num){
             $this->has_next_page=true;
         }
         return $results;
-    }
-    public static function InsertFromObj(PDO $pdo, RaceGradeRow $row_obj){
-        $exclude_columns=['id'];
-        $int_columns=array_diff(RaceGradeRow::INT_COLUMNS,$exclude_columns);
-        $str_columns=array_diff(RaceGradeRow::STR_COLUMNS,$exclude_columns);
-
-        $sql=SqlMake::InsertSql(self::TABLE,array_merge($str_columns,$int_columns));
-        $stmt = $pdo->prepare($sql);
-        foreach($int_columns as $i_col){
-            $stmt->bindValue(":{$i_col}",$row_obj->{$i_col},PDO::PARAM_INT);
-        }
-        foreach($str_columns as $s_col){
-            $stmt->bindValue(":{$s_col}",$row_obj->{$s_col},PDO::PARAM_STR);
-        }
-        try{
-            $stmt->execute();
-            return true;
-        }catch (Exception $e){
-            echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
-            Elog::error(__CLASS__.__METHOD__,[$stmt,$e]);
-            return false;
-        }
-    }
-    public static function UpdateFromObj(PDO $pdo, RaceGradeRow $row_obj){
-        $colmuns=array_merge(RaceGradeRow::INT_COLUMNS,RaceGradeRow::STR_COLUMNS);
-        $update_set_columns=array_diff($colmuns,['id']);
-        $sql=SqlMake::UpdateSqlWhereRaw(static::TABLE,$update_set_columns,"`id`=:id");
-        $stmt = $pdo->prepare($sql);
-        foreach(RaceGradeRow::INT_COLUMNS as $i_col){
-            $stmt->bindValue(":{$i_col}",$row_obj->{$i_col},PDO::PARAM_INT);
-        }
-        foreach(RaceGradeRow::STR_COLUMNS as $s_col){
-            $stmt->bindValue(":{$s_col}",$row_obj->{$s_col},PDO::PARAM_STR);
-        }
-        try{
-            $stmt->execute();
-            return true;
-        }catch (Exception $e){
-            echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
-            Elog::error(__CLASS__.__METHOD__,[$stmt,$e]);
-            return false;
-        }
     }
 }

@@ -59,13 +59,13 @@ if($error_exists){
 }
 if($check_race_grade!=false){
     // 編集モード
-    $result = RaceGrade::UpdateFromObj($pdo,$race_grade);
+    $result = RaceGrade::UpdateFromRowObj($pdo,$race_grade);
     if($result){
         redirect_exit("./list.php");
     }
 }else{
     // 新規登録モード
-    $result = RaceGrade::InsertFromObj($pdo,$race_grade);
+    $result = RaceGrade::InsertFromRowObj($pdo,$race_grade);
     if($result){
         redirect_exit("./list.php");
     }
