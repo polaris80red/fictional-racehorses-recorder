@@ -65,11 +65,11 @@ if($input_id==0){
 </tr>
 <tr>
     <th>名称</th>
-    <td class="in_input"><input type="text" name="name" class="required" value="<?php print $form_item->name; ?>"></td>
+    <td class="in_input"><input type="text" name="name" class="required" required value="<?php print $form_item->name; ?>"></td>
 </tr>
 <tr>
     <th>月と週補正</th>
-    <td class="in_input"><select name="month">
+    <td class="in_input"><select name="month" class="required" required>
     <option value="">未登録</option>
     <?php
     for ($i=1; $i <= 12; $i++) {
@@ -77,7 +77,7 @@ if($input_id==0){
         echo "<option value=\"{$i}\" {$selected}>{$i}月</option>";
         # code...
     }
-    ?></select> - <select name="month_grouping">
+    ?></select> - <select name="month_grouping" class="required" required>
     <option value="">未登録</option>
     <?php
     for ($i=0; $i <= 5; $i++) {
