@@ -141,7 +141,7 @@ if($race->setDataByPost()==false){
         <?php
             if($race->week_id>0){
                 $week=RaceWeek::getById($pdo,$race->week_id);
-                echo "第{$week['id']}週（{$week['month']}月）{$week['name']}";
+                echo "第{$week->id}週（{$week->month}月）{$week->name}";
             }
         ?>
         <?php HTPrint::Hidden('week_id',$race->week_id) ?>
