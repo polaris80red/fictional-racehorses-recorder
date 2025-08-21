@@ -1,7 +1,5 @@
 <?php
 class Setting{
-    public $year_select_min;
-    public $year_select_max;
     public $year_view_mode;
     public $age_view_mode;
     public $horse_record_year;
@@ -9,6 +7,8 @@ class Setting{
     public $horse_record_day;
     public $zero_year;
     public $select_zero_year;
+    public $year_select_min_diff;
+    public $year_select_max_diff;
     public $birth_year_mode;
     public $syutsuba_year;
     public $syutsuba_date;
@@ -16,8 +16,8 @@ class Setting{
     public $theme_dir_name;
     public $hors_history_sort_is_desc;
     const PARAM_NAME_LIST=[
-        'year_select_min'=>['label'=>'年度プルダウン下限',],
-        'year_select_max'=>['label'=>'年度プルダウン上限',],
+        'year_select_min_diff'=>['label'=>'年度プルダウン下限',],
+        'year_select_max_diff'=>['label'=>'年度プルダウン上限',],
         'year_view_mode'=>['label'=>'年度表示モード',],
         'age_view_mode'=>['label'=>'生年モード',],
         'horse_record_year'=>['label'=>'個別戦績の年形式',],
@@ -110,8 +110,8 @@ class Setting{
         return true;
     }
     public function setDefault(){
-        $this->year_select_min=2028;
-        $this->year_select_max=2035;
+        $this->year_select_min_diff=2;
+        $this->year_select_max_diff=5;
         $this->year_view_mode=0;
         $this->age_view_mode=0;
 
@@ -166,23 +166,12 @@ class Setting{
         if($this->select_zero_year===''){
             $this->select_zero_year=(int)$this->zero_year;
         }
-        if(isset($input->year_select_min)){
-            $this->year_select_min=filter_var($input->year_select_min,FILTER_VALIDATE_INT);
-        }else{
-            if(isset($input->year_select_min_diff)){
-                $year_select_min_diff=filter_var($input->year_select_min_diff,FILTER_VALIDATE_INT);
-                $this->year_select_min= $this->select_zero_year - $year_select_min_diff;
-            }
+        if(isset($input->year_select_min_diff)){
+            $this->year_select_min_diff=max(filter_var($input->year_select_min_diff,FILTER_VALIDATE_INT),0);
         }
-        if(isset($input->year_select_max)){
-            $this->year_select_max=filter_var($input->year_select_max,FILTER_VALIDATE_INT);
-        }else{
-            if(isset($input->year_select_max_diff)){
-                $year_select_max_diff=filter_var($input->year_select_max_diff,FILTER_VALIDATE_INT);
-                $this->year_select_max= $this->select_zero_year + $year_select_max_diff;
-            }
+        if(isset($input->year_select_max_diff)){
+            $this->year_select_max_diff=max(filter_var($input->year_select_max_diff,FILTER_VALIDATE_INT),0);
         }
-
 
         if(isset($input->year_view_mode)){
             $this->year_view_mode=filter_var($input->year_view_mode,FILTER_VALIDATE_INT);
@@ -227,8 +216,8 @@ class Setting{
             'world_id'=>$this->world_id,
             'theme_dir_name'=>$this->theme_dir_name,
             'select_zero_year'=>$this->select_zero_year,
-            'year_select_max'=>$this->year_select_max,
-            'year_select_min'=>$this->year_select_min,
+            'year_select_max_diff'=>$this->year_select_max_diff,
+            'year_select_min_diff'=>$this->year_select_min_diff,
             'year_view_mode'=>$this->year_view_mode,
             'zero_year'=>$this->zero_year,
             'birth_year_mode'=>$this->birth_year_mode,

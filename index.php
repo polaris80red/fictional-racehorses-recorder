@@ -30,8 +30,8 @@ $page->is_editable=SESSION::is_logined();
 <a href="<?php echo APP_ROOT_REL_PATH; ?>race/search.php?search_reset=1">レース検索</a><br>
 <hr>
 <?php
-$year_min=$setting->year_select_min;
-$year_max=min($setting->year_select_max,$year_min+20,2050);
+$year_min=$setting->select_zero_year - $setting->year_select_min_diff;
+$year_max=$setting->select_zero_year + $setting->year_select_max_diff;
 ?>
 <ul>
 <?php for($i=$year_min; $i<=$year_max; $i++): ?>

@@ -32,10 +32,11 @@ if($save_story_is_enabled && $save_story_id>0 && Session::is_logined()){
         $config_json_data=$setting->getSettingArray();
         if(isset($_POST['save_target']) && is_array($_POST['save_target'])){
             $diff_array=$_POST['save_target'];
+            // 上限下限の保存チェックボックスは共通なので比較用配列は差し替え
             if(!empty($diff_array['year_select_min_max_diff'])){
                 unset($diff_array['year_select_min_max_diff']);
-                $diff_array['year_select_max']=1;
-                $diff_array['year_select_min']=1;
+                $diff_array['year_select_max_diff']=1;
+                $diff_array['year_select_min_diff']=1;
             }
             $config_json_data=array_intersect_key($config_json_data,$diff_array);
         }
@@ -56,11 +57,19 @@ if(SESSION::is_logined() && $save_to_file){
 // 年上限・下限が絶対値で設定によっては範囲外になりやすいので設定変更後の初期値に強制変換（暫定）
 //unset($_SESSION['race_list']);
 if(isset($_SESSION['race_list'])){
-    if(isset($_SESSION['race_list']['max_year']) && isset($_SESSION['setting']['year_select_max'])){
-        $_SESSION['race_list']['max_year']=$_SESSION['setting']['year_select_max'];
+    if(isset($_SESSION['race_list']['max_year'])
+        && isset($_SESSION['setting']['year_select_max_diff'])
+        && isset($_SESSION['setting']['select_zero_year'])
+    ){
+        $_SESSION['race_list']['max_year']
+        =$_SESSION['setting']['select_zero_year']+$_SESSION['setting']['year_select_max_diff'];
     }
-    if(isset($_SESSION['race_list']['min_year']) && isset($_SESSION['setting']['year_select_min'])){
-        $_SESSION['race_list']['min_year']=$_SESSION['setting']['year_select_min'];
+    if(isset($_SESSION['race_list']['min_year'])
+        && isset($_SESSION['setting']['year_select_min_diff'])
+        && isset($_SESSION['setting']['select_zero_year'])
+    ){
+        $_SESSION['race_list']['min_year']
+        =$_SESSION['setting']['select_zero_year']-$_SESSION['setting']['year_select_min_diff'];
     }
     if(isset($_SESSION['race_list']['year']) &&
         strval($_SESSION['race_list']['year'])!=='' &&

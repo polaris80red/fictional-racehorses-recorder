@@ -142,13 +142,13 @@ foreach($skin_list as $row){
 <tr>
     <th>年度プルダウン</th>
     <td><?php
-    echo ($setting->select_zero_year-$setting->year_select_min)."年前～";
-    echo ($setting->year_select_max-$setting->select_zero_year)."年後";
+    echo ($setting->year_select_min_diff)."年前～";
+    echo ($setting->year_select_max_diff)."年後";
     ?></td>
     <td class="in_input">
-        －<input type="number" style="width: 3em;" name="year_select_min_diff" value="<?php echo $setting->select_zero_year-$setting->year_select_min; ?>">
+        －<input type="number" style="width: 3em;" name="year_select_min_diff" value="<?php echo $setting->year_select_min_diff; ?>">
         ～
-        ＋<input type="number" style="width: 3em;" name="year_select_max_diff" value="<?php echo $setting->year_select_max-$setting->select_zero_year; ?>"></td>
+        ＋<input type="number" style="width: 3em;" name="year_select_max_diff" value="<?php echo $setting->year_select_max_diff; ?>"></td>
     <td oncontextmenu="return false;"><input type="checkbox" name="save_target[year_select_min_max_diff]" value="1"></td>
 </tr>
 <tr><td colspan="3">&nbsp;</td></tr>

@@ -65,8 +65,8 @@ class RaceSearch extends Search{
     }
     public function setSetting(Setting $setting){
         parent::setSetting($setting);
-        $this->min_year=$setting->year_select_min;
-        $this->max_year=$setting->year_select_max;
+        $this->min_year=$setting->select_zero_year - $setting->year_select_min_diff;
+        $this->max_year=$setting->select_zero_year + $setting->year_select_max_diff;
         return $this;
     }
     public function setByUrl(){
@@ -592,8 +592,8 @@ class RaceSearch extends Search{
 <div class="search_detail" style="<?php if($detail_tgl_is_default_open===false){echo "display:none;";} ?>">
 <hr>
 <?php
-$year_min=$this->setting->year_select_min;
-$year_max=min($this->setting->year_select_max,$year_min+20,2050);
+$year_min=$this->setting->select_zero_year - $this->setting->year_select_min_diff;
+$year_max=$this->setting->select_zero_year + $this->setting->year_select_max_diff;
 
 ?><!--<select name="min_year" style="width:6em;height:2em;">
 <?php
