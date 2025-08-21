@@ -67,9 +67,9 @@ $age_name_row=RaceCategoryAge::getById($pdo,$race->age_category_id);
 if(
     $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME||
     $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME_S){
-    $age_name=$age_name_row['name_umamusume']."級";
+    $age_name=$age_name_row->name_umamusume."級";
 }else{
-    $age_name=$age_name_row['name']??'';
+    $age_name=$age_name_row->name??'';
 }
 echo " ".($race->age?:$age_name);
 $race_sex_name=RaceCategorySex::getShortNameById($pdo,$race->sex_category_id);
