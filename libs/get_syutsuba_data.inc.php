@@ -66,7 +66,11 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         LEFT JOIN `{$race_results_tbl}` AS `RR` ON
             `RR`.`race_id`=`RR_Detail`.`race_results_id`
             AND
-            `RR`.`date`<:race_date
+            (
+                ((`RR`.`year`=:race_year AND `RR`.`week_id`<:week_id) OR `RR`.`year`<:race_year)
+                OR
+                `RR`.`date`<:race_date
+            )
             AND
             `RR_Detail`.`is_registration_only`= 0
         LEFT JOIN `{$grade_tbl}` as g ON RR.grade=g.unique_name
@@ -75,7 +79,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
             `RR_Detail`.`horse_id`=:horse_id
         ORDER BY
             `RR`.`year` DESC
-            ,`RR`.`month` DESC
+            ,`RR`.`week_id` DESC
             ,`RR`.`date` DESC
         LIMIT {$rr_count}
         DOC;
@@ -85,6 +89,8 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
     $horse_id='';
     $stmt2 = $pdo->prepare($result_get_sql);
     $stmt2->bindParam(':horse_id', $horse_id, PDO::PARAM_STR);
+    $stmt2->bindValue(':race_year', $race->year, PDO::PARAM_INT);
+    $stmt2->bindValue(':week_id', $race->week_id, PDO::PARAM_INT);
     $stmt2->bindValue(':race_date', $race->date, PDO::PARAM_STR);
 
     $rr12HourseGetter=new RaceResults1stOr2ndHourseGetter($pdo);
