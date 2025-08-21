@@ -24,9 +24,11 @@ class Affiliation extends Table{
         }
         return (new (static::ROW_CLASS))->setFromArray($result);
     }
-    public function getPage($pdo, $current_page=1){
+    public function getPage($pdo, $current_page=1, $show_disabled=false){
         $sql_parts[]="SELECT * FROM ".self::QuotedTable();
-        $sql_parts[]="WHERE 1";
+        if(!$show_disabled){
+            $sql_parts[]="WHERE `is_enabled`=1";
+        }
         $sql_parts[]="ORDER BY ".self::DEFAULT_ORDER_BY;
         $this->current_page = $current_page;
         $sql_parts[]="LIMIT {$this->one_page_record_num}";

@@ -140,4 +140,49 @@ abstract class Table{
         }
         return true;
     }
+    // 行クラスを使用する新形式対応
+    public const ROW_CLASS = TableRow::class;
+    public static function InsertFromRowObj(PDO $pdo, TableRow $row_obj){
+        $exclude_columns=[static::UNIQUE_KEY_COLUMN];
+        $int_columns=array_diff((static::ROW_CLASS)::INT_COLUMNS,$exclude_columns);
+        $str_columns=array_diff((static::ROW_CLASS)::STR_COLUMNS,$exclude_columns);
+
+        $sql=SqlMake::InsertSql(self::TABLE,array_merge($str_columns,$int_columns));
+        $stmt = $pdo->prepare($sql);
+        foreach($int_columns as $i_col){
+            $stmt->bindValue(":{$i_col}",$row_obj->{$i_col},PDO::PARAM_INT);
+        }
+        foreach($str_columns as $s_col){
+            $stmt->bindValue(":{$s_col}",$row_obj->{$s_col},PDO::PARAM_STR);
+        }
+        try{
+            $stmt->execute();
+            return true;
+        }catch (Exception $e){
+            echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
+            Elog::error(__CLASS__.__METHOD__,[$stmt,$e]);
+            return false;
+        }
+    }
+    public static function UpdateFromRowObj(PDO $pdo, TableRow $row_obj){
+        $colmuns=array_merge((static::ROW_CLASS)::INT_COLUMNS,(static::ROW_CLASS)::STR_COLUMNS);
+        $id =static::UNIQUE_KEY_COLUMN;
+        $update_set_columns=array_diff($colmuns,[$id]);
+        $sql=SqlMake::UpdateSqlWhereRaw(static::TABLE,$update_set_columns,"`{$id}`=:{$id}");
+        $stmt = $pdo->prepare($sql);
+        foreach((static::ROW_CLASS)::INT_COLUMNS as $i_col){
+            $stmt->bindValue(":{$i_col}",$row_obj->{$i_col},PDO::PARAM_INT);
+        }
+        foreach((static::ROW_CLASS)::STR_COLUMNS as $s_col){
+            $stmt->bindValue(":{$s_col}",$row_obj->{$s_col},PDO::PARAM_STR);
+        }
+        try{
+            $stmt->execute();
+            return true;
+        }catch (Exception $e){
+            echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
+            Elog::error(__CLASS__.__METHOD__,[$stmt,$e]);
+            return false;
+        }
+    }
 }
