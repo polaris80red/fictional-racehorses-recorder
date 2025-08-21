@@ -54,12 +54,27 @@ if(!$session->is_logined()){
         <td>競馬場データを管理します</td>
     </tr>
     <tr>
+        <td><?=(new MkTagA("所属マスタ管理",APP_ROOT_REL_PATH.'admin/affiliation/list.php'));?></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+    </tr>
+    <tr>
         <td><?=(new MkTagA("レース格付マスタ管理",APP_ROOT_REL_PATH.'admin/race_grade/list.php'));?></td>
         <td></td>
     </tr>
     <tr>
-        <td><?=(new MkTagA("所属マスタ管理",APP_ROOT_REL_PATH.'admin/affiliation/list.php'));?></td>
+        <td><?=(new MkTagA("馬齢条件マスタ管理",APP_ROOT_REL_PATH.'admin/race_category_age/list.php'));?></td>
         <td></td>
+    </tr>
+    <tr>
+        <td><?=(new MkTagA("性別条件マスタ設定",APP_ROOT_REL_PATH.'admin/race_category_sex/list.php'));?></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><?=(new MkTagA("レース週マスタ設定",APP_ROOT_REL_PATH.'admin/race_week/list.php'));?></td>
+        <td>正確な日付無しのレース開催週の設定を調整します</td>
     </tr>
     <tr>
         <td colspan="2"></td>
