@@ -147,7 +147,7 @@ abstract class Table{
         $int_columns=array_diff((static::ROW_CLASS)::INT_COLUMNS,$exclude_columns);
         $str_columns=array_diff((static::ROW_CLASS)::STR_COLUMNS,$exclude_columns);
 
-        $sql=SqlMake::InsertSql(self::TABLE,array_merge($str_columns,$int_columns));
+        $sql=SqlMake::InsertSql(static::TABLE,array_merge($str_columns,$int_columns));
         $stmt = $pdo->prepare($sql);
         foreach($int_columns as $i_col){
             $stmt->bindValue(":{$i_col}",$row_obj->{$i_col},PDO::PARAM_INT);
