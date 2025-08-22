@@ -188,6 +188,10 @@ abstract class Table{
     public $current_page=1;
     public $has_next_page=false;
     public $one_page_record_num=25;
+
+    /**
+     * @return TableRow 実際はTableRowインスタンスの配列だがvscodeでエラーになるため指定
+     */
     public function getPage($pdo, $current_page=1, $show_disabled=false){
         $sql_parts[]="SELECT * FROM ".self::QuotedTable();
         if(!$show_disabled){
