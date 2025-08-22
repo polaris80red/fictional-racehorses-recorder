@@ -49,35 +49,14 @@ do{
 if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
-}else{
-    $pdo->beginTransaction();
-    try{ 
-        $sql="UPDATE `".RaceResultDetail::TABLE."` SET `horse_id`=:new_id WHERE `horse_id` LIKE :old_id;";
-        $stmt2=$pdo->prepare($sql);
-        $stmt2->bindValue(':new_id',$new_horse_id,PDO::PARAM_STR);
-        $stmt2->bindValue(':old_id',$horse_id,PDO::PARAM_STR);
-        $stmt2->execute();
-
-        $sql="UPDATE `".Horse::TABLE."` SET `horse_id`=:new_id WHERE `horse_id` LIKE :old_id;";
-        $stmt3=$pdo->prepare($sql);
-        $stmt3->bindValue(':new_id',$new_horse_id,PDO::PARAM_STR);
-        $stmt3->bindValue(':old_id',$horse_id,PDO::PARAM_STR);
-        $stmt3->execute();
-
-        $sql="UPDATE `".Horse::TABLE."` SET `mare_id`=:new_id WHERE `mare_id` LIKE :old_id;";
-        $stmt4=$pdo->prepare($sql);
-        $stmt4->bindValue(':new_id',$new_horse_id,PDO::PARAM_STR);
-        $stmt4->bindValue(':old_id',$horse_id,PDO::PARAM_STR);
-        $stmt4->execute();
-
-        $pdo->commit();
-    }catch(Exception $e){
-        $pdo->rollBack();
-        ELog::error("{$page->title}|",$e);
-        $page->addErrorMsg("PDO_ERROR:".print_r($e,true));
-        $page->printCommonErrorPage();
-    }
 }
+$updater=new IdUpdater($pdo,$horse_id,$new_horse_id);
+$updater->addUpdateTarget(Horse::TABLE,'horse_id');
+$updater->addUpdateTarget(RaceResultDetail::TABLE,'horse_id');
+$updater->addUpdateTarget(Horse::TABLE,'mare_id');
+$updater->addUpdateTarget(Horse::TABLE,'sire_id');
+$updater->addUpdateTarget(HorseTag::TABLE,'horse_id');
+$updater->execute();
 
 ?><!DOCTYPE html>
 <html>
