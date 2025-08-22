@@ -394,8 +394,8 @@ class HorseSearch extends Search{
         <td>
             <select name="birth_year_select" style="width:6em;" onchange="clearElmVal('*[name=birth_year]');">
             <?php
-                $year_min=$setting->year_select_min-3;
-                $year_max=min($setting->year_select_max,$year_min+20);
+                $year_min=$setting->select_zero_year-$setting->year_select_min_diff-3;
+                $year_max=$setting->select_zero_year+$setting->year_select_max_diff;
                 echo '<option value=""></option>'."\n";
                 $year_option_exists=false;
                 for($i=$year_min; $i<=$year_max; $i++){
