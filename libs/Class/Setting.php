@@ -456,7 +456,7 @@ class Setting{
         }
         return $ret_str;
     }
-    public function getBirthYearFormat(int $birth_year){
+    public function getBirthYearFormat(int $birth_year, bool $add_suffix=true){
         switch($this->birth_year_mode){
             case 1:
                 $birth_year_str=$birth_year+3;
@@ -466,6 +466,18 @@ class Setting{
                 break;
             default:
                 $birth_year_str=$birth_year;
+        }
+        if($add_suffix){
+            if($this->birth_year_mode==1||$this->birth_year_mode==2){
+                if($this->year_view_mode===3){
+                    $birth_year_str.="期";
+                }else{
+                    $birth_year_str.="世代";
+                }
+            }else{
+                if($this->year_view_mode==0){ $birth_year_str.="年"; }
+                if($this->year_view_mode==2){ $birth_year_str.="年"; }
+            }
         }
         return $birth_year_str;
     }

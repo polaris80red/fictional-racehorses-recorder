@@ -97,16 +97,6 @@ $world_list=World::getAll($pdo);
                 if($i==$horse->birth_year){ $year_option_exists=true; }
                 echo '<option value="'.$i,'"'.(($i==$horse->birth_year)?' selected ':'').'>';
                 echo $setting->getBirthYearFormat($i);
-                if($setting->birth_year_mode==1||$setting->birth_year_mode==2){
-                    if($setting->year_view_mode===3){
-                        echo "期";
-                    }else{
-                        echo "世代";
-                    }
-                }else{
-                    if($setting->year_view_mode==0){ echo "年"; }
-                    if($setting->year_view_mode==2){ echo "年"; }
-                }
                 echo '</option>'."\n";
             }
         ?></select>
