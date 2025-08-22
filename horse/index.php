@@ -10,7 +10,7 @@ $session=new Session();
 // 暫定でログイン＝編集可能
 $page->is_editable=Session::is_logined();
 
-$page->error_return_url=APP_ROOT_REL_PATH."horse_search";
+$page->error_return_url=APP_ROOT_REL_PATH."horse/search";
 $page->error_return_link_text="競走馬検索に戻る";
 $pdo= getPDO();
 
