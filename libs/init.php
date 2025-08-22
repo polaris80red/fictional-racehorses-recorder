@@ -71,6 +71,7 @@ require_once __DIR__.'/Class/EnvConfigInitializer.php';
     return;
 })();
 date_default_timezone_set("Asia/Tokyo");
+define('PROCESS_STARTED_AT',(new DateTime())->format('Y-m-d H:i:s'));
 
 ELog::setExportDir(LOG_DIR_PATH,LOG_FILE_PREFIX);
 Elog::setLogLevel(LOG_LEVEL);
