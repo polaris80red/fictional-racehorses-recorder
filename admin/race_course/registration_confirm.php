@@ -13,14 +13,16 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'race_course_id',FILTER_VALIDATE_INT);
-$race_course=new RaceCourse();
+$race_course=new RaceCourseRow();
 if($id>0){
-    $race_course->getDataById($pdo,$id);
+    $check_race_course=RaceCourse::getById($pdo,$id);
+    $race_course->id=$id;
 }
 $race_course->unique_name=filter_input(INPUT_POST,'unique_name');
 $race_course->short_name=filter_input(INPUT_POST,'short_name');
 $race_course->short_name_m=filter_input(INPUT_POST,'short_name_m');
 $race_course->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
+$race_course->sort_priority=filter_input(INPUT_POST,'sort_priority');
 $race_course->sort_number=filter_input(INPUT_POST,'sort_number');
 if($race_course->sort_number===''){
     $race_course->sort_number=null;
@@ -31,7 +33,7 @@ $race_course->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BO
 
 $error_exists=false;
 do{
-    if($id>0 && !$race_course->record_exists){
+    if($id>0 && $check_race_course===false){
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
     }
@@ -96,6 +98,10 @@ if($id>0){
 <tr>
     <th>短縮名2</th>
     <td><?php HTPrint::HiddenAndText('short_name_m',$race_course->short_name_m); ?></td>
+</tr>
+<tr>
+    <th>表示順優先度</th>
+    <td><?php HTPrint::HiddenAndText('sort_priority',$race_course->sort_priority); ?></td>
 </tr>
 <tr>
     <th>表示順補正</th>

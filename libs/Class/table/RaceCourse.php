@@ -13,7 +13,7 @@ class RaceCourse extends Table{
         'short_name',
         'short_name_m',
     ];
-    protected const DEFAULT_ORDER_BY ='`sort_number` IS NULL, `sort_number` ASC, `id` ASC';
+    protected const DEFAULT_ORDER_BY ='`sort_priority` DESC, `sort_number` IS NULL, `sort_number` ASC, `id` ASC';
     public const ROW_CLASS = RaceCourseRow::class;
 
     public $id                  =0;
@@ -28,6 +28,13 @@ class RaceCourse extends Table{
         if(!is_null($pdo)&& $key>0){
             $this->getDataById($pdo,$key);
         }
+    }
+    public static function getById(PDO $pdo, $id, $pdo_param_mode=PDO::PARAM_STR){
+        $result = self::getByUniqueKey($pdo,'id',$id,PDO::PARAM_INT);
+        if($result==false){
+            return false;
+        }
+        return (new (static::ROW_CLASS))->setFromArray($result);
     }
     public function getDataById(PDO $pdo, int $id){
         $this->id = $id;

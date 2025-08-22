@@ -30,7 +30,7 @@ $race_course = $race_course_table->getPage($pdo,$search_page,$show_disabled);
     tr.disabled { background-color: #EEE; }
     td.select_box_disabled { background-color: #EEE; }
 
-    td.col_sort_number { text-align: right; }
+    td.col_id, td.col_sort_priority, td.col_sort_number { text-align: right; }
     td a { text-decoration: none; }
 </style>
 </head>
@@ -54,6 +54,7 @@ $next_tag  =new MkTagA("[次へ]",($race_course_table->has_next_page?('?'.$url_p
     <th>キー名</th>
     <th>略名</th>
     <th>略名2<br>(出馬表向け)</th>
+    <th>表示順<br>優先度</th>
     <th>表示順<br>補正</th>
     <th>セレクト<br>表示</th>
     <th>論理削除<br><?=(new MkTagA('表示切替',"?show_disabled=".($show_disabled?'0':'1')));?></th>
@@ -64,10 +65,11 @@ $next_tag  =new MkTagA("[次へ]",($race_course_table->has_next_page?('?'.$url_p
 <?php
     $url="./form.php?id={$row->id}";
 ?>
-    <td><?php print $row->id; ?></td>
+    <td class="col_id"><?php print $row->id; ?></td>
     <td><?php print_h($row->unique_name); ?></td>
     <td><?php print $row->short_name; ?></td>
     <td><?php print $row->short_name_m; ?></td>
+    <td class="col_sort_priority"><?php print $row->sort_priority; ?></td>
     <td class="col_sort_number"><?php print $row->sort_number; ?></td>
     <td class="<?=$row->show_in_select_box?'':'select_box_disabled'?>"><?php print $row->show_in_select_box?'表示':'非表示'; ?></td>
     <td><?php print $row->is_enabled?'有効':'無効化中'; ?></td>

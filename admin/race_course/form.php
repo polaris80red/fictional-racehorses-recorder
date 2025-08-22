@@ -14,17 +14,20 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 $pdo=getPDO();
 $input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 $input_name=filter_input(INPUT_GET,'name');
-$race_course=new RaceCourse();
 $s_setting=new Setting(false);
 if($input_id>0){
-    $race_course->getDataById($pdo,$input_id);
-    if($race_course->record_exists){
+    $race_course=RaceCourse::getById($pdo,$input_id);
+    if($race_course!==false){
         $page->title.="（編集）";
     }else{
-        $race_course->id=0;
+        $input_id=0;
     }
-}else if($input_name){
-    $race_course->unique_name=$input_name;
+}
+if($input_id==0){
+    $race_course=new RaceCourseRow();
+    if($input_name){
+        $race_course->unique_name=$input_name;
+    }
 }
 
 ?><!DOCTYPE html>
@@ -61,7 +64,7 @@ if($input_id>0){
 </tr>
 <tr>
     <th rowspan="2">キー名称</th>
-    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?php print $race_course->unique_name; ?>"<?=(($race_course->record_exists||$input_name)?' readonly':'')?> required></td>
+    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?php print $race_course->unique_name; ?>"<?=(($race_course->id||$input_name)?' readonly':'')?> required></td>
 </tr>
 <tr>
     <td>レースの競馬場名が<br>有効な競馬場マスタの上記に一致すると<br>表示順や略名での表示を適用します</td></tr>
@@ -76,10 +79,13 @@ if($input_id>0){
 <tr>
     <td>出馬表等用の国名1文字でない略称</td>
 </tr>
-
 <tr>
-    <th>表示順</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?php print $race_course->sort_number; ?>" placeholder="昇順"></td>
+    <th>表示順優先度</th>
+    <td class="in_input"><input type="number" name="sort_priority" value="<?php print $race_course->sort_priority; ?>" placeholder="降順"></td>
+</tr>
+<tr>
+    <th>表示順補正</th>
+    <td class="in_input"><input type="number" name="sort_number" value="<?php print $race_course->sort_number; ?>" placeholder="同優先度内昇順"></td>
 </tr>
 <tr>
     <th>プルダウンに表示</th>
@@ -109,7 +115,7 @@ if($input_id>0){
 <tr><td colspan="2" style="text-align: right;"><input type="submit" value="登録内容確認"></td></tr>
 </table>
 </form>
-<?php if($race_course->record_exists): ?>
+<?php if($race_course->id): ?>
 <hr>
 <div style="text-align: right;">
 ※ キー名称はレース側の競馬場も一括更新するため専用画面で変更してください<br>

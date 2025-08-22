@@ -2,6 +2,7 @@
 class RaceCourseRow extends TableRow {
     public const INT_COLUMNS=[
         'id',
+        'sort_priority',
         'sort_number',
         'show_in_select_box',
         'is_enabled',
@@ -15,6 +16,7 @@ class RaceCourseRow extends TableRow {
     public $unique_name;
     public $short_name;
     public $short_name_m;
+    public $sort_priority;
     public $sort_number;
     public $show_in_select_box=1;
     public $is_enabled=1;

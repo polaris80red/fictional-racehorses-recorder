@@ -12,16 +12,23 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_POST,'race_course_id',FILTER_VALIDATE_INT);
-$race_course=new RaceCourse();
-if($input_id>0){
-    $race_course->getDataById($pdo,$input_id);
+$id=filter_input(INPUT_POST,'race_course_id',FILTER_VALIDATE_INT);
+$race_course=new RaceCourseRow();
+if($id>0){
+    $check_race_course=RaceCourse::getById($pdo,$id);
+    $race_course->id=$id;
 }
 $race_course->unique_name=filter_input(INPUT_POST,'unique_name');
 $race_course->short_name=filter_input(INPUT_POST,'short_name');
 $race_course->short_name_m=filter_input(INPUT_POST,'short_name_m');
-$race_course->sort_number=intOrNull(filter_input(INPUT_POST,'sort_number'));
 $race_course->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
+$race_course->sort_priority=filter_input(INPUT_POST,'sort_priority');
+$race_course->sort_number=filter_input(INPUT_POST,'sort_number');
+if($race_course->sort_number===''){
+    $race_course->sort_number=null;
+}else{
+    $race_course->sort_number=(int)$race_course->sort_number;
+}
 $race_course->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
 $error_exists=false;
@@ -32,7 +39,7 @@ do{
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
-    if($input_id>0 && !$race_course->record_exists){
+    if($id>0 && $check_race_course===false){
         $error_exists=true;
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定ID '{$input_id}' が指定されていますが該当する{$base_title}がありません");
@@ -53,15 +60,15 @@ if($error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($race_course->record_exists){
+if($check_race_course!=false){
     // 編集モード
-    $result = $race_course->UpdateExec($pdo);
+    $result = RaceCourse::UpdateFromRowObj($pdo,$race_course);
     if($result){
         redirect_exit("./list.php");
     }
 }else{
     // 新規登録モード
-    $result = $race_course->InsertExec($pdo);
+    $result = RaceCourse::InsertFromRowObj($pdo,$race_course);
     if($result){
         redirect_exit("./list.php");
     }
