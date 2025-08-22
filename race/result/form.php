@@ -243,7 +243,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
 </tr>
 <tr>
     <th>正規日付</th>
-    <td class="in_input"><input type="text" id="race_date_picker" name="date" value="<?php echo $race->date; ?>" onchange="setYM();setWeekSelect();getWeekNum();"></td>
+    <td class="in_input"><input type="text" id="race_date_picker" name="date" value="<?php echo $race->date; ?>" onchange="setYM();setWeekSelect();getWeekNum();clearElmVal('*[name=year_select]');"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=date]');"></td>
 </tr>
 <tr>
@@ -257,7 +257,21 @@ $grades=RaceGrade::getForSelectbox($pdo);
 <tr>
     <th>年月</th>
     <td class="in_input">
-        <input type="number" name="year" class="required" style="width:5em;" value="<?php echo $race->year; ?>" required>年
+        <select name="year_select" style="width:6em;" onchange="clearElmVal('*[name=year]');">
+        <?php
+            $year_min=$setting->select_zero_year - $setting->year_select_min_diff;
+            $year_max=$setting->select_zero_year + $setting->year_select_max_diff;
+            echo '<option value="">年選択</option>'."\n";
+            $year_option_exists=false;
+            for($i=$year_min; $i<=$year_max; $i++){
+                if($i==$race->year){ $year_option_exists=true; }
+                echo '<option value="'.$i,'"'.(($i==$race->year)?' selected ':'').'>';
+                echo $setting->getYearSpecialFormat($i);
+                echo '</option>'."\n";
+            }
+        ?></select>
+        ／ 
+        <input type="number" name="year" style="width:5em;" value="<?php echo $race->year; ?>" onchange="clearElmVal('*[name=year_select]');" placeholder="年手入力">年
         <select name="month" class="required" onchange="setWeekSelect();" required>
     <option value="">未選択</option>
     <?php
@@ -265,9 +279,9 @@ $grades=RaceGrade::getForSelectbox($pdo);
         $selected= $i==$race->month?" selected":"";
         echo "<option value=\"{$i}\" {$selected}>{$i}月</option>\n";
     }
-    ?></select>月
+    ?></select>
     </td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=year]');clearElmVal('*[name=month]');"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=year_select]');clearElmVal('*[name=year]');clearElmVal('*[name=month]');"></td>
 </tr>
 <tr><?php $weeks=RaceWeek::getAll($pdo); ?>
     <th>週</th>

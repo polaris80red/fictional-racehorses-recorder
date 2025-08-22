@@ -130,7 +130,7 @@ class RaceResults extends Table{
             $datetime=new dateTime($this->date);
         }
         $this->is_tmp_date=filter_input(INPUT_POST,'is_tmp_date');
-        $this->year=filter_input(INPUT_POST,'year');
+        $this->year=filter_input(INPUT_POST,'year')?:filter_input(INPUT_POST,'year_select');
         if(empty($this->year)){
             if($datetime!==null){
                 $this->year=$datetime->format('Y');

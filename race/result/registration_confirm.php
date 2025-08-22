@@ -128,9 +128,9 @@ if($race->setDataByPost()==false){
     <td><?php print $race->is_tmp_date?'はい':'いいえ'; ?><?php HTPrint::Hidden('is_tmp_date',$race->is_tmp_date) ?></td>
 </tr>
 <tr>
-    <th>日付</th>
+    <th>年月</th>
     <td>
-        <?php echo $race->year; ?>年<?php echo $race->month; ?>月
+        <?=$setting->getYearSpecialFormat($race->year);?><?php echo $race->month; ?>月
         <?php HTPrint::Hidden('year',$race->year) ?>
         <?php HTPrint::Hidden('month',$race->month) ?>
     </td>
