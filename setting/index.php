@@ -41,6 +41,7 @@ $story_list=WorldStory::getAll($pdo);
 <a href="<?php print $page->to_app_root_path ?>admin/world/list.php">[ワールド管理]</a>
 <a href="<?php print $page->to_app_root_path ?>admin/world_story/list.php">[ストーリー設定管理]</a>
 <a href="<?php print $page->to_app_root_path ?>admin/themes/list.php">[テーマ設定管理]</a>
+<hr>
 <?php endif; ?>
 <form action="./execute.php" method="post" id="setting">
 <table class="setting">
