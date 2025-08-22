@@ -15,6 +15,11 @@ $pdo=getPDO();
 $input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 $input_name=filter_input(INPUT_GET,'name');
 
+if($input_id>52 || $input_id<1){
+    header('Location: ./list.php');
+    exit;
+}
+
 $s_setting=new Setting(false);
 if($input_id>0){
     $form_item=RaceWeek::getById($pdo,$input_id);

@@ -44,6 +44,11 @@ $race_category_age = $race_category_age_table->getPage($pdo,$search_page,true);
 </header>
 <main id="content">
 <hr class="no-css-fallback">
+<form action="./form.php" method="get">
+    第<input name="id" type="number" value="" style="width: 4em;">週
+    <input type="submit" value="IDで直接開く">
+</form>
+<hr>
 <?php
 $url_param =new UrlParams(['show_disabled'=>$show_disabled]);
 $first_tag =new MkTagA("[最初]",($race_category_age_table->current_page>2?('?'.$url_param->toString(['page'=>1])):''));
