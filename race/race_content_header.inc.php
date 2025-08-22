@@ -72,16 +72,13 @@ if(
     $age_name=$age_name_row->name??'';
 }
 echo " ".($race->age?:$age_name);
-$race_sex_name=RaceCategorySex::getShortNameById($pdo,$race->sex_category_id);
-// 年齢形式がウマ娘の場合は牝限のみティアラ路線表記
+$race_category_sex=RaceCategorySex::getById($pdo,$race->sex_category_id);
+$race_sex_name=$race_category_sex->short_name_3??'';
+// 年齢形式がウマ娘の場合は変換
 if(
     $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME||
     $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME_S){
-    if($race_sex_name ==="牝"){
-        $race_sex_name="ティアラ";
-    }else{
-        $race_sex_name ="";
-    }
+        $race_sex_name=$race_category_sex->umm_category;
 }
 if($race_sex_name!==''){
     echo "（{$race_sex_name}）";

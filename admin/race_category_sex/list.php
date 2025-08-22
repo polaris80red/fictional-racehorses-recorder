@@ -57,6 +57,7 @@ $next_tag  =new MkTagA("[次へ]",($race_category_table->has_next_page?('?'.$url
     <th>ID</th>
     <th>名称</th>
     <th>3字名</th>
+    <th>擬人化用</th>
     <th>表示順<br>補正</th>
     <th>論理削除</th>
     <th></th>
@@ -69,6 +70,7 @@ $next_tag  =new MkTagA("[次へ]",($race_category_table->has_next_page?('?'.$url
     <td class="col_id"><?=h($row->id);?></td>
     <td class="col_name"><?=h($row->name);?></td>
     <td class=""><?=h($row->short_name_3);?></td>
+    <td class=""><?=h($row->umm_category);?></td>
     <td class="col_sort_number"><?=h($row->sort_number);?></td>
     <td><?=h($row->is_enabled?'有効':'無効化中');?></td>
     <td><?php (new MkTagA('編集',"./form.php?id={$row->id}"))->print(); ?></td>

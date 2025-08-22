@@ -20,6 +20,7 @@ if($id>0){
 }
 $form_item->name=filter_input(INPUT_POST,'name');
 $form_item->short_name_3=filter_input(INPUT_POST,'short_name_3');
+$form_item->umm_category=filter_input(INPUT_POST,'umm_category');
 $form_item->sort_number=filter_input(INPUT_POST,'sort_number');
 if($form_item->sort_number===''){
     $form_item->sort_number=null;
@@ -77,6 +78,10 @@ if($id>0){
 <tr>
     <th>3字名</th>
     <td><?php HTPrint::HiddenAndText('short_name_3',$form_item->short_name_3); ?></td>
+</tr>
+<tr>
+    <th>擬人化用</th>
+    <td><?php HTPrint::HiddenAndText('umm_category',$form_item->umm_category); ?></td>
 </tr>
 <tr>
     <th>表示順補正</th>

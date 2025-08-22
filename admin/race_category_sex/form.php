@@ -72,6 +72,10 @@ if($input_id==0){
     <td class="in_input"><input type="text" name="short_name_3" value="<?php print $form_item->short_name_3; ?>"></td>
 </tr>
 <tr>
+    <th>擬人化用</th>
+    <td class="in_input"><input type="text" name="umm_category" value="<?php print $form_item->umm_category; ?>"></td>
+</tr>
+<tr>
     <th>表示順補正</th>
     <td class="in_input"><input type="number" name="sort_number" value="<?php print $form_item->sort_number; ?>" placeholder="昇順"></td>
 </tr>

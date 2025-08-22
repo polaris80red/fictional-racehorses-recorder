@@ -25,6 +25,7 @@ if($id>0){
 }
 $form_item->name=filter_input(INPUT_POST,'name');
 $form_item->short_name_3=filter_input(INPUT_POST,'short_name_3');
+$form_item->umm_category=filter_input(INPUT_POST,'umm_category');
 $form_item->sort_number=filter_input(INPUT_POST,'sort_number');
 if($form_item->sort_number===''){
     $form_item->sort_number=null;
