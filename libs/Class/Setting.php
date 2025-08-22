@@ -462,10 +462,10 @@ class Setting{
                 $birth_year_str=$birth_year+3;
                 break;
             case 2:
-                $birth_year_str=substr($birth_year+3,2);
+                $birth_year_str=substr(str_pad($birth_year+3,4,'0',STR_PAD_LEFT),2);
                 break;
             default:
-                $birth_year_str=$birth_year;
+                $birth_year_str=$this->getYearSpecialFormat($birth_year);
         }
         if($add_suffix){
             if($this->birth_year_mode==1||$this->birth_year_mode==2){
