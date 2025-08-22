@@ -235,8 +235,15 @@ class HorseSearch extends Search{
     public function SelectExec(PDO $pdo){
         $sql_parts=[];
         $where_parts=[];
-        $sql_parts[]='SELECT * FROM `'.Horse::TABLE.'`';
+        $sql_parts[]='SELECT * FROM `'.Horse::TABLE.'` AS h';
         $pre_bind=new StatementBinder();
+        if($this->search_text!=''){
+            $sql_parts[]='LEFT JOIN `'.HorseTag::TABLE.'` AS t';
+            $sql_parts[]='ON h.horse_id LIKE t.horse_id';
+
+            $where_parts[]='t.tag_text LIKE :tag';
+            $pre_bind->add(':tag', $this->search_text, PDO::PARAM_STR);
+        }
         if($this->keyword!=''){
             $where_parts[]='(`name_ja` LIKE :name_ja OR `name_en` LIKE :name_en)';
             $pre_bind->add(':name_ja', "%{$this->keyword}%", PDO::PARAM_STR);
@@ -268,27 +275,13 @@ class HorseSearch extends Search{
             $where_parts[]='`bms_name` LIKE :bms_name';
             $pre_bind->add(':bms_name', "%{$this->bms_name}%", PDO::PARAM_STR);
         }
-        if($this->search_text!=''){
-            $this->search_text=trim(str_replace(['　',','],' ',$this->search_text));
-            $search_texts=explode(' ',$this->search_text);
-            $search_text_parts=[];
-            foreach($search_texts as $key=>$word){
-                if($word===''){
-                    unset($search_texts[$key]);
-                    continue;
-                }
-                $search_text_parts[]="`search_text` LIKE :search_text_{$key}";
-                $pre_bind->add(":search_text_{$key}", "%{$word}%", PDO::PARAM_STR);
-            }
-            $where_parts[]="(".implode(' OR ',$search_text_parts).")";
-        }
         if(count($where_parts)>0){
             // 手動検索条件がある場合のみ固定の条件を追加して実行
             if($this->world_id>0){
                 $where_parts[]='`world_id` LIKE :world_id';
                 $pre_bind->add(':world_id', $this->world_id, PDO::PARAM_INT);
             }
-            $where_parts[]='`is_enabled` = 1';
+            $where_parts[]='h.is_enabled = 1';
             $sql_parts[]="WHERE ".implode(' AND ',$where_parts);
         }else{
             return false;
@@ -354,7 +347,7 @@ class HorseSearch extends Search{
             $params[]="母ID[".$this->mare_id."]";
         }
         if($this->search_text){
-            $params[]="追加検索ワード[".$this->search_text."]";
+            $params[]="検索タグ[".$this->search_text."]";
         }
         return implode(', ',$params);
     }
@@ -441,8 +434,8 @@ class HorseSearch extends Search{
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=mare_id]');"></td>
     </tr>
     <tr><td colspan="3" style="height: 6px;"></td></tr>
-    <tr><th>追加</th>
-        <td><input type="text" name="search_text" value="<?php print $this->search_text; ?>" placeholder="追加検索テキスト"></td>
+    <tr><th>検索タグ</th>
+        <td><input type="text" name="search_text" value="<?php print $this->search_text; ?>" placeholder="検索タグ"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=search_text]');"></td>
     </tr>
     <tr>

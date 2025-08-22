@@ -26,7 +26,6 @@ class Horse extends Table{
     public $is_sire_or_dam =0;
     public $meaning ='';
     public $note ='';
-    public $search_text ='';
     public $sort_number =null;
     public $is_enabled =1;
 
@@ -77,7 +76,6 @@ class Horse extends Table{
         $this->is_sire_or_dam = $result->is_sire_or_dam;
         $this->meaning = $result->meaning;
         $this->note = $result->note;
-        $this->search_text = $result->search_text;
         $this->sort_number = $result->sort_number;
         $this->is_enabled = $result->is_enabled;
 
@@ -118,8 +116,6 @@ class Horse extends Table{
         }
         $this->meaning=filter_input(INPUT_POST,'meaning');
         $this->note=filter_input(INPUT_POST,'note');
-        $search_texts=explodeAndTrim(filter_input(INPUT_POST,'search_text'));
-        $this->search_text=implode(' ',$search_texts);
         
         $this->sort_number=intOrNull(filter_input(INPUT_POST,'sort_number'));
         $this->is_enabled=filter_input(INPUT_POST,'is_enabled');
@@ -131,7 +127,7 @@ class Horse extends Table{
     public function InsertExec(PDO $pdo){
         $columns=['horse_id','world_id','name_ja','name_en','birth_year','sex','color'
         ,'affiliation_id','tc','training_country','is_affliationed_nar'
-        ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','search_text','sort_number','is_enabled'];
+        ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','sort_number','is_enabled'];
         $sql=SqlMake::InsertSql(self::TABLE,$columns);
 
         if($this->horse_id==''){
@@ -165,7 +161,7 @@ class Horse extends Table{
     public function UpdateExec(PDO $pdo){
         $update_columns=['world_id','name_ja','name_en','birth_year','sex','color'
             ,'affiliation_id','tc','training_country','is_affliationed_nar'
-            ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','search_text','sort_number','is_enabled'];
+            ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','sort_number','is_enabled'];
 
         $sql=SqlMake::UpdateSqlWhereRaw(self::TABLE,$update_columns, "`horse_id` LIKE :horse_id");
 

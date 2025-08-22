@@ -46,12 +46,16 @@ if(!$is_edit_mode){
 }
 $pdo->beginTransaction();
 try{
-    // テーブル1つのみ・trancate実行可能性があるためbeginTransactionを行わない。
     if($is_edit_mode){
         $horse->UpdateExec($pdo);
     }else{
         $horse->InsertExec($pdo);
     }
+
+    // タグの登録更新処理
+    $horse_tags=HorseTag::TagsStrToArray(filter_input(INPUT_POST,'horse_tags'));
+    (new HorseTag($pdo))->updateHorseTags($horse->horse_id,$horse_tags,PROCESS_STARTED_AT);
+
     $pdo->commit();
     redirect_exit("{$page->to_app_root_path}horse/?horse_id={$horse->horse_id}");
 }catch(Exception $e){

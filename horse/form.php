@@ -223,10 +223,6 @@ if(count($affiliation_list)>0){
     <th>備考</th>
     <td class="in_input"><textarea name="note" style="width: 95%; height: 5em;"><?php echo $horse->note; ?></textarea></td>
 </tr>
-<tr>
-    <th>追加検索</th>
-    <td class="in_input"><textarea name="search_text" style="width: 95%; height: 5em;"><?php echo $horse->search_text; ?></textarea></td>
-</tr>
 <!--<tr>
     <th>表示順補正</th>
     <td class="in_input"><input type="number" name="sort_number" value="<?php echo $horse->sort_number; ?>"></td>
@@ -237,6 +233,13 @@ if(count($affiliation_list)>0){
     <label><?php HTPrint::Radio("is_enabled",1,$horse->is_enabled);?>有効</label>
     <label><?php HTPrint::Radio("is_enabled",0,$horse->is_enabled);?>削除</label>
 </tr>-->
+<?php $horse_tags=(new HorseTag($pdo))->getTagNames($horse->horse_id); ?>
+<tr>
+    <th>検索タグ<br>(改行や空白区切り)</th>
+    <td class="in_input">
+        <textarea name="horse_tags" style="width: 95%; height: 8em;"><?=implode("\n",$horse_tags);?></textarea>
+    </td>
+</tr>
 </table>
 <?php HTPrint::Hidden("sort_number",$horse->sort_number); ?>
 <?php HTPrint::Hidden("is_enabled",$horse->is_enabled); ?>

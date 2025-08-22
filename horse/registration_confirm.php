@@ -197,14 +197,6 @@ th{
     <th>備考</th>
     <td class="in_input"><textarea name='note' readonly><?php print $horse->note; ?></textarea></td>
 </tr>
-<tr>
-    <th>追加検索</th>
-    <td><?php
-        $search_texts=explodeAndTrim($horse->search_text);
-        print implode("<br>\n",$search_texts);
-        HTPrint::Hidden('search_text',implode(" ",$search_texts));
-    ?></td>
-</tr>
 <!--<tr>
     <th>表示順補正</th>
     <td><?php HTPrint::HiddenAndText('sort_number',$horse->sort_number) ?></td>
@@ -216,6 +208,13 @@ th{
         HTPrint::Hidden('is_enabled',$horse->is_enabled);
     ?></td>
 </tr>-->
+<?php
+$horse_tags=HorseTag::TagsStrToArray(filter_input(INPUT_POST,'horse_tags'));
+?>
+<tr>
+    <th>検索タグ</th>
+    <td><?=nl2br(implode("\n",$horse_tags));?><?php HTPrint::Hidden('horse_tags',urldecode(implode(' ',$horse_tags))); ?></td>
+</tr>
 </table>
 <?php HTPrint::Hidden("sort_number",$horse->sort_number); ?>
 <?php HTPrint::Hidden("is_enabled",$horse->is_enabled); ?>

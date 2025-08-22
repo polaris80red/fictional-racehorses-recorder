@@ -317,7 +317,7 @@ foreach ($race_history as $data) {
     $date_str=$setting->getRaceListDate([
         'year'=>$data['year'],
         'month'=>$month,
-        'day'=>$month,$day,
+        'day'=>$day,
         'turn'=>$data['umm_month_turn'],
         'age'=>$data['year']-$horse->birth_year]);
     $url = '';
@@ -460,20 +460,16 @@ $(function() {
 });
 </script>
 <?php endif; ?>
-<?php if($horse->search_text!=''):?>
+<?php $horse_tags=(new HorseTag($pdo))->getTagNames($horse->horse_id); ?>
+<?php if(count($horse_tags)>0):?>
 <hr>
-<?php
+検索タグ：<?php
         $search_text_search=new HorseSearch();
-        $search_text=str_replace('　',' ',$horse->search_text);
-        $search_texts=explode(' ',$search_text);
         $links=new Imploader('　');
-        foreach($search_texts as $val){
-            if($val===''){
-                continue;
-            }
-            $search_text_search->search_text=$val;
+        foreach($horse_tags as $tag){
+            $search_text_search->search_text = $tag;
             $url ="{$page->to_horse_search_path}?".$search_text_search->getUrlParam();
-            $links->add("<a href=\"{$url}\">#{$val}</a>");
+            $links->add("<a href=\"{$url}\">#{$tag}</a>");
         }
         print($links);
 ?>
