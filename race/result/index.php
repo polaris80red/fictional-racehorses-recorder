@@ -311,20 +311,8 @@ $(function() {
 </script>
 <?php endif; ?>
 <hr>
-<a href="<?php echo $page->getRaceNameSearchUrl($race->race_name); ?>" style="">他年度の<?php echo $race->race_name; ?>を検索</a><br>
-関連レース：<?php
-$a_tag=new MkTagA("同日");
-if(!$race->is_tmp_date){
-    $a_tag->href($page->getDateRaceListUrl($race->date));
-}
-print $a_tag;
-$week=(new RaceWeek())->getById($pdo,$race->week_id);
-if($week!==false && !empty($week->id) && !empty($week->umm_month_turn)){
-    $urlparam="year={$race->year}&month={$week->month}&turn={$week->umm_month_turn}";
-    ?>｜<a href="<?php echo $page->to_app_root_path ?>race/list/in_week.php?<?php echo $urlparam; ?>" style="">同ターン</a><?php    
-}
-?>
-<br><?php
+<a href="<?php echo $page->getRaceNameSearchUrl($race->race_name); ?>" style="">他年度の<?php echo $race->race_name; ?>を検索</a>
+<?php
     if($registration_only_horse_is_exists||$show_registration_only){
         $a_tag=new MkTagA("特別登録のみの馬を".($show_registration_only?"非表示(現在:表示)":"表示(現在:非表示)")."");
         $a_tag->href("?race_id={$race_id}".($show_registration_only?'':"&show_registration_only=true"));
@@ -336,11 +324,20 @@ if($week!==false && !empty($week->id) && !empty($week->umm_month_turn)){
 <tr><th>名称</th><td><?php print_h($race->race_name); ?></td></tr>
 <tr><th>略名</th><td><?php print_h($race->race_short_name); ?></td></tr>
 <tr><th>補足</th><td style="min-width: 200px;"><?php print_h($race->caption); ?></td></tr>
-<?php if($page->is_editable): ?>
-<tr><th>正規日付</th><td><?php print_h($race->date.($race->is_tmp_date?'(仮)':'')); ?></td></tr>
+<?php if($race->date): ?>
+<tr>
+    <th>日付</th>
+    <?php
+    $a_tag=new MkTagA($race->date.($race->date&&$race->is_tmp_date?'(仮)':''));
+    if(!$race->is_tmp_date){
+        $a_tag->href($page->getDateRaceListUrl($race->date));
+    }
+    ?>
+    <td><?=$a_tag; ?></td></tr>
+<?php endif; ?>
 <?php if(!empty($race->week_id)): ?>
 <tr><th>ターン</th><td><?php
-    print $race->year."年｜";
+    print $setting->getYearSpecialFormat($race->year)."｜";
     $week_url_param=new UrlParams(['year'=>$race->year,'week'=>$race->week_id]);
     $a_tag=new MkTagA("第{$race->week_id}週");
     $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$week_url_param);
@@ -351,7 +348,6 @@ if($week!==false && !empty($week->id) && !empty($week->umm_month_turn)){
     $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$turn_url_param);
     print $a_tag;
 ?></td></tr>
-<?php endif; ?>
 <?php endif; ?>
 <tr><th>備考</th><td><?php print(str_replace(["\r\n","\r","\n"],"<br>\n",h($race->note))); ?></td></tr>
 </table>
