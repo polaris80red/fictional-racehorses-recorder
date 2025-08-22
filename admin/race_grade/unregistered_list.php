@@ -65,7 +65,7 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
 <?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
 <table>
 <tr>
-    <th>競馬場名称</th>
+    <th>名称</th>
     <th colspan="2">リンク</th>
 </tr>
 <?php foreach($table_data as $row): ?>
