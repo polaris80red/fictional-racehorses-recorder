@@ -207,6 +207,13 @@ class HorseSearch extends Search{
         if($search_text!=''){ $search_text = trim($search_text); }
         $this->search_text=$search_text;
 
+        // キーワード検索で先頭に # を付与していた場合はタグ検索する
+        if(substr((string)$this->keyword,0,1)=='#'){
+            list($str)=explode(' ',$this->keyword);
+            $this->search_text=ltrim($str,'#');
+            $this->keyword='';
+        }
+
         if(isset($_GET['limit'])){
             $this->limit=filter_input(INPUT_GET,'limit');
         }
@@ -356,7 +363,7 @@ class HorseSearch extends Search{
      */
     public static function printSimpleForm($page){
         ?><form action="<?php echo $page->to_app_root_path."horse/search/";?>" method="get">
-        <input type="text" name="keyword" style="width:150px;height:1.5em;" value="" placeholder="馬名で検索">
+        <input type="text" name="keyword" style="width:180px;height:1.5em;" value="" placeholder="馬名で検索, 先頭#でタグ検索">
         <input type="submit" value="検索">
         <input type="hidden" name="executed_by_form" value="1">
         </form><?php
@@ -364,13 +371,13 @@ class HorseSearch extends Search{
     /**
      * 検索フォームをHTML出力
      */
-    public function printForm($page, $setting){
+    public function printForm($page, Setting $setting){
         ?>
 <form action="<?php echo $page->to_app_root_path."horse/search/";?>" method="get">
 <fieldset>
 <table class="horse_search">
     <tr><th>馬名</th>
-        <td><input type="text" name="keyword" style="width:200px;height:1.5em;" value="<?php print $this->keyword; ?>" placeholder="馬名"></td>
+        <td><input type="text" name="keyword" style="width:200px;height:1.5em;" value="<?php print $this->keyword; ?>" placeholder="馬名, 先頭#でタグ検索"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=keyword]');">　<input type="submit" value="検索実行"></td>
     </tr>
     <tr><th><?php
