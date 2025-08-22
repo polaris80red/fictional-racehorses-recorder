@@ -176,7 +176,7 @@ class Horse extends Table{
         $stmt->bindValue(":sort_number",$sort_number,PDO::PARAM_INT);
         $stmt=$this->BindValuesFromThis($stmt, [
             'horse_id','name_ja','name_en','color','tc','training_country',
-            'sire_id','sire_name','mare_id','mare_name','bms_name','meaning','note','search_text'
+            'sire_id','sire_name','mare_id','mare_name','bms_name','meaning','note'
         ],PDO::PARAM_STR);
         $stmt=$this->BindValuesFromThis($stmt, [
             'world_id','birth_year','sex','is_affliationed_nar','is_sire_or_dam','is_enabled'
