@@ -134,6 +134,22 @@ foreach($skin_list as $row){
     <td oncontextmenu="return false;"><input type="checkbox" name="save_target[theme_dir_name]" value="1"></td>
 </tr>
 <tr>
+    <th>レース検索：主催初期値</th>
+    <td colspan="2" style="text-align: right;" oncontextmenu="return false;">
+        <?php
+        $tag_h=new MkTagInput('hidden','','OFF');
+        $tag_c=new MkTagInput('checkbox','',1);
+        ?>
+        <?=$tag_h->name('race_search_org_jra');?>
+        <?=$tag_h->name('race_search_org_nar');?>
+        <?=$tag_h->name('race_search_org_other');?>
+        <label oncontextmenu="reset_and_checked('race_search_org_','jra');"><?=$tag_c->name('race_search_org_jra')->checked($setting->race_search_org_jra);?>中央　</label>
+        <label oncontextmenu="reset_and_checked('race_search_org_','nar');"><?=$tag_c->name('race_search_org_nar')->checked($setting->race_search_org_nar);?>地方　</label>
+        <label oncontextmenu="reset_and_checked('race_search_org_','other');"><?=$tag_c->name('race_search_org_other')->checked($setting->race_search_org_other);?>その他（海外）</label>
+    </td>
+    <td oncontextmenu="return false;"><input type="checkbox" name="save_target[race_search_org]" value="1"></td>
+</tr>
+<tr>
     <th>年度プルダウン等起点</th>
     <td><?php echo $setting->select_zero_year; ?></td>
     <td class="in_input"><input type="number" name="select_zero_year" placeholder="空でカウント起点使用" value="<?php echo $setting->select_zero_year; ?>"></td>
@@ -314,5 +330,6 @@ function save_check_tgl(mode=''){
   }
 }
 </script>
+<?php $page->printScriptLink('js/race_search_form.js'); ?>
 </body>
 </html>

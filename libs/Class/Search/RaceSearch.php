@@ -67,6 +67,10 @@ class RaceSearch extends Search{
         parent::setSetting($setting);
         $this->min_year=$setting->select_zero_year - $setting->year_select_min_diff;
         $this->max_year=$setting->select_zero_year + $setting->year_select_max_diff;
+
+        $this->show_organization_jra=$setting->race_search_org_jra;
+        $this->show_organization_nar=$setting->race_search_org_nar;
+        $this->show_organization_other=$setting->race_search_org_other;
         return $this;
     }
     public function setByUrl(){

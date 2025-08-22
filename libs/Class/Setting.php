@@ -13,6 +13,9 @@ class Setting{
     public $syutsuba_year;
     public $syutsuba_date;
     public $world_id;
+    public $race_search_org_jra;
+    public $race_search_org_nar;
+    public $race_search_org_other;
     public $theme_dir_name;
     public $hors_history_sort_is_desc;
     const PARAM_NAME_LIST=[
@@ -124,6 +127,9 @@ class Setting{
         $this->syutsuba_year=1;
         $this->syutsuba_date='mx';
         $this->world_id=2;
+        $this->race_search_org_jra=true;
+        $this->race_search_org_nar=false;
+        $this->race_search_org_other=false;
         $this->theme_dir_name='';
         $this->hors_history_sort_is_desc=0;
     }
@@ -203,6 +209,15 @@ class Setting{
         if(isset($input->theme_dir_name)){
             $this->theme_dir_name=filter_var($input->theme_dir_name);
         }
+        if(isset($input->race_search_org_jra)){
+            $this->race_search_org_jra=filter_var($input->race_search_org_jra,FILTER_VALIDATE_BOOL);
+        }
+        if(isset($input->race_search_org_nar)){
+            $this->race_search_org_nar=filter_var($input->race_search_org_nar,FILTER_VALIDATE_BOOL);
+        }
+        if(isset($input->race_search_org_other)){
+            $this->race_search_org_other=filter_var($input->race_search_org_other,FILTER_VALIDATE_BOOL);
+        }
         if(isset($input->hors_history_sort_is_desc)){
             $this->hors_history_sort_is_desc=filter_var($input->hors_history_sort_is_desc,FILTER_VALIDATE_INT);
         }
@@ -228,6 +243,9 @@ class Setting{
             'hors_history_sort_is_desc'=>$this->hors_history_sort_is_desc,
             'syutsuba_year'=>$this->syutsuba_year,
             'syutsuba_date'=>$this->syutsuba_date,
+            'race_search_org_jra'=>$this->race_search_org_jra,
+            'race_search_org_nar'=>$this->race_search_org_nar,
+            'race_search_org_other'=>$this->race_search_org_other,
         ];
         if($excludeIfNull){
             $setting=array_diff($setting,[null]);

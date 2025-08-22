@@ -7,7 +7,6 @@ $page->setSetting($setting);
 $page->title="設定実行結果";
 
 $pdo=getPDO();
-
 $setting->setByStdClass($_POST);
 $save_to_file=filter_input(INPUT_POST,'save_to_file');
 $story_id=filter_input(INPUT_POST,'story_id');
@@ -32,11 +31,17 @@ if($save_story_is_enabled && $save_story_id>0 && Session::is_logined()){
         $config_json_data=$setting->getSettingArray();
         if(isset($_POST['save_target']) && is_array($_POST['save_target'])){
             $diff_array=$_POST['save_target'];
-            // 上限下限の保存チェックボックスは共通なので比較用配列は差し替え
+            // 複数欄共通チェックボックスは比較用配列を差し替え
             if(!empty($diff_array['year_select_min_max_diff'])){
                 unset($diff_array['year_select_min_max_diff']);
                 $diff_array['year_select_max_diff']=1;
                 $diff_array['year_select_min_diff']=1;
+            }
+            if(!empty($diff_array['race_search_org'])){
+                unset($diff_array['race_search_org']);
+                $diff_array['race_search_org_jra']=1;
+                $diff_array['race_search_org_nar']=1;
+                $diff_array['race_search_org_other']=1;
             }
             $config_json_data=array_intersect_key($config_json_data,$diff_array);
         }
