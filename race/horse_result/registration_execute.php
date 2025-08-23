@@ -129,6 +129,54 @@ if($is_error!==0){
     echo "</div>";
 }
 ?>
+<?php if($is_error==0): ?>
+<h2>登録完了</h2>
+<hr>
+<div><?php
+$url_suffix='';
+$sp_result=RaceSpecialResults::getByUniqueName($pdo,$input->result_text);
+if($sp_result && $sp_result->is_registration_only){
+    $url_suffix = '&show_registration_only=true';
+}
+?>
+<a href="<?=$page->getRaceResultUrl($input->race_results_id).$url_suffix?>" style="font-weight: bold;">レース結果</a>
+｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek.php?race_id=<?=$input->race_results_id.$url_suffix?>">出走馬情報</a>
+｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek_sps.php?race_id=<?=$input->race_results_id?>">SP出馬表紹介文</a><br>
+<a href="<?=APP_ROOT_REL_PATH?>horse/?horse_id=<?=$input->horse_id.$url_suffix?>" style="font-weight: bold;">競走馬情報</a>
+</div>
+<hr>
+<div>
+<?php
+$race_result=new RaceResults($pdo,$input->race_results_id);
+?>
+<?php if($race_result->date!=''): ?>
+<?=(new MkTagA('同日のレース一覧',APP_ROOT_REL_PATH.'race/list/in_date.php?date='.urlencode($race_result->date)))?><br>
+<?php endif; ?>
+<?php
+$url_param=new UrlParams(['year'=>$race_result->year]);
+$url=APP_ROOT_REL_PATH.'race/list/in_week.php?';
+$week=new RaceYearWeek($race_result->year,$race_result->week_id);
+
+echo (new MkTagA('同週のレース一覧',$url.$url_param->toString(['year'=>$week->year,'week'=>$week->week])));
+$getNextWeekTag=function($link_text,&$week)use($url_param){
+    $url=APP_ROOT_REL_PATH.'race/list/in_week.php?';
+    $week->nextWeek();
+    return (new MkTagA($link_text,$url.$url_param->toString(['year'=>$week->year,'week'=>$week->week])))->__toString();
+};
+echo "｜".$getNextWeekTag('連闘',$week);
+for ($i=1; $i <=5; $i++) {
+    echo "｜".$getNextWeekTag("中{$i}週",$week);
+}
+?><br>
+<?php
+$week_row=RaceWeek::getById($pdo,$race_result->week_id);
+$ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_PAD_LEFT)."-01");
+?>
+<?=(new MkTagA('同月のレース一覧',$url.$url_param->toString(['month'=>$race_result->month])))?>
+｜<?=(new MkTagA('翌月',$url.$url_param->toString(['year'=>$ym_dt->modify('next month')->format('Y'),'month'=>$ym_dt->format('n')])))?>
+｜<?=(new MkTagA('翌々月',$url.$url_param->toString(['year'=>$ym_dt->modify('next month')->format('Y'),'month'=>$ym_dt->format('n')])))?>
+</div>
+<hr>
 <form action="" method="post">
 <input type="hidden" name="is_edit_mode" value="<?php echo ($is_edit_mode)?1:0; ?>">
 <table class="edit-form-table floatLeft" style="margin-right: 4px;">
@@ -232,22 +280,12 @@ switch($input->is_affliationed_nar){
 </tr>
 </table>
 </form>
-<div style="clear: both;"><?php
-$url_suffix='';
-$sp_result=RaceSpecialResults::getByUniqueName($pdo,$input->result_text);
-if($sp_result && $sp_result->is_registration_only){
-    $url_suffix = '&show_registration_only=true';
-}
-?>
-<a href="<?php echo $page->getRaceResultUrl($input->race_results_id).$url_suffix; ?>">レース結果</a>
-｜<a href="<?php echo APP_ROOT_REL_PATH ?>race/j_thisweek.php?race_id=<?php echo $input->race_results_id.$url_suffix;?>">出走馬情報</a>
-｜<a href="<?php echo APP_ROOT_REL_PATH ?>race/j_thisweek_sps.php?race_id=<?php echo $input->race_results_id;?>">SP出馬表</a><br>
-<a href="<?php echo APP_ROOT_REL_PATH ?>horse/?horse_id=<?php echo $input->horse_id.$url_suffix;?>">馬データ</a><br>
-</div>
+<div style="clear: both;"></div>
+<?php endif; ?>
 <hr class="no-css-fallback">
 </main>
 <footer>
-<?php $page->printFooterHomeLink(false); ?>
+<?php $page->printFooterHomeLink(); ?>
 </footer>
 </body>
 </html>
