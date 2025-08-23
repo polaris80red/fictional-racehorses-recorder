@@ -82,6 +82,7 @@ $sql=(function(){
     $horse_tbl=Horse::TABLE;
     $r_results_tbl=RaceResults::TABLE;
     $rr_detail_tbl=RaceResultDetail::TABLE;
+    $race_special_results_tbl=RaceSpecialResults::TABLE;
 
     $horse_s_columns=new SqlMakeSelectColumns(Horse::TABLE);
     $horse_s_columns->addColumnsByArray([
@@ -94,7 +95,8 @@ $sql=(function(){
     $sql_part_select_columns=implode(",\n",[
         "`det`.*",
         $horse_s_columns->get(true),
-        "`race`.*"
+        "`race`.*",
+        "`spr`.`is_registration_only`",
     ]);
      
     $sql=<<<END
@@ -105,12 +107,16 @@ $sql=(function(){
         ON `race`.`race_id`=`det`.`race_results_id`
     LEFT JOIN `{$horse_tbl}`
         ON `det`.`horse_id`=`{$horse_tbl}`.`horse_id`
+    LEFT JOIN `{$race_special_results_tbl}` as spr
+        ON `det`.result_text LIKE spr.unique_name AND spr.is_enabled=1
     WHERE `race_id`=:race_id
     ORDER BY
         `det`.`result_number` IS NULL,
         `det`.`result_number` ASC,
         `det`.`result_order` IS NULL,
         `det`.`result_order` ASC,
+        `spr`.`sort_number` IS NULL,
+        `spr`.`sort_number` ASC,
         `det`.`result_text` ASC;
     END;
     return $sql;

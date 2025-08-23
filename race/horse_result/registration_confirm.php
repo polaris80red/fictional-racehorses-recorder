@@ -229,19 +229,6 @@ switch($race_detail->is_affliationed_nar){
 ?><?php HTPrint::Hidden('is_affliationed_nar',$race_detail->is_affliationed_nar); ?></td>
 </tr>
 <tr>
-    <th>登録区分</th>
-    <td><?php
-switch($race_detail->is_registration_only){
-    case 0:
-        echo "通常出走";
-        break;
-    case 1:
-        echo "出走決定せず<br>(非当選・非抽選・回避)";
-        break;    
-}
-?><?php HTPrint::Hidden('is_registration_only',$race_detail->is_registration_only); ?></td>
-</tr>
-<tr>
     <th>未登録の前走</th>
     <td><?php HTPrint::HiddenAndText('non_registered_prev_race_number',$race_detail->non_registered_prev_race_number); ?></td>
 </tr>

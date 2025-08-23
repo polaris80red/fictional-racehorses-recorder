@@ -144,6 +144,7 @@ do{
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=result_text]');"></td>
 </tr>
+<tr><td colspan="2">取消・非当・非抽・回避は<br>レース結果や出馬表非表示</td></tr>
 <tr>
     <th>降着前入線順</th>
     <td class="in_input">
@@ -246,15 +247,6 @@ do{
     </td>
 </tr>
 <tr>
-    <th rowspan="2">登録区分</th>
-    <td colspan="2">
-    <?php $radio=new MkTagInputRadio("is_registration_only"); ?>
-    <label><?php $radio->value(0)->checkedIf($form_data->is_registration_only)->print(); ?>通常出走</label>
-    <label title="通常は結果画面や戦績画面に表示しない（特定の操作で表示）"><?php $radio->value(1)->checkedIf($form_data->is_registration_only)->print(); ?>出走決定せず</label>
-    </td>
-</tr>
-<tr><td colspan="2">※ 非当選・非抽選など用</td></tr>
-<tr>
     <th>未登録の前走</th>
     <td class="in_input"><input type="number" name="non_registered_prev_race_number" style="width: 3em;" value="<?php echo (int)$form_data->non_registered_prev_race_number; ?>">走</td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=non_registered_prev_race_number]');"></td>
@@ -319,7 +311,7 @@ do{
 <?php endif; ?>
 </table>
 <?php
-HTPrint::DataList('result_text_list',['中止','除外','取消','非当','非抽']);
+HTPrint::DataList('result_text_list',['中止','除外','取消','非当','非抽','回避']);
 HTPrint::DataList('horse_number_list',[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]);
 HTPrint::DataList('handicap_list',
     ['58','57','56','55','54'],

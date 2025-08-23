@@ -53,6 +53,7 @@ class HorseRaceHistory implements Iterator{
             $race_week_tbl=RaceWeek::TABLE;
             $grade_tbl=RaceGrade::TABLE;
             $course_mst_tbl=RaceCourse::TABLE;
+            $race_special_results_tbl=RaceSpecialResults::TABLE;
             $sql=<<<END
             SELECT
             `r`.`date`
@@ -64,7 +65,7 @@ class HorseRaceHistory implements Iterator{
             ,`RR_Detail`.`handicap`
             ,`RR_Detail`.`frame_number`
             ,`RR_Detail`.`favourite`
-            ,`RR_Detail`.`is_registration_only`
+            ,`spr`.`is_registration_only`
             ,`RR_Detail`.`non_registered_prev_race_number`
             ,`RR_Detail`.`jra_thisweek_horse_1`
             ,`RR_Detail`.`jra_thisweek_horse_2`
@@ -80,6 +81,7 @@ class HorseRaceHistory implements Iterator{
             LEFT JOIN `{$race_week_tbl}` AS w ON `r`.`week_id` = w.id
             LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.unique_name
             LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1
+            LEFT JOIN `{$race_special_results_tbl}` as spr ON `RR_Detail`.result_text LIKE spr.unique_name AND spr.is_enabled=1
             WHERE `RR_Detail`.`horse_id`=:horse_id
             ORDER BY
             `r`.`year` {$date_order},

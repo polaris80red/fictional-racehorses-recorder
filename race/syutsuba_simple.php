@@ -79,6 +79,7 @@ $sql=(function(){
     $horse_tbl=Horse::TABLE;
     $r_results_tbl=RaceResults::TABLE;
     $rr_detail_tbl=RaceResultDetail::TABLE;
+    $race_special_results_tbl=RaceSpecialResults::TABLE;
 
     $horse_s_columns=new SqlMakeSelectColumns(Horse::TABLE);
     $horse_s_columns->addColumnsByArray([
@@ -88,22 +89,26 @@ $sql=(function(){
     $horse_s_columns->addColumnAs('training_country','horse_training_country');
     $horse_s_columns->addColumnAs('is_affliationed_nar','horse_is_affliationed_nar');
     $sql_part_select_columns=implode(",\n",[
-        "`{$rr_detail_tbl}`.*",
+        "`det`.*",
         $horse_s_columns->get(true),
-        "`{$r_results_tbl}`.*"
+        "`race`.*",
+        "`spr`.`is_registration_only`",
     ]);
      
     $sql=<<<END
     SELECT
     {$sql_part_select_columns}
-    FROM `{$r_results_tbl}`
-    LEFT JOIN `{$rr_detail_tbl}`
-        ON `{$r_results_tbl}`.`race_id`=`{$rr_detail_tbl}`.`race_results_id`
+    FROM `{$r_results_tbl}` AS `race`
+    LEFT JOIN `{$rr_detail_tbl}` AS `det`
+        ON `race`.`race_id`=`det`.`race_results_id`
     LEFT JOIN `{$horse_tbl}`
-        ON `{$rr_detail_tbl}`.`horse_id`=`{$horse_tbl}`.`horse_id`
+        ON `det`.`horse_id`=`{$horse_tbl}`.`horse_id`
+    LEFT JOIN `{$race_special_results_tbl}` as spr
+        ON `det`.result_text LIKE spr.unique_name AND spr.is_enabled=1
     WHERE `race_id`=:race_id
     ORDER BY
-        IFNULL(`{$rr_detail_tbl}`.`horse_number`,99) ASC,
+        `det`.`horse_number` IS NULL,
+        `det`.`horse_number` ASC,
         `{$horse_tbl}`.`name_en` ASC;
     END;
     return $sql;

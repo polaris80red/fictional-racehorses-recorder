@@ -148,18 +148,6 @@ if($is_error!==0){
     <th>降着前入線順</th><td><?php echo $input->result_before_demotion?:''; ?></td>
 </tr>
 <tr>
-    <th>登録区分</th><td><?php
-switch($input->is_registration_only){
-    case 1:
-        echo "通常";
-        break;
-    case 2:
-        echo "出走決定前まで";
-        break;    
-}
-?></td>
-</tr>
-<tr>
     <th>枠番</th><td><?php echo ifZero2Empty($input->frame_number); ?>枠</td>
 </tr>
 <tr>
@@ -182,9 +170,6 @@ switch($input->is_registration_only){
 </tr>
 <tr>
     <th>単勝人気</th><td><?php echo ifZero2Empty($input->favourite); ?></td>
-</tr>
-<tr>
-    <th>収得賞金</th><td><?php echo $input->syuutoku; ?>万円</td>
 </tr>
 <tr>
     <th>性別</th>
@@ -245,7 +230,11 @@ switch($input->is_affliationed_nar){
 </table>
 </form>
 <div style="clear: both;"><?php
-$url_suffix = $input->is_registration_only?'&show_registration_only=true':'';
+$url_suffix='';
+$sp_result=RaceSpecialResults::getByUniqueName($pdo,$input->result_text);
+if($sp_result && $sp_result->is_registration_only){
+    $url_suffix = '&show_registration_only=true';
+}
 ?>
 <a href="<?php echo $page->getRaceResultUrl($input->race_results_id).$url_suffix; ?>">レース結果</a>
 ｜<a href="<?php echo APP_ROOT_REL_PATH ?>race/j_thisweek.php?race_id=<?php echo $input->race_results_id.$url_suffix;?>">出走馬情報</a>

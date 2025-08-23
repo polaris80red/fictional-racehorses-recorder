@@ -5,6 +5,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         $horse_tbl=Horse::TABLE;
         $race_results_tbl=RaceResults::TABLE;
         $race_results_detail_tbl=RaceResultDetail::TABLE;
+        $race_special_results_tbl=RaceSpecialResults::TABLE;
         $sql=<<<END
         SELECT
         `RR_Detail`.*
@@ -20,10 +21,12 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`Horse`.`bms_name`
         ,`Horse`.`color`
         ,`RResults`.*
+        ,`spr`.`is_registration_only`
         FROM `{$race_results_tbl}` AS `RResults`
         LEFT JOIN `{$race_results_detail_tbl}` AS `RR_Detail`
             ON `RResults`.`race_id`=`RR_Detail`.`race_results_id`
         LEFT JOIN `{$horse_tbl}` AS `Horse` ON `RR_Detail`.`horse_id`=`Horse`.`horse_id`
+        LEFT JOIN `{$race_special_results_tbl}` as spr ON `RR_Detail`.result_text LIKE spr.unique_name AND spr.is_enabled=1
         WHERE `RResults`.`race_id`=:race_id
         ORDER BY
         IFNULL(`RR_Detail`.`frame_number`,32) ASC,
