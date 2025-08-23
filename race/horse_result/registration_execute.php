@@ -53,32 +53,30 @@ do{
         $pdo,
         $input->race_results_id,
         $input->horse_id);
-
+    $horse=new Horse();
+    $horse->setDataById($pdo, $input->horse_id);
+    $race=new RaceResults($pdo, $input->race_results_id);
+    if(!$race->record_exists){
+        $is_error=1;
+        $error_msgs[]="存在しないレースID";
+        break;
+    }
+    if(!$horse->record_exists){
+        $is_error=1;
+        $error_msgs[]="存在しない競走馬ID";
+        break;
+    }
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
             $is_error=1;
             $error_msgs[]="対象のレース結果が存在しません。";
             break;
         }
-
         $input->UpdateExec($pdo);
     }else{
         if($old_horse_result->record_exists){
             $is_error=1;
             $error_msgs[]="結果が既に存在します";
-            break;
-        }
-        $horse=new Horse();
-        $horse->setDataById($pdo, $input->horse_id);
-        $race=new RaceResults($pdo, $input->race_results_id);
-        if(!$race->record_exists){
-            $is_error=1;
-            $error_msgs[]="存在しないレースID";
-            break;
-        }
-        if(!$horse->record_exists){
-            $is_error=1;
-            $error_msgs[]="存在しない競走馬ID";
             break;
         }
         $pdo->beginTransaction();
@@ -99,6 +97,11 @@ do{
             $page->printCommonErrorPage();
         }
     }
+    // 最後に開いた馬を結果登録した馬に更新
+    $session->latest_horse=[
+        'id'=>$input->horse_id,
+        'name'=>$horse->name_ja?:$horse->name_en,
+    ];
 }while(false);
 
 ?><!DOCTYPE html>
