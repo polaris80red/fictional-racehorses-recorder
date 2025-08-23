@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
+defineAppRootRelPath(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -169,6 +170,12 @@ $func_weekday_class=function($weekday_num){
 </tr>
 </table>
 <?php
+$new_race_url_param= (new UrlParams())->set('date',$date);
+$a_tag=new MkTagA("同日のレースを登録",APP_ROOT_REL_PATH."race/result/form.php?".$new_race_url_param);
+if(Session::is_logined()):
+?>[ <?=$a_tag;?> ]<?php
+endif;
+
 $table_data=[];
 // 1～3着馬を取得
 $race123horseGetter=new Race123HorseGetter($pdo);

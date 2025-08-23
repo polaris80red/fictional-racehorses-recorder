@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
+defineAppRootRelPath(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -154,11 +155,12 @@ $prev_year=$year;
 $next_year=$year;
 
 $prev_turn=$next_turn=$umm_month_turn===2?1:2;
-?>
-<?php if($umm_month_turn!=0): ?>
-<?php
-$prev_month= ($umm_month_turn===1||$umm_month_turn==0)?$month-1:$month;
-$next_month= ($umm_month_turn===2||$umm_month_turn==0)?$month+1:$month;
+$prev_month=$month-1;
+$next_month=$month+1;
+if($umm_month_turn!=0){
+    $prev_month= ($umm_month_turn===1||$umm_month_turn==0)?$month-1:$month;
+    $next_month= ($umm_month_turn===2||$umm_month_turn==0)?$month+1:$month;
+}
 if($prev_month<=0){
     $prev_year=$year-1;
     $prev_month=12;
@@ -168,6 +170,7 @@ if($next_month>=13){
     $next_month=1;
 }
 ?>
+<?php if($umm_month_turn!=0): ?>
 <?php
     $url_param_str=$url_params->toString(['year'=>$prev_year,'month'=>$prev_month,'turn'=>$prev_turn]);
     echo (new MkTagA('前ターン',"?{$url_param_str}"));
@@ -244,8 +247,16 @@ foreach($table_data as $data){
                 break;
         }
         echo "</td></tr>\n";
-    }else if($prev_week_id!==0 && $prev_week_id != $data['week_id']){
-        echo "<tr><td colspan=\"9\" style=\"height:0.2em;background-color:#EEE;\">";
+    }
+    if($prev_week_id != $data['week_id']){
+        $new_race_url_param= new UrlParams();
+        $new_race_url_param->set('year',$year)->set('week_id',$data['week_id']);
+        echo "<tr><td colspan=\"9\" style=\"background-color:#EEE;text-align:left;\">";
+        if(Session::is_logined()){
+            echo "　<a href=\"".APP_ROOT_REL_PATH."race/result/form.php?{$new_race_url_param}\">この週のレースを登録（第{$data['week_id']}週）</a>";
+        }else{
+            echo "第{$data['week_id']}週";
+        }
         echo "</td></tr>\n";
     }
     $prev_date=$data['date'];

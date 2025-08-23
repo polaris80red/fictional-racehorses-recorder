@@ -7,12 +7,12 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果情報登録";
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::is_logined()){ $page->exitToHome(); }  
+$pdo= getPDO();
 
 $race_id=(string)filter_input(INPUT_GET,'race_id');
 $is_edit_mode=filter_input(INPUT_GET,'edit_mode')?1:0;
-$race= new RaceResults();   
-$pdo= getPDO();
+$race= new RaceResults(); 
 if($race_id===''){
     $is_edit_mode=0;
     $race->world_id=$setting->world_id;
@@ -21,10 +21,25 @@ if($race_id===''){
     $race->setDataById($pdo,$race_id);
 }
 if($is_edit_mode==0 && $race_id==''){
-    // 引き継ぎ新規の場合
+    // 新規登録かつID指定引継ぎではない場合
     $race->date=(string)filter_input(INPUT_GET,'date');
-    $race->year=(string)filter_input(INPUT_GET,'year');
-    $race->month=(string)filter_input(INPUT_GET,'month');
+    if($race->date!==''){
+        //正規日付が指定されている場合は正規日付を基に年月を設定する
+        $datetime=new DateTime($race->date);
+        $race->year=$datetime->format('Y');
+        $race->month=$datetime->format('m');
+        $race->week_id=getWeekByDate($race->date);
+    }else{
+        $race->year=(string)filter_input(INPUT_GET,'year');
+        $race->month=(string)filter_input(INPUT_GET,'month');
+        $race->week_id=filter_input(INPUT_GET,'week_id',FILTER_VALIDATE_INT)?:0;
+        // 月が指定されていない場合は週の設定値を優先する
+        if($race->month=='' && $race->week_id){
+            $week_obj=RaceWeek::getById($pdo,$race->week_id);
+            $race->month=$week_obj?$week_obj->month:'';
+        }
+    }
+
     $race->race_course_name=(string)filter_input(INPUT_GET,'race_course_name');
 }
 #echo '<pre>'.print_r($race,true).'</pre>'; exit;
@@ -271,7 +286,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
             }
         ?></select>
         ／ 
-        <input type="number" name="year" style="width:5em;" value="<?php echo $race->year; ?>" onchange="clearElmVal('*[name=year_select]');" placeholder="年手入力">年
+        <input type="number" name="year" style="width:5em;" value="<?=$year_option_exists?'':$race->year;?>" onchange="clearElmVal('*[name=year_select]');" placeholder="年手入力">年
         <select name="month" class="required" onchange="setWeekSelect();" required>
     <option value="">未選択</option>
     <?php
@@ -359,7 +374,7 @@ HTPrint::DataList('distance_list',[
 <hr class="no-css-fallback">
 </main>
 <footer>
-<?php $page->printFooterHomeLink(); ?>
+<?php $page->printFooterHomeLink(false); ?>
 </footer>
 <script>
 $("#race_date_picker").datepicker({
@@ -440,7 +455,6 @@ function setWeekSelect(){
     $('label.race_week').css('display', 'none');
     $('label.race_week_m' + month).css('display', '');
 }
-//setWeekSelect();
 $(document).ready(function() {
     // 判定用配列（キーは文字列）
     const grade = {
@@ -510,6 +524,7 @@ $(document).ready(function() {
         }
         checkRequiredElm("[name='race_name']");
     });
+    setWeekSelect();
 });
 </script>
 </body>
