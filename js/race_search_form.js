@@ -90,3 +90,14 @@ function reset_and_checked(reset_target_prefix,enable_target_suffix){
     $('input[type=checkbox][name^="'+reset_target_prefix+'"]').prop("checked", false);
     $('input[type=checkbox][name="'+reset_target_prefix+enable_target_suffix+'"]').prop("checked", true);
 }
+/**
+ * name1で指定したチェックボックスがオンならname2で指定したチェックボックスをオフにする
+ */
+function uncheck_if_checked(name1, name2) {
+  var $target1 = $('input[type=checkbox][name="'+name1+'"]');
+  var $target2 = $('input[type=checkbox][name="'+name2+'"]');
+
+  if ($target1.is(':checked')) {
+    $target2.prop('checked', false);
+  }
+}

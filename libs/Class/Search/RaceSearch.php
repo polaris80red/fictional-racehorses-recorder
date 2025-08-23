@@ -647,10 +647,10 @@ $year_max=$this->setting->select_zero_year + $this->setting->year_select_max_dif
 $cbox=MkTagInput::Checkbox('',1)->class('age_btn');
 $a_flags=new FlagChecker($this->age);
 ?>
-<label oncontextmenu="reset_and_checked('age[','20]');"><?php print $cbox->name('age[20]')->checked($a_flags->hasFlag(self::Age20)); ?>2歳</label>
-<label oncontextmenu="reset_and_checked('age[','30]');"><?php print $cbox->name('age[30]')->checked($a_flags->hasFlag(self::Age30)); ?>3歳</label>
-<label oncontextmenu="reset_and_checked('age[','31]');"><?php print $cbox->name('age[31]')->checked($a_flags->hasFlag(self::Age31)); ?>3上</label>
-<label oncontextmenu="reset_and_checked('age[','41]');"><?php print $cbox->name('age[41]')->checked($a_flags->hasFlag(self::Age41)); ?>4上</label>
+<label oncontextmenu="reset_and_checked('age[','20]');uncheck_if_checked('age[20]','is_generation_search');" onchange="uncheck_if_checked('age[20]','is_generation_search');"><?php print $cbox->name('age[20]')->checked($a_flags->hasFlag(self::Age20)); ?>2歳</label>
+<label oncontextmenu="reset_and_checked('age[','30]');uncheck_if_checked('age[30]','is_generation_search');" onchange="uncheck_if_checked('age[30]','is_generation_search');"><?php print $cbox->name('age[30]')->checked($a_flags->hasFlag(self::Age30)); ?>3歳</label>
+<label oncontextmenu="reset_and_checked('age[','31]');uncheck_if_checked('age[31]','is_generation_search');" onchange="uncheck_if_checked('age[31]','is_generation_search');"><?php print $cbox->name('age[31]')->checked($a_flags->hasFlag(self::Age31)); ?>3上</label>
+<label oncontextmenu="reset_and_checked('age[','41]');uncheck_if_checked('age[41]','is_generation_search');" onchange="uncheck_if_checked('age[41]','is_generation_search');"><?php print $cbox->name('age[41]')->checked($a_flags->hasFlag(self::Age41)); ?>4上</label>
 ）</span>
 <span style="white-space:nowrap;" oncontextmenu="return false;">
 <input class="age_preset_3" type="button" value="3歳世代">
