@@ -77,6 +77,10 @@ if(!$session->is_logined()){
         <td>正確な日付無しのレース開催週の設定を調整します</td>
     </tr>
     <tr>
+        <td><?=(new MkTagA("レース特殊結果マスタ閲覧",APP_ROOT_REL_PATH.'admin/race_special_results/list.php'));?></td>
+        <td></td>
+    </tr>
+    <tr>
         <td colspan="2"></td>
     </tr>
     <tr>
