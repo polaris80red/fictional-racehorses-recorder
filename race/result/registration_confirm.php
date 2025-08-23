@@ -12,6 +12,7 @@ $csrf_token=new FormCsrfToken();
 
 $race_id=(string)filter_input(INPUT_POST,'race_id');
 $is_edit_mode=filter_input(INPUT_POST,'edit_mode')?1:0;
+$horse_id=(string)filter_input(INPUT_POST,'horse_id')?:'';// 登録後に馬戦績登録時
 # 対象取得
 $race= new RaceResults();
 $pdo= getPDO();
@@ -164,6 +165,12 @@ if($race->setDataByPost()==false){
         <?php HTPrint::Hidden('is_enabled',$race->is_enabled) ?>
     </td>
 </tr>
+<?php if($horse_id && !$is_edit_mode): ?>
+<tr>
+    <th>登録後に<br>個別結果登録</th>
+    <td><?=(MkTagInput::Hidden('horse_id',$horse_id));?><?=h($horse_id)?></td>
+</tr>
+<?php endif; ?>
 </table>
 <?php HTPrint::Hidden('sort_number',$race->sort_number) ?>
 <hr>

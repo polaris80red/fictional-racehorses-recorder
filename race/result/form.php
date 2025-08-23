@@ -12,6 +12,7 @@ $pdo= getPDO();
 
 $race_id=(string)filter_input(INPUT_GET,'race_id');
 $is_edit_mode=filter_input(INPUT_GET,'edit_mode')?1:0;
+$horse_id=(string)filter_input(INPUT_GET,'horse_id')?:'';// 登録後に馬戦績登録時
 $race= new RaceResults(); 
 if($race_id===''){
     $is_edit_mode=0;
@@ -347,6 +348,12 @@ $grades=RaceGrade::getForSelectbox($pdo);
     </td>
     <td></td>
 </tr>
+<?php if($horse_id && !$is_edit_mode): ?>
+<tr>
+    <th>登録後に<br>個別結果登録</th>
+    <td><?=(MkTagInput::Hidden('horse_id',$horse_id));?><?=h($horse_id)?></td>
+</tr>
+<?php endif; ?>
 </table>
 <?php if(!$is_edit_mode && $race->is_enabled==1){HTPrint::Hidden('is_enabled',$race->is_enabled);} ?>
 <?php HTPrint::Hidden('sort_number',$race->sort_number); ?>
@@ -365,12 +372,12 @@ HTPrint::DataList('distance_list',[
     '1000','1200','1400','1600','1800','2000','2200','2400','2600','3000','3200','3600','1500','1150'
     ]);
 ?>
-<?php if($is_edit_mode){ ?>
+<?php if($is_edit_mode): ?>
 <form action="./delete/" method="post" style="text-align:right;">
 <input type="hidden" name="race_id" value="<?php echo $race_id; ?>">
 <input type="submit" value="レース結果データ削除確認" style="color:red;">
 </form>
-<?php } ?>
+<?php endif; ?>
 <hr class="no-css-fallback">
 </main>
 <footer>

@@ -11,6 +11,7 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $race_id=(string)filter_input(INPUT_POST,'race_id');
 $is_edit_mode=filter_input(INPUT_POST,'edit_mode')?1:0;
+$horse_id=(string)filter_input(INPUT_POST,'horse_id')?:'';// 登録後に馬戦績登録時
 
 if(!(new FormCsrfToken())->isValid()){
     Elog::error($page->title.": CSRFトークンエラー");
@@ -38,6 +39,7 @@ if($race->setDataByPost()==false){
 if(!$is_edit_mode){
     (new SurrogateKeyGenerator($pdo))->autoReset();
 }
+$redirect_url=$page->getRaceResultUrl($race->race_id);
 $pdo->beginTransaction();
 try{
     // テーブル1つのみ・trancate実行可能性があるためbeginTransactionを行わない。
@@ -45,9 +47,14 @@ try{
         $race->UpdateExec($pdo);
     }else{
         $race->InsertExec($pdo);
+        if($horse_id!==''){
+            // 新規登録かつ競走馬ID指定の場合は個別結果登録画面に転送
+            $urlparam=new UrlParams(['horse_id'=>$horse_id,'race_id'=>$race->race_id]);
+            $redirect_url=APP_ROOT_REL_PATH.'race/horse_result/form.php?'.$urlparam;
+        }
     }
     $pdo->commit();
-    redirect_exit($page->getRaceResultUrl($race->race_id));
+    redirect_exit($redirect_url);
 }catch(Exception $e){
     $pdo->rollBack();
     $page->addErrorMsg("Exception:".print_r($e,true));

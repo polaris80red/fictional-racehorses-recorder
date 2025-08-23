@@ -411,7 +411,7 @@ foreach ($race_history as $data) {
 <div class="edit_menu" style="display:none;">
 <hr>
 <?php $url=APP_ROOT_REL_PATH."horse/form.php?horse_id={$horse->horse_id}"; ?>
-<a href="<?php echo $url; ?>">[この馬の情報を編集]</a>
+<a href="<?=$url;?>">[この馬の情報を編集]</a>
 　
 <?php
     $url=APP_ROOT_REL_PATH."race/horse_result/form.php?horse_id={$horse->horse_id}";
@@ -430,18 +430,37 @@ foreach ($race_history as $data) {
     $a_tag=new MkTagA('[最後に開いたレースにこの馬の戦績を追加]');
     $a_tag->href($url);
     if($horse->birth_year==null){
-        $a_tag->href('')->setStyle('text-decoration','line-through');;
+        $a_tag->href('')->setStyle('text-decoration','line-through');
         $a_tag->title("生年仮登録馬のため戦績追加不可");
     }
     if($latest_race_is_exists===true){
-        $a_tag->href('')->setStyle('text-decoration','line-through');;
+        $a_tag->href('')->setStyle('text-decoration','line-through');
         $a_tag->title("最後に開いたレースには既に登録されています");
     }
-    print $a_tag."<br>\n";
+    print $a_tag;
 ?>
 <?php $url=$page->getRaceResultUrl($session->latest_race['id']); ?>
-（<a href="<?php echo $url; ?>"><?php echo $session->latest_race['year']." ".($session->latest_race['name']?:$session->latest_race['id']); ?></a>）
+（<a href="<?=$url;?>"><?=$session->latest_race['year']." ".($session->latest_race['name']?:$session->latest_race['id']); ?></a>）
 <?php endif; ?>
+<?php
+if($horse->birth_year!==null){
+    echo "<hr>";
+    $url_param=new UrlParams(['horse_id'=>$horse->horse_id]);
+    $url=APP_ROOT_REL_PATH."race/result/form.php?";
+    echo (new MkTagA('[レースを新規登録してからこの馬の戦績を追加]'))->href($url.$url_param)."<br>\n";
+    $url_param->set('year',$horse->birth_year+2);
+    echo (new MkTagA('[2歳年]'))->href($url.$url_param);
+    echo "　";
+    $url_param->set('year',$horse->birth_year+3);
+    echo (new MkTagA('[3歳年]'))->href($url.$url_param);
+    echo "　";
+    $url_param->set('year',$horse->birth_year+4);
+    echo (new MkTagA('[4歳年]'))->href($url.$url_param);
+    echo "　";
+    $url_param->set('year',$horse->birth_year+5);
+    echo (new MkTagA('[5歳年]'))->href($url.$url_param);
+}
+?>
 <hr>
 <a href="./update_horse_id/form.php?horse_id=<?php echo $horse->horse_id; ?>">[競走馬ID修正]</a>
 </div><!-- /.edit_menu -->
