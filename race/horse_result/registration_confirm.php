@@ -139,7 +139,7 @@ if($horse->name_ja){
     <td><?php HTPrint::HiddenAndText('result_number',$race_detail->result_number?:''); ?>着</td>
 </tr>
 <tr>
-    <th>着順表示順</th>
+    <th>表示順補正</th>
     <td><?php HTPrint::HiddenAndText('result_order',$race_detail->result_order?:''); ?></td>
 </tr>
 <tr>

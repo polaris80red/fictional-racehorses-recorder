@@ -90,15 +90,8 @@ class RaceResultDetail extends Table{
         if($this->result_number==0){
             $this->result_number = (int)filter_input($input_type,'result_number_select');
         }
-
-        $result_order=(int)filter_input($input_type,'result_order',FILTER_VALIDATE_INT);
-        if($result_order==0){
-            $result_order=(int)filter_input($input_type,'result_order_select',FILTER_VALIDATE_INT);
-        }
-        if($result_order==0){
-            $result_order=$this->result_number;
-        }
-        $this->result_order = $result_order;
+        if($this->result_number==0){ $this->result_number==null; }
+        $this->result_order=filter_input($input_type,'result_order',FILTER_VALIDATE_INT)?:null;
 
         $this->result_before_demotion = (int)filter_input($input_type,'result_before_demotion');
         $this->result_text = filter_input($input_type,'result_text');

@@ -12,15 +12,18 @@ class Race123HorseGetter{
         $horse_table=Horse::TABLE;
         $sql=<<<END
         SELECT
-        `ResultDetail`.`horse_id`,`name_ja`,`name_en`,`result_number`
-        FROM `{$results_detail_table}` AS `ResultDetail`
+        `detail`.`horse_id`,`name_ja`,`name_en`,`result_number`
+        FROM `{$results_detail_table}` AS `detail`
         LEFT JOIN `{$horse_table}` AS `Horse`
-        ON `Horse`.`horse_id`= `ResultDetail`.`horse_id`
+        ON `Horse`.`horse_id`= `detail`.`horse_id`
         WHERE
         `race_results_id` LIKE :race_id
         AND
         `result_number`<=3
-        ORDER BY `result_number` ASC, `result_order` ASC;
+        ORDER BY
+        `result_number` ASC,
+        `result_order` IS NULL,
+        `result_order` ASC;
         END;
         $this->stmt = $pdo->prepare($sql);
         $this->stmt->bindParam(':race_id', $this->race_id, PDO::PARAM_STR);

@@ -114,7 +114,7 @@ do{
 <tr>
     <th>着順</th>
     <td class="in_input">
-    <select name="result_number_select" style="width:5em;" onchange="clearElmVal('*[name=result_number]');">
+    <select name="result_number_select" style="width:5em;" onchange="clearElmVal('*[name=result_number]');clearElmVal('*[name=result_order]');">
     <?php
         echo '<option value=""></option>'."\n";
         $selected_option_exists=false;
@@ -125,29 +125,18 @@ do{
             echo '</option>'."\n";
         }
     ?></select>／
-    <input type="number" name="result_number" style="width:3em;" onchange="clearElmVal('*[name=result_number_select]');" value="<?php echo $selected_option_exists?'':$form_data->result_number; ?>">着
+    <input type="number" name="result_number" style="width:3em;" onchange="clearElmVal('*[name=result_number_select]');clearElmVal('*[name=result_order]');" value="<?php echo $selected_option_exists?'':$form_data->result_number; ?>">着
     </td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=result_number]');clearElmVal('*[name=result_number_select]');"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=result_number]');clearElmVal('*[name=result_number_select]');clearElmVal('*[name=result_order]');"></td>
 </tr>
 <tr>
-    <th rowspan="2">着順表示順</th>
+    <th>表示順補正</th>
     <td class="in_input">
-        <select name="result_order_select" style="width:5em;" onchange="clearElmVal('*[name=result_order]');">
-        <?php
-            echo '<option value=""></option>'."\n";
-            $selected_option_exists=false;
-            for($i=1; $i<=18; $i++){
-                if($i==$form_data->result_order){ $selected_option_exists=true; }
-                echo '<option value="'.$i,'"'.(($i==$form_data->result_order)?' selected ':'').'>';
-                echo $i."番目";
-                echo '</option>'."\n";
-            }
-        ?></select>／
-        <input type="number" name="result_order" style="width: 3em;" onchange="clearElmVal('*[name=result_order_select]');" value="<?php echo $selected_option_exists?'':$form_data->result_order; ?>">
+        <input type="number" name="result_order" style="width: 3em;" value="<?=$form_data->result_order;?>">
+        同着順はこの値で昇順
     </td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=result_order]');clearElmVal('*[name=result_order_select]');"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=result_order]');"></td>
 </tr>
-<tr><td colspan="2">同着など調整用／空で着順と同じ値</td></tr>
 <tr>
     <th>特殊結果</th>
     <td class="in_input">

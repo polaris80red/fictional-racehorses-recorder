@@ -9,16 +9,18 @@ class RaceResults1stOr2ndHourseGetter{
         $results_detail_table=RaceResultDetail::TABLE;
         $sql=<<<END
 SELECT
-`results`.`horse_id`
-,`name_ja`
-,`name_en`
+`results`.`horse_id`,`name_ja`,`name_en`
 FROM `{$results_detail_table}` AS `results`
-LEFT JOIN `{$horse_table}` AS `horse`
-ON `horse`.`horse_id`= `results`.`horse_id`
-WHERE `race_results_id` LIKE :race_id 
-AND `result_number`<=:result_num 
-AND `results`.`horse_id` NOT LIKE :horse_id
-ORDER BY `result_number` ASC;
+    LEFT JOIN `{$horse_table}` AS `horse`
+        ON `horse`.`horse_id`= `results`.`horse_id`
+WHERE
+    `race_results_id` LIKE :race_id 
+    AND `result_number`<=:result_num 
+    AND `results`.`horse_id` NOT LIKE :horse_id
+ORDER BY
+    `result_number` ASC,
+    `result_order` IS NULL,
+    `result_order` ASC;
 END;
         $this->stmt = $pdo->prepare($sql);
     }

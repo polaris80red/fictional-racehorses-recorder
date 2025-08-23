@@ -92,23 +92,26 @@ $sql=(function(){
     $horse_s_columns->addColumnAs('training_country','horse_training_country');
     $horse_s_columns->addColumnAs('is_affliationed_nar','horse_is_affliationed_nar');
     $sql_part_select_columns=implode(",\n",[
-        "`{$rr_detail_tbl}`.*",
+        "`det`.*",
         $horse_s_columns->get(true),
-        "`{$r_results_tbl}`.*"
+        "`race`.*"
     ]);
      
     $sql=<<<END
     SELECT
     {$sql_part_select_columns}
-    FROM `{$r_results_tbl}`
-    LEFT JOIN `{$rr_detail_tbl}`
-        ON `{$r_results_tbl}`.`race_id`=`{$rr_detail_tbl}`.`race_results_id`
+    FROM `{$r_results_tbl}` AS `race`
+    LEFT JOIN `{$rr_detail_tbl}` AS `det`
+        ON `race`.`race_id`=`det`.`race_results_id`
     LEFT JOIN `{$horse_tbl}`
-        ON `{$rr_detail_tbl}`.`horse_id`=`{$horse_tbl}`.`horse_id`
+        ON `det`.`horse_id`=`{$horse_tbl}`.`horse_id`
     WHERE `race_id`=:race_id
     ORDER BY
-        IFNULL(`{$rr_detail_tbl}`.`result_order`,100) ASC,
-        `{$rr_detail_tbl}`.`result_text` ASC;
+        `det`.`result_number` IS NULL,
+        `det`.`result_number` ASC,
+        `det`.`result_order` IS NULL,
+        `det`.`result_order` ASC,
+        `det`.`result_text` ASC;
     END;
     return $sql;
 })();

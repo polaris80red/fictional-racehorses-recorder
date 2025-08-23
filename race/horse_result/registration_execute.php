@@ -27,6 +27,7 @@ $input->setDataByForm(INPUT_POST);
 do{
     if(!(new FormCsrfToken())->isValid()){
         Elog::error($page->title.": CSRFトークンエラー");
+        $is_error=1;
         $error_msgs[]="登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）";
         break;
     }
@@ -55,6 +56,7 @@ do{
 
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
+            $is_error=1;
             $error_msgs[]="対象のレース結果が存在しません。";
             break;
         }
@@ -118,7 +120,8 @@ do{
 <hr class="no-css-fallback">
 <?php
 if($is_error!==0){
-    echo '<div style="border:solid 1px red;">';
+    echo '<div style="border:solid 1px red;padding:8px;margin-bottom:8px;">';
+    echo "<h2>処理中止</h2>";
     echo implode("<br>\n",$error_msgs);
     echo "</div>";
 }
@@ -136,7 +139,7 @@ if($is_error!==0){
     <th>着順</th><td><?php echo $input->result_number; ?>着</td>
 </tr>
 <tr>
-    <th>着順表示順</th><td><?php echo $input->result_order; ?></td>
+    <th>表示順補正</th><td><?php echo $input->result_order; ?></td>
 </tr>
 <tr>
     <th>特殊結果</th><td><?php echo $input->result_text; ?></td>
