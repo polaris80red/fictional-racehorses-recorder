@@ -177,6 +177,9 @@ if($next_month>=13){
 ?>｜<?php
     $url_param_str=$url_params->toString(['year'=>$next_year,'month'=>$next_month,'turn'=>$next_turn]);
     echo (new MkTagA('次ターン',"?{$url_param_str}"));
+    if(Session::is_logined()){
+        echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/result/form.php?year={$year}&month={$month}\">この月のレースを登録</a> ]";
+    }
 ?>
 <?php elseif($week_id==0): ?>
 <?php
@@ -185,6 +188,9 @@ if($next_month>=13){
 ?>｜<?php
     $url_param_str=$url_params->toString(['year'=>$next_year,'month'=>$next_month]);
     echo (new MkTagA('次月',"?{$url_param_str}"));
+    if(Session::is_logined()){
+        echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/result/form.php?year={$year}&month={$month}\">この月のレースを登録</a> ]";
+    }
 ?>
 <?php elseif($week_id!=0): ?>
 <?php
@@ -203,6 +209,13 @@ if($next_month>=13){
 ?>｜<?php
     $url_param_str=$url_params->toString(['year'=>$next_year,'week'=>$next_week]);
     echo (new MkTagA('次週',"?{$url_param_str}"));
+?>
+<?php
+if(Session::is_logined()){
+    $week_obj=RaceWeek::getById($pdo,$week_id);
+    $week_name=$week_obj?$week_obj->name:'';
+    echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/result/form.php?year={$year}&week_id={$week_id}\">この週のレースを登録</a> ]";
+}
 ?>
 <?php endif; ?>
 <?php
@@ -252,10 +265,12 @@ foreach($table_data as $data){
         $new_race_url_param= new UrlParams();
         $new_race_url_param->set('year',$year)->set('week_id',$data['week_id']);
         echo "<tr><td colspan=\"9\" style=\"background-color:#EEE;text-align:left;\">";
+        $week_obj=RaceWeek::getById($pdo,$data['week_id']);
+        $week_name=$week_obj?$week_obj->name:'';
         if(Session::is_logined()){
-            echo "　<a href=\"".APP_ROOT_REL_PATH."race/result/form.php?{$new_race_url_param}\">この週のレースを登録（第{$data['week_id']}週）</a>";
+            echo "　<a href=\"".APP_ROOT_REL_PATH."race/result/form.php?{$new_race_url_param}\">この週のレースを登録｜第{$data['week_id']}週（{$week_name}）</a>";
         }else{
-            echo "第{$data['week_id']}週";
+            echo "第{$data['week_id']}週（{$week_name}）";
         }
         echo "</td></tr>\n";
     }
