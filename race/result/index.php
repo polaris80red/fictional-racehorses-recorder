@@ -65,6 +65,14 @@ $turn=$week_data->umm_month_turn??null;
 .race_results td:nth-child(10){ text-align:center; }
 .race_info th{ background-color: #EEEEEE; }
 .disabled_row{ background-color: #dddddd; }
+
+.edit_menu table { margin-top: 8px;}
+.edit_menu table a:link {text-decoration: none;}
+.edit_menu table a:link:hover {
+    text-decoration: underline;
+    background-color: #CCFFFF;
+}
+.edit_menu table {font-size: 0.9em;}
 </style>
 </head>
 <body>
@@ -271,39 +279,64 @@ if($data['result_text']!=''){
 <div class="edit_menu" style="display:none; border:solid 1px #00FFFF; margin-top:0.2em;">
 <hr> 
 <input type="hidden" id="edit_menu_states" value="0">
-<?php $url="{$page->to_app_root_path}race/result/form.php?race_id={$race->race_id}&edit_mode=1"; ?>
-<a href="<?php echo $url; ?>">[このレースの情報を編集]</a>
-　
-<?php $url="{$page->to_app_root_path}race/horse_result/form.php?race_id={$race->race_id}"; ?>
-<a href="<?php echo $url; ?>">[このレースの戦績を追加]</a>
-<?php if(!empty($session->latest_horse['id'])): ?>
-<hr>
+<table>
+    <tr>
+<?php $url=APP_ROOT_REL_PATH."race/result/form.php?race_id={$race->race_id}&edit_mode=1"; ?>
+        <td><a href="<?=$url?>">このレースの情報を編集</a></td>
+<?php $url=APP_ROOT_REL_PATH."race/horse_result/form.php?race_id={$race->race_id}"; ?>
+        <td><a href="<?=$url?>">このレースに戦績を追加</a></td>
+        <td><a href="<?=APP_ROOT_REL_PATH?>race/update_race_result_id/form.php?race_id=<?php echo $race->race_id; ?>&edit_mode=1">レースID修正</a></td>
+    </tr>
+    <tr>
+        <td colspan="2">
 <?php
-$url="{$page->to_app_root_path}race/horse_result/form.php?horse_id={$session->latest_horse['id']}&race_id={$race->race_id}";
-$a_tag=new MkTagA('[最後に開いた馬をこのレースに追加]');
+$a_tag=new MkTagA('最後に開いた馬をこのレースに追加');
 $latest_horse=new Horse();
-$latest_horse->setDataById($pdo,$session->latest_horse['id']);
-if($latest_horse->birth_year!==null){
-    $a_tag->href($url);
-}else{
-    $a_tag->title("生年仮登録馬のため戦績追加不可")->setStyle('text-decoration','line-through');;
+if(!empty($session->latest_horse['id'])){
+    $latest_horse->setDataById($pdo,$session->latest_horse['id']);
 }
-print $a_tag."<br>";
+if($latest_horse->record_exists){
+    if($latest_horse->birth_year!==null){
+        $url=APP_ROOT_REL_PATH."race/horse_result/form.php?horse_id={$session->latest_horse['id']}&race_id={$race->race_id}";
+        $a_tag->href($url);
+    }else{
+       $a_tag->title("生年仮登録馬のため戦績追加不可")->setStyle('text-decoration','line-through');
+    }
+}
+print $a_tag;
 ?>
-<?php $url="{$page->to_app_root_path}horse/?horse_id={$session->latest_horse['id']}"; ?>
-（<a href="<?php echo $url; ?>"><?php echo ($session->latest_horse['name']?:$session->latest_horse['id']) ?></a>）
-<?php endif; ?>
-<hr>
-<a href="<?php echo $page->to_app_root_path; ?>race/result/form.php?race_id=<?php echo $race->race_id; ?>&edit_mode=0">[コピーして新規登録]</a><?php
-    $addparams=implode('&',[
-        "date=".$race->date,
-        "year=".$race->year,
-        "month=".$race->month,
-        "race_course_name=".$race->race_course_name
-    ])
-?>　<a href="<?php echo $page->to_app_root_path; ?>race/result/form.php?<?php echo $addparams; ?>">[同日同場で新規登録]</a><br>
-<hr>
-<a href="<?php echo $page->to_app_root_path; ?>race/update_race_result_id/form.php?race_id=<?php echo $race->race_id; ?>&edit_mode=1">[レースID修正]</a>
+        </td>
+        <td>
+<?php $url=APP_ROOT_REL_PATH."horse/?horse_id={$session->latest_horse['id']}"; ?>
+<a href="<?=$url;?>"><?=($session->latest_horse['name']?:$session->latest_horse['id'])?></a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+<a href="<?=APP_ROOT_REL_PATH?>race/result/form.php?race_id=<?=$race->race_id;?>&edit_mode=0">コピーして新規登録</a>
+        </td>
+        <td>
+<?php
+    $a_tag=new MkTagA('同日同場で新規登録');
+    if($race->date!=''){
+        $a_tag->setLinkText('同日同場で新規登録');
+        $urlparam=new UrlParams([
+            'date'=>$race->date,
+            'race_course_name'=>$race->race_course_name]);
+        $a_tag->href(APP_ROOT_REL_PATH."race/result/form.php?".$urlparam);
+    }else{
+        $a_tag->setLinkText('同週同場で新規登録');
+        $urlparam=new UrlParams([
+            'year'=>$race->year,
+            'week_id'=>$race->week_id,
+            'race_course_name'=>$race->race_course_name]);
+        $a_tag->href(APP_ROOT_REL_PATH."race/result/form.php?".$urlparam);
+    }
+    $a_tag->print();
+    ?></td>
+        <td></td>
+    </tr>
+</table>
 </div>
 <script>
 $(function() {
