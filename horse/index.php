@@ -502,8 +502,35 @@ if($horse->birth_year!==null){
         </td>
     </tr>
 <?php if($horse->birth_year!==null):?>
+    <tr><td colspan="3"></tr>
     <tr>
-        <td>レース検索</td>
+        <td rowspan="2">レース検索（重賞）</td>
+        <td colspan="2" style="text-align: right;">
+<?php
+if($horse->birth_year!==null){
+    $url_param=new UrlParams(['session_is_not_update'=>1,'grade_g1'=>1,'grade_g2'=>1,'grade_g3'=>1]);
+    $url=APP_ROOT_REL_PATH."race/list/?";
+    echo (new MkTagA('[2歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+2,'age[20]'=>1]));
+    echo "　".(new MkTagA('[3歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+3,'age[30]'=>1,'age[31]'=>1]));
+    echo "　".(new MkTagA('[4歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+4,'age[31]'=>1,'age[41]'=>1]));
+    echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+5,'age[31]'=>1,'age[41]'=>1]));
+}
+?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align: right;">
+<?php
+if($horse->birth_year!==null){
+    $url_param=new UrlParams(['session_is_not_update'=>1,'grade_g1'=>1,'grade_g2'=>1,'grade_g3'=>1,'show_organization_jra'=>1]);
+    $url=APP_ROOT_REL_PATH."race/list/?";
+    echo (new MkTagA('[世代基準・中央重賞]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+3,'is_generation_search'=>1]));
+}
+?>
+        </td>
+    </tr>
+    <tr>
+        <td>レース検索（すべて）</td>
         <td colspan="2" style="text-align: right;">
 <?php
 if($horse->birth_year!==null){
