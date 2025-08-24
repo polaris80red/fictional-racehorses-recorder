@@ -58,12 +58,10 @@ $next_tag  =new MkTagA("[次へ]",($race_sp_results_table->has_next_page?('?'.$u
     <th>キー名</th>
     <th>名称</th>
     <th>2字略</th>
-    <th>区分</th>
+    <th>結果表示区分</th>
     <th>表示順<br>補正</th>
     <th>論理削除</th>
-<!--
     <th></th>
--->
 </tr>
 <?php foreach($tbl_data as $row): ?>
 <tr class="<?php print($row->is_enabled?:"disabled"); ?>">
@@ -77,9 +75,7 @@ $next_tag  =new MkTagA("[次へ]",($race_sp_results_table->has_next_page?('?'.$u
     <td class=""><?=h($row->is_registration_only?'登録のみ不出走':'結果掲載有り');?></td>
     <td class="col_sort_number"><?=h($row->sort_number);?></td>
     <td><?=h($row->is_enabled?'有効':'無効化中');?></td>
-<!--
     <td><?php (new MkTagA('編集',"./form.php?id={$row->id}"))->print(); ?></td>
--->
 </tr>
 <?php endforeach; ?>
 </table>
