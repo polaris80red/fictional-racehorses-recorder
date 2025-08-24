@@ -468,17 +468,7 @@ foreach ($race_history as $data) {
         </td>
     </tr>
     <tr>
-        <td colspan="3">
-<?php
-$a_tag=new MkTagA('レースを新規登録してからこの馬の戦績を追加');
-if($horse->birth_year!==null){
-    $url_param=new UrlParams(['horse_id'=>$horse->horse_id]);
-    $url=APP_ROOT_REL_PATH."race/result/form.php?";
-    $a_tag->href($url.$url_param);
-}
-echo $a_tag;
-?>
-        </td>
+        <td colspan="3">レースを新規登録してからこの馬の戦績を追加</td>
     </tr>
     <tr>
         <td colspan="3" style="text-align: right;">
