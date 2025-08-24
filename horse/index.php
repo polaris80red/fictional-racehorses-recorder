@@ -94,6 +94,14 @@ td.favourite{ text-align:right; }
 td.result_number{ text-align:right; }
 table.horse_base_data a {text-decoration: none;}
 
+.edit_menu table { margin-top: 8px;}
+.edit_menu table a:link {text-decoration: none;}
+.edit_menu table a:link:hover {
+    text-decoration: underline;
+    background-color: #CCFFFF;
+}
+.edit_menu table {font-size: 0.9em;}
+
 </style>
 </head>
 <body>
@@ -409,13 +417,15 @@ foreach ($race_history as $data) {
 (horse_id=<?php echo $horse->horse_id; ?>)
 <input type="hidden" id="edit_menu_states" value="0">
 <div class="edit_menu" style="display:none;">
-<hr>
-<?php $url=APP_ROOT_REL_PATH."horse/form.php?horse_id={$horse->horse_id}"; ?>
-<a href="<?=$url;?>">[この馬の情報を編集]</a>
-　
+<table>
+    <tr>
+        <td>
+            <?=(new MkTagA('この馬の情報を編集',APP_ROOT_REL_PATH."horse/form.php?horse_id=".urlencode($horse->horse_id)))?>
+        </td>
+        <td>
 <?php
     $url=APP_ROOT_REL_PATH."race/horse_result/form.php?horse_id={$horse->horse_id}";
-    $a_tag=new MkTagA('[この馬の戦績を追加]');
+    $a_tag=new MkTagA('この馬の戦績を追加');
         $a_tag->href($url);
     if($horse->birth_year==null){
         $a_tag->href('')->setStyle('text-decoration','line-through');
@@ -423,31 +433,59 @@ foreach ($race_history as $data) {
     }
     print $a_tag;
 ?>
-<?php if(!empty($session->latest_race['id'])): ?>
-<hr>
+        </td>
+        <td>
+            <?=(new MkTagA('競走馬ID修正',"./update_horse_id/form.php?horse_id=".urlencode($horse->horse_id)))?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
 <?php
-    $url=APP_ROOT_REL_PATH."race/horse_result/form.php?horse_id={$horse->horse_id}&race_id={$session->latest_race['id']}";
-    $a_tag=new MkTagA('[最後に開いたレースにこの馬の戦績を追加]');
-    $a_tag->href($url);
-    if($horse->birth_year==null){
-        $a_tag->href('')->setStyle('text-decoration','line-through');
-        $a_tag->title("生年仮登録馬のため戦績追加不可");
-    }
-    if($latest_race_is_exists===true){
-        $a_tag->href('')->setStyle('text-decoration','line-through');
-        $a_tag->title("最後に開いたレースには既に登録されています");
+    $a_tag=new MkTagA('最後に開いたレースにこの馬の戦績を追加');
+    if(!empty($session->latest_race['id'])){
+        $url=APP_ROOT_REL_PATH."race/horse_result/form.php?horse_id={$horse->horse_id}&race_id={$session->latest_race['id']}";
+        $a_tag->href($url);
+        if($horse->birth_year==null){
+            $a_tag->href('')->setStyle('text-decoration','line-through');
+            $a_tag->title("生年仮登録馬のため戦績追加不可");
+        }
+        if($latest_race_is_exists===true){
+            $a_tag->href('')->setStyle('text-decoration','line-through');
+            $a_tag->title("最後に開いたレースには既に登録されています");
+        }
     }
     print $a_tag;
 ?>
-<?php $url=$page->getRaceResultUrl($session->latest_race['id']); ?>
-（<a href="<?=$url;?>"><?=$session->latest_race['year']." ".($session->latest_race['name']?:$session->latest_race['id']); ?></a>）
-<?php endif; ?>
+        </td>
+        <td>
 <?php
+    if(!empty($session->latest_race['id'])){
+        $url=$page->getRaceResultUrl($session->latest_race['id']);
+        $text= $session->latest_race['year']." ".($session->latest_race['name']?:$session->latest_race['id']);
+        (new MkTagA($text,$url))->print();
+    }
+?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+<?php
+$a_tag=new MkTagA('レースを新規登録してからこの馬の戦績を追加');
 if($horse->birth_year!==null){
-    echo "<hr>";
     $url_param=new UrlParams(['horse_id'=>$horse->horse_id]);
     $url=APP_ROOT_REL_PATH."race/result/form.php?";
-    echo (new MkTagA('[レースを新規登録してからこの馬の戦績を追加]'))->href($url.$url_param)."<br>\n";
+    $a_tag->href($url.$url_param);
+}
+echo $a_tag;
+?>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" style="text-align: right;">
+<?php
+if($horse->birth_year!==null){
+    $url_param=new UrlParams(['horse_id'=>$horse->horse_id]);
+    $url=APP_ROOT_REL_PATH."race/result/form.php?";
     $url_param->set('year',$horse->birth_year+2);
     echo (new MkTagA('[2歳年]'))->href($url.$url_param);
     echo "　";
@@ -461,12 +499,30 @@ if($horse->birth_year!==null){
     echo (new MkTagA('[5歳年]'))->href($url.$url_param);
 }
 ?>
-<hr>
-<a href="./update_horse_id/form.php?horse_id=<?php echo $horse->horse_id; ?>">[競走馬ID修正]</a>
+        </td>
+    </tr>
+<?php if($horse->birth_year!==null):?>
+    <tr>
+        <td>レース検索</td>
+        <td colspan="2" style="text-align: right;">
+<?php
+if($horse->birth_year!==null){
+    $url_param=new UrlParams(['session_is_not_update'=>1]);
+    $url=APP_ROOT_REL_PATH."race/list/?";
+    echo (new MkTagA('[2歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+2,'age[20]'=>1]));
+    echo "　".(new MkTagA('[3歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+3,'age[30]'=>1,'age[31]'=>1]));
+    echo "　".(new MkTagA('[4歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+4,'age[31]'=>1,'age[41]'=>1]));
+    echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+5,'age[31]'=>1,'age[41]'=>1]));
+}
+?>
+        </td>
+    </tr>
+<?php endif; ?>
+</table>
 </div><!-- /.edit_menu -->
 <script>
 $(function() {
-    //チェックボックス操作時
+    // 編集メニュー開閉
     $('#edit_tgl').click(function(){
     if($('#edit_menu_states').val()=='0') {
         $('.edit_menu').css('display','block');
