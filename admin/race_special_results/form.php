@@ -73,7 +73,7 @@ if($input_id==0){
 </tr>
 <tr>
     <th>2字略</th>
-    <td class="in_input"><input type="text" name="short_name_2" value="<?php print $form_item->short_name_2; ?>"></td>
+    <td class="in_input"><input type="text" name="short_name_2" value="<?php print $form_item->short_name_2; ?>" placeholder="空ならキー名を使用"></td>
 </tr>
 <tr>
     <th>結果表示区分</th>
