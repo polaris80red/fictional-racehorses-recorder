@@ -52,6 +52,12 @@ $cfg['ADMINISTRATOR_PASS'] ='';
 
 $cfg['ANNONYMOUS_HORSE_NAME'] ='□□□□□□';
 
+$cfg['EDIT_MENU_TOGGLE']=false;
+/**   EDIT_MENU_TOGGLE 競走馬・レースページの編集メニューの開閉機能
+ *      true:   初期値は閉じる
+ *      false:  常に表示
+ */
+
 $cfg['AUTO_ID_DATE_PART_FORMAT']='ymd';
 /**   AUTO_ID_DATE_PART_FORMAT 自動IDに日付をつける場合の日付部分のフォーマット
  *      ymd: 年2桁月2桁日2桁（推奨）

@@ -411,12 +411,12 @@ foreach ($race_history as $data) {
 }
 ?></table>
 <?php if($page->is_editable): ?>
-<hr><input type="button" id="edit_tgl" value="編集">
+<hr><input type="button" id="edit_tgl" value="編集" style="<?=EDIT_MENU_TOGGLE===false?'display:none;':'';?>">
 <input type="hidden" id="hiddden_horse_id" value="<?php echo $horse->horse_id; ?>">
 <input type="button" value="競走馬IDをクリップボードにコピー" onclick="copyToClipboard('#hiddden_horse_id');">
 (horse_id=<?php echo $horse->horse_id; ?>)
 <input type="hidden" id="edit_menu_states" value="0">
-<div class="edit_menu" style="display:none;">
+<div class="edit_menu" style="<?=EDIT_MENU_TOGGLE?'display:none;':'';?>">
 <table>
     <tr>
         <td>

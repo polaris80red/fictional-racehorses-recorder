@@ -35,6 +35,8 @@ class EnvConfigInitializer {
 
         define('ANNONYMOUS_HORSE_NAME',$cfg['ANNONYMOUS_HORSE_NAME']);
 
+        define('EDIT_MENU_TOGGLE',filter_var($cfg['EDIT_MENU_TOGGLE'],FILTER_VALIDATE_BOOL));
+
         if(exists_htmlspecialchars($cfg['AUTO_ID_DATE_PART_FORMAT'])){
             $has_error=true;
             $error_msgs[]="[AUTO_ID_DATE_PART_FORMAT]\nIDに使用できない文字が含まれています。";

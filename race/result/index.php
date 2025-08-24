@@ -272,11 +272,11 @@ if($data['result_text']!=''){
 </tr>
 <?php } ?></table>
 <?php if($page->is_editable): ?>
-<hr><input type="button" id="edit_tgl" value="編集">
+<hr><input type="button" id="edit_tgl" value="編集" style="<?=!EDIT_MENU_TOGGLE?'display:none;':''?>">
 <input type="hidden" id="hiddden_race_id" value="<?php echo $race->race_id; ?>">
 <input type="button" value="レースIDをクリップボードにコピー" onclick="copyToClipboard('#hiddden_race_id');">
 (race_id=<?php echo $race->race_id; ?>)
-<div class="edit_menu" style="display:none; border:solid 1px #00FFFF; margin-top:0.2em;">
+<div class="edit_menu" style="<?=EDIT_MENU_TOGGLE?'display:none;':''?>border:solid 1px #00FFFF; margin-top:0.2em;">
 <hr> 
 <input type="hidden" id="edit_menu_states" value="0">
 <table>
