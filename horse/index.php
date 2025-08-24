@@ -365,7 +365,7 @@ foreach ($race_history as $data) {
     echo "<td class=\"favourite favourite_{$data['favourite']}\">{$data['favourite']}</td>";
     $result_txt='';
     if($data['result_text']!=''){
-        $result_txt=$data['result_text'];
+        $result_txt=$data['special_result_short_name_2']?:$data['result_text'];
     }else if($data['result_number']>0){
         if($data['result_before_demotion']>0){
             $result_txt.="<span title=\"※".$data['result_before_demotion']."位入線降着\">(降)</span>";

@@ -104,6 +104,7 @@ $sql=(function(){
         "`det`.*",
         $horse_s_columns->get(true),
         "`race`.*",
+        "`spr`.`short_name_2` AS special_result_short_name_2",
         "`spr`.`is_registration_only`",
     ]);
      
@@ -205,7 +206,7 @@ foreach ($table_data as $data) {
 ?><tr class="<?php echo $tr_class; ?>">
 <td><?php
 if($data['result_text']!=''){
-    print_h($data['result_text']);
+    print_h($data['special_result_short_name_2']?:$data['result_text']);
 }else if($data['result_number']>0){
     print($data['result_number']);
     if($data['result_before_demotion']>0){ print"<span title=\"※".$data['result_before_demotion']."位入線降着\">(降)</span>";}

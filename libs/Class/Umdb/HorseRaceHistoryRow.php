@@ -32,6 +32,8 @@ class HorseRaceHistoryRow{
         'grade_css_class_suffix',
         'is_registration_only',
         'non_registered_prev_race_number',
+    
+        'special_result_short_name_2',
     ];
 
     // レース結果詳細テーブルのパラメータ
@@ -89,6 +91,9 @@ class HorseRaceHistoryRow{
     public $r_name_en;
 
     public $has_jra_thisweek=false;
+    
+    // 特殊結果のマスタ版略称
+    public $special_result_short_name_2;
 
     // 指定したパラメータだけを取り込む
     public function setByArray(array $row_data){

@@ -222,7 +222,7 @@ foreach($data['horse_results'] as $prev_race){
         echo "</div>\n";
 
         echo "<span class=\"result_number\" style=\"\">";
-        echo $r->result_text?:($r->result_number."着");
+        echo $r->result_text?($r->special_result_short_name_2?:$r->result_text):($r->result_number."着");
         echo "</span>";
         echo "<br>\n";
         echo $r->course_type.$r->distance."<br>\n";

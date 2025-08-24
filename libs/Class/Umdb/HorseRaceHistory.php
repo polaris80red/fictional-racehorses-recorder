@@ -76,6 +76,8 @@ class HorseRaceHistory implements Iterator{
             ,g.short_name as grade_short_name
             ,g.css_class_suffix as grade_css_class_suffix
             ,c.short_name as race_course_mst_short_name
+            ,spr.short_name_2 as special_result_short_name_2
+            ,IFNULL(spr.is_excluded_from_race_count,0) AS is_excluded_from_race_count
             FROM `{$race_results_detail_tbl}` AS `RR_Detail`
             LEFT JOIN `{$race_results_tbl}` AS `r` ON `r`.`race_id`=`RR_Detail`.`race_results_id`
             LEFT JOIN `{$race_week_tbl}` AS w ON `r`.`week_id` = w.id
@@ -128,8 +130,8 @@ class HorseRaceHistory implements Iterator{
                 $this->race_count_n+=1;
             }
             $this->race_count_all+=1;
-            // 出走除外および登録のみ情報は戦績にカウントしない
-            if($data['is_registration_only'] || $data['result_text']==='除外'){
+            // 除外判定が1のレコードはカウントしない
+            if($data['is_excluded_from_race_count']){
                 $this->race_count_n-=1;
                 $this->race_count_all-=1;
             }

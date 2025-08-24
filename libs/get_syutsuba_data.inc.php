@@ -47,6 +47,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         $race_results_detail_tbl=RaceResultDetail::TABLE;
         $grade_tbl=RaceGrade::TABLE;
         $race_course_tbl=RaceCourse::TABLE;
+        $race_special_results_tbl=RaceSpecialResults::TABLE;
         $sql=<<<DOC
         SELECT
         `RR_Detail`.*
@@ -65,6 +66,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,g.css_class_suffix as grade_css_class_suffix
         ,c.short_name AS race_course_short_name
         ,c.short_name_m AS race_course_short_name_m
+        ,`spr`.`short_name_2` as `special_result_short_name_2`
         FROM `{$race_results_detail_tbl}` AS `RR_Detail`
         LEFT JOIN `{$race_results_tbl}` AS `RR` ON
             `RR`.`race_id`=`RR_Detail`.`race_results_id`
@@ -78,6 +80,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
             `RR_Detail`.`is_registration_only`= 0
         LEFT JOIN `{$grade_tbl}` as g ON RR.grade=g.unique_name
         LEFT JOIN `{$race_course_tbl}` as c ON RR.race_course_name=c.unique_name AND c.is_enabled=1
+        LEFT JOIN `{$race_special_results_tbl}` as spr ON `RR_Detail`.result_text LIKE spr.unique_name AND spr.is_enabled=1
         WHERE
             `RR_Detail`.`horse_id`=:horse_id
         ORDER BY

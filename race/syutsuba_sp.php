@@ -238,7 +238,7 @@ foreach($data['horse_results'] as $prev_race){
         echo "<span>□□□□</span>";
         echo "</div>";
         echo "<span class=\"result_number\" style=\"display:inline-block;float:right;\">";
-        echo $r->result_text?:$r->result_number;
+        echo $r->result_text?($r->special_result_short_name_2?:$r->result_text):$r->result_number;
         echo "</span>";
         echo "</div>\n";
         echo "<div style=\"clear:both;\">\n";
