@@ -27,6 +27,7 @@ $form_item->unique_name=filter_input(INPUT_POST,'unique_name');
 $form_item->name=filter_input(INPUT_POST,'name');
 $form_item->short_name_2=filter_input(INPUT_POST,'short_name_2');
 $form_item->is_registration_only=filter_input(INPUT_POST,'is_registration_only');
+$form_item->is_excluded_from_race_count=filter_input(INPUT_POST,'is_excluded_from_race_count');
 $form_item->sort_number=filter_input(INPUT_POST,'sort_number');
 if($form_item->sort_number===''){
     $form_item->sort_number=null;

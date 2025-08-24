@@ -89,6 +89,19 @@ if($input_id==0){
     </td>
 </tr>
 <tr>
+    <th>カウント</th>
+    <td>
+        <label><?php
+        $radio=new MkTagInputRadio('c',0,$form_item->is_excluded_from_race_count);
+        $radio->print();
+        ?>着外1回</label><br>
+        <label><?php
+        $radio->value(1)->checkedIf($form_item->is_excluded_from_race_count)
+        ->disabled($form_item->id>0?false:true)->print();
+        ?>数えない</label>
+    </td>
+</tr>
+<tr>
     <th>表示順補正</th>
     <td class="in_input"><input type="number" name="sort_number" value="<?php print $form_item->sort_number; ?>" placeholder="昇順"></td>
 </tr>

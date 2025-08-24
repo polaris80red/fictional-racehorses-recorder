@@ -22,6 +22,7 @@ $form_item->unique_name=filter_input(INPUT_POST,'unique_name');
 $form_item->name=filter_input(INPUT_POST,'name');
 $form_item->short_name_2=filter_input(INPUT_POST,'short_name_2');
 $form_item->is_registration_only=filter_input(INPUT_POST,'is_registration_only');
+$form_item->is_excluded_from_race_count=filter_input(INPUT_POST,'is_excluded_from_race_count');
 $form_item->sort_number=filter_input(INPUT_POST,'sort_number');
 if($form_item->sort_number===''){
     $form_item->sort_number=null;
@@ -91,6 +92,13 @@ if($id>0){
     <td><?php
         HTPrint::Hidden('is_registration_only',$form_item->is_registration_only);
         print $form_item->is_registration_only?'結果掲載有り':'登録のみで不出走';
+    ?></td></td>
+</tr>
+<tr>
+    <th>カウント</th>
+    <td><?php
+        HTPrint::Hidden('is_excluded_from_race_count',$form_item->is_excluded_from_race_count);
+        print $form_item->is_excluded_from_race_count?'数えない':'着外1回';
     ?></td></td>
 </tr>
 <tr>
