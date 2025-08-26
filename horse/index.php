@@ -111,6 +111,7 @@ table.horse_base_data a {text-decoration: none;}
 </header>
 <main id="content">
 <hr class="no-css-fallback">
+<div style="float:left">
 <?php
 if($horse->name_ja){
     echo "<span style=\"font-size:1.2em;\">".$horse->name_ja."</span>　";
@@ -127,7 +128,8 @@ if($horse->birth_year>0){
 }
 echo "{$horse->color} {$sex_str}";
 ?>
-<hr>
+</div><div style="float:right;<?=$page->is_editable?'':'display:none;'?>"><a href="#edit_menu" style="text-decoration: none;" title="下部編集メニューへ">▽</a></div>
+<hr style="clear: both;">
 <table class="horse_base_data">
     <tr>
         <th>馬名</th>
@@ -410,11 +412,38 @@ foreach ($race_history as $data) {
     }
 }
 ?></table>
+<hr>
+<table class="horse_base_data">
+<tr><th>馬名意味</th><td><?php print_h($horse->meaning); ?></td></tr>
+<tr><th>備考</th><td><pre><?php print_h($horse->note); ?></pre></td></tr>
+</table>
+<?php
+if($registration_only_race_is_exists||$show_registration_only){
+    print('<hr>');
+    $a_tag=new MkTagA("特別登録のみのレースを".($show_registration_only?"非表示(現在:表示)":"表示(現在:非表示)")."");
+    $a_tag->href("?".$page_urlparam->toString(['show_registration_only'=>!$show_registration_only]));
+    $a_tag->print();
+}
+?>
+<?php $horse_tags=(new HorseTag($pdo))->getTagNames($horse->horse_id); ?>
+<?php if(count($horse_tags)>0):?>
+<hr>
+検索タグ：<?php
+        $search_text_search=new HorseSearch();
+        $links=new Imploader('　');
+        foreach($horse_tags as $tag){
+            $search_text_search->search_text = $tag;
+            $url ="{$page->to_horse_search_path}?".$search_text_search->getUrlParam();
+            $links->add("<a href=\"{$url}\">#{$tag}</a>");
+        }
+        print($links);
+?>
+<?php endif; ?>
 <?php if($page->is_editable): ?>
 <hr><input type="button" id="edit_tgl" value="編集" style="<?=EDIT_MENU_TOGGLE===false?'display:none;':'';?>">
 <input type="hidden" id="hiddden_horse_id" value="<?php echo $horse->horse_id; ?>">
 <input type="button" value="競走馬IDをクリップボードにコピー" onclick="copyToClipboard('#hiddden_horse_id');">
-(horse_id=<?php echo $horse->horse_id; ?>)
+(horse_id=<?php echo $horse->horse_id; ?>)<a id="edit_menu"></a>
 <input type="hidden" id="edit_menu_states" value="0">
 <div class="edit_menu" style="<?=EDIT_MENU_TOGGLE?'display:none;':'';?>">
 <table>
@@ -542,33 +571,6 @@ $(function() {
 });
 </script>
 <?php endif; ?>
-<?php $horse_tags=(new HorseTag($pdo))->getTagNames($horse->horse_id); ?>
-<?php if(count($horse_tags)>0):?>
-<hr>
-検索タグ：<?php
-        $search_text_search=new HorseSearch();
-        $links=new Imploader('　');
-        foreach($horse_tags as $tag){
-            $search_text_search->search_text = $tag;
-            $url ="{$page->to_horse_search_path}?".$search_text_search->getUrlParam();
-            $links->add("<a href=\"{$url}\">#{$tag}</a>");
-        }
-        print($links);
-?>
-<?php endif; ?>
-<hr>
-<table class="horse_base_data">
-<tr><th>馬名意味</th><td><?php print_h($horse->meaning); ?></td></tr>
-<tr><th>備考</th><td><pre><?php print_h($horse->note); ?></pre></td></tr>
-</table>
-<?php
-if($registration_only_race_is_exists||$show_registration_only){
-    $a_tag=new MkTagA("特別登録のみのレースを".($show_registration_only?"非表示(現在:表示)":"表示(現在:非表示)")."");
-    $a_tag->href("?".$page_urlparam->toString(['show_registration_only'=>!$show_registration_only]));
-    $a_tag->print();
-    print('<hr>');
-}
-?>
 <hr class="no-css-fallback">
 </main>
 <footer>
