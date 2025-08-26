@@ -68,10 +68,6 @@ $turn=$week_data->umm_month_turn??null;
 
 .edit_menu table { margin-top: 8px;}
 .edit_menu table a:link {text-decoration: none;}
-.edit_menu table a:link:hover {
-    text-decoration: underline;
-    background-color: #CCFFFF;
-}
 .edit_menu table {font-size: 0.9em;}
 </style>
 </head>
