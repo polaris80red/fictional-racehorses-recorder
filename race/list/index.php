@@ -76,9 +76,7 @@ $search->current_page_results_count=count($table_data);
 <?php
 if($year!==''){
     echo '<a href="?year='.$prev.'&'.$search->getUrlParam(['year','page']).'">[前年へ]</a> ';
-    echo $setting->getYearSpecialFormat($year);
-    if($setting->year_view_mode==0){ echo "年"; }
-    if($setting->year_view_mode==2){ echo "年"; }
+    echo $setting->getConvertedDate(['year'=>$year],'y');
     echo ' <a href="?year='.$next.'&'.$search->getUrlParam(['year','page']).'">[翌年へ]</a>';
     echo "<hr>\n";
 }
