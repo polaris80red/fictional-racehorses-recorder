@@ -163,6 +163,7 @@ $empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td><td></td><td
 </tr><?php
 $i=0;
 $registration_only_horse_is_exists=false;
+$latest_horse_exists=false;
 foreach ($table_data as $data) {
     $i++;
     $tr_class=new imploader(' ');
@@ -171,6 +172,9 @@ foreach ($table_data as $data) {
         Elog::debug($data);
         //echo "<tr><td></td>".$empty_row_2."</tr>\n";
         continue;
+    }
+    if($data['horse_id']==$session->latest_horse['id']??''){
+        $latest_horse_exists=true;
     }
     // 特別登録のみのデータは表示フラグがなければスキップ
     $horse_url_add_param='';
@@ -337,11 +341,13 @@ if(!empty($session->latest_horse['id'])){
     $latest_horse->setDataById($pdo,$session->latest_horse['id']);
 }
 if($latest_horse->record_exists){
-    if($latest_horse->birth_year!==null){
+    if($latest_horse_exists){
+        $a_tag->title("最後に開いた競走馬は既に登録されています")->setStyle('text-decoration','line-through');
+    }else if($latest_horse->birth_year==null){
+        $a_tag->title("生年仮登録馬のため戦績追加不可")->setStyle('text-decoration','line-through');
+    }else{
         $url=APP_ROOT_REL_PATH."race/horse_result/form.php?horse_id={$session->latest_horse['id']}&race_id={$race->race_id}";
         $a_tag->href($url);
-    }else{
-       $a_tag->title("生年仮登録馬のため戦績追加不可")->setStyle('text-decoration','line-through');
     }
 }
 print $a_tag;
