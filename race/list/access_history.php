@@ -224,21 +224,21 @@ foreach($table_data as $data){
     echo "</td>";
     echo "<td>";
     if(!empty($data['r1']['horse_id'])){
-        $a_tag->setLinkText($data['r1']['name_ja']?:$data['r1']['name_en']);
+        $a_tag=(new MkTagA($data['r1']['name_ja']?:$data['r1']['name_en']));
         $a_tag->href($page->getHorsePageUrl($data['r1']['horse_id']));
         echo $a_tag;
     }
     echo "</td>";
     echo "<td>";
     if(!empty($data['r2']['horse_id'])){
-        $a_tag->setLinkText($data['r2']['name_ja']?:$data['r2']['name_en']);
+        $a_tag=(new MkTagA($data['r2']['name_ja']?:$data['r2']['name_en']));
         $a_tag->href($page->getHorsePageUrl($data['r2']['horse_id']));
         echo $a_tag;
     }
     echo "</td>";
     echo "<td>";
     if(!empty($data['r3']['horse_id'])){
-        $a_tag->setLinkText($data['r3']['name_ja']?:$data['r3']['name_en']);
+        $a_tag=(new MkTagA($data['r3']['name_ja']?:$data['r3']['name_en']));
         $a_tag->href($page->getHorsePageUrl($data['r3']['horse_id']));
         echo $a_tag;
     }
