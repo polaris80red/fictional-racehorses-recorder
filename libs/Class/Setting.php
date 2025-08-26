@@ -460,6 +460,7 @@ class Setting{
         switch($this->birth_year_mode){
             case 1:
                 $birth_year_str=$birth_year+3;
+                $birth_year_str=$this->getConvertedDate(['year'=>$birth_year_str],'y');
                 break;
             case 2:
                 $birth_year_str=substr(str_pad($birth_year+3,4,'0',STR_PAD_LEFT),2);
@@ -468,12 +469,14 @@ class Setting{
                 $birth_year_str=$this->getYearSpecialFormat($birth_year);
         }
         if($add_suffix){
-            if($this->birth_year_mode==1||$this->birth_year_mode==2){
-                if($this->year_view_mode===3){
-                    $birth_year_str.="期";
-                }else{
+            if($this->birth_year_mode==1){
+                if($this->year_view_mode===self::YEAR_VIEW_MODE_DEFAULT){
                     $birth_year_str.="世代";
+                }else{
+                    $birth_year_str.="クラシック世代";
                 }
+            }else if($this->birth_year_mode==2){
+                $birth_year_str.="世代";
             }else{
                 if($this->year_view_mode==0){ $birth_year_str.="年"; }
                 if($this->year_view_mode==2){ $birth_year_str.="年"; }
