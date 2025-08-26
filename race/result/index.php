@@ -308,8 +308,10 @@ print $a_tag;
 ?>
         </td>
         <td>
+<?php if(!empty($session->latest_horse['id'])): ?>
 <?php $url=APP_ROOT_REL_PATH."horse/?horse_id={$session->latest_horse['id']}"; ?>
 <a href="<?=$url;?>"><?=($session->latest_horse['name']?:$session->latest_horse['id'])?></a>
+<?php endif; ?>
         </td>
     </tr>
     <tr>
