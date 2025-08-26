@@ -9,8 +9,8 @@ $page->title="レース結果詳細・登録";
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
-$race_result_id=filter_input(INPUT_GET,'race_id');
-$horse_id=filter_input(INPUT_GET,'horse_id');
+$race_result_id=(string)filter_input(INPUT_GET,'race_id');
+$horse_id=(string)filter_input(INPUT_GET,'horse_id');
 $result_number=filter_input(INPUT_GET,'result_number');
 
 $is_edit_mode=filter_input(INPUT_GET,'edit_mode')?1:0;
@@ -32,29 +32,49 @@ if($race_result_id){
     $race->setDataById($pdo, $race_result_id);
 }
 do{
-    if(!$is_edit_mode && !$horse->record_exists){
-        $is_error=1;
-        $error_msgs[]="存在しない競走馬ID";
+    if($horse_id!=='' && !$horse->record_exists){
+        // 競走馬ID指定ありでレコード無し
+        $page->addErrorMsg("存在しない競走馬ID｜$horse_id");
+        break;
+    }
+    if($race_result_id!=='' && !$race->record_exists){
+        // レースID指定ありでレコード無し
+        $page->addErrorMsg("存在しないレース結果ID｜$race_result_id");
         break;
     }
     # 該当結果を取得
     if(empty($race_result_id) || empty($horse_id)){};
     if($is_edit_mode){
-        $result=$form_data->setDataById($pdo,$race_result_id,$horse_id);
-            if(!$result){
-                $is_error=1;
-                $error_msgs[]="存在しないレース結果";
-                break;
+        if($horse_id===''){
+            $page->addErrorMsg("編集モードですが競走馬IDが指定されていません");
+            break;
+        }
+        if($horse_id===''){
+            $page->addErrorMsg("編集モードですがレース結果IDが指定されていません");
+            break;
         }
     }
-    if(!$is_edit_mode){
-        if($next_race_id!=''){
-            $next_race_detail = new RaceResultDetail();
-            $next_race_detail->setDataById($pdo,$next_race_id,$horse_id);
-            $next_race = new RaceResults($pdo,$next_race_id);
+    if($horse_id!==''&& $horse_id!==''){
+        $result=$form_data->setDataById($pdo,$race_result_id,$horse_id);
+        if($result && !$is_edit_mode){
+            $page->addErrorMsg("登録予定のレース個別結果が既に存在します｜$race_result_id|$horse_id");
+            break;
         }
+        if(!$result && $is_edit_mode){
+            $page->addErrorMsg("編集対象のレース個別結果が存在しません｜$race_result_id|$horse_id");
+            break;
+        }
+    }
+    if(!$is_edit_mode && $next_race_id!=''){
+        $next_race_detail = new RaceResultDetail();
+        $next_race_detail->setDataById($pdo,$next_race_id,$horse_id);
+        $next_race = new RaceResults($pdo,$next_race_id);
     }
 }while(false);
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 
 ?><!DOCTYPE html>
 <html>
@@ -79,7 +99,7 @@ do{
 <tr>
     <?php if(empty($race_result_id)): ?>
     <th>レースID</th>
-    <td class="in_input" colspan="2"><input type="text" name="race_id" value="<?php echo $race_result_id; ?>" required></td>
+    <td class="in_input" colspan="2"><input type="text" name="race_id" value="<?php echo $race_result_id; ?>" class="required" required></td>
     <?php else: ?>
     <th>レース名称</th>
     <td colspan="2">
@@ -91,7 +111,7 @@ do{
 <tr>
     <?php if(empty($horse_id)): ?>
     <th>競走馬ID</th>
-    <td class="in_input" colspan="2"><input type="text" name="horse_id" value="<?php print_h($horse_id); ?>" required></td>
+    <td class="in_input" colspan="2"><input type="text" name="horse_id" value="<?php print_h($horse_id); ?>" class="required" required></td>
     <?php else: ?>
     <th>競走馬名</th>
     <td colspan="2">
