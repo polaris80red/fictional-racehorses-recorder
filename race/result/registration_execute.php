@@ -39,14 +39,15 @@ if($race->setDataByPost()==false){
 if(!$is_edit_mode){
     (new SurrogateKeyGenerator($pdo))->autoReset();
 }
-$redirect_url=$page->getRaceResultUrl($race->race_id);
 $pdo->beginTransaction();
 try{
     // テーブル1つのみ・trancate実行可能性があるためbeginTransactionを行わない。
     if($is_edit_mode==1){
         $race->UpdateExec($pdo);
+        $redirect_url=$page->getRaceResultUrl($race->race_id);
     }else{
         $race->InsertExec($pdo);
+        $redirect_url=$page->getRaceResultUrl($race->race_id);
         if($horse_id!==''){
             // 新規登録かつ競走馬ID指定の場合は個別結果登録画面に転送
             $urlparam=new UrlParams(['horse_id'=>$horse_id,'race_id'=>$race->race_id]);
