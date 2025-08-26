@@ -272,13 +272,53 @@ if($data['result_text']!=''){
 <?php endif; ?>
 </tr>
 <?php } ?></table>
+<hr>
+<a href="<?php echo $page->getRaceNameSearchUrl($race->race_name); ?>" style="">他年度の<?php echo $race->race_name; ?>を検索</a>
+<?php
+    if($registration_only_horse_is_exists||$show_registration_only){
+        $a_tag=new MkTagA("特別登録のみの馬を".($show_registration_only?"非表示(現在:表示)":"表示(現在:非表示)")."");
+        $a_tag->href("?race_id={$race_id}".($show_registration_only?'':"&show_registration_only=true"));
+        $a_tag->print();
+    }
+    ?>
+<hr>
+<table class="race_info">
+<tr><th>名称</th><td><?php print_h($race->race_name); ?></td></tr>
+<tr><th>略名</th><td><?php print_h($race->race_short_name); ?></td></tr>
+<tr><th>補足</th><td style="min-width: 200px;"><?php print_h($race->caption); ?></td></tr>
+<?php if($race->date): ?>
+<tr>
+    <th>日付</th>
+    <?php
+    $a_tag=new MkTagA($race->date.($race->date&&$race->is_tmp_date?'(仮)':''));
+    if(!$race->is_tmp_date){
+        $a_tag->href($page->getDateRaceListUrl($race->date));
+    }
+    ?>
+    <td><?=$a_tag; ?></td></tr>
+<?php endif; ?>
+<?php if(!empty($race->week_id)): ?>
+<tr><th>ターン</th><td><?php
+    print $setting->getYearSpecialFormat($race->year)."｜";
+    $week_url_param=new UrlParams(['year'=>$race->year,'week'=>$race->week_id]);
+    $a_tag=new MkTagA("第{$race->week_id}週");
+    $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$week_url_param);
+    print $a_tag;
+    print "｜";
+    $turn_url_param=new UrlParams(['year'=>$race->year,'month'=>$week_month,'turn'=>$turn]);
+    $a_tag=new MkTagA("{$week_month}月".($turn===2?"後半":"前半"));
+    $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$turn_url_param);
+    print $a_tag;
+?></td></tr>
+<?php endif; ?>
+<tr><th>備考</th><td><?php print(str_replace(["\r\n","\r","\n"],"<br>\n",h($race->note))); ?></td></tr>
+</table>
 <?php if($page->is_editable): ?>
 <hr><input type="button" id="edit_tgl" value="編集" style="<?=!EDIT_MENU_TOGGLE?'display:none;':''?>">
 <input type="hidden" id="hiddden_race_id" value="<?php echo $race->race_id; ?>">
 <input type="button" value="レースIDをクリップボードにコピー" onclick="copyToClipboard('#hiddden_race_id');">
-(race_id=<?php echo $race->race_id; ?>)
-<div class="edit_menu" style="<?=EDIT_MENU_TOGGLE?'display:none;':''?>">
-<hr> 
+(race_id=<?php echo $race->race_id; ?>)<a id="edit_menu"></a>
+<div class="edit_menu" style="<?=EDIT_MENU_TOGGLE?'display:none;':''?>"> 
 <input type="hidden" id="edit_menu_states" value="0">
 <table>
     <tr>
@@ -355,47 +395,6 @@ $(function() {
 });
 </script>
 <?php endif; ?>
-<hr>
-<a href="<?php echo $page->getRaceNameSearchUrl($race->race_name); ?>" style="">他年度の<?php echo $race->race_name; ?>を検索</a>
-<?php
-    if($registration_only_horse_is_exists||$show_registration_only){
-        $a_tag=new MkTagA("特別登録のみの馬を".($show_registration_only?"非表示(現在:表示)":"表示(現在:非表示)")."");
-        $a_tag->href("?race_id={$race_id}".($show_registration_only?'':"&show_registration_only=true"));
-        $a_tag->print();
-    }
-    ?>
-<hr>
-<table class="race_info">
-<tr><th>名称</th><td><?php print_h($race->race_name); ?></td></tr>
-<tr><th>略名</th><td><?php print_h($race->race_short_name); ?></td></tr>
-<tr><th>補足</th><td style="min-width: 200px;"><?php print_h($race->caption); ?></td></tr>
-<?php if($race->date): ?>
-<tr>
-    <th>日付</th>
-    <?php
-    $a_tag=new MkTagA($race->date.($race->date&&$race->is_tmp_date?'(仮)':''));
-    if(!$race->is_tmp_date){
-        $a_tag->href($page->getDateRaceListUrl($race->date));
-    }
-    ?>
-    <td><?=$a_tag; ?></td></tr>
-<?php endif; ?>
-<?php if(!empty($race->week_id)): ?>
-<tr><th>ターン</th><td><?php
-    print $setting->getYearSpecialFormat($race->year)."｜";
-    $week_url_param=new UrlParams(['year'=>$race->year,'week'=>$race->week_id]);
-    $a_tag=new MkTagA("第{$race->week_id}週");
-    $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$week_url_param);
-    print $a_tag;
-    print "｜";
-    $turn_url_param=new UrlParams(['year'=>$race->year,'month'=>$week_month,'turn'=>$turn]);
-    $a_tag=new MkTagA("{$week_month}月".($turn===2?"後半":"前半"));
-    $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$turn_url_param);
-    print $a_tag;
-?></td></tr>
-<?php endif; ?>
-<tr><th>備考</th><td><?php print(str_replace(["\r\n","\r","\n"],"<br>\n",h($race->note))); ?></td></tr>
-</table>
 <hr class="no-css-fallback">
 </main>
 <footer>

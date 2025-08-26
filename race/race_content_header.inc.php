@@ -1,5 +1,6 @@
 <div class="race_header">
-<div style="margin-bottom: 4px;"><span style="border-bottom:solid 1px #CCC;"><?php
+<div>
+<div style="border-bottom:solid 1px #CCC;margin-bottom: 4px;float:left;"><?php
 $day=($race->date == null || $race->is_tmp_date)?null:(new DateTime($race->date))->format('d');
 $week=(new RaceWeek())->getById($pdo,$race->week_id);
 $umdb_date = $setting->getRaceListDate([
@@ -52,10 +53,13 @@ if($race->track_condition){
         print "　[ダ：{$race->track_condition}]";
     }
 }
-?></span></div>
+?></div>
+<div style="float: right;"><a href="<?=$page->getRaceResultUrl($race_id); ?>#edit_menu" style="text-decoration: none;" title="レース結果下部編集メニュー">▽</a></div>
+</div>
+<div style="clear: both;"><!-- race title block -->
 <div class="race_number floatLeft">
     <?php print $race->race_number?($race->race_number."R"):'&nbsp;'; ?>
-</div>  
+</div>
 <div class="race_grade_and_name">
     <span class="nowrap" style="display: inline-block; min-width:16em;border-bottom:solid 1px #CCC;"><?php echo $race->race_name; ?></span>
     <?php if($race->grade): ?>
@@ -92,15 +96,16 @@ if($race_sex_name!==''){
 
 echo " {$race->course_type}{$race->distance}m";
 ?></div>
-</div>
+</div><!-- /race title block -->
 <hr class="clear">
 <a href="<?php echo $page->getRaceResultUrl($race_id); ?>" title="着順">[結果]</a>
-<a href="<?php echo APP_ROOT_REL_PATH; ?>race/syutsuba_simple.php?race_id=<?php echo $race_id; ?>" title="NK出馬表">[出馬表]</a>
-<a href="<?php echo APP_ROOT_REL_PATH; ?>race/syutsuba.php?race_id=<?php echo $race_id; ?>" title="出馬表">■</a> 
-<a href="<?php echo APP_ROOT_REL_PATH; ?>race/syutsuba_sp.php?race_id=<?php echo $race_id; ?>" title="Jスペシャル出馬表">■</a>
+<a href="<?php echo APP_ROOT_REL_PATH; ?>race/syutsuba_simple.php?race_id=<?=$race_id;?>" title="NK出馬表">[出馬表]</a>
+<a href="<?php echo APP_ROOT_REL_PATH; ?>race/syutsuba.php?race_id=<?=$race_id;?>" title="出馬表">■</a> 
+<a href="<?php echo APP_ROOT_REL_PATH; ?>race/syutsuba_sp.php?race_id=<?=$race_id;?>" title="Jスペシャル出馬表">■</a>
 <?php if(in_array($race->grade,['G1','G2','G3','Jpn1','Jpn2','Jpn3','重賞'])): ?>
-<a href="<?php echo APP_ROOT_REL_PATH; ?>race/j_thisweek.php?race_id=<?php echo $race_id; ?>" title="J今週の注目レース・出走馬情報">■</a>
+<a href="<?php echo APP_ROOT_REL_PATH; ?>race/j_thisweek.php?race_id=<?=$race_id;?>" title="J今週の注目レース・出走馬情報">■</a>
 <?php endif; ?>
 <?php if(in_array($race->grade,['G1','Jpn1'])): ?>
-<a href="<?php echo APP_ROOT_REL_PATH; ?>race/j_thisweek_sps.php?race_id=<?php echo $race_id; ?>" title="Jスペシャル出馬表紹介文">■</a>
+<a href="<?php echo APP_ROOT_REL_PATH; ?>race/j_thisweek_sps.php?race_id=<?=$race_id;?>" title="Jスペシャル出馬表紹介文">■</a>
 <?php endif; ?>
+</div>
