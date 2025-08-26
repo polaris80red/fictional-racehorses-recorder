@@ -125,7 +125,7 @@ foreach ($table_data as $data) {
     if($data['is_jra']==0 && $data['is_nar']==0){
         echo "<span style=\"font-family:monospace;\">[{$data['training_country']}]</span> ";
     }
-    echo '<span style="font-weight:bold;"><a href="'.$page->to_app_root_path.'/horse/?horse_id='.$data['horse_id'].'">';
+    echo '<span style="font-weight:bold;"><a href="'.APP_ROOT_REL_PATH.'horse/?horse_id='.$data['horse_id'].'">';
     echo ($data['name_ja']?:$data['name_en']);
     echo "</a></span>";
     if($data['result_text']==='回避'){ echo " 【出走取消】"; }
