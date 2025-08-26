@@ -107,6 +107,8 @@ $sql=(function(){
         ON `det`.result_text LIKE spr.unique_name AND spr.is_enabled=1
     WHERE `race_id`=:race_id
     ORDER BY
+        `det`.`frame_number` IS NULL,
+        `det`.`frame_number` ASC,
         `det`.`horse_number` IS NULL,
         `det`.`horse_number` ASC,
         `{$horse_tbl}`.`name_en` ASC;
