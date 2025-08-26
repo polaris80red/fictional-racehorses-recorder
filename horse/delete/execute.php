@@ -34,19 +34,20 @@ if($page->error_exists){
 }else{
     $pdo->beginTransaction();
     try{
+        $escaped_horse_id=SqlValueNormalizer::escapeLike($horse_id);
         $sql="DELETE FROM `".HorseTag::TABLE."` WHERE `horse_id` LIKE :old_id;";
         $stmt1=$pdo->prepare($sql);
-        $stmt1->bindValue(':old_id',$horse_id,PDO::PARAM_STR);
+        $stmt1->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
         $stmt1->execute();
 
         $sql="DELETE FROM `".RaceResultDetail::TABLE."` WHERE `horse_id` LIKE :old_id;";
         $stmt2=$pdo->prepare($sql);
-        $stmt2->bindValue(':old_id',$horse_id,PDO::PARAM_STR);
+        $stmt2->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
         $stmt2->execute();
 
         $sql="DELETE FROM `".Horse::TABLE."` WHERE `horse_id` LIKE :old_id;";
         $stmt3=$pdo->prepare($sql);
-        $stmt3->bindValue(':old_id',$horse_id,PDO::PARAM_STR);
+        $stmt3->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
         $stmt3->execute();
 
         $pdo->commit();

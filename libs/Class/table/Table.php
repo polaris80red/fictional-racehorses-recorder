@@ -70,9 +70,16 @@ abstract class Table{
         int $pdo_param_mode=PDO::PARAM_STR
     ) {
         self::checkTableName();
-        $sql="SELECT * FROM `".static::TABLE."` WHERE `$unique_key_colUmn` LIKE :unique_key LIMIT 1;";
+        $sql="SELECT * FROM `".static::TABLE."`";
+        if($pdo_param_mode===PDO::PARAM_INT){
+            $sql.=" WHERE `$unique_key_colUmn` = :unique_key";
+        }else{
+            $sql.=" WHERE `$unique_key_colUmn` LIKE :unique_key";
+            $unique_key_value = SqlValueNormalizer::escapeLike($unique_key_value);
+        }
+        $sql.=" LIMIT 1";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':unique_key', $unique_key_value, $pdo_param_mode);
+        $stmt->bindValue(':unique_key',$unique_key_value,$pdo_param_mode);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

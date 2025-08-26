@@ -32,14 +32,15 @@ if($page->error_exists){
 }else{
     $pdo->beginTransaction();
     try{ 
+        $escaped_race_result_id=SqlValueNormalizer::escapeLike($race_result_id);
         $sql="DELETE FROM `".RaceResultDetail::TABLE."` WHERE `race_results_id` LIKE :old_id;";
         $stmt2=$pdo->prepare($sql);
-        $stmt2->bindValue(':old_id',$race_result_id,PDO::PARAM_STR);
+        $stmt2->bindValue(':old_id',$escaped_race_result_id,PDO::PARAM_STR);
         $stmt2->execute();
 
         $sql="DELETE FROM `".RaceResults::TABLE."` WHERE `race_id` LIKE :old_id;";
         $stmt3=$pdo->prepare($sql);
-        $stmt3->bindValue(':old_id',$race_result_id,PDO::PARAM_STR);
+        $stmt3->bindValue(':old_id',$escaped_race_result_id,PDO::PARAM_STR);
         $stmt3->execute();
 
         $pdo->commit();

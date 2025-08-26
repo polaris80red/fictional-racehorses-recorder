@@ -19,7 +19,7 @@ class HorseTag extends Table{
         $sql.=" WHERE `horse_id` LIKE :id AND `is_enabled`=1";
         $sql.=" ORDER BY `tag_text` ASC";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':id',$horse_id,PDO::PARAM_STR);
+        $stmt->bindValue(':id',SqlValueNormalizer::escapeLike($horse_id),PDO::PARAM_STR);
         $stmt->execute();
         $results=[];
         while(($row=$stmt->fetch(PDO::FETCH_ASSOC))!==false){
@@ -32,7 +32,7 @@ class HorseTag extends Table{
         $sql.=" WHERE `horse_id` LIKE :id AND `is_enabled`=1";
         $sql.=" ORDER BY `tag_text` ASC";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':id',$horse_id,PDO::PARAM_STR);
+        $stmt->bindValue(':id',SqlValueNormalizer::escapeLike($horse_id),PDO::PARAM_STR);
         $stmt->execute();
         $results=[];
         while(($row=$stmt->fetch(PDO::FETCH_COLUMN))!==false){
@@ -52,14 +52,14 @@ class HorseTag extends Table{
         $update_sql.=" SET `is_enabled`=:is_enabled, `updated_at`=:updated_at";
         $update_sql.=" WHERE `horse_id` LIKE :id AND `tag_text` LIKE :tag";
         $update_stmt=$this->pdo->prepare($update_sql);
-        $update_stmt->bindValue(':id',$horse_id,PDO::PARAM_STR);
+        $update_stmt->bindValue(':id',SqlValueNormalizer::escapeLike($horse_id),PDO::PARAM_STR);
         $is_enabled=0;
 
         $record_tags=array_keys($data); // レコードにあるタグの切り出し
         $insert_tags=array_diff($input_tags,$record_tags); // テーブルに存在しないタグをInsert用に切り出し
 
         $update_stmt=$this->pdo->prepare($update_sql);
-        $update_stmt->bindValue(':id',$horse_id,PDO::PARAM_STR);
+        $update_stmt->bindValue(':id',SqlValueNormalizer::escapeLike($horse_id),PDO::PARAM_STR);
         $update_stmt->bindValue(':updated_at',$log_date_time,PDO::PARAM_STR);
         $bind_tag=''; $is_enabled=0;
         $update_stmt->bindParam(':tag',$bind_tag,PDO::PARAM_STR);
@@ -69,7 +69,7 @@ class HorseTag extends Table{
             $tag=(new (static::ROW_CLASS)())->setFromArray($row);
             $exist_in_input=in_array($tag->tag_text,$input_tags);
 
-            $bind_tag=$tag->tag_text;
+            $bind_tag=SqlValueNormalizer::escapeLike($tag->tag_text);
             if($exist_in_input && $tag->is_enabled==0){
                 // 無効で入力値にある→UPDATEで復活させる
                 $is_enabled=1;

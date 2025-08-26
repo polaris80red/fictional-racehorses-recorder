@@ -47,28 +47,11 @@ do{
 if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
-}else{
-    $pdo->beginTransaction();
-    try{ 
-        $sql="UPDATE `".RaceResultDetail::TABLE."` SET `race_results_id`=:new_id WHERE `race_results_id` LIKE :old_id;";
-        $stmt2=$pdo->prepare($sql);
-        $stmt2->bindValue(':new_id',$new_race_result_id,PDO::PARAM_STR);
-        $stmt2->bindValue(':old_id',$race_result_id,PDO::PARAM_STR);
-        $stmt2->execute();
-
-        $sql="UPDATE `".RaceResults::TABLE."` SET `race_id`=:new_id WHERE `race_id` LIKE :old_id;";
-        $stmt3=$pdo->prepare($sql);
-        $stmt3->bindValue(':new_id',$new_race_result_id,PDO::PARAM_STR);
-        $stmt3->bindValue(':old_id',$race_result_id,PDO::PARAM_STR);
-        $stmt3->execute();
-
-        $pdo->commit();
-    }catch(Exception $e){
-        $pdo->rollBack();
-        $page->addErrorMsg("PDO_ERROR:".print_r($e,true));
-        $page->printCommonErrorPage();
-    }
 }
+$updater=new IdUpdater($pdo,$race_result_id,$new_race_result_id);
+$updater->addUpdateTarget(RaceResultDetail::TABLE,'race_results_id');
+$updater->addUpdateTarget(RaceResults::TABLE,'race_id');
+$updater->execute();
 
 ?><!DOCTYPE html>
 <html>

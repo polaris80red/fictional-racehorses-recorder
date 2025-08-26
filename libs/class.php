@@ -32,9 +32,9 @@ END;
             // 2着以降なら1着馬のみ
             $result_num=1;
         }
-        $this->stmt->bindValue(':race_id', $race_id, PDO::PARAM_STR);
+        $this->stmt->bindValue(':race_id', SqlValueNormalizer::escapeLike($race_id), PDO::PARAM_STR);
         $this->stmt->bindValue(':result_num', $result_num, PDO::PARAM_INT);
-        $this->stmt->bindValue(':horse_id', $horse_id, PDO::PARAM_STR);
+        $this->stmt->bindValue(':horse_id', SqlValueNormalizer::escapeLike($horse_id), PDO::PARAM_STR);
         $this->stmt->execute();
         return $this->stmt->fetch(PDO::FETCH_ASSOC);
     }

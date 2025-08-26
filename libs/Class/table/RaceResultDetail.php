@@ -67,8 +67,8 @@ class RaceResultDetail extends Table{
         $sql ="SELECT {$sql_select_columns_part} FROM `".self::TABLE;
         $sql.="` WHERE `race_results_id` LIKE :race_results_id AND `horse_id` LIKE :horse_id LIMIT 1;";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':race_results_id', $race_results_id, PDO::PARAM_STR);
-        $stmt->bindValue(':horse_id', $horse_id, PDO::PARAM_STR);
+        $stmt->bindValue(':race_results_id', SqlValueNormalizer::escapeLike($race_results_id), PDO::PARAM_STR);
+        $stmt->bindValue(':horse_id', SqlValueNormalizer::escapeLike($horse_id), PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         if($result==false){
@@ -134,6 +134,8 @@ class RaceResultDetail extends Table{
         END;
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
+        $stmt->bindValue(":race_results_id",$this->race_results_id,PDO::PARAM_STR);
+        $stmt->bindValue(":horse_id",$this->horse_id,PDO::PARAM_STR);
         $flag = $stmt->execute();
     }
     public function UpdateExec(PDO $pdo){
@@ -150,6 +152,8 @@ class RaceResultDetail extends Table{
         END;
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
+        $stmt->bindValue(":race_results_id",SqlValueNormalizer::escapeLike($this->race_results_id),PDO::PARAM_STR);
+        $stmt->bindValue(":horse_id",SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
         return $stmt->execute();
     }
     /**
@@ -162,16 +166,14 @@ class RaceResultDetail extends Table{
         $sql.= " WHERE `race_results_id` LIKE :race_results_id";
         $sql.= " AND `horse_id` LIKE :horse_id";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(":race_results_id",$this->race_results_id,PDO::PARAM_STR);
-        $stmt->bindValue(":horse_id",$this->horse_id,PDO::PARAM_STR);
+        $stmt->bindValue(":race_results_id",SqlValueNormalizer::escapeLike($this->race_results_id),PDO::PARAM_STR);
+        $stmt->bindValue(":horse_id",SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
         $result = $stmt->execute();
     }
     /**
      * Insert/Updateのバインド
      */
     private function BindValues($stmt){
-        $stmt->bindValue(':race_results_id', $this->race_results_id, PDO::PARAM_STR);
-        $stmt->bindValue(':horse_id', $this->horse_id, PDO::PARAM_STR);
         $stmt->bindValue(':result_number', intOrNullIfZero($this->result_number), PDO::PARAM_INT);
         $stmt->bindValue(':result_order', intOrNullIfZero($this->result_order), PDO::PARAM_INT);
         $stmt->bindValue(':result_before_demotion', $this->result_before_demotion, PDO::PARAM_INT);

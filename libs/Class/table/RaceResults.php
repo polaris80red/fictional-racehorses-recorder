@@ -182,6 +182,7 @@ class RaceResults extends Table{
         }
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
+        $stmt->bindValue(':race_id',$this->race_id,PDO::PARAM_STR);
         $result = $stmt->execute();
         return;
     }
@@ -192,12 +193,13 @@ class RaceResults extends Table{
             "`".self::UNIQUE_KEY_COLUMN."` LIKE :".self::UNIQUE_KEY_COLUMN);
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
+        $stmt->bindValue(':race_id',SqlValueNormalizer::escapeLike($this->race_id),PDO::PARAM_STR);
         $result = $stmt->execute();
         return;
     }
     private function BindValues($stmt){
         $stmt=$this->BindValuesFromThis($stmt, [
-            'race_id','course_type',
+            'course_type',
             'race_name','race_short_name','caption','age','track_condition','note'
         ],PDO::PARAM_STR);
         $stmt=$this->BindValuesFromThis($stmt, [

@@ -26,7 +26,7 @@ class IdUpdater{
         }
         $sql.= " LIMIT 1;";
         $stmt=$this->pdo->prepare($sql);
-        $stmt->bindValue(':id',$this->new_key,$this->pdo_param_type);
+        $stmt->bindValue(':id',SqlValueNormalizer::escapeLike($this->new_key),$this->pdo_param_type);
         $stmt->execute();
         $results=$stmt->fetch();
         return ($results==false)?false:true;
@@ -51,7 +51,7 @@ class IdUpdater{
         }
         $stmt=$this->pdo->prepare($sql);
         $stmt->bindValue(':new_id',$this->new_key,$this->pdo_param_type);
-        $stmt->bindValue(':old_id',$this->old_key,$this->pdo_param_type);
+        $stmt->bindValue(':old_id',SqlValueNormalizer::escapeLike($this->old_key),$this->pdo_param_type);
         $this->stmts[]=$stmt;
         return $this;
     }

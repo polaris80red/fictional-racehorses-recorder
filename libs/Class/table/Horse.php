@@ -148,7 +148,7 @@ class Horse extends Table{
         }
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
-
+        $stmt->bindValue(':horse_id',$this->horse_id,PDO::PARAM_STR);
         try{
             $result = $stmt->execute();
         }catch (Exception $e){
@@ -167,6 +167,7 @@ class Horse extends Table{
 
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
+        $stmt->bindValue(':horse_id',SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
         $result = $stmt->execute();
         return;
     }
@@ -175,7 +176,7 @@ class Horse extends Table{
         $sort_number=(strval($this->sort_number)==='')?null:(int)$this->sort_number;
         $stmt->bindValue(":sort_number",$sort_number,PDO::PARAM_INT);
         $stmt=$this->BindValuesFromThis($stmt, [
-            'horse_id','name_ja','name_en','color','tc','training_country',
+            'name_ja','name_en','color','tc','training_country',
             'sire_id','sire_name','mare_id','mare_name','bms_name','meaning','note'
         ],PDO::PARAM_STR);
         $stmt=$this->BindValuesFromThis($stmt, [
