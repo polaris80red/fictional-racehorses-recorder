@@ -41,7 +41,6 @@ if(!$is_edit_mode){
 }
 $pdo->beginTransaction();
 try{
-    // テーブル1つのみ・trancate実行可能性があるためbeginTransactionを行わない。
     if($is_edit_mode==1){
         $race->UpdateExec($pdo);
         $redirect_url=$page->getRaceResultUrl($race->race_id);
