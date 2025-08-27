@@ -29,7 +29,6 @@ class RaceResults extends Table{
     public $year =null;
     public $month =null;
     public $week_id =0;
-    public $sort_number =10000;
     public $is_enabled =1;
 
     public const UMM_MONTH_TURN_NAME = [
@@ -46,7 +45,7 @@ class RaceResults extends Table{
         'note',
         'number_of_starters','is_jra','is_nar',
         'date','is_tmp_date','year','month','week_id',
-        'sort_number','is_enabled'
+        'is_enabled'
         ];
     
     public function __construct(PDO|null $pdo=null, string $race_id=''){
@@ -154,7 +153,6 @@ class RaceResults extends Table{
             $this->error_exists=true;
         }
 
-        $this->sort_number=filter_input(INPUT_POST,'sort_number');
         $this->is_enabled=filter_input(INPUT_POST,'is_enabled');
         return $this->error_exists?false:true;
     }
@@ -207,7 +205,7 @@ class RaceResults extends Table{
             'age_category_id',
             'sex_category_id',
             'is_jra','is_nar','is_tmp_date',
-            'year','month','week_id','sort_number','is_enabled'
+            'year','month','week_id','is_enabled'
         ],PDO::PARAM_INT);
         // gradeはもしnullなら空文字列にする
         $stmt->BindValue(':race_course_name',$this->race_course_name?:'',PDO::PARAM_STR);

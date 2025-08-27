@@ -152,12 +152,6 @@ if($race->setDataByPost()==false){
     <th>備考</th>
     <td class="in_input"><textarea name="note" readonly><?php echo $race->note;?></textarea></td>
 </tr>
-<!--
-<tr>
-    <th>表示順補正</th>
-    <td><?php HTPrint::HiddenAndText('sort_number',$race->sort_number) ?></td>
-</tr>
--->
 <tr>
     <th>論理削除状態</th>
     <td>
@@ -172,7 +166,6 @@ if($race->setDataByPost()==false){
 </tr>
 <?php endif; ?>
 </table>
-<?php HTPrint::Hidden('sort_number',$race->sort_number) ?>
 <hr>
 <input type="submit" value="レース結果データ登録実行">
 <?php $csrf_token->printHiddenInputTag(); ?>

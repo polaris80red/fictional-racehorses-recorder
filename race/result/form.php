@@ -333,13 +333,6 @@ $grades=RaceGrade::getForSelectbox($pdo);
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=note]');"></td>
 </tr>
-<!--
-<tr>
-    <th>表示順補正</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?php echo $race->sort_number; ?>"></td>
-    <td></td>
-</tr>
--->
 <tr style="<?php echo ($is_edit_mode || $race->is_enabled==0)?'':'display:none;'; ?>">
     <th>表示<br>（論理削除）</th>
     <td>
@@ -356,7 +349,6 @@ $grades=RaceGrade::getForSelectbox($pdo);
 <?php endif; ?>
 </table>
 <?php if(!$is_edit_mode && $race->is_enabled==1){HTPrint::Hidden('is_enabled',$race->is_enabled);} ?>
-<?php HTPrint::Hidden('sort_number',$race->sort_number); ?>
 <hr>
 <input type="submit" value="レース結果データ登録内容確認">
 </form>
