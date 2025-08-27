@@ -46,8 +46,10 @@ $sql.=" LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name"
 $sql.=" LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.unique_name";
 $where_parts=[
     "`date`=:date",
-    "`is_tmp_date`=0"
+    "`is_tmp_date`=0",
+    "`world_id`=:world_id",
 ];
+$pre_bind->add(':world_id',$setting->world_id,PDO::PARAM_INT);
 if($is_jra_only){ $where_parts[]="`is_jra`=1"; }
 if(!$show_disabled){ $where_parts[]="r.`is_enabled`=1"; }
 if($race_course_name){

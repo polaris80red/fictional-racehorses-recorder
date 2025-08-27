@@ -76,7 +76,11 @@ LEFT JOIN {$race_week_tbl} AS w ON r.`week_id`= w.id
 LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name
 LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.unique_name
 END;
-$sql_where_and_parts=["`year`=:year"];
+$sql_where_and_parts=[
+    "`world_id`=:world_id",
+    "`year`=:year",
+];
+$pre_bind->add(':world_id',$setting->world_id,PDO::PARAM_INT);
 if($week_id>0){
     $sql_where_and_parts[]="r.`week_id`=:week_id";
     $pre_bind->add(':week_id', $week_id, PDO::PARAM_INT);
