@@ -143,6 +143,9 @@ foreach($table_data as $data){
         $date_url="";
         if($datetime!==null){
             $date_url=$page->getDateRaceListUrl($datetime);
+        }else{
+            $date_url=$page->getTurnRaceListUrl(
+                $data['year'],$month,null,['week'=>$data['week_id']]);
         }
         echo "<td>".(new MkTagA($date_str,$date_url))."</td>";
     }

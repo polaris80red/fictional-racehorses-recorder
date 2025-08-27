@@ -238,9 +238,13 @@ $url=$this->to_app_root_path."race/list/access_history.php";
         $url =$this->to_app_root_path.'race/list/in_date.php?'.http_build_query($params);
         return $url;
     }
-    public function getTurnRaceListUrl($year,$month,$turn=''){
+    public function getTurnRaceListUrl($year,$month,$turn='',$optional_params_array=[]){
         $url = $this->to_app_root_path."race/list/in_week.php";
-        $url.="?year={$year}&month={$month}&turn={$turn}";
+        $url_params=new UrlParams(['year'=>$year,'month'=>$month]);
+        if($turn!=''){
+            $url_params->set('turn',$turn);
+        }
+        $url.="?".$url_params->toString($optional_params_array);
         return $url;
     }
     public function printFooterHomeLink($is_enabled=true){
