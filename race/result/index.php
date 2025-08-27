@@ -169,7 +169,7 @@ foreach ($table_data as $data) {
         //echo "<tr><td></td>".$empty_row_2."</tr>\n";
         continue;
     }
-    if($data['horse_id']==$session->latest_horse['id']??''){
+    if($data['horse_id']==($session->latest_horse['id']??'')){
         $latest_horse_exists=true;
     }
     // 特別登録のみのデータは表示フラグがなければスキップ
