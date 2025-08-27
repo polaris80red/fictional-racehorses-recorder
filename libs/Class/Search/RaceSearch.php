@@ -722,7 +722,7 @@ echo $cbox->name('grade_3w')->checked($g_flags->hasFlag(self::Grade_W3)); ?>3勝
 <label title="世代検索に上限適用：上限のほうが4歳年より小さい場合は4歳年まで表示"><input type="checkbox" name="max_year_is_enabled_for_generation_search" value="1"<?php HTPrint::CheckedIfNotEmpty($this->max_year_is_enabled_for_generation_search); ?>>世代検索にも上限を適用（超過時は4歳年度）</label><br>
 1ページあたり：<select name="limit">
 <?php
-foreach([20=>20, 25=>25, 30=>30, 50=>50,100=>100,150=>150, 0=>'無制限'] as $key=>$val){
+foreach([20=>20, 24=>"24（中央平地G1）", 25=>25, 26=>"26（中央G1）", 30=>30, 50=>50,100=>100,150=>150, 0=>'無制限'] as $key=>$val){
     $selected=($this->limit==$key?' selected':'');
     echo "<option value=\"{$key}\"{$selected}>{$val}</option>\n";
 }
