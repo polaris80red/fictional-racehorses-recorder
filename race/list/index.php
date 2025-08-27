@@ -43,9 +43,7 @@ if($year!==''){
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>
 <style>
-td:nth-child(4){
-    text-align:center;
-}
+td.grade{ text-align:center;}
 td.race_course_name { text-align: center; }
 .disabled_row{ background-color: #ccc; }
 </style>
@@ -79,15 +77,19 @@ if($year!==''){
     echo $setting->getConvertedDate(['year'=>$year],'y');
     echo ' <a href="?year='.$next.'&'.$search->getUrlParam(['year','page']).'">[翌年へ]</a>';
     echo "<hr>\n";
-}
-echo "<table class=\"race_list clear\">\n";
-echo "<tr><td colspan=\"8\">";
-if($search->limit>0){
-    $search->printPagination();
-}
-echo "<span style=\"white-space:nowrap; display:inline-block; float:right;\"><a href=\"?search_reset=1\">[検索条件初期化]</a>";
-echo "</td></tr>";
-?><tr>
+} ?>
+<form method="get" action="<?=APP_ROOT_REL_PATH?>race/duplicate/form.php">
+<?php if($page->is_editable && $search->is_one_year_only): ?>
+<input type="button" value="全てチェック" onclick="toggleIdList();">
+<input type="submit" value="チェックしたレースを一括複写">
+<?php endif; ?>
+<table class="race_list clear">
+<tr>
+    <td colspan="<?=($page->is_editable && $search->is_one_year_only)?8:7?>"><?=($search->limit>0)?$search->printPagination():''?></td>
+    <td style="text-align: center;"><span style="white-space:nowrap;"><a href="?search_reset=1\">[検索条件初期化]</a></td>
+</tr>
+<tr>
+<?php if($page->is_editable && $search->is_one_year_only): ?><th>複</th><?php endif; ?>
 <?php if($show_column_umm_turn): ?><th>時期</th><?php endif; ?>
 <?php if($show_column_date): ?><th>日付</th><?php endif; ?>
 <th>場</th><th style="min-width:3.5em;">距離</th><th>格付</th><th>名称</th><th>1着馬</th><th>2着馬</th><th>3着馬</th>
@@ -97,6 +99,11 @@ foreach($table_data as $data){
     $class[]="race_grade_".$data['grade_css_class_suffix']??'';
     if($data['is_enabled']===0){ $class[]='disabled_row'; }
     echo '<tr class="'.implode(' ',$class).'">';
+    if($page->is_editable && $search->is_one_year_only){
+        echo "<td class=\"in_input\"><label style=\"width:100%;height:100%;\">";
+        echo (new MkTagInput('checkbox',"id_list[]",urlencode($data['race_id'])));
+        echo "</label></td>";
+    }
     // 正規日付があり、仮日付でない場合　と　それ以外
     $datetime=null;
     if(!is_null($data['date']) && $data['is_tmp_date']==0){
@@ -195,6 +202,7 @@ if($year!==''){
     echo ' <a href="?year='.$next.'&'.$search->getUrlParam(['year','page']).'">[翌年へ]</a>';
 }
 ?>
+</form>
 <hr><a id="foot"></a>
 <?php $search->printForm($page,false,true); ?>
 <hr class="no-css-fallback">
@@ -203,5 +211,17 @@ if($year!==''){
 <?php $page->printFooterHomeLink(); ?>
 </footer>
 <?php $page->printScriptLink('js/race_search_form.js'); ?>
+<script>
+function toggleIdList() {
+    const $targets = $('input[type="checkbox"][name^="id_list"]');
+    const allChecked = $targets.length > 0 && $targets.filter(':checked').length === $targets.length;
+
+    if (allChecked) {
+        $targets.prop('checked', false);
+    } else {
+        $targets.prop('checked', true);
+    }
+}
+</script>
 </body>
 </html>
