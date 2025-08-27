@@ -28,6 +28,7 @@ $year=$datetime->format('Y');
 $weekdaynum=$datetime->format('w');
 $page->title=$datetime->format('Y年m月d日')."(".getWeekDayJa($weekdaynum).")のレース一覧";
 
+$year_week=getWeekByDate($date_str);
 
 # レース情報取得
 $horse_tbl=Horse::TABLE;
@@ -234,7 +235,8 @@ foreach($table_data as $data){
     echo "</tr>\n";
 }
 echo "</table>\n";
-?><hr class="no-css-fallback">
+?><hr>[ <a href="./in_week.php?<?=(new UrlParams(['year'=>$year,'week'=>$year_week]))?>">週単位の一覧</a> ]
+<hr class="no-css-fallback">
 </main>
 <footer>
 <?php $page->printFooterHomeLink(); ?>
