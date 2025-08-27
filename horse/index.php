@@ -118,9 +118,13 @@ if($horse->name_en){
     echo "<span style=\"font-size:1.1em;\">{$horse->name_en}</span>";
 }
 if($horse->birth_year>0){
-    echo "（{$horse->birth_year}）\t";
+    if($setting->year_view_mode===Setting::YEAR_VIEW_MODE_DEFAULT){
+        echo "（{$horse->birth_year}）　";
+    }else{
+        echo "（{$setting->getBirthYearFormat($horse->birth_year)}）　";
+    }
 }else{
-    echo " ";
+    echo "　";
 }
 echo "{$horse->color} {$sex_str}";
 ?>
