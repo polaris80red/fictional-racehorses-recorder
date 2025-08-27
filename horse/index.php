@@ -333,6 +333,8 @@ foreach ($race_history as $data) {
         }
     }else if($datetime!==null){
         $url=$page->getDateRaceListUrl($datetime);
+    }else{
+        $url = $page->getTurnRaceListUrl($data['year'],$month,null,['week'=>$data['week_id']]);
     }
     $date_str=(new MkTagA($date_str,$url))->get();
     echo "<td>{$date_str}</td>";
