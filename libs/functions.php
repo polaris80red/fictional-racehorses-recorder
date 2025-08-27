@@ -119,12 +119,10 @@ function getWeekByDate($input_date){
         $d0106_weekday = (new DateTime("$year-01-06"))->format('w');
         if($d0106_weekday==0 && $day<6){
             // 1/5(土)金杯で1/6(日)シンザン記念の場合は1/5まで金杯週扱い
-            echo 1;
-            exit;
+            return 1;
         }else if($day<=6){
             // それ以外は1/6までを金杯週扱い
-            echo 1;
-            exit;
+            return 1;
         }
     }
 
