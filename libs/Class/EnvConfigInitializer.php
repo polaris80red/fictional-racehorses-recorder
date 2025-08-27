@@ -25,7 +25,6 @@ class EnvConfigInitializer {
         define('SHOW_PHPMYADMIN_LINK',PHPMYADMIN_URL===''?false:$show_phpmyadmin_link);
 
         define('STORAGE_DIR',$cfg['STORAGE_DIR']);
-        define('SETTING_JSON_FILE_PATH',$cfg['SETTING_JSON_FILE_PATH']);
 
         define('LOG_DIR_PATH',$cfg['LOG_DIR_PATH']);
         define('LOG_FILE_PREFIX',$cfg['LOG_FILE_PREFIX']);

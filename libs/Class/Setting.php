@@ -36,8 +36,6 @@ class Setting{
         'hors_history_sort_is_desc'=>['label'=>'個別戦績のデフォルト並び順',],
     ];
 
-    protected $setting_json_file_path='';
-
     const YEAR_VIEW_MODE_DEFAULT=0;
     const YEAR_VIEW_MODE_NNM    =1;
     const YEAR_VIEW_MODE_PLMN   =2;
@@ -88,29 +86,22 @@ class Setting{
     ];
     public function __construct(bool $activateToSession = true ){
         if(!$activateToSession){ return false; }
-        $this->setting_json_file_path=SETTING_JSON_FILE_PATH;
         $this->setDefault();
         if(!isset($_SESSION['setting'])){
-            // セッション側に設定がない場合、ファイルからの設定を試みる
-            $setting_is_imported=$this->setFromJsonFile();
-            if(!$setting_is_imported){
-                // 読み込み失敗した場合もデフォルト値のまま初期設定する
-                $this->saveToSessionAll();
+            //  セッション側に設定がない場合、DBからの設定を試みる
+            // TODO: $pdoを外から渡すように全箇所変更
+            $setting=(new ConfigTable(getPDO()))->getAllParams();
+            Elog::debug($setting);
+            if($setting!==false){
+                $this->setByStdClass($setting);
             }
+            $this->saveToSessionAll();
         }else{
             // セッション側に設定があればこのオブジェクトに設定
             $this->setSettingBySession();
             // 定数的パラメータの設定
             $this->setConstLikeParam();
         }
-    }
-    public function setFromJsonFile(){
-        if(!file_exists($this->setting_json_file_path)){ return false; }
-        $json=json_decode(file_get_contents($this->setting_json_file_path));
-        if($json===null){ return false;}
-        $this->setByStdClass($json);// JSONから読み取ってオブジェクトに設定          
-        $this->saveToSessionAll();
-        return true;
     }
     public function setDefault(){
         $this->year_select_min_diff=2;
@@ -141,15 +132,6 @@ class Setting{
             return $_SESSION['setting'][$param_name];
         }
         return $if_not_set_return;
-    }
-    /**
-     * 設定画面用にこのオブジェクトに取得
-     */
-    public function setByJson(){
-        $json=new stdClass;
-        if(file_exists($this->setting_json_file_path)){
-            $json=json_decode(file_get_contents($this->setting_json_file_path));
-        }
     }
     /**
      * セッションからこのオブジェクトに取得
@@ -267,14 +249,6 @@ class Setting{
     public function saveToSessionAll(){
         $_SESSION['setting']=$this->getSettingArray();
         $this->setConstLikeParam();
-    }
-    /**
-     * 設定をJSONファイルとして出力する
-     */
-    public function ExportJson(string $path='') {
-        if($path===''){ $path=$this->setting_json_file_path; }
-        $json=json_encode($this->getSettingArray(),JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
-        file_put_contents($path,$json);        
     }
     public $year_month_separator='';
     //日付形式の部分

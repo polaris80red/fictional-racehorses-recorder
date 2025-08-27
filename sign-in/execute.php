@@ -45,7 +45,7 @@ do{
         break;
     }
     $session->Login();
-    $setting->setFromJsonFile();// ログイン時にキャッシュファイルから設定を読み込みなおす（ログアウト中の一時的変更をリセットする）
+    $setting=new Setting();// ログイン処理時に初期化しなおす
     redirect_exit($page->to_app_root_path.$return_url);
 }while(false);
 redirect_exit('./?error=true');

@@ -29,7 +29,6 @@ $cfg['PHPMYADMIN_URL'] ='/phpmyadmin/';
 
 // 各種ファイル保存先
 $cfg['STORAGE_DIR']             =APP_ROOT_DIR.'/storage';
-$cfg['SETTING_JSON_FILE_PATH']  =$cfg['STORAGE_DIR'].'/tmp/setting.latest.json';
 
 // ログファイル設定
 $cfg['LOG_DIR_PATH']            =$cfg['STORAGE_DIR'].'/logs';

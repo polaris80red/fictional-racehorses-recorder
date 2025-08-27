@@ -51,12 +51,12 @@ if($save_story_is_enabled && $save_story_id>0 && Session::is_logined()){
     }
 }
 
-// 設定反映・ファイル保存
+// 設定反映
 $setting->saveToSessionAll();
-// ログイン中かつ保存する選択でなければ設定キャッシュには反映しない
+// ログイン中かつ保存する選択でなければデフォルト値には反映しない
 //（ログアウトやセッションが切れるまでのみ有効）
 if(SESSION::is_logined() && $save_to_file){
-    $setting->ExportJson();
+    (new ConfigTable($pdo))->setTimestamp(PROCESS_STARTED_AT)->saveAllParams($setting->getSettingArray());
 }
 
 // 年上限・下限が絶対値で設定によっては範囲外になりやすいので設定変更後の初期値に強制変換（暫定）
