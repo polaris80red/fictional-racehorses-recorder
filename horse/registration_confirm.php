@@ -143,10 +143,6 @@ th{
     <th>毛色</th>
     <td><?php HTPrint::HiddenAndText('color',$horse->color) ?></td>
 </tr>
-<!--<tr>
-    <th>所属ID</th>
-    <td><?php HTPrint::HiddenAndText('affiliation_id',$horse->affiliation_id) ?></td>
-</tr>-->
 <tr>
     <th>所属</th>
     <td><?php HTPrint::HiddenAndText('tc',$horse->tc) ?></td>
@@ -198,10 +194,6 @@ th{
     <td class="in_input"><textarea name='note' readonly><?php print $horse->note; ?></textarea></td>
 </tr>
 <!--<tr>
-    <th>表示順補正</th>
-    <td><?php HTPrint::HiddenAndText('sort_number',$horse->sort_number) ?></td>
-</tr>
-<tr>
     <th>論理削除</th>
     <td><?php
         print $horse->is_enabled?'有効':'削除';
@@ -216,7 +208,6 @@ $horse_tags=HorseTag::TagsStrToArray(filter_input(INPUT_POST,'horse_tags'));
     <td><?=nl2br(implode("\n",$horse_tags));?><?php HTPrint::Hidden('horse_tags',urldecode(implode(' ',$horse_tags))); ?></td>
 </tr>
 </table>
-<?php HTPrint::Hidden("sort_number",$horse->sort_number); ?>
 <?php HTPrint::Hidden("is_enabled",$horse->is_enabled); ?>
 <hr>
 <input type="submit" value="競走馬データ登録実行">

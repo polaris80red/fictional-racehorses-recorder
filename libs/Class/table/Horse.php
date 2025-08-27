@@ -14,7 +14,6 @@ class Horse extends Table{
     public $birth_year =null;
     public $sex =0;
     public $color ='';
-    public $affiliation_id =null;
     public $tc ='';
     public $training_country ='JPN';
     public $is_affliationed_nar =0;
@@ -26,7 +25,6 @@ class Horse extends Table{
     public $is_sire_or_dam =0;
     public $meaning ='';
     public $note ='';
-    public $sort_number =null;
     public $is_enabled =1;
 
     public function __construct(){
@@ -64,7 +62,6 @@ class Horse extends Table{
         $this->sex = $result->sex;
         $this->color = $result->color;
         $this->birth_year = $result->birth_year;
-        $this->affiliation_id = $result->affiliation_id;
         $this->tc = $result->tc;
         $this->training_country = $result->training_country;
         $this->is_affliationed_nar = $result->is_affliationed_nar;
@@ -76,7 +73,6 @@ class Horse extends Table{
         $this->is_sire_or_dam = $result->is_sire_or_dam;
         $this->meaning = $result->meaning;
         $this->note = $result->note;
-        $this->sort_number = $result->sort_number;
         $this->is_enabled = $result->is_enabled;
 
         $this->record_exists=true;
@@ -100,7 +96,6 @@ class Horse extends Table{
             //$this->error_exists=true;
         }
         $this->color=(string)(filter_input(INPUT_POST,'color')?:filter_input(INPUT_POST,'color_select'));
-        $this->affiliation_id=filter_input(INPUT_POST,'affiliation_id');
         $this->tc=(string)(filter_input(INPUT_POST,'tc')?:filter_input(INPUT_POST,'tc_select'));
         $this->training_country=filter_input(INPUT_POST,'training_country');
         $this->is_affliationed_nar=filter_input(INPUT_POST,'is_affliationed_nar');
@@ -117,7 +112,6 @@ class Horse extends Table{
         $this->meaning=filter_input(INPUT_POST,'meaning');
         $this->note=filter_input(INPUT_POST,'note');
         
-        $this->sort_number=intOrNull(filter_input(INPUT_POST,'sort_number'));
         $this->is_enabled=filter_input(INPUT_POST,'is_enabled');
         return $this->error_exists?false:true;
     }
@@ -126,8 +120,8 @@ class Horse extends Table{
      */
     public function InsertExec(PDO $pdo){
         $columns=['horse_id','world_id','name_ja','name_en','birth_year','sex','color'
-        ,'affiliation_id','tc','training_country','is_affliationed_nar'
-        ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','sort_number','is_enabled'];
+        ,'tc','training_country','is_affliationed_nar'
+        ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','is_enabled'];
         $sql=SqlMake::InsertSql(self::TABLE,$columns);
 
         if($this->horse_id==''){
@@ -160,8 +154,8 @@ class Horse extends Table{
     }
     public function UpdateExec(PDO $pdo){
         $update_columns=['world_id','name_ja','name_en','birth_year','sex','color'
-            ,'affiliation_id','tc','training_country','is_affliationed_nar'
-            ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','sort_number','is_enabled'];
+            ,'tc','training_country','is_affliationed_nar'
+            ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','is_enabled'];
 
         $sql=SqlMake::UpdateSqlWhereRaw(self::TABLE,$update_columns, "`horse_id` LIKE :horse_id");
 
@@ -172,9 +166,6 @@ class Horse extends Table{
         return;
     }
     private function BindValues($stmt){
-        $stmt->bindValue(":affiliation_id",($this->affiliation_id?:null),PDO::PARAM_INT);
-        $sort_number=(strval($this->sort_number)==='')?null:(int)$this->sort_number;
-        $stmt->bindValue(":sort_number",$sort_number,PDO::PARAM_INT);
         $stmt=$this->BindValuesFromThis($stmt, [
             'name_ja','name_en','color','tc','training_country',
             'sire_id','sire_name','mare_id','mare_name','bms_name','meaning','note'

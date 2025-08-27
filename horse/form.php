@@ -134,22 +134,15 @@ $world_list=World::getAll($pdo);
         <input type="text" name="color" style="width: 6em;" value="<?php echo $target_exists?'':$horse->color; ?>" placeholder="毛色手入力" onchange="clearElmVal('*[name=color_select]');">
     </td>
 </tr>
-<!--<tr>
-    <th>所属ID</th>
-    <td><select name="affiliation_id">
-    <option value=""></option>
-    <?php
+<?php
 $affiliation_list=Affiliation::getForSelectbox($pdo);
 $affiliation_name_list=[];
 if(count($affiliation_list)>0){
     foreach($affiliation_list as $row){
         $affiliation_name_list[]=$row['name'];
-        //$selected= $row['id']==$horse->affiliation_id?" selected":"";
-        //echo "<option value=\"{$row['id']}\" {$selected}>{$row['id']}: {$row['name']}</option>";
     }
 }
-    ?></select></td>
-</tr>-->
+?>
 <tr>
     <th>所属</th>
     <td class="in_input">
@@ -214,10 +207,6 @@ if(count($affiliation_list)>0){
     <td class="in_input"><textarea name="note" style="width: 95%; height: 5em;"><?php echo $horse->note; ?></textarea></td>
 </tr>
 <!--<tr>
-    <th>表示順補正</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?php echo $horse->sort_number; ?>"></td>
-</tr>
-<tr>
     <th>論理削除</th>
     <td>
     <label><?php HTPrint::Radio("is_enabled",1,$horse->is_enabled);?>有効</label>
@@ -231,7 +220,6 @@ if(count($affiliation_list)>0){
     </td>
 </tr>
 </table>
-<?php HTPrint::Hidden("sort_number",$horse->sort_number); ?>
 <?php HTPrint::Hidden("is_enabled",$horse->is_enabled); ?>
 <hr>
 <input type="submit" value="競走馬データ登録内容確認">
