@@ -106,12 +106,15 @@ $story_list=WorldStory::getAll($pdo);
         }
     ?></td>
     <td class="in_input"><select name="world_id">
+<?php if($session->is_logined()): ?>
     <option value="">未選択</option>
+<?php endif; ?>
     <?php
     if(count($world_list)>0){
         foreach($world_list as $row){
+            if(!$session->is_logined() && $row['guest_visible']==0){ continue; }
             $selected= $row['id']==$setting->world_id?" selected":"";
-            echo "<option value=\"{$row['id']}\" {$selected}>{$row['id']}: {$row['name']}</option>";
+            echo "<option value=\"{$row['id']}\" {$selected}>{$row['name']}</option>";
         }
     }
     ?></select></td>
