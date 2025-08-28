@@ -74,6 +74,10 @@ class RaceResults extends Table{
             $this->error_msgs[]="エンコード結果：".$enc_race_id;
             $this->error_exists=true;
         }
+        if(strpbrk($race_id,ITEM_ID_FORBIDDEN_CHARS)){
+            $this->error_msgs[]="IDに使用できない文字（その他）を含んでいます";
+            $this->error_exists=true;
+        }
         $this->race_id=$race_id;
         return $this->error_exists?false:true;
     }
@@ -168,6 +172,12 @@ class RaceResults extends Table{
             $world=new World($pdo,$this->world_id);
             $skey_gen=new SurrogateKeyGenerator($pdo,$world->auto_id_prefix);
             $id=$skey_gen->generateId();
+            if(false===(new self())->setRaceId($id)){
+                $msgs[]="自動生成されたIDに使用できない文字が含まれています。";
+                $msgs[]="config.inc.phpやワールド設定を確認してください。\n";;
+                throw new ErrorException(implode("\n",$msgs));
+                return false;
+            }
             do {
                 $duplicate_check_tgt=new self($pdo,$id);
                 if(!$duplicate_check_tgt->record_exists){

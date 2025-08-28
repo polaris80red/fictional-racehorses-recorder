@@ -42,16 +42,10 @@ class EnvConfigInitializer {
 
         define('EDIT_MENU_TOGGLE',filter_var($cfg['EDIT_MENU_TOGGLE'],FILTER_VALIDATE_BOOL));
 
-        if(exists_htmlspecialchars($cfg['AUTO_ID_DATE_PART_FORMAT'])){
-            $has_error=true;
-            $error_msgs[]="[AUTO_ID_DATE_PART_FORMAT]\nIDに使用できない文字が含まれています。";
-        }
+        define('ITEM_ID_FORBIDDEN_CHARS',$cfg['ITEM_ID_FORBIDDEN_CHARS']);
+
         define('AUTO_ID_DATE_PART_FORMAT',$cfg['AUTO_ID_DATE_PART_FORMAT']);
 
-        if(exists_htmlspecialchars($cfg['AUTO_ID_DATE_NUMBER_SEPARATOR'])){
-            $has_error=true;
-            $error_msgs[]="[AUTO_ID_DATE_NUMBER_SEPARATOR]\nIDに使用できない文字が含まれています。";
-        }
         define('AUTO_ID_DATE_NUMBER_SEPARATOR',$cfg['AUTO_ID_DATE_NUMBER_SEPARATOR']);
         define('AUTO_ID_NUMBER_MIN_LENGTH',(int)$cfg['AUTO_ID_NUMBER_MIN_LENGTH']);
 
