@@ -186,7 +186,9 @@ $url=$this->to_app_root_path."race/list/access_history.php";
 <div style="width:20%;float:right;text-align:right;">
 <a href="<?php echo $pref;?>setting/">[設定]</a>
 <?php if(!Session::is_logined()): ?>
+<?php if(SHOW_LOGIN_LINK): ?>
 <a href="<?php echo $pref."sign-in/"; ?>" class="nowrap">[ログイン]</a>
+<?php endif; ?>
 <?php else: ?>
 <a href="<?php echo $pref; ?>sign-out.php" class="nowrap">[ログアウト]</a>
 <?php endif; ?>

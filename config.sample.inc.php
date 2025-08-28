@@ -23,6 +23,13 @@ $cfg['ALLOW_REMOTE_EDITOR_LOGIN']=false;
  *  true    :リモートIPアドレスからのログインを許可します
  */
 
+// ログインリンクをフロントに表示するかどうか
+$cfg['SHOW_LOGIN_LINK']=true;
+/**   SHOW_LOGIN_LINK
+ *  true    :リンクを表示します
+ *  false   :ログインするには「アプリのルート/admin/」にアクセスしてください
+ */
+
 // 管理ユーザー向けにphpMyAdmin画面へのリンクを表示する（XAMPPによるローカル環境向け）
 $cfg['SHOW_PHPMYADMIN_LINK'] =true;
 $cfg['PHPMYADMIN_URL'] ='/phpmyadmin/';
