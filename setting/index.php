@@ -52,7 +52,8 @@ $story_list=WorldStory::getAll($pdo);
     <?php
     if(count($story_list)>0){
         foreach($story_list as $row){
-            echo "<option value=\"{$row['id']}\">{$row['id']}: {$row['name']}</option>";
+            if(!$session->is_logined() && $row['guest_visible']==0){ continue; }
+            echo "<option value=\"{$row['id']}\">{$row['name']}</option>";
         }
     }
     ?></select></td>
@@ -78,8 +79,9 @@ $story_list=WorldStory::getAll($pdo);
     <?php
     if(count($story_list)>0){
         foreach($story_list as $row){
+            if(!$session->is_logined() && $row['guest_visible']==0){ continue; }
             if($row['is_read_only']){continue;}
-            echo "<option value=\"{$row['id']}\">{$row['id']}: {$row['name']}</option>";
+            echo "<option value=\"{$row['id']}\">{$row['name']}</option>";
         }
     }
     ?></select></td>
