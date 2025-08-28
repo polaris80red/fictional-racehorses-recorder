@@ -87,6 +87,8 @@ th{ background-color: #EEE;}
     <th rowspan="2"></th>
     <th colspan="2">複写元</th>
     <th rowspan="2">週</th>
+    <th rowspan="2">場</th>
+    <th rowspan="2">R</th>
     <th rowspan="2">名称</th>
     <th rowspan="2">補足</th>
     <th rowspan="2">新ID<br>(重複と未入力は自動採番)</th>
@@ -101,10 +103,13 @@ th{ background-color: #EEE;}
         <label style="width: 100%; height:100%;"><input type="checkbox" name="race[<?=$row['race_id']?>][save]" value="1" checked></label>
     </td>
     <td>
-        <input type="hidden" name="race[<?=$row['race_id']?>][orig_id]" value="<?=$row['race_id']?>"><?=$row['race_id']?>
+        <input type="hidden" name="race[<?=$row['race_id']?>][orig_id]" value="<?=$row['race_id']?>">
+        <a href="<?=APP_ROOT_REL_PATH?>race/?race_id=<?=$row['race_id']?>" target="_blank"><?=$row['race_id']?></a>
     </td>
     <td><?=$row['year']?></td>
-    <td>第<?=$row['week_id']?>週</td>
+    <td>第<?=$row['week_id']?>週<?=$row['date']==''?'':('('.(new DateTime($row['date']))->format('D').')')?></td>
+    <td><?=mb_substr($row['race_course_name']??'',0,2).(mb_strlen($row['race_course_name']??'')>2?'…':'')?></td>
+    <td><?=$row['race_number']??''?></td>
     <td><?=$row['race_name']?></td>
     <td><?=$row['caption']?></td>
     <td class="in_input">
