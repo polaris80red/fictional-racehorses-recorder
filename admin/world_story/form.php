@@ -61,6 +61,13 @@ if($input_id>0){
     <td class="in_input"><input type="text" name="name" class="required" value="<?php print $story->name; ?>" required></td>
 </tr>
 <tr>
+    <th>非ログイン時<br>設定画面</th>
+    <td>
+        <label><?php HTPrint::Radio('guest_visible',1,$story->guest_visible); ?>選択肢に表示する</label><br>
+        <label><?php HTPrint::Radio('guest_visible',0,$story->guest_visible); ?>選択肢に表示しない</label>
+    </td>
+</tr>
+<tr>
     <th>表示順優先度</th>
     <td class="in_input"><input type="number" name="sort_priority" value="<?php print $story->sort_priority; ?>"></td>
 </tr>

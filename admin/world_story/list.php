@@ -29,6 +29,7 @@ $story_list=WorldStory::getAll($pdo,true);
         height: 2em;
     }
     tr.disabled { background-color: #EEE; }
+    td.select_box_disabled { background-color: #EEE; }
 </style>
 </head>
 <body>
@@ -42,6 +43,7 @@ $story_list=WorldStory::getAll($pdo,true);
 <tr>
     <th>ID</th>
     <th>名称</th>
+    <th>非ログイン時</th>
     <th>表示順優先度</th>
     <th>表示順補正</th>
     <th>読取専用</th>
@@ -53,13 +55,14 @@ $story_list=WorldStory::getAll($pdo,true);
 <?php
     $url="./form.php?id={$row['id']}";
 ?>
-    <td><?php print $row['id']; ?></td>
-    <td><?php print_h($row['name']); ?></td>
-    <td><?php print $row['sort_priority']; ?></td>
-    <td><?php print $row['sort_number']; ?></td>
-    <td><?php print $row['is_read_only']?'はい':'いいえ'; ?></td>
-    <td><?php print $row['is_enabled']?'表示':'非表示'; ?></td>
-    <td><?php (new MkTagA('編',$url))->print(); ?></td>
+    <td><?=$row['id']?></td>
+    <td><?=h($row['name'])?></td>
+    <td class="<?=$row['guest_visible']?'':'select_box_disabled'?>"><?=$row['guest_visible']?'表示':'非表示'?></td>
+    <td><?=$row['sort_priority']?></td>
+    <td><?=$row['sort_number']?></td>
+    <td><?=$row['is_read_only']?'はい':'いいえ'?></td>
+    <td><?=$row['is_enabled']?'表示':'非表示'?></td>
+    <td><?=(new MkTagA('編',$url))?></td>
 </tr>
 <?php endforeach; ?>
 </table>

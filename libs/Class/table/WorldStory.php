@@ -4,6 +4,7 @@ class WorldStory extends Table{
     public const UNIQUE_KEY_COLUMN="id";
     protected const INT_COLUMNS=[
         'id',
+        'guest_visible',
         'sort_priority',
         'sort_number',
         'is_read_only',
@@ -20,6 +21,7 @@ class WorldStory extends Table{
 
     public $id=0;
     public $name='';
+    public $guest_visible=1;
     public $config_json=null;
     public $sort_priority=0;
     public $sort_number=null;

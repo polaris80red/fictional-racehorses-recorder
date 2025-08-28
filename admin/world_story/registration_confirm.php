@@ -18,6 +18,7 @@ if($input_id>0){
     $story->getDataById($pdo,$input_id);
 }
 $story->name=filter_input(INPUT_POST,'name');
+$story->guest_visible=filter_input(INPUT_POST,'guest_visible',FILTER_VALIDATE_BOOL)?1:0;
 $story->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
 $story->sort_number=filter_input(INPUT_POST,'sort_number');
 $story->is_read_only=filter_input(INPUT_POST,'is_read_only',FILTER_VALIDATE_BOOL)?1:0;
@@ -79,6 +80,13 @@ if($input_id>0){
 <tr>
     <th>名称</th>
     <td><?php HTPrint::HiddenAndText('name',$story->name); ?></td>
+</tr>
+<tr>
+    <th>非ログイン時<br>設定画面</th>
+    <td>
+        <?php HTPrint::Hidden('guest_visible',$story->guest_visible); ?>
+        <?=$story->guest_visible?'表示':'非表示'?>
+    </td>
 </tr>
 <tr>
     <th>表示順優先度</th>

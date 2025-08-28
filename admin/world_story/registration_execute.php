@@ -18,6 +18,7 @@ if($input_id>0){
     $story->getDataById($pdo,$input_id);
 }
 $story->name=filter_input(INPUT_POST,'name');
+$story->guest_visible=filter_input(INPUT_POST,'guest_visible',FILTER_VALIDATE_BOOL)?1:0;
 $story->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
 
 $story->sort_number=intOrNull(filter_input(INPUT_POST,'sort_number'));
