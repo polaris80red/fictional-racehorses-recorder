@@ -101,7 +101,7 @@ if($input_id>0){
 <tr><td colspan="2" style="text-align: right;"><input type="submit" value="登録内容確認"></td></tr>
 </table>
 設定値確認用：<br>
-<textarea name="config_json" style="min-width:25em;min-height:20em;"><?php print($story->getConfigJsonEncodeText()); ?></textarea><br>
+<textarea name="config_json" style="min-width:25em;min-height:20em;" readonly><?php print($story->getConfigJsonEncodeText()); ?></textarea><br>
 </form>
 <hr class="no-css-fallback">
 </main>
