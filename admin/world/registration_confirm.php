@@ -18,6 +18,7 @@ if($input_world_id>0){
 }
 $world->name=filter_input(INPUT_POST,'name');
 $world->use_exact_date=filter_input(INPUT_POST,'use_exact_date');
+$world->auto_id_prefix=filter_input(INPUT_POST,'auto_id_prefix');
 $world->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
 $world->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
@@ -99,7 +100,7 @@ if($input_world_id>0){
 <?php endif; ?>
 <tr>
     <th>自動ID接頭語</th>
-    <td><?php HTPrint::HiddenAndText('sort_priority',$world->auto_id_prefix); ?></td>
+    <td><?php HTPrint::HiddenAndText('auto_id_prefix',$world->auto_id_prefix); ?></td>
 </tr>
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>
 <?php (new FormCsrfToken())->printHiddenInputTag(); ?>
