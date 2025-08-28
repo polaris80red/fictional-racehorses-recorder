@@ -30,13 +30,6 @@ class Horse extends Table{
     public function __construct(){
     }
     public function setHorseId($horse_id){
-        /*
-        if(empty($horse_id)){
-            $this->error_msgs[]="競走馬ID未入力";
-            $this->error_exists=true;
-            return false;
-        }
-        */
         if(exists_htmlspecialchars($horse_id)){
             $this->error_msgs[]="IDに使用できない文字（HTML）を含んでいます";
             $this->error_exists=true;
