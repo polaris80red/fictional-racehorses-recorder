@@ -17,18 +17,19 @@ $horse_id=(string)filter_input(INPUT_POST,'horse_id')?:'';// 登録後に馬戦�
 # 対象取得
 $race= new RaceResults();
 $pdo= getPDO();
-// IDだけチェック
-if($race->setRaceId($race_id)===false){
-    $page->addErrorMsgArray($race->error_msgs);
-    $page->printCommonErrorPage();
-    exit;
-}
-// IDチェックと該当レコード取り出し
-$race->setDataById($pdo,$race_id);
-if($is_edit_mode==0 && $race->record_exists){
-    $page->addErrorMsg('新規モードで重複IDあり');
-    $page->printCommonErrorPage();
-    exit;
+
+if($race_id!=''){
+    if($race->setRaceId($race_id)===false){
+        $page->addErrorMsgArray($race->error_msgs);
+        $page->printCommonErrorPage();
+        exit;
+    }
+    $race->setDataById($pdo,$race_id);
+    if($is_edit_mode==0 && $race->record_exists){
+        $page->addErrorMsg('新規モードで重複IDあり');
+        $page->printCommonErrorPage();
+        exit;
+    }
 }
 if($race->setDataByPost()==false){
     $page->debug_dump_var[]=$race;
@@ -60,8 +61,9 @@ if($race->setDataByPost()==false){
     <td><?php HTPrint::Hidden('race_id',$race_id);print($race_id?:'登録実行時に生成'); ?></td>
 </tr>
 <tr>
-    <th>ワールドID</th>
-    <td><?php HTPrint::HiddenAndText('world_id',$race->world_id) ?></td>
+    <th>ワールド</th>
+    <?php $world=World::getById($pdo,$race->world_id) ?>
+    <td><?=(MkTagInput::Hidden('world_id',$race->world_id))."{$race->world_id}:{$world['name']}"?></td>
 </tr>
 <tr>
     <th>競馬場</th>

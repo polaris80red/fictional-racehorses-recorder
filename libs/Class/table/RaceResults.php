@@ -94,7 +94,7 @@ class RaceResults extends Table{
     public function setDataByPost(){
         // 送信された内容をセット
         $race_id=filter_input(INPUT_POST,'race_id');
-        if(!$this->setRaceId($race_id)){return false;}
+        if($race_id!=='' && !$this->setRaceId($race_id)){return false;}
         $this->world_id=filter_input(INPUT_POST,'world_id');
         if(empty($this->world_id)){
             $this->error_msgs[]='ワールドID未設定';
