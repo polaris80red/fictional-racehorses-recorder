@@ -293,6 +293,7 @@ $url=$this->to_app_root_path."race/list/access_history.php";
     <title><?php echo $this->title; ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$this->ForceNoindex()->getMetaNoindex();?>
     <?php $this->printBaseStylesheetLinks(); ?>
 <style>
 </style>
