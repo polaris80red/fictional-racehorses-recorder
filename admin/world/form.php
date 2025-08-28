@@ -59,6 +59,13 @@ if($input_id>0){
     <td class="in_input"><input type="text" name="name" class="required" value="<?php print $world->name; ?>" required></td>
 </tr>
 <tr>
+    <th>非ログイン時<br>設定画面</th>
+    <td>
+        <label><?php HTPrint::Radio('guest_visible',1,$world->guest_visible); ?>選択肢に表示する</label><br>
+        <label><?php HTPrint::Radio('guest_visible',0,$world->guest_visible); ?>選択肢に表示しない</label>
+    </td>
+</tr>
+<tr>
     <th>正規日付</th>
     <td>
         <label><?php HTPrint::Radio('use_exact_date',1,$world->use_exact_date); ?>あり前提</label><br>

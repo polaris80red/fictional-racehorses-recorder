@@ -29,6 +29,7 @@ $story_list=WorldStory::getAll($pdo);
         height: 2em;
     }
     tr.disabled { background-color: #EEE; }
+    td.select_box_disabled { background-color: #EEE; }
 </style>
 </head>
 <body>
@@ -42,6 +43,7 @@ $story_list=WorldStory::getAll($pdo);
 <tr>
     <th>ID</th>
     <th>名称</th>
+    <th>非ログイン時</th>
     <th>正規日付</th>
     <th>表示順優先度</th>
     <th>選択肢</th>
@@ -52,12 +54,13 @@ $story_list=WorldStory::getAll($pdo);
 <?php
     $url="./form.php?id={$world['id']}";
 ?>
-    <td><?php print $world['id']; ?></td>
-    <td><?php print_h($world['name']); ?></td>
-    <td><?php print $world['use_exact_date']?'あり前提':'なし前提'; ?></td>
-    <td><?php print $world['sort_priority']; ?></td>
-    <td><?php print $world['is_enabled']?'表示':'非表示'; ?></td>
-    <td><?php (new MkTagA('編',$url))->print(); ?></td>
+    <td><?=$world['id']?></td>
+    <td><?=h($world['name'])?></td>
+    <td class="<?=$world['guest_visible']?'':'select_box_disabled'?>"><?=$world['guest_visible']?'表示':'非表示'?></td>
+    <td><?=$world['use_exact_date']?'あり前提':'なし前提'?></td>
+    <td><?=$world['sort_priority']?></td>
+    <td><?=$world['is_enabled']?'表示':'非表示'?></td>
+    <td><?=(new MkTagA('編',$url))?></td>
 </tr>
 <?php endforeach; ?>
 </table>

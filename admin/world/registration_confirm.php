@@ -17,6 +17,7 @@ if($input_world_id>0){
     $world->getDataById($pdo,$input_world_id);
 }
 $world->name=filter_input(INPUT_POST,'name');
+$world->guest_visible=filter_input(INPUT_POST,'guest_visible',FILTER_VALIDATE_BOOL)?1:0;
 $world->use_exact_date=filter_input(INPUT_POST,'use_exact_date');
 $world->auto_id_prefix=filter_input(INPUT_POST,'auto_id_prefix');
 $world->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
@@ -77,6 +78,13 @@ if($input_world_id>0){
 <tr>
     <th>名称</th>
     <td><?php HTPrint::HiddenAndText('name',$world->name); ?></td>
+</tr>
+<tr>
+    <th>非ログイン時<br>設定画面</th>
+    <td>
+        <?php HTPrint::Hidden('guest_visible',$world->guest_visible); ?>
+        <?=$world->guest_visible?'表示':'非表示'?>
+    </td>
 </tr>
 <tr>
     <th>正規日付</th>

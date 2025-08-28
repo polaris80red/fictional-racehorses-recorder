@@ -17,6 +17,7 @@ if($input_world_id>0){
     $world->getDataById($pdo,$input_world_id);
 }
 $world->name=filter_input(INPUT_POST,'name');
+$world->guest_visible=filter_input(INPUT_POST,'guest_visible',FILTER_VALIDATE_BOOL)?1:0;
 $world->use_exact_date=filter_input(INPUT_POST,'use_exact_date');
 $world->auto_id_prefix=filter_input(INPUT_POST,'auto_id_prefix');
 $world->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
