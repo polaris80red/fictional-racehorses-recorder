@@ -57,13 +57,6 @@ class RaceResults extends Table{
      * @param string $race_id
      */
     public function setRaceId($race_id){
-        /*
-        if(empty($race_id)){
-            $this->error_msgs[]='レースID未設定';
-            $this->error_exists=true;
-            return false;
-        }
-        */
         if(exists_htmlspecialchars($race_id)){
             $this->error_msgs[]='IDに使用できない文字（HTML）を含んでいます';
             $this->error_exists=true;
