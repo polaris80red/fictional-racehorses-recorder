@@ -6,6 +6,7 @@ $page=new Page();
 $setting=new Setting(); 
 $page->setSetting($setting);
 $page->title="ログアウト - ".SITE_NAME;
+$page->ForceNoindex();
 $session=new Session();
 $session->Logout();
 $_SESSION=[];
@@ -15,6 +16,8 @@ session_destroy();
 <head>
     <title><?php $page->printTitle(); ?></title>
     <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
 </head>
 <body>

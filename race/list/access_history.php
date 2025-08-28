@@ -6,6 +6,7 @@ $page=new Page(2);
 $setting=new Setting(); 
 $page->setSetting($setting);
 $page->title="最近アクセスしたレースの一覧";
+$page->ForceNoindex();
 $session=new Session();
 // 暫定でログイン＝編集可能
 $page->is_editable=Session::is_logined();
@@ -93,6 +94,8 @@ try{
 <head>
     <title><?php $page->printTitle(); ?></title>
     <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

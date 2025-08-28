@@ -6,6 +6,7 @@ $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="ワールド登録";
+$page->ForceNoindex();
 
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
@@ -28,6 +29,7 @@ if($input_id>0){
     <title><?php $page->printTitle();  ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

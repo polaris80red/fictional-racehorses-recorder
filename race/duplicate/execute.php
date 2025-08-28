@@ -6,6 +6,7 @@ $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果一括複写・実行";
+$page->ForceNoindex();
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }  
 $pdo= getPDO();
@@ -59,6 +60,7 @@ $world=World::getById($pdo,$world_id);
     <title><?php $page->printTitle();?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

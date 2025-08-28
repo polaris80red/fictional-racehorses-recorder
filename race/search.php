@@ -6,6 +6,7 @@ $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース検索";
+$page->ForceNoindex();
 $search=(new RaceSearch())->setSetting($setting);
 if(!filter_input(INPUT_GET,'search_reset',FILTER_VALIDATE_BOOL)){
     $search->setBySession();
@@ -18,6 +19,7 @@ $pdo=getPDO();
     <title><?php $page->printTitle(); ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

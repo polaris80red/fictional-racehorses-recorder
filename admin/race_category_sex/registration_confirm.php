@@ -7,6 +7,7 @@ $setting=new Setting();
 $page->setSetting($setting);
 $base_title="性別条件マスタ";
 $page->title="{$base_title}｜設定登録：内容確認";
+$page->ForceNoindex();
 
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
@@ -51,6 +52,7 @@ if($id>0){
     <title><?php $page->printTitle(); ?><?=" - ".SITE_NAME; ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

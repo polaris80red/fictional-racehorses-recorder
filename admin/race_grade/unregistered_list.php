@@ -7,6 +7,7 @@ $setting=new Setting();
 $page->setSetting($setting);
 $base_title="レース格付マスタ";
 $page->title="{$base_title}｜未登録リスト";
+$page->ForceNoindex();
 
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
@@ -45,6 +46,7 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
     <title><?php $page->printTitle();  ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

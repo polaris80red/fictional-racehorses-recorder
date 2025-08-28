@@ -52,6 +52,7 @@ $turn=$week_data->umm_month_turn;
     <title><?php $page->printTitle(); ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink("js/functions.js"); ?>

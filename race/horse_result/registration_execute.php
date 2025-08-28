@@ -6,6 +6,7 @@ $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果詳細・登録実行";
+$page->ForceNoindex();
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
@@ -110,6 +111,7 @@ do{
     <title>結果登録</title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
 <style>
 </style>

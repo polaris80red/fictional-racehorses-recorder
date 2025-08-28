@@ -6,6 +6,7 @@ $page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース格付マスタ｜キー名称の一括変更：実行";
+$page->ForceNoindex();
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
@@ -46,6 +47,7 @@ $updater->execute();
     <title><?php echo $page->title; ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
 </head>
 <body>

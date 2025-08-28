@@ -6,6 +6,7 @@ $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果登録内容確認";
+$page->ForceNoindex();
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 $csrf_token=new FormCsrfToken();
@@ -41,6 +42,7 @@ if($race->setDataByPost()==false){
     <title><?php $page->printTitle(); ?>（<?php echo $is_edit_mode?"編集":"新規" ?>）</title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
 </head>
 <body>

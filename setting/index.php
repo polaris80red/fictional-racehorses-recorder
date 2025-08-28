@@ -5,6 +5,7 @@ $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="システム設定";
+$page->ForceNoindex();
 $session=new Session();
 // 暫定でログイン＝編集可能
 $page->is_editable=SESSION::is_logined();
@@ -19,6 +20,7 @@ $story_list=WorldStory::getAll($pdo);
     <title><?php $page->printTitle(); ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

@@ -5,6 +5,7 @@ $page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果削除・実行";
+$page->ForceNoindex();
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
@@ -57,6 +58,7 @@ if($page->error_exists){
     <title><?php echo $page->title; ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
 <style>
 table{

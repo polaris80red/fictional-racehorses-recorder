@@ -7,6 +7,7 @@ $setting=new Setting();
 $page->setSetting($setting);
 $base_title="テーマ";
 $page->title="{$base_title}設定一覧";
+$page->ForceNoindex();
 
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
@@ -20,6 +21,7 @@ $themes=Themes::getAll($pdo,true);
     <title><?php $page->printTitle();  ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

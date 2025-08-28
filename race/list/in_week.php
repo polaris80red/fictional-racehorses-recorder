@@ -122,6 +122,8 @@ $flag = $stmt->execute();
 <head>
     <title><?php $page->printTitle(); ?></title>
     <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
 <style>
 td:nth-child(3){ text-align:center;}

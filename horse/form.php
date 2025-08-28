@@ -6,6 +6,7 @@ $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="競走馬登録";
+$page->ForceNoindex();
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
@@ -31,6 +32,7 @@ $world_list=World::getAll($pdo);
     <title><?php $page->printTitle(); ?>（<?php echo $is_edit_mode?"編集":"新規" ?>）</title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink("js/functions.js"); ?>

@@ -6,6 +6,7 @@ $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="ログイン";
+$page->ForceNoindex();
 $session=new Session();
 
 // ALLOW_REMOTE_EDITOR_LOGIN で許可されていない場合、localhost以外からのログインは拒否する
@@ -25,6 +26,7 @@ $login_is_disabled=(function(){
     <title><?php $page->printTitle();  ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
 </head>
 <body>

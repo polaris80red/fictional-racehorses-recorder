@@ -6,6 +6,7 @@ $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="競走馬登録内容確認";
+$page->ForceNoindex();
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 $csrf_token=new FormCsrfToken();
@@ -69,6 +70,7 @@ if($error_exists){
     <title><?php $page->printTitle(); ?>（<?php echo $is_edit_mode?"編集":"新規" ?>）</title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
 <style>
 table{

@@ -7,6 +7,7 @@ $setting=new Setting();
 $page->setSetting($setting);
 $base_title="競馬場マスタ";
 $page->title="{$base_title}設定登録";
+$page->ForceNoindex();
 
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
@@ -36,6 +37,7 @@ if($input_id==0){
     <title><?php $page->printTitle();  ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

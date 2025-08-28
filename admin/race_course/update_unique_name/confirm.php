@@ -6,6 +6,7 @@ $page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="競馬場マスタ管理｜キー名称の一括変更：確認";
+$page->ForceNoindex();
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
@@ -34,6 +35,7 @@ $updater=new IdUpdater($pdo,$u_name,$new_unique_name);
     <title><?php echo $page->title; ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
 <style>

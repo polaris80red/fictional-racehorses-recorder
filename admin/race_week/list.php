@@ -7,6 +7,7 @@ $setting=new Setting();
 $page->setSetting($setting);
 $base_title="レース週マスタ";
 $page->title="{$base_title}｜設定一覧";
+$page->ForceNoindex();
 
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
@@ -22,6 +23,7 @@ $race_category_age = $race_category_age_table->getPage($pdo,$search_page,true);
     <title><?php $page->printTitle(); ?><?=" - ".SITE_NAME; ?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>

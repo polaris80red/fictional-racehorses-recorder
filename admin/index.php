@@ -5,8 +5,8 @@ defineAppRootRelPath(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
-$page->ForceNoindex();
 $page->title="管理画面 - ".SITE_NAME;
+$page->ForceNoindex();
 $session=new Session();
 
 if(!$session->is_logined()){
@@ -17,6 +17,7 @@ if(!$session->is_logined()){
 <head>
     <title><?php $page->printTitle(); ?></title>
     <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
 <style>
