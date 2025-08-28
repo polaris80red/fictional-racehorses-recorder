@@ -182,9 +182,14 @@ class Page{
     public function printHeaderNavigation(){
         $pref=$this->to_app_root_path;
 ?><div class="header_navigation"><div style="width:70%;float:left;">
+<?php if(SHOW_PARENT_SITE_LINK): ?>
+<a href="<?=PARENT_SITE_URL?>"><?=PARENT_SITE_LINK_TEXT?></a>
+<?php endif; ?>
 <a href="<?php echo $pref; ?>">[HOME]</a>
+<span class="nowrap">
 <a href="<?php echo $this->to_horse_search_path; ?>">[競走馬検索]</a>
 <a href="<?php echo $this->to_race_list_path; ?>?set_by_session=true">[レース検索]</a>
+</span>
 <?php
 $race_history_count=(new RaceAccessHistory())->count();
 if( !empty($_SESSION[Session::PUBLIC_PARAM_KEY]['latest_horse']['id'])||$race_history_count>0): ?>

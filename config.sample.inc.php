@@ -37,6 +37,13 @@ $cfg['SHOW_LOGIN_LINK']=true;
  *  false   :ログインするには「アプリのルート/admin/」にアクセスしてください
  */
 
+// 親サイトリンクを表示する
+$cfg['SHOW_PARENT_SITE_LINK']=false;
+// 親サイトリンクの文字列
+$cfg['PARENT_SITE_LINK_TEXT']='[メインサイト]';
+// 親サイトリンクのURL
+$cfg['PARENT_SITE_URL']='/';
+
 // 管理ユーザー向けにphpMyAdmin画面へのリンクを表示する（XAMPPによるローカル環境向け）
 $cfg['SHOW_PHPMYADMIN_LINK'] =true;
 $cfg['PHPMYADMIN_URL'] ='/phpmyadmin/';
