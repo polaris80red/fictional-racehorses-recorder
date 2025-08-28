@@ -3,6 +3,7 @@ class Page{
     public $title='';
     public $is_logined=false;
     public $is_editable = false;
+    private $noindex=false;
 
     public $common_msgs=[];
     public $error_msgs=[];
@@ -146,6 +147,22 @@ class Page{
     public function printSiteName(string $prefix='', string $suffix=''){
         print $prefix.SITE_NAME.$suffix;
         return $this;
+    }
+    /**
+     * 設定と関係なくnoindexに設定する
+     */
+    public function ForceNoindex(){
+        $this->noindex=true;
+        return $this;
+    }
+    /**
+     * noindex,nofollowメタタグを使用する設定ならタグ文字列を取得
+     */
+    public function getMetaNoindex(){
+        if($this->noindex||FORCE_NOINDEX){
+            return '<meta name="robots" content="noindex, nofollow">';
+        }
+        return '';
     }
     /**
      * デバッグ用データに格納した内容をdumpする

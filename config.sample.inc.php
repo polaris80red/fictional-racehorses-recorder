@@ -23,6 +23,13 @@ $cfg['ALLOW_REMOTE_EDITOR_LOGIN']=false;
  *  true    :リモートIPアドレスからのログインを許可します
  */
 
+// 検索のインデックス拒否
+$cfg['FORCE_NOINDEX']=true;
+/**   FORCE_NOINDEX
+ *  true    :noindex・nofollowをメタタグに設定して全体をインデックス拒否します
+ *  false   :基本的にはnoindex・nofollowを設定しません
+ */
+
 // ログインリンクをフロントに表示するかどうか
 $cfg['SHOW_LOGIN_LINK']=true;
 /**   SHOW_LOGIN_LINK

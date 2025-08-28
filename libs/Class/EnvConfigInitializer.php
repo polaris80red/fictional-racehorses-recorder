@@ -19,6 +19,9 @@ class EnvConfigInitializer {
         define('ALLOW_REMOTE_EDITOR_LOGIN',
             filter_var($cfg['ALLOW_REMOTE_EDITOR_LOGIN'],FILTER_VALIDATE_BOOL));
 
+        define('FORCE_NOINDEX',
+            filter_var($cfg['FORCE_NOINDEX'],FILTER_VALIDATE_BOOL));
+
         define('SHOW_LOGIN_LINK',
             filter_var($cfg['SHOW_LOGIN_LINK'],FILTER_VALIDATE_BOOL));
 
