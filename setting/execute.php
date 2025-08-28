@@ -79,7 +79,13 @@ if(isset($_SESSION['race_list'])){
     if(isset($_SESSION['race_list']['year']) &&
         strval($_SESSION['race_list']['year'])!=='' &&
         isset($_SESSION['setting']['select_zero_year'])){
-        $_SESSION['race_list']['year']=$_SESSION['setting']['select_zero_year'];
+            // 新しい範囲から外れている場合はリセット（大きく外れる日程対策）
+            if($_SESSION['race_list']['year']>$_SESSION['race_list']['max_year']){
+                $_SESSION['race_list']['year']=$_SESSION['setting']['select_zero_year'];
+            }
+            if($_SESSION['race_list']['year']<$_SESSION['race_list']['min_year']){
+                $_SESSION['race_list']['year']=$_SESSION['setting']['select_zero_year'];
+            }
     }
 }
 header('Location: ./');
