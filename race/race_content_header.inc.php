@@ -82,7 +82,7 @@ $race_sex_name=$race_category_sex->short_name_3??'';
 if(
     $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME||
     $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME_S){
-        $race_sex_name=$race_category_sex->umm_category;
+        $race_sex_name=(string)$race_category_sex->umm_category;
 }
 if($race_sex_name!==''){
     echo "（{$race_sex_name}）";
