@@ -77,6 +77,7 @@ class Page{
         $this->printStylesheetLink('style/main.css');
         $this->printThemeStylesheetLink('color.css');
         $this->printThemeStylesheetLink('grade_color.css');
+        $this->printStylesheetLink('user/style.css');
         return $this;
     }
     /**
