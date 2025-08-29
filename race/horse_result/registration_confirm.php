@@ -58,7 +58,7 @@ do{
     $race=new RaceResults($pdo, $race_detail->race_results_id);
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
-            $page->addErrorMsg("対象のレース結果が存在しません。");
+            $page->addErrorMsg("編集対象のレース結果が存在しません。");
             break;
         }
     }else{
@@ -71,6 +71,10 @@ do{
         }
         if(!$horse->record_exists){
             $page->addErrorMsg("存在しない競走馬ID");
+        }
+        if($horse->world_id!==$race->world_id){
+            $page->addErrorMsg("競走馬とレース情報のワールドが一致していません");
+            break;
         }
         if($horse->birth_year===null){
             $page->addErrorMsg("対象馬は生年未登録です");

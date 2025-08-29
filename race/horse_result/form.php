@@ -44,7 +44,6 @@ do{
         break;
     }
     # 該当結果を取得
-    if(empty($race_result_id) || empty($horse_id)){};
     if($is_edit_mode){
         if($horse_id===''){
             $page->addErrorMsg("編集モードですが競走馬IDが指定されていません");
@@ -55,7 +54,8 @@ do{
             break;
         }
     }
-    if($horse_id!==''&& $horse_id!==''){
+    if($horse_id!=='' && $race_result_id!==''){
+        // レースと馬が両方指定されている状態のとき
         $result=$form_data->setDataById($pdo,$race_result_id,$horse_id);
         if($result && !$is_edit_mode){
             $page->addErrorMsg("登録予定のレース個別結果が既に存在します｜$race_result_id|$horse_id");
@@ -63,6 +63,10 @@ do{
         }
         if(!$result && $is_edit_mode){
             $page->addErrorMsg("編集対象のレース個別結果が存在しません｜$race_result_id|$horse_id");
+            break;
+        }
+        if($horse->world_id!==$race->world_id){
+            $page->addErrorMsg("競走馬とレース情報のワールドが一致していません");
             break;
         }
     }

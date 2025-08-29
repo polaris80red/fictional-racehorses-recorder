@@ -67,6 +67,11 @@ do{
         $error_msgs[]="存在しない競走馬ID";
         break;
     }
+    if($horse->world_id!==$race->world_id){
+        $is_error=1;
+        $error_msgs[]="競走馬とレース情報のワールドが一致していません";
+        break;
+    }
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
             $is_error=1;
