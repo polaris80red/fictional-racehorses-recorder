@@ -184,6 +184,12 @@ if($search->limit>0){
     $search->printPagination();
 }
 ?>
+<?php if($search->birth_year!==''): ?>
+<hr>
+<a href="?birth_year=<?=($search->birth_year-1)?>&<?=$search->getUrlParam(['birth_year'])?>">[前年へ]</a>
+ <?=$search->birth_year?> 
+<a href="?birth_year=<?=($search->birth_year+1)?>&<?=$search->getUrlParam(['birth_year'])?>">[翌年へ]</a>
+<?php endif; ?>
 <hr><a id="foot"></a>
 <?php $search->printForm($page, $setting); ?>
 <?php endif; ?>
