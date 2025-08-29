@@ -305,9 +305,6 @@ $grades=RaceGrade::getForSelectbox($pdo);
     <th>週</th>
     <td>
     <?php
-    echo "<label>";
-    HTPrint::Radio('week_id','',$race->week_id);
-    echo "未選択</label><br>\n";
     foreach($weeks as $row){
         $class="race_week race_week_m{$row['month']} race_week_id{$row['id']}";
         if($row['month_grouping']%10===0){
@@ -321,7 +318,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
             $style="display:none;";
         }
         echo "<label class=\"{$class}\" style=\"{$style}\">";
-        HTPrint::Radio('week_id',$row['id'],$race->week_id);
+        HTPrint::Radio('week_id',$row['id'],$race->week_id,' required');
         echo str_pad($row['id'],2,'0',STR_PAD_LEFT)."週（".str_pad($row['month'],2,'0',STR_PAD_LEFT)."月）".h($row['name'])."\n";
         echo "<br></label>\n";
     }
