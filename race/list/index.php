@@ -71,15 +71,14 @@ $search->current_page_results_count=count($table_data);
 ?>
 <?php //$search->printForm($page,true,null); ?>
 <!--<hr>-->
-<?php print "<a href=\"#foot\" title=\"最下部検索フォームに移動\" style=\"text-decoration:none;\">▽検索結果</a>｜".$search->getSearchParamStr(); ?>
+<a href="#foot" title="最下部検索フォームに移動" style="text-decoration:none;">▽検索結果</a>｜<?=h($search->getSearchParamStr())?>
 <hr>
-<?php
-if($year!==''){
-    echo '<a href="?year='.$prev.'&'.$search->getUrlParam(['year','page']).'">[前年へ]</a> ';
-    echo $setting->getConvertedDate(['year'=>$year],'y');
-    echo ' <a href="?year='.$next.'&'.$search->getUrlParam(['year','page']).'">[翌年へ]</a>';
-    echo "<hr>\n";
-} ?>
+<?php if($year!==''): ?>
+<a href="?year=<?=$prev?>&<?=h($search->getUrlParam(['year','page']))?>">[前年へ]</a>
+<?=h($setting->getConvertedDate(['year'=>$year],'y'))?>
+ <a href="?year=<?=$next?>&<?=h($search->getUrlParam(['year','page']))?>">[翌年へ]</a>
+<hr>
+<?php endif; ?>
 <form method="get" action="<?=APP_ROOT_REL_PATH?>race/duplicate/form.php">
 <?php if($page->is_editable && $search->is_one_year_only): ?>
 <input type="button" value="全てチェック" onclick="toggleIdList();">
@@ -95,15 +94,17 @@ if($year!==''){
 <?php if($show_column_umm_turn): ?><th>時期</th><?php endif; ?>
 <?php if($show_column_date): ?><th>日付</th><?php endif; ?>
 <th>場</th><th style="min-width:3.5em;">距離</th><th>格付</th><th>名称</th><th>1着馬</th><th>2着馬</th><th>3着馬</th>
-</tr><?php
-foreach($table_data as $data){
-    $class=[];
-    $class[]="race_grade_".$data['grade_css_class_suffix']??'';
-    if($data['is_enabled']===0){ $class[]='disabled_row'; }
-    echo '<tr class="'.implode(' ',$class).'">';
+</tr>
+<?php foreach($table_data as $data): ?>
+<?php
+    $class=(new Imploader(' '))->add("race_grade_".$data['grade_css_class_suffix']??'');
+    if($data['is_enabled']===0){ $class->add('disabled_row'); }
+?>
+<tr class="<?=$class?>">
+<?php
     if($page->is_editable && $search->is_one_year_only){
         echo "<td class=\"in_input\"><label style=\"width:100%;height:100%;\">";
-        echo (new MkTagInput('checkbox',"id_list[]",urlencode($data['race_id'])));
+        echo (new MkTagInput('checkbox',"id_list[]",$data['race_id']));
         echo "</label></td>";
     }
     // 正規日付があり、仮日付でない場合　と　それ以外
@@ -191,22 +192,19 @@ foreach($table_data as $data){
         echo $a_tag;
     }
     echo "</td>";
-    echo "</tr>\n";
-}
-echo "</table>\n";
-if($search->limit>0){
-    echo "<hr>\n";
-    $search->printPagination();
-}
-if($year!==''){
-    echo "<hr>\n";
-    echo '<a href="?year='.$prev.'&'.$search->getUrlParam(['year','page']).'">[前年へ]</a> ';
-    echo $setting->getYearSpecialFormat($year);
-    if($setting->year_view_mode==0){ echo "年"; }
-    if($setting->year_view_mode==2){ echo "年"; }
-    echo ' <a href="?year='.$next.'&'.$search->getUrlParam(['year','page']).'">[翌年へ]</a>';
-}
-?>
+?></tr>
+<?php endforeach; ?>
+</table>
+<?php if($search->limit>0): ?>
+<hr>
+<?=$search->printPagination()?>
+<?php endif; ?>
+<?php if($year!==''): ?>
+<hr>
+<a href="?year=<?=$prev?>&<?=h($search->getUrlParam(['year','page']))?>">[前年へ]</a>
+<?=h($setting->getConvertedDate(['year'=>$year],'y'))?>
+ <a href="?year=<?=$next?>&<?=h($search->getUrlParam(['year','page']))?>">[翌年へ]</a>
+<?php endif; ?>
 </form>
 <hr><a id="foot"></a>
 <?php $search->printForm($page,false,true); ?>
