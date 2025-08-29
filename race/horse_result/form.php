@@ -84,7 +84,7 @@ if($page->error_exists){
 ?><!DOCTYPE html>
 <html>
 <head>
-    <title><?php echo $page->title; ?></title>
+    <title><?=h($page->title)?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -95,7 +95,7 @@ if($page->error_exists){
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $page->title; ?><?php echo ($is_edit_mode?"(編集)":"") ?></h1>
+<h1 class="page_title"><?=h($page->title)?><?=h($is_edit_mode?"(編集)":"") ?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
@@ -110,18 +110,18 @@ if($page->error_exists){
     <th>レース名称</th>
     <td colspan="2">
         <?php HTPrint::Hidden('race_id',$race_result_id); ?>
-        <?php print ($race->year?:"")." ".($race->race_name?:""); ?>
+        <?=h(($race->year?:"")." ".($race->race_name?:""))?>
     </td>
     <?php endif; ?>
 </tr>
 <tr>
     <?php if(empty($horse_id)): ?>
     <th>競走馬ID</th>
-    <td class="in_input" colspan="2"><input type="text" name="horse_id" value="<?php print_h($horse_id); ?>" class="required" required></td>
+    <td class="in_input" colspan="2"><input type="text" name="horse_id" value="<?=h($horse_id)?>" class="required" required></td>
     <?php else: ?>
     <th>競走馬名</th>
     <td colspan="2">
-        <?php print_h(!empty($horse->name_ja)?$horse->name_ja:($horse->name_en?:"")); ?>
+        <?=h(!empty($horse->name_ja)?$horse->name_ja:($horse->name_en?:""))?>
         <?php HTPrint::Hidden('horse_id',h($horse_id)); ?>
     </td>
     <?php endif; ?>
@@ -158,7 +158,7 @@ if($page->error_exists){
 <tr>
     <th>表示順補正</th>
     <td class="in_input">
-        <input type="number" name="result_order" style="width: 3em;" value="<?=$form_data->result_order;?>">
+        <input type="number" name="result_order" style="width: 3em;" value="<?=h($form_data->result_order)?>">
         同着順はこの値で昇順
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=result_order]');"></td>
@@ -166,7 +166,7 @@ if($page->error_exists){
 <tr>
     <th>特殊結果</th>
     <td class="in_input">
-    <input type="text" name="result_text" style="width: 4em;" list="result_text_list" value="<?php echo $form_data->result_text; ?>" placeholder=""><span title="記載がある場合は着順を無視して代わりに表示します。>除外は戦績にカウントせず中止は数えます。">（着順の代わりに表示）</span>
+    <input type="text" name="result_text" style="width: 4em;" list="result_text_list" value="<?=h($form_data->result_text)?>" placeholder=""><span title="記載がある場合は着順を無視して代わりに表示します。>除外は戦績にカウントせず中止は数えます。">（着順の代わりに表示）</span>
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=result_text]');"></td>
 </tr>
@@ -174,7 +174,7 @@ if($page->error_exists){
 <tr>
     <th>降着前入線順</th>
     <td class="in_input">
-    <input type="number" name="result_before_demotion" style="width: 3em;" value="<?php echo $form_data->result_before_demotion?:''; ?>" placeholder=""><span title="空でない場合、着順などに降着表記">（※降着馬のみ入力）</span>
+    <input type="number" name="result_before_demotion" style="width: 3em;" value="<?=h($form_data->result_before_demotion?:'')?>" placeholder=""><span title="空でない場合、着順などに降着表記">（※降着馬のみ入力）</span>
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=result_before_demotion]');"></td>
 </tr>
@@ -193,18 +193,18 @@ if($page->error_exists){
                 echo '</option>'."\n";
             }
         ?></select>／
-        <input type="number" name="horse_number" style="width:3em;" onchange="clearElmVal('*[name=horse_number_select]');" value="<?php echo $selected_option_exists?'':ifZero2Empty($form_data->horse_number); ?>">番
+        <input type="number" name="horse_number" style="width:3em;" onchange="clearElmVal('*[name=horse_number_select]');" value="<?=h($selected_option_exists?'':ifZero2Empty($form_data->horse_number))?>">番
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=frame_number]');clearElmVal('*[name=horse_number]');clearElmVal('*[name=horse_number_select]');"></td>
 </tr>
 <tr>
     <th>斤量</th>
-    <td class="in_input"><input type="text" name="handicap" style="width:6em;" list="handicap_list" value="<?php echo $form_data->handicap; ?>">kg</td>
+    <td class="in_input"><input type="text" name="handicap" style="width:6em;" list="handicap_list" value="<?=h($form_data->handicap)?>">kg</td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=handicap]');"></td>
 </tr>
 <tr>
     <th>着差</th>
-    <td class="in_input"><input type="text" name="margin" list="margin_list" value="<?php echo $form_data->margin; ?>"></td>
+    <td class="in_input"><input type="text" name="margin" list="margin_list" value="<?=h($form_data->margin)?>"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=margin]');"></td>
 </tr>
 <tr>
@@ -232,13 +232,13 @@ if($page->error_exists){
                 echo '</option>'."\n";
             }
         ?></select>／
-        <input type="number" name="favourite" style="width:3em;" onchange="clearElmVal('*[name=favourite_select]');" value="<?php $selected_option_exists?'':HTPrint::ifZero2Empty($form_data->favourite); ?>">
+        <input type="number" name="favourite" style="width:3em;" onchange="clearElmVal('*[name=favourite_select]');" value="<?=h($selected_option_exists?'':HTPrint::ifZero2Empty($form_data->favourite))?>">
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=favourite]');clearElmVal('*[name=favourite_select]');"></td>
 </tr>
 <!--<tr>
     <th>収得賞金</th>
-    <td class="in_input"><input type="number" name="syuutoku" list="syuutoku_list" value="<?php echo $form_data->syuutoku; ?>">万円</td>
+    <td class="in_input"><input type="number" name="syuutoku" list="syuutoku_list" value="<?=h($form_data->syuutoku)?>">万円</td>
     <td></td>
 </tr>-->
 <tr><td colspan="3" style="height: 4px;"></td></tr>
@@ -249,46 +249,46 @@ if($page->error_exists){
     $radio=new MkTagInputRadio("sex");
     $radio->value(0)->checkedIf($form_data->sex);
     ?>
-    <label><?php $radio->print(); ?>元の値</label>
+    <label><?=$radio?>元の値</label>
     <?php if($horse->sex===2){ $radio->disabled(); } ?>
-    <label><?php $radio->value(1)->checkedIf($form_data->sex)->print(); ?>牡</label>
-    <label><?php $radio->value(3)->checkedIf($form_data->sex)->print(); ?>せん</label>
+    <label><?=$radio->value(1)->checkedIf($form_data->sex)?>牡</label>
+    <label><?=$radio->value(3)->checkedIf($form_data->sex)?>せん</label>
 </tr>
 <tr>
     <th>所属上書</th>
-    <td class="in_input"><input type="text" name="tc" list="tc_list" value="<?php echo $form_data->tc; ?>" placeholder="このレース時点の所属"></td>
+    <td class="in_input"><input type="text" name="tc" list="tc_list" value="<?=h($form_data->tc)?>" placeholder="このレース時点の所属"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=tc]');"></td>
 </tr>
 <tr>
     <th>調教国上書</th>
-    <td class="in_input"><input type="text" name="training_country" value="<?php echo $form_data->training_country; ?>" placeholder="このレース時点の所属"></td>
+    <td class="in_input"><input type="text" name="training_country" value="<?=h($form_data->training_country)?>" placeholder="このレース時点の所属"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=training_country]');"></td>
 </tr>
 <tr>
     <th>地方所属</th>
     <td colspan="2">
-    <label><input type="radio" name="is_affliationed_nar" value="0" <?php echo ($form_data->is_affliationed_nar==0)?"checked":""; ?>>いいえ</label>
-    <label><input type="radio" name="is_affliationed_nar" value="1" <?php echo ($form_data->is_affliationed_nar==1)?"checked":""; ?>>はい（カク地）</label><br>
-    <label><input type="radio" name="is_affliationed_nar" value="2" <?php echo ($form_data->is_affliationed_nar==2)?"checked":""; ?>>中央移籍後（マル地）</label>
+    <label><input type="radio" name="is_affliationed_nar" value="0" <?=h(($form_data->is_affliationed_nar==0)?"checked":"")?>>いいえ</label>
+    <label><input type="radio" name="is_affliationed_nar" value="1" <?=h(($form_data->is_affliationed_nar==1)?"checked":"")?>>はい（カク地）</label><br>
+    <label><input type="radio" name="is_affliationed_nar" value="2" <?=h(($form_data->is_affliationed_nar==2)?"checked":"")?>>中央移籍後（マル地）</label>
     </td>
 </tr>
 <tr>
     <th>未登録の前走</th>
-    <td class="in_input"><input type="number" name="non_registered_prev_race_number" style="width: 3em;" value="<?php echo (int)$form_data->non_registered_prev_race_number; ?>">走</td>
+    <td class="in_input"><input type="number" name="non_registered_prev_race_number" style="width: 3em;" value="<?=h((int)$form_data->non_registered_prev_race_number)?>">走</td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=non_registered_prev_race_number]');"></td>
 </tr>
 <?php if($next_race_detail!=null && $next_race_detail->record_exists && $next_race_detail->non_registered_prev_race_number>0): ?>
 <tr>
     <th rowspan="3">次走から<br>未登録自動減算</th>
-    <td><?php echo $next_race_detail->race_results_id; ?><input type="hidden" name="next_race_id" value="<?php echo $next_race_detail->race_results_id; ?>"></td>
+    <td><?=h($next_race_detail->race_results_id)?><input type="hidden" name="next_race_id" value="<?=h($next_race_detail->race_results_id)?>"></td>
     <td></td>
 </tr>
 <tr>
-    <td><?php echo $next_race->race_name; ?>(<?php echo $next_race->year; ?>)</td>
+    <td><?=h($next_race->race_name)?>(<?=h($next_race->year)?>)</td>
     <td></td>
 </tr>
 <tr>
-    <td>現在指定：<?php echo $next_race_detail->non_registered_prev_race_number; ?>走</td>
+    <td>現在指定：<?=h($next_race_detail->non_registered_prev_race_number)?>走</td>
     <td></td>
 </tr>
 <?php endif; ?>
@@ -300,19 +300,19 @@ if($page->error_exists){
 <tr>
     <th>(火)<br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_1]','今週の注目レース（火曜日）');"></th>
     <td class="in_input">
-        <textarea name="jra_thisweek_horse_1" style="width: 20em; min-height:5.5em;"><?php echo $form_data->jra_thisweek_horse_1; ?></textarea>
+        <textarea name="jra_thisweek_horse_1" style="width: 20em; min-height:5.5em;"><?=h($form_data->jra_thisweek_horse_1)?></textarea>
     </td>
 </tr>
 <tr>
     <th>(木)<br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_2]','今週の注目レース（木曜日）');"></th>
     <td class="in_input">
-        <textarea name="jra_thisweek_horse_2" style="width: 20em; min-height:5.5em;"><?php echo $form_data->jra_thisweek_horse_2; ?></textarea><br>
+        <textarea name="jra_thisweek_horse_2" style="width: 20em; min-height:5.5em;"><?=h($form_data->jra_thisweek_horse_2)?></textarea><br>
     </td>
 </tr>
 <tr>
     <th>並び順</th>
     <td class="in_input">
-        <input type="number" name="jra_thisweek_horse_sort_number" style="width:6em;" value="<?php echo $form_data->jra_thisweek_horse_sort_number; ?>">
+        <input type="number" name="jra_thisweek_horse_sort_number" style="width:6em;" value="<?=h($form_data->jra_thisweek_horse_sort_number)?>">
         <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_thisweek_horse_sort_number]');">
     </td>
 </tr>
@@ -322,7 +322,7 @@ if($page->error_exists){
 <?php if(in_array($race->grade,['G1','Jpn1'])): ?>
 <tr>
     <td class="in_input" colspan="2">
-        <textarea name="jra_sps_comment" style="width: 95%;min-height:6em;"><?php echo $form_data->jra_sps_comment; ?></textarea><br>
+        <textarea name="jra_sps_comment" style="width: 95%;min-height:6em;"><?=h($form_data->jra_sps_comment)?></textarea><br>
         <input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_sps_comment]','スペシャル出馬表紹介');">
     </td>
 </tr>
@@ -436,8 +436,8 @@ function randomSet(){
 </script>
 <?php if($is_edit_mode){ ?>
 <form action="./delete/" method="post" style="text-align:right;">
-<input type="hidden" name="race_id" value="<?php echo $race_result_id; ?>">
-<input type="hidden" name="horse_id" value="<?php echo $horse_id; ?>">
+<input type="hidden" name="race_id" value="<?=h($race_result_id)?>">
+<input type="hidden" name="horse_id" value="<?=h($horse_id)?>">
 <input type="submit" value="レース結果詳細データ削除確認" style="color:red;">
 </form>
 <?php } ?>
