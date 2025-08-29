@@ -91,7 +91,6 @@ class Setting{
             //  セッション側に設定がない場合、DBからの設定を試みる
             // TODO: $pdoを外から渡すように全箇所変更
             $setting=(new ConfigTable(getPDO()))->getAllParams();
-            Elog::debug($setting);
             if($setting!==false){
                 $this->setByStdClass($setting);
             }
