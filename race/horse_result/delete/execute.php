@@ -65,24 +65,22 @@ if($page->error_exists){
 </head>
 <body>
 <header>
-<a href="<?php echo $page->to_app_root_path; ?>">[HOME]</a>
+<?php $page->printHeaderNavigation(); ?>
 <h1 class="page_title"><?php echo $page->title; ?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<?php if($page->error_exists){
-    ?>エラー<?php
-}else{
-    ?>削除しました。<?php
-}
-?>
-<pre><?php print_r($horse_race_result); ?></pre>
+<?php if($page->error_exists):?>
+エラー
+<?php else:?>
+<?=h($horse_race_result->horse_id)?>のレース結果を削除しました。
+<?php endif; ?>
 <hr>
-<a href="<?php echo $page->to_app_root_path ?>horse/?horse_id=<?php echo $horse_race_result->horse_id;?>">馬データへ移動</a><br>
+<a href="<?=h(APP_ROOT_REL_PATH."horse/?horse_id=".$horse_race_result->horse_id);?>">馬データへ移動</a><br>
 <hr class="no-css-fallback">
 </main>
 <footer>
-<?php $page->printFooterHomeLink(false); ?>
+<?php $page->printFooterHomeLink(); ?>
 </footer>
 </body>
 </html>
