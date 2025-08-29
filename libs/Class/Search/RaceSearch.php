@@ -411,7 +411,9 @@ class RaceSearch extends Search{
                 $distance_parts[]=":distance_{$key}";
                 $pre_bind->add(":distance_{$key}", $val>=100?$val:($val*100), PDO::PARAM_INT);
             }
-            $where_parts[]="`distance` IN (".implode(', ',$distance_parts).")";
+            if(count($distance_parts)>0){
+                $where_parts[]="`distance` IN (".implode(', ',$distance_parts).")";
+            }
         }
         // コース種類
         $parts=[];
@@ -589,8 +591,8 @@ class RaceSearch extends Search{
         echo "▼ 詳細展開";
     }
 ?>"><?php endif; ?>
-<input type="hidden" name="search_detail_tgl_status" class="search_detail_tgl_status" value="<?php echo $detail_tgl_is_default_open?'open':'close'; ?>">
-<input type="text" name="search_word" style="width:200px;height:1.5em;" placeholder="レース名称" value="<?php echo $this->search_word; ?>">
+<input type="hidden" name="search_detail_tgl_status" class="search_detail_tgl_status" value="<?=$detail_tgl_is_default_open?'open':'close'?>">
+<input type="text" name="search_word" style="width:200px;height:1.5em;" placeholder="レース名称" value="<?=h($this->search_word)?>">
 <input type="submit" value="検索実行">
 <input type="button" value="クリア" onclick="clearElmVal('*[name=search_word]');"><br>
 <div class="search_detail" style="<?php if($detail_tgl_is_default_open===false){echo "display:none;";} ?>">
@@ -702,7 +704,7 @@ echo $cbox->name('grade_3w')->checked($g_flags->hasFlag(self::Grade_W3)); ?>3勝
 ｜<input class="grade_reset_btn" type="button" value="格クリア">
 </div>
 <hr>
-競馬場：<input type="text" name="race_course" style="width:200px;height:1.5em;" placeholder="競馬場（スペース・カンマ区切り）" value="<?php echo $this->race_course; ?>">
+競馬場：<input type="text" name="race_course" style="width:200px;height:1.5em;" placeholder="競馬場（スペース・カンマ区切り）" value="<?=h($this->race_course)?>">
 <input type="button" value="競馬場をクリア" onclick="clearElmVal('*[name=race_course]');"><br>
 <span style="white-space:nowrap;" oncontextmenu="return false;">（
 <input type="hidden" name="course_type_tf" value="0">
@@ -712,12 +714,12 @@ echo $cbox->name('grade_3w')->checked($g_flags->hasFlag(self::Grade_W3)); ?>3勝
 <label oncontextmenu="reset_and_checked('course_type_','dt');"><input type="checkbox" name="course_type_dt" class="" value="1"<?php HTPrint::CheckedIfNotEmpty($this->course_type_dt); ?>>ダート</label>
 <label oncontextmenu="reset_and_checked('course_type_','hd');"><input type="checkbox" name="course_type_hd" class="" value="1"<?php HTPrint::CheckedIfNotEmpty($this->course_type_hd); ?>>障害</label>
 ）</span><input class="course_type_reset_button" type="button" value="全て" onclick="course_type_reset();"><br>
-距離　：<input type="text" name="distance" style="width:200px;height:1.5em;" placeholder="距離（スペース・カンマ区切り）" value="<?php echo $this->distance; ?>">
+距離　：<input type="text" name="distance" style="width:200px;height:1.5em;" placeholder="距離（スペース・カンマ区切り）" value="<?=h($this->distance)?>">
 <input type="button" value="距離をクリア" onclick="clearElmVal('*[name=distance]');">
 <hr>
-<span>年未指定時の範囲（<input type="number" name="min_year" value="<?php print $this->min_year; ?>" style="width:4em;">
+<span>年未指定時の範囲（<input type="number" name="min_year" value="<?=h($this->min_year)?>" style="width:4em;">
 ～
-<input type="number" name="max_year" value="<?php print $this->max_year; ?>" style="width:4em;">）</span>
+<input type="number" name="max_year" value="<?=h($this->max_year)?>" style="width:4em;">）</span>
 <input type="hidden" name="max_year_is_enabled_for_generation_search" value="0">
 <label title="世代検索に上限適用：上限のほうが4歳年より小さい場合は4歳年まで表示"><input type="checkbox" name="max_year_is_enabled_for_generation_search" value="1"<?php HTPrint::CheckedIfNotEmpty($this->max_year_is_enabled_for_generation_search); ?>>世代検索にも上限を適用（超過時は4歳年度）</label><br>
 1ページあたり：<select name="limit">
@@ -747,8 +749,8 @@ foreach([20=>20, 24=>"24（中央平地G1）", 25=>25, 26=>"26（中央G1）", 3
         $next = 1+(int)$this->page_number;
         ?>
 <?php if($this->page_number>0): ?>
-<a href="?page=0&<?php echo $this->getUrlParam(['page']); ?>">[先頭]</a>
-<a href="?page=<?php echo $prev; ?>&<?php echo $this->getUrlParam(['page']); ?>">[前のページ]</a>
+<a href="?page=0&<?=h($this->getUrlParam(['page']))?>">[先頭]</a>
+<a href="?page=<?=$prev?>&<?=h($this->getUrlParam(['page']))?>">[前のページ]</a>
 <?php else: ?>
 [先頭] [前のページ]
 <?php endif; ?>
@@ -761,7 +763,7 @@ foreach([20=>20, 24=>"24（中央平地G1）", 25=>25, 26=>"26（中央G1）", 3
         )): ?>
 [次のページ]
 <?php else: ?>
-<a href="?&page=<?php echo $next; ?>&<?php echo $this->getUrlParam(['page']); ?>">[次のページ]</a>
+<a href="?&page=<?=$next?>&<?=h($this->getUrlParam(['page']))?>">[次のページ]</a>
 <?php endif; ?>
 <?php
     }
