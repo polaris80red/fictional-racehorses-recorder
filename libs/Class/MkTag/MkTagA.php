@@ -12,8 +12,8 @@ class MkTagA extends MkTag{
     }
     public function get(){
         $raw_params=[];
-        if($this->href!==''){ $raw_params[]="href=\"{$this->href}\""; }
-        if($this->title!==''){ $raw_params[]="title=\"{$this->title}\""; }
+        if($this->href!==''){ $raw_params[]='href="'.h($this->href).'"'; }
+        if($this->title!==''){ $raw_params[]='title="'.h($this->title).'"'; }
         return $this->getDirect($raw_params,$this->raw_inner_text,$this->link_text);
     }
     /**

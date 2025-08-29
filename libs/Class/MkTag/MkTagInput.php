@@ -39,13 +39,13 @@ class MkTagInput extends MkTag{
     }
     public function get(){
         $raw_params=[];
-        $raw_params[]= "type=\"{$this->type}\"";
-        $raw_params[]= "name=\"{$this->name}{$this->name_suffix}\"";
-        $raw_params[]= "value=\"{$this->value}\"";
+        $raw_params[]= "type=\"".h($this->type)."\"";
+        $raw_params[]= "name=\"".h($this->name.$this->name_suffix)."\"";
+        $raw_params[]= "value=\"".h($this->value)."\"";
         if($this->is_checked){ $raw_params[]='checked'; }
         if($this->is_readonly){ $raw_params[]='readonly'; }
         if($this->is_disabled){ $raw_params[]='disabled'; }
-        if($this->title!==''){ $raw_params[]="title=\"{$this->title}\""; }
+        if($this->title!==''){ $raw_params[]="title=\"".h($this->title)."\""; }
         return $this->getDirect( $raw_params, $this->raw_inner_text);
     }
 

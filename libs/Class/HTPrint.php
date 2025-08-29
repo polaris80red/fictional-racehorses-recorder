@@ -50,21 +50,21 @@ class HTPrint{
      * Hiddenのinputタグを生成
      */
     public static function Hidden($name, $value, bool $return=false){
-        $html="<input type=\"hidden\" name=\"{$name}\" value=\"{$value}\">";
+        $html="<input type=\"hidden\" name=\"".h($name)."\" value=\"".h($value)."\">";
         return self::PrintOrReturn($html,$return);
     }
     /**
      * Hiddenのinputタグとvalueのテキストを生成
      */
     public static function HiddenAndText($name, $value, bool $return=false){
-        $html=$value.self::Hidden($name,$value,true);
+        $html=h($value).self::Hidden($name,$value,true);
         return self::PrintOrReturn($html,$return);
     }
     /**
      * ラジオボタンのinputタグを生成
      */
     public static function Radio($name, $value, $checked_value, string $raw_inner_text='', bool $return=false){
-        $html="<input type=\"radio\" name=\"{$name}\" value=\"{$value}\"".self::CheckedIfEqual($checked_value,$value,true).($raw_inner_text?" $raw_inner_text":"").">";
+        $html="<input type=\"radio\" name=\"".h($name)."\" value=\"".h($value)."\"".self::CheckedIfEqual($checked_value,$value,true).($raw_inner_text?" $raw_inner_text":"").">";
         return self::PrintOrReturn($html,$return);
     }
     /**
@@ -78,7 +78,7 @@ class HTPrint{
     ) {
         $html="<datalist id=\"{$list_id}\">\n";
         foreach($data_list as $key=>$val){
-            $html.="<option value=\"{$val}\">".(!empty($caption_list[$key])?$caption_list[$key]:'')."</option>\n";
+            $html.="<option value=\"{$val}\">".(!empty($caption_list[$key])?h($caption_list[$key]):'')."</option>\n";
         }
         $html.="</datalist>\n";
         return self::PrintOrReturn($html,$return);

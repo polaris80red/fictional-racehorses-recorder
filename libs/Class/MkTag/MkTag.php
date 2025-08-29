@@ -45,7 +45,7 @@ class MkTag{
         // インスタンスの汎用パラメータをセット
         if(count($this->key_value_params)>0){
             foreach($this->key_value_params as $key=>$value){
-                $tag_inner_text.=" {$key}=\"{$value}\"";
+                $tag_inner_text.=" {$key}=\"".h($value).'"';
             }
         }
         $raw_params[]=$this->getClassParam();
@@ -58,7 +58,7 @@ class MkTag{
         // 入力された生テキストをセット
         if($raw_inner_text!==''){ $tag_inner_text .=" ".$raw_inner_text; }
         $html ="<{$this->tag}{$tag_inner_text}>";
-        $html.=$contents;
+        $html.=h($contents);
         if($this->use_close_tag){
             $html.="</{$this->tag}>";
         }
