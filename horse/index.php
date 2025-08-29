@@ -419,7 +419,7 @@ foreach ($race_history as $data) {
 <hr>
 <table class="horse_base_data">
 <tr><th>馬名意味</th><td><?php print_h($horse->meaning); ?></td></tr>
-<tr><th>備考</th><td><pre><?php print_h($horse->note); ?></pre></td></tr>
+<tr><th>備考</th><td><?=nl2br(h($horse->note))?></td></tr>
 </table>
 <?php
 if($registration_only_race_is_exists||$show_registration_only){

@@ -312,7 +312,7 @@ if($data['result_text']!=''){
     print $a_tag;
 ?></td></tr>
 <?php endif; ?>
-<tr><th>備考</th><td><?php print(str_replace(["\r\n","\r","\n"],"<br>\n",h($race->note))); ?></td></tr>
+<tr><th>備考</th><td><?=nl2br(h($race->note))?></td></tr>
 </table>
 <?php if($page->is_editable): ?>
 <hr><input type="button" id="edit_tgl" value="編集" style="<?=!EDIT_MENU_TOGGLE?'display:none;':''?>">
