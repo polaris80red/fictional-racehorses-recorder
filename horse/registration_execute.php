@@ -20,7 +20,7 @@ if(empty($horse_id)){
 }
 */
 if(!(new FormCsrfToken())->isValid()){
-    Elog::error($page->title.": CSRFトークンエラー");
+    ELog::error($page->title.": CSRFトークンエラー");
     $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
     $page->printCommonErrorPage();
     exit;

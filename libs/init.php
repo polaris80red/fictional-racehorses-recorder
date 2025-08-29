@@ -79,7 +79,7 @@ date_default_timezone_set("Asia/Tokyo");
 define('PROCESS_STARTED_AT',(new DateTime())->format('Y-m-d H:i:s'));
 
 ELog::setExportDir(LOG_DIR_PATH,LOG_FILE_PREFIX);
-Elog::setLogLevel(LOG_LEVEL);
+ELog::setLogLevel(LOG_LEVEL);
 
 // ALLOW_REMOTE_ACCESS で許可されていない場合、Localhost以外からのアクセスを遮断する
 (function(){

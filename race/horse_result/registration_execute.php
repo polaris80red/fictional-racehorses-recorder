@@ -27,7 +27,7 @@ $next_race=null;
 $input->setDataByForm(INPUT_POST);
 do{
     if(!(new FormCsrfToken())->isValid()){
-        Elog::error($page->title.": CSRFトークンエラー");
+        ELog::error($page->title.": CSRFトークンエラー");
         $is_error=1;
         $error_msgs[]="登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）";
         break;

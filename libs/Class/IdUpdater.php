@@ -75,7 +75,7 @@ class IdUpdater{
             }
             if($use_this_transaction){ $this->pdo->commit();}
         }catch(Exception $e){
-            Elog::error(__CLASS__,['stmts'=>$this->stmts,'error'=>$e,'this_obj'=>$this]);
+            ELog::error(__CLASS__,['stmts'=>$this->stmts,'error'=>$e,'this_obj'=>$this]);
             if($use_this_transaction){ $this->pdo->rollBack();}
             exit;
         }

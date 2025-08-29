@@ -43,21 +43,21 @@ class SurrogateKeyGenerator {
                 $now=$datetime_now->format('Y-m-d');
                 $last=$datetime_c->format('Y-m-d');
                 if($now!==$last){
-                    Elog::debug("自動IDリセット実行（日付単位）直近ID登録:{$last}, 現在:{$now}");
+                    ELog::debug("自動IDリセット実行（日付単位）直近ID登録:{$last}, 現在:{$now}");
                     $this->Reset();
                 }
             }else if(AUTO_ID_RESET_MODE==='m'){
                 $now=$datetime_now->format('Y-m');
                 $last=$datetime_c->format('Y-m');
                 if($now!==$last){
-                    Elog::debug("自動IDリセット実行（月単位）直近ID登録:{$last}, 現在:{$now}");
+                    ELog::debug("自動IDリセット実行（月単位）直近ID登録:{$last}, 現在:{$now}");
                     $this->Reset();
                 }
             }else if(AUTO_ID_RESET_MODE==='y'){
                 $now=$datetime_now->format('Y');
                 $last=$datetime_c->format('Y');
                 if($now!==$last){
-                    Elog::debug("自動IDリセット実行（年単位）直近ID登録:{$last}, 現在:{$now}");
+                    ELog::debug("自動IDリセット実行（年単位）直近ID登録:{$last}, 現在:{$now}");
                     $this->Reset();
                 }
             }

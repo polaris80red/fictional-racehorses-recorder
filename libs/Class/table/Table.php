@@ -167,7 +167,7 @@ abstract class Table{
             return true;
         }catch (Exception $e){
             echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
-            Elog::error(__CLASS__.__METHOD__,[$stmt,$e]);
+            ELog::error(__CLASS__.__METHOD__,[$stmt,$e]);
             return false;
         }
     }
@@ -188,7 +188,7 @@ abstract class Table{
             return true;
         }catch (Exception $e){
             echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
-            Elog::error(__CLASS__.__METHOD__,[$stmt,$e]);
+            ELog::error(__CLASS__.__METHOD__,[$stmt,$e]);
             return false;
         }
     }

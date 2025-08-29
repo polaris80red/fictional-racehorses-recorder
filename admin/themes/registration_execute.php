@@ -28,7 +28,7 @@ $error_exists=false;
 do{
     if(!(new FormCsrfToken())->isValid()){
         $error_exists=true;
-        Elog::error($page->title.": CSRFトークンエラー|".__FILE__);
+        ELog::error($page->title.": CSRFトークンエラー|".__FILE__);
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }

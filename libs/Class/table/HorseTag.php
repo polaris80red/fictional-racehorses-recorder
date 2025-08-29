@@ -74,14 +74,14 @@ class HorseTag extends Table{
                 // 無効で入力値にある→UPDATEで復活させる
                 $is_enabled=1;
                 $update_stmt->execute();
-                Elog::debug($horse_id."[{$tag->tag_text}]復活");
+                ELog::debug($horse_id."[{$tag->tag_text}]復活");
                 continue;
             }
             if(!$exist_in_input && $tag->is_enabled==1){
                 // 有効だが入力値にない→UPDATEで廃止させる（AUTO INCREMENTを節約）
                 $is_enabled=0;
                 $update_stmt->execute();
-                Elog::debug($horse_id."[{$tag->tag_text}]無効化");
+                ELog::debug($horse_id."[{$tag->tag_text}]無効化");
                 continue;
             }
             // 有効で入力値にある・無効で入力値にもないは無視
@@ -105,7 +105,7 @@ class HorseTag extends Table{
             $i++;
         }
         if($i>0){
-            Elog::debug(__CLASS__.__METHOD__," INSERT $i 件(".implode(',',$insert_tags).")");
+            ELog::debug(__CLASS__.__METHOD__," INSERT $i 件(".implode(',',$insert_tags).")");
         }
     }
 }

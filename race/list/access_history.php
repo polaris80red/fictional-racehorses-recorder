@@ -87,7 +87,7 @@ try{
         $flag = $stmt->execute();
     }
 } catch(Exception $e){
-    Elog::error("access_history:",['e'=>$e, 'stmt'=>$stmt, 'sql'=>$sql]);
+    ELog::error("access_history:",['e'=>$e, 'stmt'=>$stmt, 'sql'=>$sql]);
 }
 ?><!DOCTYPE html>
 <html lang="ja">

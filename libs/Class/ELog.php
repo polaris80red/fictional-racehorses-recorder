@@ -1,5 +1,5 @@
 <?php
-class Elog{
+class ELog{
     protected static $output_dir='';
     protected static $logfile_prefix='';
     protected static int $log_level=0;

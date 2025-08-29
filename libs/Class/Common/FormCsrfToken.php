@@ -49,20 +49,20 @@ class FormCsrfToken {
     {
         // セッション側トークンがない場合は認証NG
         if($this->sessionToken===''){
-            Elog::debug(__CLASS__." エラー：SESSIONトークンなし");
+            ELog::debug(__CLASS__." エラー：SESSIONトークンなし");
             return false;
         }
         // POST側トークンがない場合は認証NG
         $post_token=(string)filter_input(INPUT_POST,self::TOKEN_KEY);
         if($post_token===''){
-            Elog::debug(__CLASS__." エラー：POSTトークンなし");
+            ELog::debug(__CLASS__." エラー：POSTトークンなし");
             return false;
         }
         // 一致していればTRUE、それ以外はfalse
         if($post_token===$this->sessionToken){
             return true;
         }
-        Elog::debug(__CLASS__." エラー：トークン不一致");
+        ELog::debug(__CLASS__." エラー：トークン不一致");
         return false;
     }
 }

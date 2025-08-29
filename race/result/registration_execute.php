@@ -14,7 +14,7 @@ $is_edit_mode=filter_input(INPUT_POST,'edit_mode')?1:0;
 $horse_id=(string)filter_input(INPUT_POST,'horse_id')?:'';// 登録後に馬戦績登録時
 
 if(!(new FormCsrfToken())->isValid()){
-    Elog::error($page->title.": CSRFトークンエラー");
+    ELog::error($page->title.": CSRFトークンエラー");
     $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
     $page->printCommonErrorPage();
     exit;

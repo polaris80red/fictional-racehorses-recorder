@@ -149,7 +149,7 @@ class Horse extends Table{
         try{
             $result = $stmt->execute();
         }catch (Exception $e){
-            Elog::error('競走馬登録例外エラー',$e);
+            ELog::error('競走馬登録例外エラー',$e);
             echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
             return false;
         }

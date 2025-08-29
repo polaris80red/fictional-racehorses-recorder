@@ -168,7 +168,7 @@ foreach ($table_data as $data) {
     $tr_class=new imploader(' ');
     // 馬情報がない異常データのスキップ
     if(empty($data['horse_id'])){
-        Elog::debug($data);
+        ELog::debug($data);
         //echo "<tr><td></td>".$empty_row_2."</tr>\n";
         continue;
     }
