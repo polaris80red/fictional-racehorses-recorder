@@ -55,7 +55,7 @@ if($save_story_is_enabled && $save_story_id>0 && Session::is_logined()){
 $setting->saveToSessionAll();
 // ログイン中かつ保存する選択でなければデフォルト値には反映しない
 //（ログアウトやセッションが切れるまでのみ有効）
-if(SESSION::is_logined() && $save_to_file){
+if(Session::is_logined() && $save_to_file){
     (new ConfigTable($pdo))->setTimestamp(PROCESS_STARTED_AT)->saveAllParams($setting->getSettingArray());
 }
 
