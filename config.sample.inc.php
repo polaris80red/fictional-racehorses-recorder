@@ -37,6 +37,15 @@ $cfg['SHOW_LOGIN_LINK']=true;
  *  false   :ログインするには「アプリのルート/admin/」にアクセスしてください
  */
 
+// 読み取り専用モード（簡易的なWEB公開用設定）
+$cfg['READONLY_MODE']=false;
+/**   READONLY_MODE
+ *  true    :画面からの編集等を行えない閲覧専用モードです。
+ *              ALLOW_REMOTE_EDITOR_LOGIN が true でもログイン不可になります。
+ *              SHOW_LOGIN_LINK が true でもログインページへのリンクを表示しません。
+ *  false   :制限のない通常の状態です
+ */
+
 // 親サイトリンクを表示する
 $cfg['SHOW_PARENT_SITE_LINK']=false;
 // 親サイトリンクの文字列

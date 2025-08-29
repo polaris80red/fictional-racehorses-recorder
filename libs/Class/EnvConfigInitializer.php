@@ -22,8 +22,12 @@ class EnvConfigInitializer {
         define('FORCE_NOINDEX',
             filter_var($cfg['FORCE_NOINDEX'],FILTER_VALIDATE_BOOL));
 
-        define('SHOW_LOGIN_LINK',
-            filter_var($cfg['SHOW_LOGIN_LINK'],FILTER_VALIDATE_BOOL));
+        define('READONLY_MODE',
+            filter_var($cfg['READONLY_MODE'],FILTER_VALIDATE_BOOL));
+        
+        $show_login_link=filter_var($cfg['SHOW_LOGIN_LINK'],FILTER_VALIDATE_BOOL);
+        if(READONLY_MODE){ $show_login_link=false; }
+        define('SHOW_LOGIN_LINK',$show_login_link);
 
         define('SHOW_PARENT_SITE_LINK',
             filter_var($cfg['SHOW_PARENT_SITE_LINK'],FILTER_VALIDATE_BOOL));

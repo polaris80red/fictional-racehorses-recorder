@@ -11,6 +11,12 @@ $password=filter_input(INPUT_POST,'password');
 
 // ALLOW_REMOTE_EDITOR_LOGIN で許可されていない場合、localhost以外からのログインは拒否する
 (function(){
+    if(READONLY_MODE){
+        header('HTTP/1.1 403 Forbidden');
+        header('Content-Type: text/plain; charset=UTF-8');
+        echo 'Access denied: 読み取り専用モードのためログインできません。';
+        exit;        
+    }
     if(ALLOW_REMOTE_EDITOR_LOGIN===true){
         if(ADMINISTRATOR_PASS===''){
             header('HTTP/1.1 403 Forbidden');

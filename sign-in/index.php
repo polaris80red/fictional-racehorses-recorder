@@ -10,13 +10,16 @@ $page->ForceNoindex();
 $session=new Session();
 
 // ALLOW_REMOTE_EDITOR_LOGIN で許可されていない場合、localhost以外からのログインは拒否する
-$login_is_disabled=(function(){
+$login_disable_status=(function(){
+    if(READONLY_MODE){
+        return '閲覧専用モードのためログインできません。';
+    }
     if(ALLOW_REMOTE_EDITOR_LOGIN===true){
         return false;
     }
     if(is_remote_access()){
         header('HTTP/1.1 403 Forbidden');
-        return true;
+        return '実行中のコンピューター以外からのログインは設定で禁止されています。';
     }
 })();
 
@@ -37,25 +40,25 @@ $login_is_disabled=(function(){
 <main id="content">
 <hr class="no-css-fallback">
 <form action="./execute.php" method="post">
-<?php if($login_is_disabled): ?>
+<?php if($login_disable_status): ?>
 <p style="color: #CC0000;">
 Access denied:<br>
-実行中のコンピューター以外からのログインは設定で禁止されています。</p>
+<?=h($login_disable_status)?></p>
 <?php endif; ?>
 <table>
     <tr>
         <th>ID</th>
-        <td class="in_input"><input type="text" name="id" style="width:10em;" value=""<?php echo $login_is_disabled?' disabled':''; ?>></td>
+        <td class="in_input"><input type="text" name="id" style="width:10em;" value=""<?php echo $login_disable_status?' disabled':''; ?>></td>
     </tr>
     <tr>
         <th>パス</th>
-        <td class="in_input"><input type="password" name="password" style="width:10em;" value=""<?php echo $login_is_disabled?' disabled':''; ?>></td>
+        <td class="in_input"><input type="password" name="password" style="width:10em;" value=""<?php echo $login_disable_status?' disabled':''; ?>></td>
     </tr>
 </table>
 <hr>
 <input type="hidden" name="return_url" value="">
 <?php (new FormCsrfToken())->printHiddenInputTag(); ?>
-<input type="submit" value="実行"<?php echo $login_is_disabled?' disabled':''; ?>>
+<input type="submit" value="実行"<?php echo $login_disable_status?' disabled':''; ?>>
 </form>
 <hr class="no-css-fallback">
 </main>
