@@ -21,6 +21,7 @@ if(filter_input(INPUT_GET,'mode')==='edit'){
 $is_edit_mode=true;
 if(empty($_GET['horse_id'])){
     $page->error_msgs[]="競走馬ID未指定";
+    header("HTTP/1.1 404 Not Found");
     $page->printCommonErrorPage();
     exit;
 }
@@ -49,6 +50,7 @@ $horse->setDataById($pdo, $horse_id);
 if(!$horse->record_exists){
     $page->error_msgs[]="競走馬情報取得失敗";
     $page->error_msgs[]="入力ID：{$horse_id}";
+    header("HTTP/1.1 404 Not Found");
     $page->printCommonErrorPage();
     exit;
 }
