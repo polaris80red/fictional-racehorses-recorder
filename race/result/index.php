@@ -314,6 +314,9 @@ if($data['result_text']!=''){
     print $a_tag;
 ?></td></tr>
 <?php endif; ?>
+<?php if(!empty($page->is_editable)): ?>
+<tr><th>ワールド</th><td><?=h((new World($pdo,$race->world_id))->name??'')?></td></tr>
+<?php endif; ?>
 <tr><th>備考</th><td><?=nl2br(h($race->note))?></td></tr>
 </table>
 <?php if($page->is_editable): ?>
