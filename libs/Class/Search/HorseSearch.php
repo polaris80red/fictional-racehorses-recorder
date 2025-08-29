@@ -377,7 +377,7 @@ class HorseSearch extends Search{
 <fieldset>
 <table class="horse_search">
     <tr><th>馬名</th>
-        <td><input type="text" name="keyword" style="width:200px;height:1.5em;" value="<?php print $this->keyword; ?>" placeholder="馬名, 先頭#でタグ検索"></td>
+        <td><input type="text" name="keyword" style="width:200px;height:1.5em;" value="<?=h($this->keyword)?>" placeholder="馬名, 先頭#でタグ検索"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=keyword]');">　<input type="submit" value="検索実行"></td>
     </tr>
     <tr><th><?php
@@ -405,40 +405,40 @@ class HorseSearch extends Search{
                     echo '</option>'."\n";
                 }
             ?></select>
-            ／ <input type="number" name="birth_year" style="width:4em;" value="<?php print $year_option_exists?'':$this->birth_year; ?>" placeholder="生年" onchange="clearElmVal('*[name=birth_year_select]');">
+            ／ <input type="number" name="birth_year" style="width:4em;" value="<?=h($year_option_exists?'':$this->birth_year)?>" placeholder="生年" onchange="clearElmVal('*[name=birth_year_select]');">
         </td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=birth_year]');clearElmVal('*[name=birth_year_select]');"></td>
     </tr>
     <tr><th>父名</th>
-        <td><input type="text" name="sire_name" value="<?php print $this->sire_name; ?>" placeholder="父名" onchange="clearElmVal('*[name=sire_id]');"></td>
+        <td><input type="text" name="sire_name" value="<?=h($this->sire_name)?>" placeholder="父名" onchange="clearElmVal('*[name=sire_id]');"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=sire_name]');"></td>
     </tr>
     <tr><th>母名</th>
-        <td><input type="text" name="mare_name" value="<?php print $this->mare_name; ?>" placeholder="母名" onchange="clearElmVal('*[name=mare_id]');"></td>
+        <td><input type="text" name="mare_name" value="<?=h($this->mare_name)?>" placeholder="母名" onchange="clearElmVal('*[name=mare_id]');"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=mare_name]');"></td>
     </tr>
     <tr><th>母父名</th>
-        <td><input type="text" name="bms_name" value="<?php print $this->bms_name; ?>" placeholder="母父名" onchange="clearElmVal('*[name=mare_id]');"></td>
+        <td><input type="text" name="bms_name" value="<?=h($this->bms_name)?>" placeholder="母父名" onchange="clearElmVal('*[name=mare_id]');"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=bms_name]');"></td>
     </tr>
     <tr><td colspan="3" style="height: 6px;"></td></tr>
     <tr><th>父ID</th>
-        <td><input type="text" name="sire_id" value="<?php print $this->sire_id; ?>" placeholder="父の競走馬ID(完全一致)" onchange="clearElmVal('*[name=sire_name]');"></td>
+        <td><input type="text" name="sire_id" value="<?=h($this->sire_id)?>" placeholder="父の競走馬ID(完全一致)" onchange="clearElmVal('*[name=sire_name]');"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=sire_id]');"></td>
     </tr>
     <tr><th>母ID</th>
-        <td><input type="text" name="mare_id" value="<?php print $this->mare_id; ?>" placeholder="母の競走馬ID(完全一致)" onchange="clearElmVal('*[name=mare_name]');clearElmVal('*[name=bms_name]');"></td>
+        <td><input type="text" name="mare_id" value="<?=h($this->mare_id)?>" placeholder="母の競走馬ID(完全一致)" onchange="clearElmVal('*[name=mare_name]');clearElmVal('*[name=bms_name]');"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=mare_id]');"></td>
     </tr>
     <tr><td colspan="3" style="height: 6px;"></td></tr>
     <tr><th>検索タグ</th>
-        <td><input type="text" name="search_text" value="<?php print $this->search_text; ?>" placeholder="検索タグ"></td>
+        <td><input type="text" name="search_text" value="<?=h($this->search_text)?>" placeholder="検索タグ"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=search_text]');"></td>
     </tr>
     <tr>
         <td colspan="3">
-            <label><input type="checkbox" name="horse_id_is_visibled" value="1"<?php print $this->horse_id_is_visibled?" checked":""; ?>>競走馬ID列の表示</label>
-            <label><input type="checkbox" name="null_birth_year" value="1"<?php print $this->null_birth_year?" checked":""; ?>>生年仮登録馬を生年検索</label>
+            <label><input type="checkbox" name="horse_id_is_visibled" value="1"<?=$this->horse_id_is_visibled?" checked":""?>>競走馬ID列の表示</label>
+            <label><input type="checkbox" name="null_birth_year" value="1"<?=$this->null_birth_year?" checked":""?>>生年仮登録馬を生年検索</label>
         </td>
     </tr>
 </table>
@@ -465,8 +465,8 @@ foreach([10=>10, 20=>20, 50=>50, 0=>'無制限'] as $key=>$val){
         $next = 1+(int)$this->page_number;
         ?>
 <?php if($this->page_number>0): ?>
-<a href="?page=0&<?php echo $this->getUrlParam(['page']); ?>">[先頭]</a>
-<a href="?page=<?php echo $prev; ?>&<?php echo $this->getUrlParam(['page']); ?>">[前のページ]</a>
+<a href="?page=0&<?=h($this->getUrlParam(['page']))?>">[先頭]</a>
+<a href="?page=<?=$prev?>&<?=h($this->getUrlParam(['page']))?>">[前のページ]</a>
 <?php else: ?>
 [先頭] [前のページ]
 <?php endif; ?>
@@ -479,7 +479,7 @@ foreach([10=>10, 20=>20, 50=>50, 0=>'無制限'] as $key=>$val){
         )): ?>
 [次のページ]
 <?php else: ?>
-<a href="?&page=<?php echo $next; ?>&<?php echo $this->getUrlParam(['page']); ?>">[次のページ]</a>
+<a href="?&page=<?=$next?>&<?=h($this->getUrlParam(['page']))?>">[次のページ]</a>
 <?php endif; ?>
 <?php
     }
