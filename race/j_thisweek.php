@@ -100,8 +100,8 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 ?>
+<?php foreach ($table_data as $data):?>
 <?php
-foreach ($table_data as $data) {
     // 1件目からない場合
     if(empty($data['horse_id'])){
         continue;
@@ -109,7 +109,7 @@ foreach ($table_data as $data) {
     if(empty($data['jra_thisweek_horse_1'])&&empty($data['jra_thisweek_horse_2'])&&$data['jra_thisweek_horse_sort_number']==0){ continue; }
 ?><section style="border: solid 1px #CCC; padding: 0.2em 0.5em; max-width: 940px;margin-top: 8px;">
 <div><?php if(false && $page->is_editable): ?>
-<a href="<?php echo $page->to_app_root_path; ?>race/horse_jra_article/form.php?race_id=<?php echo $race_id;?>&horse_id=<?php echo $data['horse_id'];?>">■</a>
+<a href="<?=$page->to_app_root_path?>race/horse_jra_article/form.php?race_id=<?=h($race_id)?>&horse_id=<?=h($data['horse_id'])?>">■</a>
 <?php else: ?>■ <?php endif; ?>
 <?php
     $training_country='';
@@ -125,31 +125,30 @@ foreach ($table_data as $data) {
         echo "[地] ";
     }
     if($data['is_jra']==0 && $data['is_nar']==0){
-        echo "<span style=\"font-family:monospace;\">[{$data['training_country']}]</span> ";
+        echo "<span style=\"font-family:monospace;\">[".h($data['training_country'])."]</span> ";
     }
-    echo '<span style="font-weight:bold;"><a href="'.APP_ROOT_REL_PATH.'horse/?horse_id='.$data['horse_id'].'">';
-    echo ($data['name_ja']?:$data['name_en']);
+    echo '<span style="font-weight:bold;"><a href="'.APP_ROOT_REL_PATH.'horse/?horse_id='.h($data['horse_id']).'">';
+    print_h($data['name_ja']?:$data['name_en']);
     echo "</a></span>";
     if($data['result_text']==='回避'){ echo " 【出走取消】"; }
-    echo "　".$data['sex_str'].$data['age']."歳";
+    print_h("　".$data['sex_str'].$data['age']."歳");
     if(!empty($data['tc'])){
-        echo "（{$data['tc']}）";
+        print_h("（{$data['tc']}）");
     }else{
-        echo "（{$data['horse_tc']}）";
+        print_h("（{$data['horse_tc']}）");
     }
 ?><hr>
-<p style="font-size: 0.9em;">父：<?php echo $data['sire_name']?:"□□□□□□"; ?><br>
-母：<?php echo $data['mare_name']?:"□□□□□□"; ?><br>
-母の父：<?php echo $data['bms_name']?:"□□□□□□"; ?><br></p>
+<p style="font-size: 0.9em;">父：<?=h($data['sire_name']?:"□□□□□□")?><br>
+母：<?=h($data['mare_name']?:"□□□□□□")?><br>
+母の父：<?=h($data['bms_name']?:"□□□□□□")?><br></p>
 </div>
 <div style="background-color:#FEC;border:solid 1px #CCC;max-width:550px;">
     <span style="font-weight:bold;">［ここに注目！］</span>
-    <div style="padding: 5px 20px 5px;font-size:0.85em;"><?php echo $data['jra_thisweek_horse_1']?:"……"; ?></div>
+    <div style="padding: 5px 20px 5px;font-size:0.85em;"><?=h($data['jra_thisweek_horse_1']?:"……")?></div>
 </div>
-<p><span style="font-weight:bold;">［出走馬情報］</span><br><?php echo $data['jra_thisweek_horse_2']?:"……"; ?></p>
-</section><?php
-}
-?>
+<p><span style="font-weight:bold;">［出走馬情報］</span><br><?=h($data['jra_thisweek_horse_2']?:"……")?></p>
+</section>
+<?php endforeach; ?>
 <hr class="no-css-fallback">
 </main>
 <footer>
