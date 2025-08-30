@@ -52,7 +52,7 @@ p {font-size:90%;}
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $page->title; ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
@@ -110,11 +110,11 @@ foreach ($table_data as $data) {
 ?><section>
 <p>
 <?php if($page->is_editable): ?>
-<a href="<?php echo $page->to_app_root_path; ?>race/horse_result/form.php?race_id=<?php echo $race_id;?>&horse_id=<?php echo $data['horse_id'];?>&edit_mode=1">■</a>
+<a href="<?=$page->to_app_root_path?>race/horse_result/form.php?race_id=<?=h($race_id)?>&horse_id=<?=h($data['horse_id'])?>&edit_mode=1">■</a>
 <?php else: ?>■
 <?php endif; ?>
 <?php if(!empty($data['frame_number'])) { ?>
-<span style="border:solid 1px #333; padding-left:0.3em; padding-right:0.3em; margin-right:0.3em;" class="<?php echo "waku_".$data['frame_number']; ?>"> <?php echo $data['frame_number']."枠"; ?></span><?php echo empty($data['horse_number'])?"":(str_pad($data['horse_number'],2,"0",STR_PAD_LEFT)."番 "); ?>
+<span style="border:solid 1px #333; padding-left:0.3em; padding-right:0.3em; margin-right:0.3em;" class="<?=h("waku_".$data['frame_number'])?>"> <?=h($data['frame_number']."枠")?></span><?=h( empty($data['horse_number'])?"":(str_pad($data['horse_number'],2,"0",STR_PAD_LEFT)."番 "))?>
 <?php } ?>
 <?php
     $training_country='';
@@ -130,27 +130,26 @@ foreach ($table_data as $data) {
         echo "[地] ";
     }
     if($data['is_jra']==0 && $data['is_nar']==0){
-        echo "<span style=\"font-family:monospace;\">[{$data['training_country']}]</span> ";
+        echo "<span style=\"font-family:monospace;\">[".h($data['training_country'])."]</span> ";
     }
-    echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.$data['horse_id'].'" style="text-decoration:none;">';
-    echo ($data['name_ja']?:$data['name_en']);
+    echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.h($data['horse_id']).'" style="text-decoration:none;">';
+    print_h($data['name_ja']?:$data['name_en']);
     echo "</a><br>";
     echo "調教師：□□□□";
     if(!empty($data['tc'])){
-        echo "（{$data['tc']}）";
+        print_h("（{$data['tc']}）");
     }else{
-        echo "（{$data['horse_tc']}）";
+        print_h("（{$data['horse_tc']}）");
     }
 ?><br>
-父：<?php echo $data['sire_name']?:"□□□□□□"; ?><br>
-母：<?php echo $data['mare_name']?:"□□□□□□"; ?><br>
-母の父：<?php echo $data['bms_name']?:"□□□□□□"; ?><br>
-<?php
-echo $data['sex_str'].$data['age']."歳";
-if($data['color']){ echo "/".$data['color'];}
-if($data['handicap']){ echo " ".$data['handicap']."kg";}
-?></p>
-<p>［紹介］<br><?php echo $data['jra_sps_comment']?:"……"; ?></p>
+父：<?=h($data['sire_name']?:"□□□□□□")?><br>
+母：<?=h($data['mare_name']?:"□□□□□□")?><br>
+母の父：<?=h($data['bms_name']?:"□□□□□□")?><br>
+<?=h($data['sex_str'].$data['age']."歳")?>
+<?=h($data['color']?("/".$data['color']):'')?>
+<?=h($data['handicap']?(" ".$data['handicap']."kg"):'')?>
+</p>
+<p>［紹介］<br><?=nl2br(h($data['jra_sps_comment']?:"……"))?></p>
 </section><hr><?php
 }
 ?>

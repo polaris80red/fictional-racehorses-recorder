@@ -58,12 +58,12 @@ if($race->track_condition){
 </div>
 <div style="clear: both;"><!-- race title block -->
 <div class="race_number floatLeft">
-    <?php print $race->race_number?($race->race_number."R"):'&nbsp;'; ?>
+    <?php print $race->race_number?h($race->race_number."R"):'&nbsp;'; ?>
 </div>
 <div class="race_grade_and_name">
-    <span class="nowrap" style="display: inline-block; min-width:16em;border-bottom:solid 1px #CCC;"><?php echo $race->race_name; ?></span>
+    <span class="nowrap" style="display: inline-block; min-width:16em;border-bottom:solid 1px #CCC;"><?=h($race->race_name)?></span>
     <?php if($race->grade): ?>
-    <span style="" class="ib grade race_grade_<?php print $grade_obj->css_class_suffix??''; ?>"><?=($grade_obj->short_name??'')?:$race->grade;?></span>
+    <span style="" class="ib grade race_grade_<?=h($grade_obj->css_class_suffix??'')?>"><?=h(($grade_obj->short_name??'')?:$race->grade)?></span>
     <?php endif; ?>
 </div>
 <div class="" style="font-size: 0.9em;"><?php
@@ -75,7 +75,7 @@ if(
 }else{
     $age_name=$age_name_row->name??'';
 }
-echo " ".($race->age?:$age_name);
+print_h(" ".($race->age?:$age_name));
 $race_category_sex=RaceCategorySex::getById($pdo,$race->sex_category_id);
 $race_sex_name=$race_category_sex->short_name_3??'';
 // 年齢形式がウマ娘の場合は変換
@@ -85,27 +85,27 @@ if(
         $race_sex_name=(string)$race_category_sex->umm_category;
 }
 if($race_sex_name!==''){
-    echo "（{$race_sex_name}）";
+    print_h("（{$race_sex_name}）");
 }
 
 (function($grade){
     if($grade==false){return; }
     if(empty($grade->category)){return;}
-    echo " ".$grade->category??'';
+    print_h(" ".$grade->category??'');
 })($grade_obj);
 
-echo " {$race->course_type}{$race->distance}m";
+print_h(" {$race->course_type}{$race->distance}m");
 ?></div>
 </div><!-- /race title block -->
 <hr class="clear">
-<a href="<?php echo $page->getRaceResultUrl($race_id); ?>" title="着順">[結果]</a>
-<a href="<?php echo APP_ROOT_REL_PATH; ?>race/syutsuba_simple.php?race_id=<?=$race_id;?>" title="NK出馬表">[出馬表]</a>
-<!--<a href="<?php echo APP_ROOT_REL_PATH; ?>race/syutsuba.php?race_id=<?=$race_id;?>" title="出馬表">■</a> -->
-<a href="<?php echo APP_ROOT_REL_PATH; ?>race/syutsuba_sp.php?race_id=<?=$race_id;?>" title="Jスペシャル出馬表">■</a>
+<a href="<?=h($page->getRaceResultUrl($race_id))?>" title="着順">[結果]</a>
+<a href="<?=APP_ROOT_REL_PATH?>race/syutsuba_simple.php?race_id=<?=h($race_id)?>" title="NK出馬表">[出馬表]</a>
+<!--<a href="<?=APP_ROOT_REL_PATH?>race/syutsuba.php?race_id=<?=h($race_id)?>" title="出馬表">■</a> -->
+<a href="<?=APP_ROOT_REL_PATH?>race/syutsuba_sp.php?race_id=<?=h($race_id)?>" title="Jスペシャル出馬表">■</a>
 <?php if(in_array($race->grade,['G1','G2','G3','Jpn1','Jpn2','Jpn3','重賞'])): ?>
-<a href="<?php echo APP_ROOT_REL_PATH; ?>race/j_thisweek.php?race_id=<?=$race_id;?>" title="J今週の注目レース・出走馬情報">■</a>
+<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek.php?race_id=<?=h($race_id)?>" title="J今週の注目レース・出走馬情報">■</a>
 <?php endif; ?>
 <?php if(in_array($race->grade,['G1','Jpn1'])): ?>
-<a href="<?php echo APP_ROOT_REL_PATH; ?>race/j_thisweek_sps.php?race_id=<?=$race_id;?>" title="Jスペシャル出馬表紹介文">■</a>
+<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek_sps.php?race_id=<?=h($race_id)?>" title="Jスペシャル出馬表紹介文">■</a>
 <?php endif; ?>
 </div>

@@ -225,26 +225,28 @@ $url=$this->to_app_root_path."race/list/access_history.php";
         return $this->to_app_root_path.'race/result/?race_id='.$race_id;
     }
     public function getRaceYearSearchUrl($year){
-        $url =$this->to_race_list_path.'?'.implode('&',[
-            'search_word=',
-            "year=".$year,
-            "distance=",
-            "search_detail_tgl_status=open",
-            "session_is_not_update=1"
-        ]);
+        $url_params=[
+            'search_word'=>'',
+            'year'=>$year,
+            'distance'=>'',
+            'search_detail_tgl_status'=>'open',
+            'session_is_not_update'=>1,
+        ];
+        $url =$this->to_race_list_path.'?'.http_build_query($url_params);
         return $url;
     }
     public function getRaceNameSearchUrl($race_name){
         $race_name=rtrim($race_name,'*');
-        $url =$this->to_race_list_path.'?'.implode('&',[
-            "search_word={$race_name}",
-            "year=",
-            "grade_reset=1",
-            "age_reset=1",
-            "distance=",
-            "search_detail_tgl_status=close",
-            "session_is_not_update=1"
-        ]);
+        $url_params=[
+            'search_word'=>$race_name,
+            'year'=>'',
+            'grade_reset'=>1,
+            'age_reset'=>1,
+            'distance'=>'',
+            'search_detail_tgl_status'=>'close',
+            'session_is_not_update'=>1,
+        ];
+        $url =$this->to_race_list_path.'?'.http_build_query($url_params);
         return $url;
     }
     public function getDateRaceListUrl($date,$optional_params_array=[]){
