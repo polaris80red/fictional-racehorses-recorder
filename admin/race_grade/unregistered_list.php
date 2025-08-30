@@ -72,12 +72,10 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
 </tr>
 <?php foreach($table_data as $row): ?>
 <tr class="">
-<?php
-    $url="./form.php?id={$row['grade']}";
-?>
-    <td><?=$row['grade'];?></td>
-    <td><a href="./form.php?name=<?=urlencode($row['grade']);?>">マスタ登録</a></td>
-    <td><a href="./update_unique_name/form.php?u_name=<?=urlencode($row['grade']);?>">レース結果を変換</a></td>
+<?php $url="./form.php?id={$row['grade']}"; ?>
+    <td><?=h($row['grade'])?></td>
+    <td><a href="./form.php?name=<?=h(urlencode($row['grade']))?>">マスタ登録</a></td>
+    <td><a href="./update_unique_name/form.php?u_name=<?=h(urlencode($row['grade']))?>">レース結果を変換</a></td>
 </tr>
 <?php endforeach; ?>
 </table>

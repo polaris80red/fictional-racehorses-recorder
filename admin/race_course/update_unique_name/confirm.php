@@ -52,13 +52,11 @@ $updater=new IdUpdater($pdo,$u_name,$new_unique_name);
 <main id="content">
 <hr class="no-css-fallback">
 <form action="execute.php" method="post">
-<?php
-$new_id_exists=$updater->new_id_exists(RaceCourse::TABLE,'unique_name');
-if($new_id_exists){
-    echo "新名称[{$new_unique_name}]の競馬場は既にマスタに存在します。<br>";
-    echo "マスタの名称は変更せず、旧名称のレースを新名称のレースに紐づけます。";
-}
-?>
+<?php $new_id_exists=$updater->new_id_exists(RaceCourse::TABLE,'unique_name'); ?>
+<?php if($new_id_exists): ?>
+新名称[<?=h($new_unique_name)?>]の競馬場は既にマスタに存在します。<br>
+マスタの名称は変更せず、旧名称のレースを新名称のレースに紐づけます。
+<?php endif; ?>
 <table class="edit-form-table">
 <tr>
     <th>置換前</th>
