@@ -21,6 +21,7 @@ class Page{
 
     public $race; // レース1件に対するページの場合用
     public $horse; // 競走馬1頭に対するページの場合用
+    private Theme $theme;
 
     protected $setting = null;
     public function __construct(int $hierarchy_number_from_app_root=0){
@@ -28,6 +29,9 @@ class Page{
     }
     public function setSetting(Setting $setting){
         $this->setting=$setting;
+        if($setting->theme_dir_name!=''){
+            $this->theme=(new ThemeLoader(APP_ROOT_DIR.'/themes'))->loadTheme($setting->theme_dir_name);
+        }
     }
     /**
      * WEBアプリルートディレクトリからの階層数を指定
@@ -75,8 +79,14 @@ class Page{
      */
     public function printBaseStylesheetLinks(){
         $this->printStylesheetLink('style/main.css');
-        $this->printThemeStylesheetLink('color.css');
-        $this->printThemeStylesheetLink('grade_color.css');
+        if(isset($this->theme)){
+            $css_files=$this->theme->getCssFiles();
+            foreach($css_files as $file_path){
+                $this->printStylesheetLink("themes/".$this->theme->getName()."/$file_path");
+            }
+        }else{
+            $this->printStylesheetLink('style/color.css');
+        }
         $this->printStylesheetLink('user/style.css');
         return $this;
     }
@@ -85,18 +95,6 @@ class Page{
      */
     public function printStylesheetLink(string $path){
         $this->printStylesheetLinkRaw($this->to_app_root_path.$path);
-        return $this;
-    }
-    /**
-     * テーマ別スタイルシートのlinkを表示
-     */
-    public function printThemeStylesheetLink(string $css_path){
-        if($this->setting->theme_dir_name!==''){
-            $result="themes/".$this->setting->theme_dir_name."/{$css_path}";
-        }else{
-            $result="style/{$css_path}";
-        }
-        $this->printStylesheetLink($result);
         return $this;
     }
     /**
