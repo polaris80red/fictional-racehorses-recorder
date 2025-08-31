@@ -47,7 +47,7 @@ if($page->error_exists){
 ?><!DOCTYPE html>
 <html>
 <head>
-    <title><?php echo $page->title; ?></title>
+    <title><?=h($page->title)?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -62,7 +62,7 @@ if($page->error_exists){
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $page->title; ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
@@ -70,7 +70,7 @@ if($page->error_exists){
 <table class="edit-form-table">
 <tr>
     <th>対象レース</th>
-    <td><?php echo $race_data->year."年 ".$race_data->race_name; ?></td>
+    <td><?=h($race_data->year."年 ".$race_data->race_name)?></td>
 </tr>
 <tr>
     <th>置換前レースID</th>

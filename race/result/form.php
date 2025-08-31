@@ -62,7 +62,7 @@ if(count($race_course_list_results)>0){
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?>（<?php echo $is_edit_mode?"編集":"新規" ?>）</title>
+    <title><?php $page->printTitle(); ?>（<?=$is_edit_mode?"編集":"新規"?>）</title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -73,30 +73,25 @@ if(count($race_course_list_results)>0){
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php $page->printTitle(); ?>（<?php echo $is_edit_mode?"編集":"新規" ?>）</h1>
+<h1 class="page_title"><?php $page->printTitle(); ?>（<?=$is_edit_mode?"編集":"新規"?>）</h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
 <form action="registration_confirm.php" method="post">
-<input type="hidden" name="edit_mode" value="<?php echo $is_edit_mode?1:0; ?>">
+<input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0; ?>">
 
 <table class="edit-form-table">
 <tr>
     <th>レースID</th>
-<?php
-if($is_edit_mode){
-    echo "<td>";
-    printHiddenAndText('race_id',$race_id);
-    echo "</td><td></td>";
-}else{
-?><td class="in_input">
-    <input type="text" name="race_id" value="<?php echo $race_id;?>" onchange="checkRaceIdExists();" placeholder="未入力で自動割当て">
-</td><td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=race_id]');"></td>
-<?php
-}
-?>
+    <?php if($is_edit_mode):?>
+    <td><?=MkTagInput::Hidden('race_id',$race_id).h($race_id)?></td><td></td>
+    <?php else: ?>
+    <td class="in_input">
+        <input type="text" name="race_id" value="<?=h($race_id)?>" onchange="checkRaceIdExists();" placeholder="未入力で自動割当て">
+    </td><td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=race_id]');"></td>
+    <?php endif; ?>
 </tr>
-<tr id="duplicate_id"<?php if($is_edit_mode){ echo 'style="display:none;"'; } ?>>
+<tr id="duplicate_id" <?=!$is_edit_mode?'':' style="display:none;"'?>>
     <th>ID重複確認</th>
     <td><a id="duplicate_id_link" href="" target="_blank"></a></td>
     <td></td>
@@ -109,7 +104,7 @@ if($is_edit_mode){
     if(count($world_list)>0){
         foreach($world_list as $row){
             $selected= $row['id']==$race->world_id?" selected":"";
-            echo "<option value=\"{$row['id']}\" {$selected}>{$row['id']}: {$row['name']}</option>";
+            echo "<option value=\"{$row['id']}\" {$selected}>{$row['id']}: ".h($row['name'])."</option>";
         }
     }
     ?></select></td>
@@ -126,15 +121,15 @@ if($is_edit_mode){
     foreach($race_course_list as $race_course_name){
         echo '<option value="'.$race_course_name,'"'.(($race_course_name==$race->race_course_name)?' selected ':'').'>';
         if($race_course_name==$race->race_course_name){$target_exists=true;}
-        echo $race_course_name;
+        print_h($race_course_name);
         echo '</option>'."\n";
     }
 ?></select>／
 <?php else: ?>
 <?php echo (MkTagInput::Hidden('race_course_name_select')); ?>
 <?php endif; ?>
-        <input type="text" name="race_course_name" style="width:4em;" value="<?php echo $target_exists?"":$race->race_course_name; ?>" placeholder="競馬場" onchange="clearElmVal('*[name=race_course_name_select]');">
-        <input type="number" name="race_number" style="width:3em;" value="<?php echo ($race->race_number?:""); ?>" placeholder="R">R
+        <input type="text" name="race_course_name" style="width:4em;" value="<?=h($target_exists?"":$race->race_course_name)?>" placeholder="競馬場" onchange="clearElmVal('*[name=race_course_name_select]');">
+        <input type="number" name="race_number" style="width:3em;" value="<?=h($race->race_number?:"")?>" placeholder="R">R
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=race_course_name]');clearElmVal('*[name=race_number]');clearElmVal('*[name=race_course_name_select]');"></td>
 </tr>
@@ -143,25 +138,25 @@ if($is_edit_mode){
     <td><?php
 foreach(['芝','ダ','障'] as $row){
     $checked= $row==$race->course_type?" checked":"";
-    echo "<label><input name=\"course_type\" type=\"radio\" value=\"{$row}\" {$checked} required>{$row}</label>\n";
+    echo "<label><input name=\"course_type\" type=\"radio\" value=\"".h($row)."\" {$checked} required>".h($row)."</label>\n";
 }
-    ?>　<input type="number" name="distance" class="required" list="distance_list" style="width:6em;" value="<?php echo $race->distance; ?>" required>m
+    ?>　<input type="number" name="distance" class="required" list="distance_list" style="width:6em;" value="<?=h($race->distance)?>" required>m
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=distance]');"></td>
 </tr>
 <tr>
     <th>レース名</th>
-    <td class="in_input"><input type="text" name="race_name" class="required" list="race_name_list" value="<?php echo $race->race_name; ?>" required></td>
+    <td class="in_input"><input type="text" name="race_name" class="required" list="race_name_list" value="<?=h($race->race_name)?>" required></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=race_name]');clearElmVal('*[name=race_short_name]');"></td>
 </tr>
 <tr>
     <th>出馬表等略名</th>
-    <td class="in_input"><input type="text" name="race_short_name" list="race_short_name_list" value="<?php echo $race->race_short_name; ?>"></td>
+    <td class="in_input"><input type="text" name="race_short_name" list="race_short_name_list" value="<?=h($race->race_short_name)?>"></td>
     <td class=""></td>
 </tr>
 <tr>
     <th>キャプション</th>
-    <td class="in_input"><input type="text" name="caption" value="<?php echo $race->caption; ?>" placeholder="一覧等オンマウス時補足"></td>
+    <td class="in_input"><input type="text" name="caption" value="<?=h($race->caption)?>" placeholder="一覧等オンマウス時補足"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=caption]');"></td>
 </tr>
 <tr>
@@ -175,13 +170,13 @@ $grades=RaceGrade::getForSelectbox($pdo);
     echo '<option value=""></option>'."\n";
     $target_exists=false;
     foreach($grades as $row){
-        echo '<option value="'.$row['unique_name'],'"'.(($row['unique_name']==$race->grade)?' selected ':'').'>';
+        echo '<option value="'.h($row['unique_name']).'"'.(($row['unique_name']==$race->grade)?' selected ':'').'>';
         if($row['unique_name']==$race->grade){$target_exists=true;}
-        echo $row['short_name']?:$row['unique_name'];
+        print_h($row['short_name']?:$row['unique_name']);
         echo '</option>'."\n";
     }
 ?></select>／
-        <input type="text" name="grade" style="width:4em;" value="<?php echo $target_exists?"":$race->grade; ?>" placeholder="手入力" onchange="clearElmVal('*[name=grade_select]');"></td>
+        <input type="text" name="grade" style="width:4em;" value="<?=h($target_exists?"":$race->grade)?>" placeholder="手入力" onchange="clearElmVal('*[name=grade_select]');"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=grade_select]');clearElmVal('*[name=grade]');"></td>
 </tr>
 <tr>
@@ -192,7 +187,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
     if(count($age_category_list)>0){
         foreach($age_category_list as $row){
             $selected= $row['id']==$race->age_category_id?" selected":"";
-            echo "<option value=\"{$row['id']}\" {$selected}>{$row['id']}: {$row['name']}</option>";
+            echo "<option value=\"{$row['id']}\" {$selected}>{$row['id']}: ".h($row['name'])."</option>";
         }
     }
     ?></select><input type="button" id="agegrade_to_name" value="馬齢・条件から命名"></td>
@@ -200,7 +195,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
 </tr>
 <tr>
     <th>馬齢（手入力）</th>
-    <td class="in_input"><input type="text" name="age" style="width: 18em;" value="<?php echo $race->age; ?>" placeholder="南半球産併記等用(選択式より優先表示)"></td>
+    <td class="in_input"><input type="text" name="age" style="width: 18em;" value="<?=h($race->age)?>" placeholder="南半球産併記等用(選択式より優先表示)"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=age]');"></td>
 </tr>
 <tr style="display:none;">
@@ -214,7 +209,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
     if(count($sex_category_list)>0){
         foreach($sex_category_list as $row){
             $selected= $row['id']==$race->sex_category_id?" selected":"";
-            echo "<option value=\"{$row['id']}\" {$selected}>{$row['id']}: {$row['name']}</option>";
+            echo "<option value=\"{$row['id']}\" {$selected}>{$row['id']}: ".h($row['name'])."</option>";
         }
     }
     ?></select></td>
@@ -229,46 +224,46 @@ $grades=RaceGrade::getForSelectbox($pdo);
     echo '<option value=""></option>'."\n";
     $target_exists=false;
     foreach($track_condition_list as $track_condition){
-        echo '<option value="'.$track_condition,'"'.(($track_condition==$race->track_condition)?' selected ':'').'>';
+        echo '<option value="'.h($track_condition).'"'.(($track_condition==$race->track_condition)?' selected ':'').'>';
         if($track_condition==$race->track_condition){$target_exists=true;}
-        echo $track_condition;
+        print_h($track_condition);
         echo '</option>'."\n";
     }
 ?></select>／
-        <input type="text" name="track_condition" style="width:4em;" value="<?php echo $target_exists?"":$race->track_condition; ?>" placeholder="手入力" onchange="clearElmVal('*[name=track_condition_select]');"></td>
+        <input type="text" name="track_condition" style="width:4em;" value="<?=h($target_exists?"":$race->track_condition)?>" placeholder="手入力" onchange="clearElmVal('*[name=track_condition_select]');"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=track_condition]');clearElmVal('*[name=track_condition_select]');"></td>
 </tr>
 <tr>
     <th>頭数</th>
-    <td class="in_input"><input type="number" name="number_of_starters" value="<?php echo $race->number_of_starters; ?>"></td>
+    <td class="in_input"><input type="number" name="number_of_starters" value="<?=h($race->number_of_starters)?>"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=number_of_starters]');"></td>
 </tr>
 <tr>
     <th>JRA</th>
     <td>
-    <label><input type="radio" name="is_jra" value="0" <?php echo ($race->is_jra==0)?"checked":""; ?>>いいえ</label>
-    <label><input type="radio" name="is_jra" value="1" <?php echo ($race->is_jra==1)?"checked":""; ?>>はい</label>
+    <label><input type="radio" name="is_jra" value="0" <?=$race->is_jra==0?"checked":""?>>いいえ</label>
+    <label><input type="radio" name="is_jra" value="1" <?=$race->is_jra==1?"checked":""?>>はい</label>
     </td>
     <td></td>
 </tr>
 <tr>
     <th>地方</th>
     <td>
-    <label><input type="radio" name="is_nar" value="0" <?php echo ($race->is_nar==0)?"checked":""; ?>>いいえ</label>
-    <label><input type="radio" name="is_nar" value="1" <?php echo ($race->is_nar==1)?"checked":""; ?>>はい</label>
+    <label><input type="radio" name="is_nar" value="0" <?=$race->is_nar==0?"checked":""?>>いいえ</label>
+    <label><input type="radio" name="is_nar" value="1" <?=$race->is_nar==1?"checked":""?>>はい</label>
     </td>
     <td></td>
 </tr>
 <tr>
     <th>正規日付</th>
-    <td class="in_input"><input type="text" id="race_date_picker" name="date" value="<?php echo $race->date; ?>" onchange="setYM();setWeekSelect();getWeekNum();clearElmVal('*[name=year_select]');"></td>
+    <td class="in_input"><input type="text" id="race_date_picker" name="date" value="<?=h($race->date)?>" onchange="setYM();setWeekSelect();getWeekNum();clearElmVal('*[name=year_select]');"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=date]');"></td>
 </tr>
 <tr>
     <th>仮の日付</th>
     <td>
-    <label><input type="radio" name="is_tmp_date" value="0" <?php echo ($race->is_tmp_date==0)?"checked":""; ?>>いいえ</label>
-    <label><input type="radio" name="is_tmp_date" value="1" <?php echo ($race->is_tmp_date==1)?"checked":""; ?>>はい（一覧等で日を省略）</label>
+    <label><input type="radio" name="is_tmp_date" value="0" <?=$race->is_tmp_date==0?"checked":""?>>いいえ</label>
+    <label><input type="radio" name="is_tmp_date" value="1" <?=$race->is_tmp_date==1?"checked":""?>>はい（一覧等で日を省略）</label>
     </td>
     <td></td>
 </tr>
@@ -283,13 +278,13 @@ $grades=RaceGrade::getForSelectbox($pdo);
             $year_option_exists=false;
             for($i=$year_min; $i<=$year_max; $i++){
                 if($i==$race->year){ $year_option_exists=true; }
-                echo '<option value="'.$i,'"'.(($i==$race->year)?' selected ':'').'>';
-                echo $setting->getYearSpecialFormat($i);
+                echo '<option value="'.$i.'"'.(($i==$race->year)?' selected ':'').'>';
+                print_h($setting->getYearSpecialFormat($i));
                 echo '</option>'."\n";
             }
         ?></select>
         ／ 
-        <input type="number" name="year" style="width:5em;" value="<?=$year_option_exists?'':$race->year;?>" onchange="clearElmVal('*[name=year_select]');" placeholder="年手入力">年
+        <input type="number" name="year" style="width:5em;" value="<?=h($year_option_exists?'':$race->year)?>" onchange="clearElmVal('*[name=year_select]');" placeholder="年手入力">年
         <select name="month" class="required" onchange="setWeekSelect();" required>
     <option value="">未選択</option>
     <?php
@@ -319,8 +314,8 @@ $grades=RaceGrade::getForSelectbox($pdo);
         }
         echo "<label class=\"{$class}\" style=\"{$style}\">";
         HTPrint::Radio('week_id',$row['id'],$race->week_id,' required');
-        echo str_pad($row['id'],2,'0',STR_PAD_LEFT)."週（".str_pad($row['month'],2,'0',STR_PAD_LEFT)."月）".h($row['name'])."\n";
-        echo "<br></label>\n";
+        print_h(str_pad($row['id'],2,'0',STR_PAD_LEFT)."週（".str_pad($row['month'],2,'0',STR_PAD_LEFT)."月）".$row['name']);
+        echo "<br>\n</label>";
     }
     ?></td>
     <td></td>
@@ -328,11 +323,11 @@ $grades=RaceGrade::getForSelectbox($pdo);
 <tr>
     <th>備考</th>
     <td class="in_input">
-        <textarea name="note" style="width:10rm;height:4em;"><?php echo $race->note; ?></textarea>
+        <textarea name="note" style="width:10rm;height:4em;"><?=h($race->note)?></textarea>
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=note]');"></td>
 </tr>
-<tr style="<?php echo ($is_edit_mode || $race->is_enabled==0)?'':'display:none;'; ?>">
+<tr style="<?=($is_edit_mode || $race->is_enabled==0)?'':'display:none;'?>">
     <th>表示<br>（論理削除）</th>
     <td>
     <label><?php HTPrint::Radio("is_enabled",1,$race->is_enabled); ?>表示する</label><br>
@@ -365,7 +360,7 @@ HTPrint::DataList('distance_list',[
 ?>
 <?php if($is_edit_mode): ?>
 <form action="./delete/" method="post" style="text-align:right;">
-<input type="hidden" name="race_id" value="<?php echo $race_id; ?>">
+<input type="hidden" name="race_id" value="<?=h($race_id)?>">
 <input type="submit" value="レース結果データ削除確認" style="color:red;">
 </form>
 <?php endif; ?>

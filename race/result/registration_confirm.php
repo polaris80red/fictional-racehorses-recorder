@@ -40,7 +40,7 @@ if($race->setDataByPost()==false){
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?>（<?php echo $is_edit_mode?"編集":"新規" ?>）</title>
+    <title><?php $page->printTitle(); ?>（<?=$is_edit_mode?"編集":"新規"?>）</title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -49,12 +49,12 @@ if($race->setDataByPost()==false){
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php $page->printTitle(); ?>（<?php echo $is_edit_mode?"編集":"新規" ?>）</h1>
+<h1 class="page_title"><?php $page->printTitle(); ?>（<?=$is_edit_mode?"編集":"新規"?>）</h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
 <form action="registration_execute.php" method="post">
-<input type="hidden" name="edit_mode" value="<?php echo $is_edit_mode?1:0; ?>">
+<input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0?>">
 <table class="edit-form-table">
 <tr>
     <th>レースID</th>
@@ -68,14 +68,14 @@ if($race->setDataByPost()==false){
 <tr>
     <th>競馬場</th>
     <td>
-        <?php echo $race->race_course_name; ?><?php if($race->race_number){print $race->race_number.'R';} ?>
+        <?=h($race->race_course_name)?><?=h($race->race_number?"{$race->race_number}R":'')?>
         <?php HTPrint::Hidden('race_course_name',$race->race_course_name) ?>
         <?php HTPrint::Hidden('race_number',$race->race_number) ?>
     </td>
 </tr>
 <tr>
     <th>距離</th>
-    <td><?php echo $race->course_type; ?><?php echo $race->distance; ?>
+    <td><?=h($race->course_type)?><?=h($race->distance)?>
     <?php HTPrint::Hidden('course_type',$race->course_type) ?>
     <?php HTPrint::Hidden('distance',$race->distance) ?>
     </td>
@@ -98,7 +98,7 @@ if($race->setDataByPost()==false){
 </tr>
 <tr>
     <th>馬齢条件</th>
-    <td><?php echo RaceCategoryAge::getNameById($pdo,$race->age_category_id); ?><?php HTPrint::Hidden('age_category_id',$race->age_category_id) ?></td>
+    <td><?=h(RaceCategoryAge::getNameById($pdo,$race->age_category_id))?><?php HTPrint::Hidden('age_category_id',$race->age_category_id) ?></td>
 </tr>
 <tr>
     <th>馬齢(手入力)</th>
@@ -106,7 +106,7 @@ if($race->setDataByPost()==false){
 </tr>
 <tr>
     <th>性別条件</th>
-    <td><?php echo RaceCategorySex::getShortNameById($pdo,$race->sex_category_id); ?><?php HTPrint::Hidden('sex_category_id',$race->sex_category_id) ?></td>
+    <td><?=h(RaceCategorySex::getShortNameById($pdo,$race->sex_category_id))?><?php HTPrint::Hidden('sex_category_id',$race->sex_category_id) ?></td>
 </tr>
 <tr>
     <th>性別条件</th>
@@ -118,11 +118,11 @@ if($race->setDataByPost()==false){
 </tr>
 <tr>
     <th>JRA</th>
-    <td><?php print $race->is_jra?'はい':'いいえ'; ?><?php HTPrint::Hidden('is_jra',$race->is_jra) ?></td>
+    <td><?=$race->is_jra?'はい':'いいえ'?><?php HTPrint::Hidden('is_jra',$race->is_jra) ?></td>
 </tr>
 <tr>
     <th>地方</th>
-    <td><?php print $race->is_nar?'はい':'いいえ'; ?><?php HTPrint::Hidden('is_nar',$race->is_nar) ?></td>
+    <td><?=$race->is_nar?'はい':'いいえ'?><?php HTPrint::Hidden('is_nar',$race->is_nar) ?></td>
 </tr>
 <tr>
     <th>正規日付</th>
@@ -130,12 +130,12 @@ if($race->setDataByPost()==false){
 </tr>
 <tr>
     <th>仮の日付</th>
-    <td><?php print $race->is_tmp_date?'はい':'いいえ'; ?><?php HTPrint::Hidden('is_tmp_date',$race->is_tmp_date) ?></td>
+    <td><?=$race->is_tmp_date?'はい':'いいえ'?><?php HTPrint::Hidden('is_tmp_date',$race->is_tmp_date) ?></td>
 </tr>
 <tr>
     <th>年月</th>
     <td>
-        <?=$setting->getYearSpecialFormat($race->year);?><?php echo $race->month; ?>月
+        <?=h($setting->getYearSpecialFormat($race->year));?><?=h($race->month)?>月
         <?php HTPrint::Hidden('year',$race->year) ?>
         <?php HTPrint::Hidden('month',$race->month) ?>
     </td>
@@ -144,22 +144,23 @@ if($race->setDataByPost()==false){
     <th>週</th>
     <td>
         <?php
+            $week_str='';
             if($race->week_id>0){
                 $week=RaceWeek::getById($pdo,$race->week_id);
-                echo "第{$week->id}週（{$week->month}月）{$week->name}";
+                $week_str="第{$week->id}週（{$week->month}月）{$week->name}";
             }
         ?>
-        <?php HTPrint::Hidden('week_id',$race->week_id) ?>
+        <?=h($week_str)?><?php HTPrint::Hidden('week_id',$race->week_id) ?>
     </td>
 </tr>
 <tr>
     <th>備考</th>
-    <td class="in_input"><textarea name="note" readonly><?php echo $race->note;?></textarea></td>
+    <td class="in_input"><textarea name="note" readonly><?=h($race->note)?></textarea></td>
 </tr>
 <tr>
     <th>論理削除状態</th>
     <td>
-        <?php print $race->is_enabled?'表示する':'非表示' ?>
+        <?=$race->is_enabled?'表示する':'非表示'?>
         <?php HTPrint::Hidden('is_enabled',$race->is_enabled) ?>
     </td>
 </tr>
