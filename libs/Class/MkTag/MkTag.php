@@ -8,12 +8,14 @@ class MkTag{
 
     protected $name_suffix='';
     protected $name='';
-    protected $value='';
-    protected $title='';
     /**
      * 汎用 param_name="value" 形式パラメータ
      */
     protected $key_value_params=[];
+    /**
+     * readonlyなど名前だけのパラメータ
+     */
+    protected $boolean_attributes=[];
 
     // param_name="[a,b,c]"になり個別に追加・削除したいもの
     protected $class_array=[];
@@ -42,14 +44,25 @@ class MkTag{
         if($this->use_close_tag===null){ $this->use_close_tag=static::UseCloseTag; }
 
         $tag_inner_text='';
+        if($this->name!=''){
+            $tag_inner_text.=" name=\"".h($this->name.$this->name_suffix??'')."\"";
+        }
         // インスタンスの汎用パラメータをセット
         if(count($this->key_value_params)>0){
             foreach($this->key_value_params as $key=>$value){
-                $tag_inner_text.=" {$key}=\"".h($value).'"';
+                $tag_inner_text.=" ".h($key)."=\"".h($value).'"';
             }
         }
-        $raw_params[]=$this->getClassParam();
-        $raw_params[]=$this->getStyleParam();
+        if(count($this->class_array)){
+            $raw_params[]='class="'.h($this->getClassParamString()).'"';
+        }
+        if(count($this->style_array)>0){
+            $raw_params[]='style="'.h($this->getStyleParamString()).'"';
+        }
+        // 名前のみ属性を一括セット
+        if(count($this->boolean_attributes)>0){
+            $tag_inner_text.=h(" ".$this->getBoolAttrString());
+        }
         // 追加で入力されたパラメータをセット
         $raw_params=array_diff($raw_params,['']);
         if(count($raw_params)>0){
@@ -79,7 +92,7 @@ class MkTag{
      * 汎用key=>value型パラメータの登録・更新
      */
     public function setKV($param_name,$value){
-        $this->key_value_params[$param_name]="{$param_name}=\"{$value}\"";
+        $this->key_value_params[$param_name]=$value;
         return $this;
     }
     /**
@@ -90,6 +103,34 @@ class MkTag{
             unset($this->key_value_params[$param_name]);
         }
         return $this;
+    }
+    /**
+     * 名前だけ型式の属性（boolean_attributes）のセット
+     */
+    public function setBool(string $attr_name,bool $bool=true) {
+        $this->boolean_attributes[$attr_name]=$bool;
+        return $this;
+    }
+    /**
+     * 名前だけ型式の属性を除去
+     */
+    public function removeBool(string $attr_name){
+        if(isset($this->boolean_attributes[$attr_name])){
+            unset($this->boolean_attributes[$attr_name]);
+        }
+        return $this;
+    }
+    /**
+     * 名前だけ型式の属性を文字列に変換
+     */
+    protected function getBoolAttrString(){
+        $ret_array=[];
+        foreach($this->boolean_attributes as $attr_name=>$state){
+            if($state===true){
+                $ret_array[]=$attr_name;
+            }
+        }
+        return implode(' ',$ret_array);
     }
     /**
      * class名を追加
@@ -118,12 +159,8 @@ class MkTag{
     /**
      * Classパラメータを取得
      */
-    protected function getClassParam(){
-        if(count($this->class_array)>0){
-            $param=implode(" ",$this->class_array);
-            return "class=\"$param\"";
-        }
-        return "";
+    protected function getClassParamString(){
+        return implode(" ",$this->class_array);
     }
     /**
      * スタイルをプロパティ名と値で設定（既にあれば置き換え、値なしは除去）
@@ -161,11 +198,11 @@ class MkTag{
     /**
      * Styleパラメータを取得
      */
-    protected function getStyleParam(){
+    protected function getStyleParamString(){
         if(($declarations=$this->getStyleDeclarations())===false){
             return "";
         }
-        return 'style="'.implode(";",$declarations).';"';
+        return implode(";",$declarations);
     }
     public function name(string $name){
         $this->name=$name;
@@ -179,9 +216,19 @@ class MkTag{
         return $this;
     }
     public function value(string $value){
-        $this->value=$value; return $this;
+        $this->setKV('value',$value);
+        return $this;
     }
-    public function title(string $title){ $this->title=$title; return $this;}
+    public function getValue(){
+        if(array_key_exists('value',$this->key_value_params)){
+            return $this->key_value_params['value'];
+        }
+        return null;
+    }
+    public function title(string $title){
+        $this->setKV('title',$title);
+        return $this;
+    }
 
     public function contents(string $contents){
         $this->contents=$contents; return $this;
