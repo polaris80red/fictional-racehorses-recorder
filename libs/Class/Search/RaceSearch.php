@@ -595,7 +595,7 @@ class RaceSearch extends Search{
 <input type="text" name="search_word" style="width:200px;height:1.5em;" placeholder="レース名称" value="<?=h($this->search_word)?>">
 <input type="submit" value="検索実行">
 <input type="button" value="クリア" onclick="clearElmVal('*[name=search_word]');"><br>
-<div class="search_detail" style="<?php if($detail_tgl_is_default_open===false){echo "display:none;";} ?>">
+<div class="search_detail" style="<?=$detail_tgl_is_default_open===false?"display:none;":''?>">
 <hr>
 <?php
 $year_min=$this->setting->select_zero_year - $this->setting->year_select_min_diff;
@@ -606,7 +606,7 @@ $year_max=$this->setting->select_zero_year + $this->setting->year_select_max_dif
     echo '<option value=""></option>'."\n";
     for($i=$year_min; $i<=$year_max; $i++){
         echo '<option value="'.$i,'"'.(($i==$this->min_year)?' selected ':'').'>';
-        echo $this->setting->getYearSpecialFormat($i);
+        print_h($this->setting->getYearSpecialFormat($i));
         if($this->setting->year_view_mode==0){ echo "年"; }
         if($this->setting->year_view_mode==2){ echo "年"; }
         echo '</option>'."\n";
@@ -619,13 +619,13 @@ $year_max=$this->setting->select_zero_year + $this->setting->year_select_max_dif
     for($i=$year_min; $i<=$year_max; $i++){
         echo '<option value="'.$i,'"'.(($i==$this->year)?' selected ':'').'>';
         if($i==$this->year){$year_exists=true;}
-        echo $this->setting->getYearSpecialFormat($i);
+        print_h($this->setting->getYearSpecialFormat($i));
         if($this->setting->year_view_mode==0){ echo "年"; }
         if($this->setting->year_view_mode==2){ echo "年"; }
         echo '</option>'."\n";
     }
 ?></select>／
-<input name="year_raw" type="number" style="width:4em;height:1.5em;" value="<?php echo $year_exists?'':$this->year; ?>" onchange="clearElmVal('*[name=year]');">年
+<input name="year_raw" type="number" style="width:4em;height:1.5em;" value="<?=h($year_exists?'':$this->year)?>" onchange="clearElmVal('*[name=year]');">年
 　<input type="button" value="年度をクリア" onclick="clearElmVal('*[name=year]');clearElmVal('*[name=year_raw]');">
 <hr>
 <div oncontextmenu="return false;">
@@ -634,9 +634,9 @@ $year_max=$this->setting->select_zero_year + $this->setting->year_select_max_dif
 <input type="hidden" name="show_organization_nar" value="0">
 <input type="hidden" name="show_organization_other" value="0">
 <?php $cbox=MkTagInput::Checkbox('show_organization_',1); ?>
-<label oncontextmenu="reset_and_checked('show_organization_','jra');"><?php print $cbox->name_s('jra')->checked($this->show_organization_jra); ?>中央競馬</label>
-<label oncontextmenu="reset_and_checked('show_organization_','nar');"><?php print $cbox->name_s('nar')->checked($this->show_organization_nar); ?>地方競馬</label>
-<label oncontextmenu="reset_and_checked('show_organization_','other');"><?php print $cbox->name_s('other')->checked($this->show_organization_other); ?>その他（海外）</label>
+<label oncontextmenu="reset_and_checked('show_organization_','jra');"><?=$cbox->name_s('jra')->checked($this->show_organization_jra)?>中央競馬</label>
+<label oncontextmenu="reset_and_checked('show_organization_','nar');"><?=$cbox->name_s('nar')->checked($this->show_organization_nar)?>地方競馬</label>
+<label oncontextmenu="reset_and_checked('show_organization_','other');"><?=$cbox->name_s('other')->checked($this->show_organization_other)?>その他（海外）</label>
 </span>
 ｜<label><?php print(MkTagInput::Checkbox('is_generation_search',1)->checked((bool)$this->is_generation_search)); ?>指定年に3歳の世代</label>
 <br>
@@ -649,10 +649,10 @@ $year_max=$this->setting->select_zero_year + $this->setting->year_select_max_dif
 $cbox=MkTagInput::Checkbox('',1)->class('age_btn');
 $a_flags=new FlagChecker($this->age);
 ?>
-<label oncontextmenu="reset_and_checked('age[','20]');uncheck_if_checked('age[20]','is_generation_search');" onchange="uncheck_if_checked('age[20]','is_generation_search');"><?php print $cbox->name('age[20]')->checked($a_flags->hasFlag(self::Age20)); ?>2歳</label>
-<label oncontextmenu="reset_and_checked('age[','30]');uncheck_if_checked('age[30]','is_generation_search');" onchange="uncheck_if_checked('age[30]','is_generation_search');"><?php print $cbox->name('age[30]')->checked($a_flags->hasFlag(self::Age30)); ?>3歳</label>
-<label oncontextmenu="reset_and_checked('age[','31]');uncheck_if_checked('age[31]','is_generation_search');" onchange="uncheck_if_checked('age[31]','is_generation_search');"><?php print $cbox->name('age[31]')->checked($a_flags->hasFlag(self::Age31)); ?>3上</label>
-<label oncontextmenu="reset_and_checked('age[','41]');uncheck_if_checked('age[41]','is_generation_search');" onchange="uncheck_if_checked('age[41]','is_generation_search');"><?php print $cbox->name('age[41]')->checked($a_flags->hasFlag(self::Age41)); ?>4上</label>
+<label oncontextmenu="reset_and_checked('age[','20]');uncheck_if_checked('age[20]','is_generation_search');" onchange="uncheck_if_checked('age[20]','is_generation_search');"><?=$cbox->name('age[20]')->checked($a_flags->hasFlag(self::Age20))?>2歳</label>
+<label oncontextmenu="reset_and_checked('age[','30]');uncheck_if_checked('age[30]','is_generation_search');" onchange="uncheck_if_checked('age[30]','is_generation_search');"><?=$cbox->name('age[30]')->checked($a_flags->hasFlag(self::Age30))?>3歳</label>
+<label oncontextmenu="reset_and_checked('age[','31]');uncheck_if_checked('age[31]','is_generation_search');" onchange="uncheck_if_checked('age[31]','is_generation_search');"><?=$cbox->name('age[31]')->checked($a_flags->hasFlag(self::Age31))?>3上</label>
+<label oncontextmenu="reset_and_checked('age[','41]');uncheck_if_checked('age[41]','is_generation_search');" onchange="uncheck_if_checked('age[41]','is_generation_search');"><?=$cbox->name('age[41]')->checked($a_flags->hasFlag(self::Age41))?>4上</label>
 ）</span>
 <span style="white-space:nowrap;" oncontextmenu="return false;">
 <input class="age_preset_3" type="button" value="3歳世代">
