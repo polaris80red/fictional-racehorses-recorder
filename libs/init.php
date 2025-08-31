@@ -116,6 +116,9 @@ require_once APP_ROOT_DIR.'/vendor/VendorConfigInitializer.php';
 
 require_once __DIR__.'/get_syutsuba_data.inc.php';
 
+TemplateImporter::setDefalutDir(APP_ROOT_DIR."/templates");
+TemplateImporter::setUserDir('user/templates');
+
 #require_once DIR.'/libs/init.php';
 define('DSN', 'mysql:dbname='.DB_NAME.';host='.DB_HOST.';charset='.DB_CHARSET);
 

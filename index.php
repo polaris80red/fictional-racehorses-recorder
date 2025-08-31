@@ -28,6 +28,7 @@ $page->is_editable=SESSION::is_logined();
 <hr class="no-css-fallback">
 <?php HorseSearch::printSimpleForm($page); ?>
 <hr>
+<?php TemplateImporter::include('index.description.inc.php'); ?>
 <a href="<?php echo $page->to_horse_search_path; ?>?reset=true">競走馬検索</a><br>
 <a href="<?=h(InAppUrl::to('race/search.php?',['search_reset'=>1]))?>">レース検索</a><br>
 <hr>
