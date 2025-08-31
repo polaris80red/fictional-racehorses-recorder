@@ -65,6 +65,10 @@ $turn=$week_data->umm_month_turn;
 .race_results td:nth-child(<?php
     print($setting->age_view_mode!==Setting::AGE_VIEW_MODE_UMAMUSUME?9:7);
 ?>){ text-align:center; }
+
+.edit_menu table { margin-top: 8px;}
+.edit_menu table a:link {text-decoration: none;}
+.edit_menu table {font-size: 0.9em;}
 </style>
 </head>
 <body>
@@ -130,12 +134,12 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $table_data[]=$data;
 }
 
-echo "<table class=\"race_results\">\n";
 $empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td><td></td><td></td><td></td><td></td>";
-?><tr>
+?><table class="race_results">
+<tr>
 <th>枠</th><th>馬番</th>
 <th style="min-width:12em;">馬名</th>
-<th><?php print ($setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME?"級":"性齢"); ?></th>
+<th><?=h($setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME?"級":"性齢")?></th>
 <th>負担<br>重量</th>
 <?php if($setting->age_view_mode!==Setting::AGE_VIEW_MODE_UMAMUSUME): ?><th>騎手</th><?php endif; ?>
 <th>所属</th>
@@ -144,6 +148,7 @@ $empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td><td></td><td
 <?php if($page->is_editable): ?><th>編</th><?php endif; ?>
 </tr><?php
 $i=0;
+$latest_horse_exists=false;
 foreach ($table_data as $data) {
     $i++;
     // 1件目からない場合
@@ -151,13 +156,16 @@ foreach ($table_data as $data) {
         echo "<tr><td></td>".$empty_row_2."</tr>\n";
         continue;
     }
+    if($data['horse_id']==($session->latest_horse['id']??'')){
+        $latest_horse_exists=true;
+    }
     // 特別登録のみのデータはスキップ
     if($data['is_registration_only']){
         continue;
     }
 ?><tr class="">
 <td class="waku_<?php echo $data['frame_number']; ?>"><?php echo $data['frame_number']; ?></td>
-<td><?php echo $data['horse_number']; ?></td>
+<td><?=h($data['horse_number'])?></td>
 <td class="horse_name">
 <?php
     $training_country='';
@@ -178,68 +186,105 @@ foreach ($table_data as $data) {
     if($data['is_jra']==1&& $is_affliationed_nar==1){
         echo "[地] ";
     }
-    echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.$data['horse_id'].'">';
-    echo ($data['name_ja']?:$data['name_en']);
+    echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.h($data['horse_id']).'">';
+    print_h($data['name_ja']?:$data['name_en']);
     if($data['is_jra']==0 && $data['is_nar']==0){
-        echo " <span>({$training_country})</span> ";
+        echo " <span>(".h($training_country).")</span> ";
     }
     echo "</a>";
 ?></td>
-<td class="sex_<?php echo $data['sex']; ?>"><?php
+<?php
+    $age_sex_str='';
     if($setting->age_view_mode===Setting::AGE_VIEW_MODE_DEFAULT){
         // 通常表記の場合
-        print $data['sex_str'];
+        $age_sex_str.=$data['sex_str'];
     }
-    echo $setting->getAgeSexSpecialFormat($data['age'],$data['sex']);
-?></td>
-<td><?php echo $data['handicap']; ?></td>
+    $age_sex_str.=$setting->getAgeSexSpecialFormat($data['age'],$data['sex']);
+?>
+<td class="sex_<?=h($data['sex'])?>"><?=h($age_sex_str)?></td>
+<td><?=h($data['handicap'])?></td>
 <?php if($setting->age_view_mode!==1): ?><td><?php /* 騎手 */ ?></td><?php endif; ?>
-<td><?php echo !empty($data['tc'])?$data['tc']:$data['horse_tc']; ?></td>
+<td><?=h(!empty($data['tc'])?$data['tc']:$data['horse_tc'])?></td>
 <?php if($setting->age_view_mode!==1): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>
-<td class="favourite_<?php echo $data['favourite']; ?>"><?php echo $data['favourite']; ?></td>
+<td class="favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
 <?php
     if(!empty($data['horse_id'])){
         $url=$page->to_app_root_path."race/horse_result/form.php?race_id={$race->race_id}&horse_id={$data['horse_id']}&edit_mode=1";
     }
 ?>
 <?php if($page->is_editable): ?>
-<td>
-<a href="<?php echo $url; ?>" title="編集">編</a>
-</td>
+<td><a href="<?=h($url)?>" title="編集">編</a></td>
 <?php endif; ?>
 </tr>
 <?php } ?></table>
+<hr>
+<a href="<?=h($page->getRaceNameSearchUrl($race->race_name))?>" style="">他年度の<?=h($race->race_name)?>を検索</a>
 <?php if($page->is_editable): ?>
-<hr><input type="button" id="edit_tgl" value="編集">
-<input type="hidden" id="hiddden_race_id" value="<?php echo $race->race_id; ?>">
+<hr><input type="button" id="edit_tgl" value="編集" style="<?=!EDIT_MENU_TOGGLE?'display:none;':''?>">
+<input type="hidden" id="hiddden_race_id" value="<?=h($race->race_id)?>">
 <input type="button" value="レースIDをクリップボードにコピー" onclick="copyToClipboard('#hiddden_race_id');">
-(race_id=<?php echo $race->race_id; ?>)
-<div class="edit_menu" style="display:none; border:solid 1px #00FFFF; margin-top:0.2em;">
-<hr> 
+(race_id=<?=h($race->race_id)?>)<a id="edit_menu"></a>
+<div class="edit_menu" style="<?=EDIT_MENU_TOGGLE?'display:none;':''?>"> 
 <input type="hidden" id="edit_menu_states" value="0">
-<?php $url="{$page->to_app_root_path}race/result/form.php?race_id={$race->race_id}&edit_mode=1"; ?>
-<a href="<?php echo $url; ?>">[このレースの情報を編集]</a>
-　
-<?php $url="{$page->to_app_root_path}race/horse_result/form.php?race_id={$race->race_id}"; ?>
-<a href="<?php echo $url; ?>">[このレースの戦績を追加]</a>
+<table>
+    <tr>
+<?php $url=APP_ROOT_REL_PATH."race/result/form.php?race_id={$race->race_id}&edit_mode=1"; ?>
+        <td><a href="<?=$url?>">このレースの情報を編集</a></td>
+<?php $url=APP_ROOT_REL_PATH."race/horse_result/form.php?race_id={$race->race_id}"; ?>
+        <td><a href="<?=h($url)?>">このレースに戦績を追加</a></td>
+        <td><a href="<?=APP_ROOT_REL_PATH?>race/update_race_result_id/form.php?race_id=<?=h($race->race_id)?>&edit_mode=1">レースID修正</a></td>
+    </tr>
+    <tr>
+<?php
+$a_tag=new MkTagA('最後に開いた馬をこのレースに追加');
+$latest_horse=new Horse();
+if(!empty($session->latest_horse['id'])){
+    $latest_horse->setDataById($pdo,$session->latest_horse['id']);
+}
+if($latest_horse->record_exists){
+    if($latest_horse_exists){
+        $a_tag->title("最後に開いた競走馬は既に登録されています")->setStyle('text-decoration','line-through');
+    }else if($latest_horse->birth_year==null){
+        $a_tag->title("生年仮登録馬のため戦績追加不可")->setStyle('text-decoration','line-through');
+    }else{
+        $url=APP_ROOT_REL_PATH."race/horse_result/form.php?horse_id={$session->latest_horse['id']}&race_id={$race->race_id}";
+        $a_tag->href($url);
+    }
+}
+?>
+        <td colspan="2"><?=$a_tag?></td>
+        <td>
 <?php if(!empty($session->latest_horse['id'])): ?>
-<hr>
-<?php $url="{$page->to_app_root_path}race/horse_result/form.php?horse_id={$session->latest_horse['id']}&race_id={$race->race_id}"; ?>
-<a href="<?php echo $url; ?>">[最後に開いた馬をこのレースに追加]</a><br>
-<?php $url="{$page->to_app_root_path}horse/?horse_id={$session->latest_horse['id']}"; ?>
-（<a href="<?php echo $url; ?>"><?php echo ($session->latest_horse['name']?:$session->latest_horse['id']) ?></a>）
-<hr>
-<a href="<?php echo $page->to_app_root_path; ?>race/result/form.php?race_id=<?php echo $race->race_id; ?>&edit_mode=0">[コピーして新規登録]</a><?php
-    $addparams=implode('&',[
-        "date=".$race->date,
-        "year=".$race->year,
-        "month=".$race->month,
-        "race_course_name=".$race->race_course_name
-    ])
-?>　<a href="<?php echo $page->to_app_root_path; ?>race/result/form.php?<?php echo $addparams; ?>">[同日同場で新規登録]</a><br>
-<hr>
-<a href="<?php echo $page->to_app_root_path; ?>race/update_race_result_id/form.php?race_id=<?php echo $race->race_id; ?>&edit_mode=1">[レースID修正]</a>
+<?php $url=APP_ROOT_REL_PATH."horse/?horse_id={$session->latest_horse['id']}"; ?>
+<a href="<?=h($url)?>"><?=h($session->latest_horse['name']?:$session->latest_horse['id'])?></a>
 <?php endif; ?>
+        </td>
+    </tr>
+    <tr>
+        <td>
+<a href="<?=APP_ROOT_REL_PATH?>race/result/form.php?race_id=<?=h($race->race_id);?>&edit_mode=0">コピーして新規登録</a>
+        </td>
+<?php
+    $a_tag=new MkTagA('同日同場で新規登録');
+    if($race->date!=''){
+        $a_tag->setLinkText('同日同場で新規登録');
+        $urlparam=new UrlParams([
+            'date'=>$race->date,
+            'race_course_name'=>$race->race_course_name]);
+        $a_tag->href(APP_ROOT_REL_PATH."race/result/form.php?".$urlparam);
+    }else{
+        $a_tag->setLinkText('同週同場で新規登録');
+        $urlparam=new UrlParams([
+            'year'=>$race->year,
+            'week_id'=>$race->week_id,
+            'race_course_name'=>$race->race_course_name]);
+        $a_tag->href(APP_ROOT_REL_PATH."race/result/form.php?".$urlparam);
+    }
+    ?>
+        <td><?=$a_tag?></td>
+        <td></td>
+    </tr>
+</table>
 </div>
 <script>
 $(function() {
@@ -255,13 +300,6 @@ $(function() {
 });
 </script>
 <?php endif; ?>
-<hr>
-<a href="<?php echo $page->getRaceNameSearchUrl($race->race_name); ?>" style="">他年度の<?php echo $race->race_name; ?>を検索</a><br>
-<?php
-if(!$race->is_tmp_date){
-    ?><a href="<?php echo $page->getDateRaceListUrl($race->date); ?>" style="">同日のレース</a><br><?php
-}
-?>
 <hr class="no-css-fallback">
 </main>
 <footer>

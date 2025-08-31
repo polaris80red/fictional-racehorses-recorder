@@ -88,7 +88,7 @@ table.syutsuba.sps .result_number {
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $page->title; ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
@@ -141,8 +141,8 @@ foreach ($table_data as $data) {
     if($data['is_jra']==1&& $data['is_affliationed_nar']==1){
         echo "[地] ";
     }
-    echo '<a class="horse_name" href="'.$page->to_app_root_path.'horse/?horse_id='.$data['horse_id'].'">';
-    echo ($data['name_ja']?:$data['name_en']);
+    echo '<a class="horse_name" href="'.$page->to_app_root_path.'horse/?horse_id='.h($data['horse_id']).'">';
+    print_h($data['name_ja']?:$data['name_en']);
     echo "</a>";
     if($data['is_jra']==0 && $data['is_nar']==0){
         echo "<span style=\"\"> (".($data['training_country']?:$data['horse_training_country']).")</span> ";
@@ -155,14 +155,14 @@ foreach ($table_data as $data) {
         echo "（{$data['horse_tc']}）";
     }
 ?><br>
-父：<?php echo $data['sire_name']?:"□□□□□□"; ?><br>
-母：<?php echo $data['mare_name']?:"□□□□□□"; ?><br>
-母の父：<?php echo $data['bms_name']?:"□□□□□□"; ?><br>
+父：<?=h($data['sire_name']?:"□□□□□□")?><br>
+母：<?=h($data['mare_name']?:"□□□□□□")?><br>
+母の父：<?=h($data['bms_name']?:"□□□□□□")?><br>
 </td>
 <td>
-    <span class="nowrap"><?php echo $data['sex_str'].$data['age']."歳"; ?></span><?php
-if($data['color']){ echo "/".$data['color'];}
-if($data['handicap']){ echo " ".$data['handicap']."kg";}
+    <span class="nowrap"><?=h($data['sex_str'].$data['age']."歳")?></span><?php
+if($data['color']){ print_h("/".$data['color']);}
+if($data['handicap']){ print_h(" ".$data['handicap']."kg");}
 ?></td>
 <?php
 $i=1;
@@ -176,7 +176,7 @@ if(!empty($data['non_registered_prev_race_number']) && $data['non_registered_pre
             $url ="{$page->to_app_root_path}race/horse_result/form.php?";
             $url.="horse_id={$data['horse_id']}";
             $url.="&next_race_id={$data['race_id']}";
-            print "<td class=\"race_result_column\"><a href=\"{$url}\">……</a></td>\n";
+            print "<td class=\"race_result_column\"><a href=\"".h($url)."\">……</a></td>\n";
         }else{
             print "<td class=\"race_result_column\">……</td>\n";
         }
@@ -191,7 +191,7 @@ foreach($data['horse_results'] as $prev_race){
     }
     if($i>$rr_count){ break; }
     $i++;
-?><td class="race_result_column <?php printResultClass($result_number); ?> <?php echo "race_grade_".($r->grade_css_class_suffix??''); ?>"><?php
+?><td class="race_result_column <?php printResultClass($result_number); ?> <?=h("race_grade_".($r->grade_css_class_suffix??''))?>"><?php
     if($r!=null){
         echo "<div>";
         $date_line='';
@@ -209,7 +209,7 @@ foreach($data['horse_results'] as $prev_race){
                     $date_line.='月';
             }
         }
-        if($setting->syutsuba_year==0 && $setting->syutsuba_date=='none'){ $date_line='&nbsp;'; }
+        if($setting->syutsuba_year==0 && $setting->syutsuba_date=='none'){ $date_line=' '; }
         if($setting->syutsuba_date==='mx'){ $date_line.='.xx'; }
         if($setting->syutsuba_date==='md'){
             $date_line.='.';
@@ -220,36 +220,36 @@ foreach($data['horse_results'] as $prev_race){
                 $date_line.='xx';
             }
         }
-        echo "<span>{$date_line}</span>";
+        echo "<span>".h($date_line)."</span>";
         //echo "<span>".$r->year.".".str_pad($r->month,2,'0',STR_PAD_LEFT).".xx"."</span>";
         $course_name = $r->race_course_name;
         if(!empty($r->race_course_short_name)){ $course_name=$r->race_course_short_name; }
         if(!empty($r->race_course_short_name_m)){ $course_name=$r->race_course_short_name_m; }
-        echo "<span style=\"display:inline-block;float:right;\">"." {$course_name}"."</span>";
+        echo "<span style=\"display:inline-block;float:right;\">".h($course_name)."</span>";
         echo "</div>\n";
 
         echo "<div>";
         $url=$page->getRaceResultUrl($r->race_results_id);
-        echo "<span style=\"\"><a class=\"race_name\" href=\"{$url}\" title=\"{$r->caption}\">";
-        echo $r->race_short_name==''?$r->race_name:$r->race_short_name;
+        echo "<span style=\"\"><a class=\"race_name\" href=\"".h($url)."\" title=\"".h($r->caption)."\">";
+        print_h($r->race_short_name==''?$r->race_name:$r->race_short_name);
         echo "</a></span>";
         echo "</div>\n";
 
         echo "<div>";
         echo "<div style=\"display:inline-block;float:left;\">";
-        echo "<span style=\"\" class=\"ib grade\">".($r->grade_short_name??$r->grade)."</span><br>";
+        echo "<span style=\"\" class=\"ib grade\">".h($r->grade_short_name??$r->grade)."</span><br>";
         echo "<span>□□□□</span>";
         echo "</div>";
         echo "<span class=\"result_number\" style=\"display:inline-block;float:right;\">";
-        echo $r->result_text?($r->special_result_short_name_2?:$r->result_text):$r->result_number;
+        echo h($r->result_text?($r->special_result_short_name_2?:$r->result_text):$r->result_number)?:"&nbsp;";
         echo "</span>";
         echo "</div>\n";
         echo "<div style=\"clear:both;\">\n";
         echo $r->course_type.$r->distance."<br>\n";
 
         if(!empty($r->winner_or_runner_up['horse_id'])){
-            echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.$r->winner_or_runner_up['horse_id'].'">';
-            echo $r->winner_or_runner_up['name_ja']?:$r->winner_or_runner_up['name_en'];
+            echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.h($r->winner_or_runner_up['horse_id']).'">';
+            echo h($r->winner_or_runner_up['name_ja']?:$r->winner_or_runner_up['name_en']);
             echo '</a>';
         }else{
             echo '&nbsp;';
@@ -265,7 +265,7 @@ foreach($data['horse_results'] as $prev_race){
                 $url ="{$page->to_app_root_path}race/horse_result/form.php?";
                 $url.="horse_id={$data['horse_id']}";
                 $url.="&next_race_id={$r->race_results_id}";
-                print "<td class=\"race_result_column\"><a href=\"{$url}\">……</a></td>\n";
+                print "<td class=\"race_result_column\"><a href=\"".h($url)."\">……</a></td>\n";
             }else{
                 print "<td class=\"race_result_column\">……</td>\n";
             }
