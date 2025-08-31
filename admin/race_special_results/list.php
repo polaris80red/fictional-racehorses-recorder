@@ -60,8 +60,8 @@ $next_tag  =new MkTagA("[次へ]",($race_sp_results_table->has_next_page?('?'.$u
     <th>キー名</th>
     <th>名称</th>
     <th>2字略</th>
-    <th>カウント</th>
     <th>結果表示区分</th>
+    <th>カウント</th>
     <th>表示順<br>補正</th>
     <th>論理削除</th>
     <th></th>
