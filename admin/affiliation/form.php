@@ -61,17 +61,17 @@ if($input_id==0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $affiliation->id?:"新規登録";
+        print_h($affiliation->id?:"新規登録");
         HTPrint::Hidden('id',$affiliation->id);
     ?></td>
 </tr>
 <tr>
     <th rowspan="1">名称</th>
-    <td class="in_input"><input type="text" name="name" class="required" value="<?php print $affiliation->name; ?>"<?=(($affiliation->id||$input_name)?' readonly':'')?> required></td>
+    <td class="in_input"><input type="text" name="name" class="required" value="<?=h($affiliation->name)?>"<?=h(($affiliation->id||$input_name)?' readonly':'')?> required></td>
 </tr>
 <tr>
     <th>表示順補正</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?php print $affiliation->sort_number; ?>" placeholder="昇順"></td>
+    <td class="in_input"><input type="number" name="sort_number" value="<?=h($affiliation->sort_number)?>" placeholder="昇順"></td>
 </tr>
 <tr>
     <th>プルダウンに表示</th>

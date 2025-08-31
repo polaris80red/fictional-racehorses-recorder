@@ -87,7 +87,7 @@ if($input_id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $theme->id?:"新規登録";
+        print_h($theme->id?:"新規登録");
         HTPrint::Hidden('theme_id',$theme->id);
     ?></td>
 </tr>

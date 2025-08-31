@@ -90,19 +90,19 @@ if($input_id==0){
 </tr>
 <tr>
     <th>名称</th>
-    <td class="in_input"><input type="text" name="name" value="<?php print $form_item->name; ?>"></td>
+    <td class="in_input"><input type="text" name="name" value="<?=($form_item->name)?>"></td>
 </tr>
 <tr>
     <th>2字名</th>
-    <td class="in_input"><input type="text" name="short_name_2" value="<?php print $form_item->short_name_2; ?>"></td>
+    <td class="in_input"><input type="text" name="short_name_2" value="<?=($form_item->short_name_2)?>"></td>
 </tr>
 <tr>
     <th>擬人化用</th>
-    <td class="in_input"><input type="text" name="name_umamusume" value="<?php print $form_item->name_umamusume; ?>"></td>
+    <td class="in_input"><input type="text" name="name_umamusume" value="<?=h($form_item->name_umamusume)?>"></td>
 </tr>
 <tr>
     <th>表示順補正</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?php print $form_item->sort_number; ?>" placeholder="昇順"></td>
+    <td class="in_input"><input type="number" name="sort_number" value="<?=h($form_item->sort_number)?>" placeholder="昇順"></td>
 </tr>
 <tr>
     <th>論理削除状態</th>

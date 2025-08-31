@@ -61,25 +61,25 @@ if($input_id==0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $form_item->id?:"新規登録";
+        print_h($form_item->id?:"新規登録");
         HTPrint::Hidden('id',$form_item->id);
     ?></td>
 </tr>
 <tr>
     <th>名称</th>
-    <td class="in_input"><input type="text" name="name" class="required" required value="<?php print $form_item->name; ?>"></td>
+    <td class="in_input"><input type="text" name="name" class="required" required value="<?=($form_item->name)?>"></td>
 </tr>
 <tr>
     <th>3字名</th>
-    <td class="in_input"><input type="text" name="short_name_3" value="<?php print $form_item->short_name_3; ?>"></td>
+    <td class="in_input"><input type="text" name="short_name_3" value="<?=h($form_item->short_name_3)?>"></td>
 </tr>
 <tr>
     <th>擬人化用</th>
-    <td class="in_input"><input type="text" name="umm_category" value="<?php print $form_item->umm_category; ?>"></td>
+    <td class="in_input"><input type="text" name="umm_category" value="<?=h($form_item->umm_category)?>"></td>
 </tr>
 <tr>
     <th>表示順補正</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?php print $form_item->sort_number; ?>" placeholder="昇順"></td>
+    <td class="in_input"><input type="number" name="sort_number" value="<?=h($form_item->sort_number); ?>" placeholder="昇順"></td>
 </tr>
 <tr>
     <th>論理削除状態</th>

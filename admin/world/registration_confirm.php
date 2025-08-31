@@ -73,7 +73,7 @@ if($input_world_id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $world->id?:"新規登録";
+        print_r($world->id?:"新規登録");
         HTPrint::Hidden('world_id',$world->id);
     ?></td>
 </tr>

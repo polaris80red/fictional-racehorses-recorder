@@ -61,17 +61,17 @@ if($input_id==0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $race_grade->id?:"新規登録";
+        print_r($race_grade->id?:"新規登録");
         HTPrint::Hidden('race_grade_id',$race_grade->id);
     ?></td>
 </tr>
 <tr>
     <th rowspan="1">キー名称</th>
-    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?php print $race_grade->unique_name; ?>"<?=(($race_grade->id||$input_name)?' readonly':'')?> required></td>
+    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?=h($race_grade->unique_name)?>"<?=(($race_grade->id||$input_name)?' readonly':'')?> required></td>
 </tr>
 <tr>
     <th>短縮名</th>
-    <td class="in_input"><input type="text" name="short_name" value="<?php print $race_grade->short_name; ?>" placeholder="空ならキー名称を使用"></td>
+    <td class="in_input"><input type="text" name="short_name" value="<?=h($race_grade->short_name)?>" placeholder="空ならキー名称を使用"></td>
 </tr>
 <tr>
     <th>検索判定</th>
@@ -96,15 +96,15 @@ if($input_id==0){
 </tr>
 <tr>
     <th>カテゴリ</th>
-    <td class="in_input"><input type="text" name="category" value="<?php print $race_grade->category; ?>"></td>
+    <td class="in_input"><input type="text" name="category" value="<?=h($race_grade->category)?>"></td>
 </tr>
 <tr>
     <th>CSSクラス接尾語</th>
-    <td class="in_input"><input type="text" name="css_class_suffix" value="<?php print $race_grade->css_class_suffix; ?>"></td>
+    <td class="in_input"><input type="text" name="css_class_suffix" value="<?=h($race_grade->css_class_suffix)?>"></td>
 </tr>
 <tr>
     <th>表示順補正</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?php print $race_grade->sort_number; ?>" placeholder="昇順"></td>
+    <td class="in_input"><input type="number" name="sort_number" value="<?=h($race_grade->sort_number)?>" placeholder="昇順"></td>
 </tr>
 <tr>
     <th>プルダウンに表示</th>
@@ -138,7 +138,7 @@ if($input_id==0){
 <hr>
 <div style="text-align: right;">
 ※ キー名称はレース側のグレードも一括更新するため専用画面で変更してください<br>
-[ <a href="./update_unique_name/form.php?<?=(new UrlParams(['u_name'=>$race_grade->unique_name]));?>">キー名称一括変換</a> ]
+[ <a href="./update_unique_name/form.php?<?=h(new UrlParams(['u_name'=>$race_grade->unique_name]));?>">キー名称一括変換</a> ]
 </div>
 <?php endif; ?>
 <hr class="no-css-fallback">

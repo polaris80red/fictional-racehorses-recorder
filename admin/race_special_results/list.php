@@ -67,10 +67,8 @@ $next_tag  =new MkTagA("[次へ]",($race_sp_results_table->has_next_page?('?'.$u
     <th></th>
 </tr>
 <?php foreach($tbl_data as $row): ?>
-<tr class="<?php print($row->is_enabled?:"disabled"); ?>">
-<?php
-    $url="./form.php?id={$row->id}";
-?>
+<tr class="<?=$row->is_enabled?:"disabled"?>">
+<?php $url="./form.php?id={$row->id}"; ?>
     <td class="col_id"><?=h($row->id);?></td>
     <td><?=h($row->unique_name);?></td>
     <td class=""><?=h($row->name);?></td>
@@ -79,7 +77,7 @@ $next_tag  =new MkTagA("[次へ]",($race_sp_results_table->has_next_page?('?'.$u
     <td class=""><?=h($row->is_excluded_from_race_count?'数えない':'着外1回');?></td>
     <td class="col_sort_number"><?=h($row->sort_number);?></td>
     <td><?=h($row->is_enabled?'有効':'無効化中');?></td>
-    <td><?php (new MkTagA('編集',"./form.php?id={$row->id}"))->print(); ?></td>
+    <td><?=(new MkTagA('編集',$url))?></td>
 </tr>
 <?php endforeach; ?>
 </table>

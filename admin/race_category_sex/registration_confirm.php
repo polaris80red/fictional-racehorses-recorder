@@ -69,7 +69,7 @@ if($id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $form_item->id?:"新規登録";
+        print_h($form_item->id?:"新規登録");
         HTPrint::Hidden('id',$form_item->id);
     ?></td>
 </tr>

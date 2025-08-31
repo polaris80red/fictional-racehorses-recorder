@@ -54,25 +54,25 @@ if($input_id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $theme->id?:"新規登録";
+        print_h($theme->id?:"新規登録");
         HTPrint::Hidden('theme_id',$theme->id);
     ?></td>
 </tr>
 <tr>
     <th>名称</th>
-    <td class="in_input"><input type="text" name="name" class="required" value="<?php print $theme->name; ?>" required></td>
+    <td class="in_input"><input type="text" name="name" class="required" value="<?=h($theme->name)?>" required></td>
 </tr>
 <tr>
     <th>テーマディレクトリ名</th>
-    <td class="in_input"><input type="text" name="dir_name" class="required" value="<?php print $theme->dir_name; ?>" required></td>
+    <td class="in_input"><input type="text" name="dir_name" class="required" value="<?=($theme->dir_name)?>" required></td>
 </tr>
 <tr>
     <th>表示順優先度</th>
-    <td class="in_input"><input type="number" name="sort_priority" value="<?php print $theme->sort_priority; ?>" placeholder="大きい値ほど上"></td>
+    <td class="in_input"><input type="number" name="sort_priority" value="<?=h($theme->sort_priority)?>" placeholder="大きい値ほど上"></td>
 </tr>
 <tr>
     <th>表示順(同優先度内で昇順)</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?php print $theme->sort_number; ?>" placeholder="同優先度内で昇順"></td>
+    <td class="in_input"><input type="number" name="sort_number" value="<?=h($theme->sort_number)?>" placeholder="同優先度内で昇順"></td>
 </tr>
 <tr>
     <th>選択肢</th>

@@ -75,7 +75,7 @@ if($input_id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $story->id?:"新規登録";
+        print_h($story->id?:"新規登録");
         HTPrint::Hidden('story_id',$story->id);
     ?></td>
 </tr>
@@ -114,7 +114,7 @@ if($input_id>0){
 </tr>
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>
 </table>
-<textarea name="config_json" style="min-width: 25em;min-height: 20em;" readonly><?php print($story->getConfigJsonEncodeText()); ?></textarea>
+<textarea name="config_json" style="min-width: 25em;min-height: 20em;" readonly><?=h($story->getConfigJsonEncodeText()); ?></textarea>
 <?php (new FormCsrfToken())->printHiddenInputTag(); ?>
 </form>
 <hr class="no-css-fallback">

@@ -85,7 +85,7 @@ if($id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $race_course->id?:"新規登録";
+        print_h($race_course->id?:"新規登録");
         HTPrint::Hidden('race_course_id',$race_course->id);
     ?></td>
 </tr>

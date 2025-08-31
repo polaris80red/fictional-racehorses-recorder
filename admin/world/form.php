@@ -52,13 +52,13 @@ if($input_id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $world->id?:"新規登録";
+        print_h($world->id?:"新規登録");
         HTPrint::Hidden('world_id',$world->id);
     ?></td>
 </tr>
 <tr>
     <th>名称</th>
-    <td class="in_input"><input type="text" name="name" class="required" value="<?php print $world->name; ?>" required></td>
+    <td class="in_input"><input type="text" name="name" class="required" value="<?=h($world->name); ?>" required></td>
 </tr>
 <tr>
     <th>非ログイン時<br>設定画面</th>
@@ -76,7 +76,7 @@ if($input_id>0){
 </tr>
 <tr>
     <th>表示順優先度</th>
-    <td class="in_input"><input type="number" name="sort_priority" value="<?php print $world->sort_priority; ?>"></td>
+    <td class="in_input"><input type="number" name="sort_priority" value="<?=h($world->sort_priority)?>"></td>
 </tr>
 <tr>
     <th>選択肢</th>
@@ -87,7 +87,7 @@ if($input_id>0){
 </tr>
 <tr>
     <th>自動ID接頭語</th>
-    <td class="in_input"><input type="text" name="auto_id_prefix" value="<?php print $world->auto_id_prefix; ?>"></td>
+    <td class="in_input"><input type="text" name="auto_id_prefix" value="<?=h($world->auto_id_prefix)?>"></td>
 </tr>
 <tr>
     <td colspan="2"></td>

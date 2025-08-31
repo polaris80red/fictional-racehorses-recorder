@@ -57,11 +57,11 @@ $story_list=WorldStory::getAll($pdo,true);
 <?php
     $url="./form.php?id={$row['id']}";
 ?>
-    <td><?=$row['id']?></td>
+    <td><?=h($row['id'])?></td>
     <td><?=h($row['name'])?></td>
     <td class="<?=$row['guest_visible']?'':'select_box_disabled'?>"><?=$row['guest_visible']?'表示':'非表示'?></td>
-    <td><?=$row['sort_priority']?></td>
-    <td><?=$row['sort_number']?></td>
+    <td><?=h($row['sort_priority'])?></td>
+    <td><?=h($row['sort_number'])?></td>
     <td><?=$row['is_read_only']?'はい':'いいえ'?></td>
     <td><?=$row['is_enabled']?'表示':'非表示'?></td>
     <td><?=(new MkTagA('編',$url))?></td>

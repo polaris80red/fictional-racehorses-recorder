@@ -54,13 +54,13 @@ if($input_id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print $story->id?:"新規登録";
+        print_h($story->id?:"新規登録");
         HTPrint::Hidden('story_id',$story->id);
     ?></td>
 </tr>
 <tr>
     <th>名称</th>
-    <td class="in_input"><input type="text" name="name" class="required" value="<?php print $story->name; ?>" required></td>
+    <td class="in_input"><input type="text" name="name" class="required" value="<?=h($story->name)?>" required></td>
 </tr>
 <tr>
     <th>非ログイン時<br>設定画面</th>
@@ -71,11 +71,11 @@ if($input_id>0){
 </tr>
 <tr>
     <th>表示順優先度</th>
-    <td class="in_input"><input type="number" name="sort_priority" value="<?php print $story->sort_priority; ?>"></td>
+    <td class="in_input"><input type="number" name="sort_priority" value="<?=h($story->sort_priority)?>"></td>
 </tr>
 <tr>
     <th>表示順(同優先度内で昇順)</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?php print $story->sort_number; ?>" placeholder="同優先度内で昇順"></td>
+    <td class="in_input"><input type="number" name="sort_number" value="<?=h($story->sort_number)?>" placeholder="同優先度内で昇順"></td>
 </tr>
 <tr>
     <th>読取専用</th>
@@ -103,7 +103,7 @@ if($input_id>0){
 <tr><td colspan="2" style="text-align: right;"><input type="submit" value="登録内容確認"></td></tr>
 </table>
 設定値確認用：<br>
-<textarea name="config_json" style="min-width:25em;min-height:20em;" readonly><?php print($story->getConfigJsonEncodeText()); ?></textarea><br>
+<textarea name="config_json" style="min-width:25em;min-height:20em;" readonly><?=h($story->getConfigJsonEncodeText()); ?></textarea><br>
 </form>
 <hr class="no-css-fallback">
 </main>
