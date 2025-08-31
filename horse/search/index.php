@@ -113,7 +113,7 @@ if($search->limit>0){
 ]; ?>
 <?php foreach($search_results as $row): ?>
 <tr>
-    <?php if($horse_id_is_visibled): ?><td><?php print $row['horse_id']; ?></td><?php endif; ?>
+    <?php if($horse_id_is_visibled): ?><td><?=h($row['horse_id'])?></td><?php endif; ?>
     <?php $url="{$page->to_app_root_path}horse/?horse_id={$row['horse_id']}"; ?>
     <td><?php
     $name=$row['name_ja']?:$row['name_en'];
@@ -133,9 +133,9 @@ if($search->limit>0){
             $a_tag->print();
         }
     ?></td>
-    <td><a><?php echo $row['color']; ?></a></td>
-    <td><a><?php echo sex2String($row['sex']); ?></a></td>
-    <td><a><?php echo $row['tc']; ?></a></td>
+    <td><a><?=h($row['color'])?></a></td>
+    <td><a><?=h(sex2String($row['sex']))?></a></td>
+    <td><a><?=h($row['tc'])?></a></td>
     <td><?php
         if($row['sire_id']!=''){
             $url ="./?".$search->getUrlParam($search_reset_array);
@@ -186,9 +186,9 @@ if($search->limit>0){
 ?>
 <?php if($search->birth_year!==''): ?>
 <hr>
-<a href="?birth_year=<?=($search->birth_year-1)?>&<?=$search->getUrlParam(['birth_year'])?>">[前年へ]</a>
+<a href="?birth_year=<?=h($search->birth_year-1)?>&<?=h($search->getUrlParam(['birth_year']))?>">[前年へ]</a>
  <?=$search->birth_year?> 
-<a href="?birth_year=<?=($search->birth_year+1)?>&<?=$search->getUrlParam(['birth_year'])?>">[翌年へ]</a>
+<a href="?birth_year=<?=h($search->birth_year+1)?>&<?=h($search->getUrlParam(['birth_year']))?>">[翌年へ]</a>
 <?php endif; ?>
 <hr><a id="foot"></a>
 <?php $search->printForm($page, $setting); ?>
