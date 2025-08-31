@@ -108,14 +108,14 @@ th{ background-color: #EEE;}
         <input type="hidden" name="race[<?=$row['race_id']?>][orig_id]" value="<?=$row['race_id']?>">
         <a href="<?=APP_ROOT_REL_PATH?>race/?race_id=<?=$row['race_id']?>" target="_blank"><?=$row['race_id']?></a>
     </td>
-    <td><?=$row['year']?></td>
-    <td>第<?=$row['week_id']?>週<?=$row['date']==''?'':('('.(new DateTime($row['date']))->format('D').')')?></td>
-    <td><?=mb_substr($row['race_course_name']??'',0,2).(mb_strlen($row['race_course_name']??'')>2?'…':'')?></td>
-    <td><?=$row['race_number']??''?></td>
-    <td><?=$row['race_name']?></td>
-    <td><?=$row['caption']?></td>
+    <td><?=h($row['year'])?></td>
+    <td>第<?=h($row['week_id'])?>週<?=h($row['date']==''?'':('('.(new DateTime($row['date']))->format('D').')'))?></td>
+    <td><?=h(mb_substr($row['race_course_name']??'',0,2).(mb_strlen($row['race_course_name']??'')>2?'…':''))?></td>
+    <td><?=h($row['race_number']??'')?></td>
+    <td><?=h($row['race_name'])?></td>
+    <td><?=h($row['caption'])?></td>
     <td class="in_input">
-        <input type="text"   name="race[<?=$row['race_id']?>][new_id]" value="<?=$row['race_id']?>" placeholder="重複と未入力は自動">
+        <input type="text"   name="race[<?=h($row['race_id'])?>][new_id]" value="<?=h($row['race_id'])?>" placeholder="重複と未入力は自動">
     </td>
 </tr>
 <?php endforeach; ?>

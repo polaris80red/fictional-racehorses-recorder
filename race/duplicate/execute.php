@@ -79,7 +79,7 @@ th{ background-color: #EEE;}
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<p>[<?=$world['name']?>]に以下のレースを登録しました。</p>
+<p>[<?=h($world['name'])?>]に以下のレースを登録しました。</p>
 <table>
 <tr>
   <th>ID</th>
@@ -89,10 +89,10 @@ th{ background-color: #EEE;}
 </tr>
 <?php foreach($data as $row): ?>
 <tr>
-  <td><?=$row['race_id']?></td>
-  <td><?=$row['year']?></td>
-  <td><?=$row['week_id']?></td>
-  <td><?=$row['race_name']?></td>
+  <td><?=h($row['race_id'])?></td>
+  <td><?=h($row['year'])?></td>
+  <td><?=h($row['week_id'])?></td>
+  <td><?=h($row['race_name'])?></td>
 </tr>
 <?php endforeach; ?>
 </table>
