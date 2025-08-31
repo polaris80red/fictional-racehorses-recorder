@@ -135,7 +135,7 @@ if($race->setDataByPost()==false){
 <tr>
     <th>年月</th>
     <td>
-        <?=h($setting->getYearSpecialFormat($race->year));?><?=h($race->month)?>月
+        <?=h($setting->getConvertedDate(['year'=>$race->year,'month'=>$race->month]))?>
         <?php HTPrint::Hidden('year',$race->year) ?>
         <?php HTPrint::Hidden('month',$race->month) ?>
     </td>
