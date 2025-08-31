@@ -93,7 +93,7 @@ if($id>0){
     <th>結果表示区分</th>
     <td><?php
         HTPrint::Hidden('is_registration_only',$form_item->is_registration_only);
-        print $form_item->is_registration_only?'結果掲載有り':'登録のみで不出走';
+        print $form_item->is_registration_only?'登録のみで不出走':'結果掲載有り';
     ?></td></td>
 </tr>
 <tr>

@@ -81,11 +81,11 @@ if($input_id==0){
     <th>結果表示区分</th>
     <td>
         <label><?php
-        $radio=new MkTagInputRadio('is_registration_only',1,$form_item->is_registration_only);
+        $radio=new MkTagInputRadio('is_registration_only',0,$form_item->is_registration_only);
         $radio->print();
         ?>結果掲載有り</label><br>
         <label><?php
-        $radio->value(0)->checkedIf($form_item->is_registration_only)
+        $radio->value(1)->checkedIf($form_item->is_registration_only)
         ->disabled($form_item->id>0?false:true)->print();
         ?>登録のみで不出走</label>
     </td>
