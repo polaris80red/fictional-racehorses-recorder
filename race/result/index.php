@@ -165,7 +165,7 @@ $registration_only_horse_is_exists=false;
 $latest_horse_exists=false;
 foreach ($table_data as $data) {
     $i++;
-    $tr_class=new imploader(' ');
+    $tr_class=new Imploader(' ');
     // 馬情報がない異常データのスキップ
     if(empty($data['horse_id'])){
         ELog::debug($data);
