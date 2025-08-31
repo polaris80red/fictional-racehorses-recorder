@@ -113,42 +113,44 @@ table.horse_base_data a {text-decoration: none;}
 <hr class="no-css-fallback">
 <div style="float:left">
 <?php
+$name_line=[];
 if($horse->name_ja){
-    echo "<span style=\"font-size:1.2em;\">".$horse->name_ja."</span>　";
+    $name_line[]="<span style=\"font-size:1.2em;\">".h($horse->name_ja)."</span> ";
 }else if($horse->name_en===''){
-    echo "<span style=\"font-size:1.2em;\">".ANNONYMOUS_HORSE_NAME."</span>";
+    $name_line[]="<span style=\"font-size:1.2em;\">".h(ANNONYMOUS_HORSE_NAME)."</span>";
 }
 if($horse->name_en){
-    echo "<span style=\"font-size:1.1em;\">{$horse->name_en}</span>";
+    $name_line[]="<span style=\"font-size:1.1em;\">{$horse->name_en}</span>";
 }
+echo implode(' ',$name_line);
 if($horse->birth_year>0){
     if($setting->year_view_mode===Setting::YEAR_VIEW_MODE_DEFAULT){
-        echo "（{$horse->birth_year}）　";
+        print_h("（{$horse->birth_year}）");
     }else{
-        echo "（{$setting->getBirthYearFormat($horse->birth_year)}）　";
+        print_h("（{$setting->getBirthYearFormat($horse->birth_year)}）");
     }
 }else{
-    echo "　";
+    print "　";
 }
-echo "{$horse->color} {$sex_str}";
+print_h("{$horse->color} {$sex_str}");
 ?>
 </div><div style="float:right;<?=$page->is_editable?'':'display:none;'?>"><a href="#edit_menu" style="text-decoration: none;" title="下部編集メニューへ">▽</a></div>
 <hr style="clear: both;">
 <table class="horse_base_data">
     <tr>
         <th>馬名</th>
-        <td style="min-width: 12em;"><?php print_h($horse->name_ja); ?></td>
+        <td style="min-width: 12em;"><?=h($horse->name_ja)?></td>
     </tr>
     <tr>
         <th>馬名(欧字)</th>
-        <td><?php print_h($horse->name_en); ?></td>
+        <td><?=h($horse->name_en)?></td>
     </tr>
     <tr>
         <th>所属</th>
-        <td><?php print_h($horse->tc); ?></td>
+        <td><?=h($horse->tc)?></td>
     </tr>
     <tr>
-        <th><?php print($setting->birth_year_mode===0?"生年":"世代"); ?></th>
+        <th><?=$setting->birth_year_mode===0?"生年":"世代"?></th>
         <td><?php
         if($horse->birth_year>0){
             $birth_year_search=new HorseSearch();
@@ -219,12 +221,12 @@ echo "{$horse->color} {$sex_str}";
 </table>
 <hr>
 <span><?php
-echo $race_history->race_count_1."-";
-echo $race_history->race_count_2."-";
-echo $race_history->race_count_3."-";
-?><span style="<?php echo $race_history->has_unregistered_race_results?'color:#999999;':''; ?>"><?php
-echo $race_history->race_count_4+$race_history->race_count_5+$race_history->race_count_n." / ";
-echo $race_history->race_count_all."戦";
+print_h($race_history->race_count_1."-");
+print_h($race_history->race_count_2."-");
+print_h($race_history->race_count_3."-");
+?><span style="<?=$race_history->has_unregistered_race_results?'color:#999999;':'';?>"><?php
+print_h($race_history->race_count_4+$race_history->race_count_5+$race_history->race_count_n." / ");
+print_h($race_history->race_count_all."戦");
 ?></span></span>
 <?php
 if($is_broodmare){
@@ -316,7 +318,7 @@ foreach ($race_history as $data) {
     }
     $tr_class->add('race_grade_'.$data['grade_css_class_suffix']);
     if($data['is_enabled']===0){ $tr_class->add('disabled_row'); }
-    echo '<tr class="'.$tr_class.'">';
+    echo '<tr class="'.h($tr_class).'">';
 
     $datetime=null;
     if($data['date']!=null && $data['is_tmp_date']==0){
@@ -419,7 +421,7 @@ foreach ($race_history as $data) {
 ?></table>
 <hr>
 <table class="horse_base_data">
-<tr><th>馬名意味</th><td><?php print_h($horse->meaning); ?></td></tr>
+<tr><th>馬名意味</th><td><?=h($horse->meaning)?></td></tr>
 <tr><th>備考</th><td><?=nl2br(h($horse->note))?></td></tr>
 </table>
 <?php
@@ -439,16 +441,16 @@ if($registration_only_race_is_exists||$show_registration_only){
         foreach($horse_tags as $tag){
             $search_text_search->search_text = $tag;
             $url ="{$page->to_horse_search_path}?".$search_text_search->getUrlParam();
-            $links->add("<a href=\"{$url}\">#{$tag}</a>");
+            $links->add("<a href=\"".h($url)."\">#".h($tag)."</a>");
         }
         print($links);
 ?>
 <?php endif; ?>
 <?php if($page->is_editable): ?>
 <hr><input type="button" id="edit_tgl" value="編集" style="<?=EDIT_MENU_TOGGLE===false?'display:none;':'';?>">
-<input type="hidden" id="hiddden_horse_id" value="<?php echo $horse->horse_id; ?>">
+<input type="hidden" id="hiddden_horse_id" value="<?=h($horse->horse_id)?>">
 <input type="button" value="競走馬IDをクリップボードにコピー" onclick="copyToClipboard('#hiddden_horse_id');">
-(horse_id=<?php echo $horse->horse_id; ?>)<a id="edit_menu"></a>
+(horse_id=<?=h($horse->horse_id)?>)<a id="edit_menu"></a>
 <input type="hidden" id="edit_menu_states" value="0">
 <div class="edit_menu" style="<?=EDIT_MENU_TOGGLE?'display:none;':'';?>">
 <table>
