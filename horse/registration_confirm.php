@@ -193,7 +193,7 @@ th{
 </tr>
 <tr>
     <th>備考</th>
-    <td class="in_input"><textarea name='note' readonly><?php print $horse->note; ?></textarea></td>
+    <td class="in_input"><textarea name='note' readonly><?=h($horse->note)?></textarea></td>
 </tr>
 <!--<tr>
     <th>論理削除</th>
@@ -207,7 +207,7 @@ $horse_tags=HorseTag::TagsStrToArray(filter_input(INPUT_POST,'horse_tags'));
 ?>
 <tr>
     <th>検索タグ</th>
-    <td><?=nl2br(implode("\n",$horse_tags));?><?php HTPrint::Hidden('horse_tags',urldecode(implode(' ',$horse_tags))); ?></td>
+    <td><?=nl2br(h(implode("\n",$horse_tags)));?><?php HTPrint::Hidden('horse_tags',h(implode(' ',$horse_tags))); ?></td>
 </tr>
 </table>
 <?php HTPrint::Hidden("is_enabled",$horse->is_enabled); ?>

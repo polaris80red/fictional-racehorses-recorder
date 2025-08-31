@@ -62,7 +62,7 @@ $updater->execute();
 ?><!DOCTYPE html>
 <html>
 <head>
-    <title><?php echo $page->title; ?></title>
+    <title><?=h($page->title)?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -83,7 +83,7 @@ th{
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $page->title; ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
@@ -91,7 +91,7 @@ th{
 <table>
 <tr>
     <th>対象馬</th>
-    <td><?php echo $horse_data->name_ja."/".$horse_data->name_en; ?></td>
+    <td><?=h(implode('/',array_diff([$horse_data->name_ja,$horse_data->name_en],[''])))?></td>
 </tr>
 <tr>
     <th>置換前競走馬ID</th>
@@ -103,7 +103,7 @@ th{
 </tr>
 </table>
 <hr>
-<a href="<?php echo $page->to_app_root_path; ?>horse/?horse_id=<?php echo $new_horse_id; ?>">馬情報に移動</a>
+<a href="<?php echo $page->to_app_root_path; ?>horse/?horse_id=<?=h(urlencode($new_horse_id))?>">馬情報に移動</a>
 </form>
 <hr class="no-css-fallback">
 </main>

@@ -49,7 +49,7 @@ if($page->error_exists){
 ?><!DOCTYPE html>
 <html>
 <head>
-    <title><?php echo $page->title; ?></title>
+    <title><?=h($page->title)?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -64,7 +64,7 @@ if($page->error_exists){
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $page->title; ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
@@ -72,7 +72,7 @@ if($page->error_exists){
 <table class="edit-form-table">
 <tr>
     <th>対象馬</th>
-    <td><?php echo $horse_data->name_ja."/".$horse_data->name_en; ?></td>
+    <td><?=h(implode('/',array_diff([$horse_data->name_ja,$horse_data->name_en],[''])))?></td>
 </tr>
 <tr>
     <th>置換前競走馬ID</th>
