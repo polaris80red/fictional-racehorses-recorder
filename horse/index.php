@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__).'/libs/init.php';
-defineAppRootRelPath(1);
+InAppUrl::init(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -10,7 +10,7 @@ $session=new Session();
 // 暫定でログイン＝編集可能
 $page->is_editable=Session::is_logined();
 
-$page->error_return_url=APP_ROOT_REL_PATH."horse/search";
+$page->error_return_url=InAppUrl::to("horse/search");
 $page->error_return_link_text="競走馬検索に戻る";
 $pdo= getPDO();
 
@@ -277,12 +277,12 @@ $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id=''
         print "<tr><td style=\"color:#999999;\">（{$non_registered_prev_race_number}戦～）</td>";
         print "<td></td>"."<td></td>"."<td></td>"."<td></td>"."<td>……</td>"."<td></td>"."<td></td>"."<td></td>"."<td></td>"."<td></td><td></td><td></td>";
         if($page->is_editable){
-            $url =APP_ROOT_REL_PATH."race/horse_result/form.php?";
-            $url.="horse_id={$horse_id}";
+            $params=['horse_id'=>$horse_id];
             if($next_race_id!==''){
-                $url.="&next_race_id={$next_race_id}";
+                $params['next_race_id']=$next_race_id;
             }
-            print "<td><a href=\"{$url}\">新</td>";
+            $url =InAppUrl::to("race/horse_result/form.php",$params);
+            print "<td><a href=\"".h($url)."\">新</td>";
         }
         print "</tr>\n";
     }
@@ -384,7 +384,7 @@ foreach ($race_history as $data) {
     echo "<td class=\"handicap\">{$data['handicap']}</td>";
     echo "<td class=\"r_horse\">";
     if($data['result_number']==1){ echo "("; }
-    echo '<a href="'.APP_ROOT_REL_PATH.'horse/?horse_id='.$data['r_horse_id'].'">';
+    echo '<a href="'.h(InAppUrl::to('horse/',['horse_id'=>$data['r_horse_id']])).'">';
     echo ($data['r_name_ja']?:$data['r_name_en']);
     echo "</a>";
     if($data['result_number']==1){ echo ")"; }
@@ -392,19 +392,18 @@ foreach ($race_history as $data) {
     $a_tag=new MkTagA();
     if($data['has_jra_thisweek']){
         $a_tag->setLinkText('記');
-        $a_tag->href(APP_ROOT_REL_PATH."race/j_thisweek.php?race_id=".$data['race_id'].$race_url_add_param);
+        $a_tag->href(InAppUrl::to('race/j_thisweek.php',['race_id'=>$data['race_id'],'show_registration_only'=>($race_url_add_param?true:null)]));
     }
     echo "<td>{$a_tag}</td>";
     if($page->is_editable){
         echo "<td class=\"edit_link\">";
         if(!empty($data['race_id'])){
-            $url_param=(new UrlParams())->toString([
+            $url=InAppUrl::to("race/horse_result/form.php",[
                 'race_id'=>$data['race_id'],
                 'horse_id'=>$horse->horse_id,
                 'edit_mode'=>1,
-            ]); 
-            $url=APP_ROOT_REL_PATH."race/horse_result/form.php?{$url_param}";
-            echo '<a href="'.$url.'">編</a>';
+            ]);
+            echo '<a href="'.h($url).'">編</a>';
         }
         echo "</td>";
     }
@@ -455,11 +454,11 @@ if($registration_only_race_is_exists||$show_registration_only){
 <table>
     <tr>
         <td>
-            <?=(new MkTagA('この馬の情報を編集',APP_ROOT_REL_PATH."horse/form.php?horse_id=".urlencode($horse->horse_id)))?>
+            <?=(new MkTagA('この馬の情報を編集',InAppUrl::to('horse/form.php',['horse_id'=>$horse->horse_id])))?>
         </td>
         <td>
 <?php
-    $url=APP_ROOT_REL_PATH."race/horse_result/form.php?horse_id={$horse->horse_id}";
+    $url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$horse->horse_id]);
     $a_tag=new MkTagA('この馬の戦績を追加');
         $a_tag->href($url);
     if($horse->birth_year==null){
@@ -479,7 +478,7 @@ if($registration_only_race_is_exists||$show_registration_only){
 <?php
     $a_tag=new MkTagA('最後に開いたレースにこの馬の戦績を追加');
     if(!empty($session->latest_race['id'])){
-        $url=APP_ROOT_REL_PATH."race/horse_result/form.php?horse_id={$horse->horse_id}&race_id={$session->latest_race['id']}";
+        $url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$horse->horse_id,'race_id'=>$session->latest_race['id']]);
         $a_tag->href($url);
         if($latest_race_is_exists===true){
             $a_tag->href('')->setStyle('text-decoration','line-through');
@@ -505,19 +504,19 @@ if($registration_only_race_is_exists||$show_registration_only){
     <tr>
         <td colspan="3" style="text-align: right;">
 <?php
-$url_param=new UrlParams(['horse_id'=>$horse->horse_id]);
-$url=APP_ROOT_REL_PATH."race/result/form.php?";
-$url_param->set('year',$horse->birth_year+2);
-echo (new MkTagA('[2歳年]'))->href($url.$url_param);
+$params=['horse_id'=>$horse->horse_id];
+$url='race/result/form.php';
+$params['year']=$horse->birth_year+2;
+echo (new MkTagA('[2歳年]'))->href(InAppUrl::to($url,$params));
 echo "　";
-$url_param->set('year',$horse->birth_year+3);
-echo (new MkTagA('[3歳年]'))->href($url.$url_param);
+$params['year']=$horse->birth_year+3;
+echo (new MkTagA('[3歳年]'))->href(InAppUrl::to($url,$params));
 echo "　";
-$url_param->set('year',$horse->birth_year+4);
-echo (new MkTagA('[4歳年]'))->href($url.$url_param);
+$params['year']=$horse->birth_year+4;
+echo (new MkTagA('[4歳年]'))->href(InAppUrl::to($url,$params));
 echo "　";
-$url_param->set('year',$horse->birth_year+5);
-echo (new MkTagA('[5歳年]'))->href($url.$url_param);
+$params['year']=$horse->birth_year+5;
+echo (new MkTagA('[5歳年]'))->href(InAppUrl::to($url,$params));
 ?>
         </td>
     </tr>
@@ -527,7 +526,7 @@ echo (new MkTagA('[5歳年]'))->href($url.$url_param);
         <td colspan="2" style="text-align: right;">
 <?php
 $url_param=new UrlParams(['session_is_not_update'=>1,'grade_g1'=>1,'grade_g2'=>1,'grade_g3'=>1]);
-$url=APP_ROOT_REL_PATH."race/list/?";
+$url=InAppUrl::to("race/list/?");
 echo (new MkTagA('[2歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+2,'age[20]'=>1]));
 echo "　".(new MkTagA('[3歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+3,'age[30]'=>1,'age[31]'=>1]));
 echo "　".(new MkTagA('[4歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+4,'age[31]'=>1,'age[41]'=>1]));
@@ -539,7 +538,7 @@ echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$h
         <td colspan="2" style="text-align: right;">
 <?php
     $url_param=new UrlParams(['session_is_not_update'=>1,'grade_g1'=>1,'grade_g2'=>1,'grade_g3'=>1,'show_organization_jra'=>1]);
-    $url=APP_ROOT_REL_PATH."race/list/?";
+    $url=InAppUrl::to("race/list/?");
     echo (new MkTagA('[世代基準・中央重賞]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+3,'is_generation_search'=>1]));
 ?>
         </td>
@@ -550,7 +549,7 @@ echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$h
 <?php
 if($horse->birth_year!==null){
     $url_param=new UrlParams(['session_is_not_update'=>1]);
-    $url=APP_ROOT_REL_PATH."race/list/?";
+    $url=InAppUrl::to('race/list/?');
     echo (new MkTagA('[2歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+2,'age[20]'=>1]));
     echo "　".(new MkTagA('[3歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+3,'age[30]'=>1,'age[31]'=>1]));
     echo "　".(new MkTagA('[4歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+4,'age[31]'=>1,'age[41]'=>1]));
