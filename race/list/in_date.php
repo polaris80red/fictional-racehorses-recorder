@@ -31,19 +31,8 @@ $page->title=$datetime->format('Y年m月d日')."(".getWeekDayJa($weekdaynum).")�
 $year_week=getWeekByDate($date_str);
 
 # レース情報取得
-$horse_tbl=Horse::TABLE;
-$race_tbl=Race::TABLE;
-$grade_tbl=RaceGrade::TABLE;
+$race_list_getter=new RaceListGetter($pdo);
 $pre_bind=new StatementBinder();
-$race_course_tbl = RaceCourse::QuotedTable();
-
-$sql ="SELECT `r`.*";
-$sql.=",g.short_name as grade_short_name";
-$sql.=",g.css_class_suffix as grade_css_class_suffix";
-$sql.=",c.short_name as race_course_short_name";
-$sql.=" FROM `{$race_tbl}` AS `r`";
-$sql.=" LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name";
-$sql.=" LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.unique_name";
 $where_parts=[
     "`date`=:date",
     "`is_tmp_date`=0",
@@ -56,19 +45,16 @@ if($race_course_name){
     $where_parts[]="`race_course_name` LIKE :race_course_name";
     $pre_bind->add(':race_course_name',$race_course_name);
 }
-$sql.=" WHERE ".implode(' AND ',$where_parts);
-//$sql.=" ORDER BY `race_course_name` ASC, `race_number` ASC, `race_id` ASC;";
-$sql_order_parts=[
+$race_list_getter->addWhereParts($where_parts);
+$race_list_getter->addOrderParts([
     "`is_jra` DESC",
     "`is_nar` DESC",
     "c.sort_number IS NULL, c.sort_number ASC", // コースマスタにある競馬場はソート順適用
     "`race_course_name` ASC", // それ以外を名前順
     "`race_number` ASC",
     "`race_id` ASC",
-];
-$sql.=" ORDER BY ".implode(',',$sql_order_parts).";";
-
-$stmt = $pdo->prepare($sql);
+]);
+$stmt = $race_list_getter->getPDOStatement();
 $pre_bind->add(':date', $date_str);
 $pre_bind->bindTo($stmt);
 $flag = $stmt->execute();
@@ -212,7 +198,7 @@ foreach($table_data as $data){
     if($data['is_enabled']===0){ $class->add('disabled_row'); }
     echo "<tr class=\"".$class."\">";
     #echo $data['date']."\t";
-    echo "<td>".$data['race_course_short_name']??$data['race_course_name']."</td>";
+    echo "<td>".$data['race_course_mst_short_name']??$data['race_course_name']."</td>";
     echo "<td>".($data['race_number']?:"")."</td>";
     echo "<td>{$data['course_type']}{$data['distance']}</td>";
     echo "<td class=\"grade\">".(($data['grade_short_name']??'')?:$data['grade'])."</td>";

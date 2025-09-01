@@ -28,10 +28,7 @@ $world_id= $setting->world_id;
 $race_history = (new RaceAccessHistory())->toArray();
 
 # レース情報取得
-$horse_tbl=Horse::TABLE;
-$race_tbl=Race::TABLE;
-$week_tbl=RaceWeek::TABLE;
-$course_mst_tbl=RaceCourse::TABLE;
+$race_list_getter=new RaceListGetter($pdo);
 $binder=new StatementBinder();
 
 $where_parts=[];
@@ -51,38 +48,19 @@ if($world_id>0){
     $binder->add(':world_id', $world_id);
 }
 if(!$show_disabled){ $where_parts[]="r.`is_enabled`=1"; }
-$sql_where=" WHERE ".implode(' AND ',$where_parts);
-$sql_order_parts=[
+$race_list_getter->addWhereParts($where_parts);
+$race_list_getter->addOrderParts([
     "`year` ASC",
     "IFNULL(w.`month`,r.`month`) ASC",
     "w.`sort_number` ASC",
     "`date` ASC",
     "`race_course_name` ASC, `race_number` ASC",
     "`race_id` ASC",
-];
-$sql_order_by=implode(',',$sql_order_parts);
-$grade_tbl=RaceGrade::TABLE;
-$sql=<<<END
-SELECT
-    r.*
-    ,w.month AS 'w_month'
-    ,w.umm_month_turn
-    ,g.short_name as grade_short_name
-    ,g.css_class_suffix as grade_css_class_suffix
-    ,c.short_name as race_course_mst_short_name
-FROM `{$race_tbl}` AS r
-LEFT JOIN `{$week_tbl}` as w ON r.week_id=w.id
-LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.unique_name
-LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1
-{$sql_where}
-ORDER BY
-{$sql_order_by};
-END;
-
+]);
 try{
     $stmt=null;
     if(count($race_history)>0){
-        $stmt = $pdo->prepare($sql);
+        $stmt = $race_list_getter->getPDOStatement();
         $binder->bindTo($stmt);
         $flag = $stmt->execute();
     }

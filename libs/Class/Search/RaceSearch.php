@@ -298,6 +298,7 @@ class RaceSearch extends Search{
      * 検索実行
      */
     public function SelectExec(PDO $pdo){
+        $race_list_getter=new RaceListGetter($pdo);
         $tbl=Race::TABLE;
         $where_parts=[];
         $pre_bind=new StatementBinder();
@@ -532,43 +533,21 @@ class RaceSearch extends Search{
             $where_parts[]="r.`world_id`=:world_id";
             $pre_bind->add(':world_id', $this->world_id, PDO::PARAM_INT);
         }
-        // WHERE文結合
-        $sql_where='';
         if(count($where_parts)>0){
-            $sql_where="WHERE ".implode(" AND ",$where_parts);
+            $race_list_getter->addWhereParts($where_parts);
         }
-        $limit_offset_part='';
+        $race_list_getter->addOrderParts([
+            '`year` ASC',
+            'IFNULL(w.`month`,r.`month`) ASC',
+            'w.`sort_number` ASC',
+            '`date` ASC',
+            '`race_course_name` ASC, `race_number` ASC',
+        ]);
         if($this->limit>0){
-            $limit_offset_part=" LIMIT {$this->limit}";
-            $limit_offset_part.=" OFFSET ".($this->page_number*$this->limit);
+            $race_list_getter->setLimit($this->limit);
+            $race_list_getter->setOffset($this->page_number*$this->limit);
         }
-        $week_tbl=RaceWeek::TABLE;
-        $age_tbl=RaceCategoryAge::TABLE;
-        $grade_tbl=RaceGrade::TABLE;
-        $course_mst_tbl=RaceCourse::TABLE;
-        $sql=<<<END
-        SELECT
-            r.*
-            ,w.month AS 'w_month'
-            ,w.umm_month_turn
-            ,g.short_name as grade_short_name
-            ,g.css_class_suffix as grade_css_class_suffix
-            ,c.short_name as race_course_mst_short_name
-            ,c.short_name_m as race_course_mst_short_name_m
-        FROM `{$tbl}` AS r
-        LEFT JOIN `{$week_tbl}` as w ON r.week_id=w.id
-        LEFT JOIN `{$age_tbl}` as age ON r.age_category_id=age.id
-        LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.unique_name AND g.is_enabled=1
-        LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1
-        {$sql_where}
-        ORDER BY
-        `year` ASC,
-        IFNULL(w.`month`,r.`month`) ASC,
-        w.`sort_number` ASC,
-        `date` ASC,
-        `race_course_name` ASC, `race_number` ASC {$limit_offset_part};
-        END;
-        $stmt = $pdo->prepare($sql);
+        $stmt = $race_list_getter->getPDOStatement();
         $pre_bind->bindTo($stmt);
         $stmt->execute();
         return $stmt;

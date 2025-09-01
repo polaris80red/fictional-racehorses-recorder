@@ -57,25 +57,8 @@ $page_title_text2.= 'のレース一覧';
 $page->title=$page_title_text1.$page_title_text2;
 
 # レース情報取得
+$race_list_getter=new RaceListGetter($pdo);
 $pre_bind=new StatementBinder();
-$horse_tbl=Horse::TABLE;
-$race_tbl=Race::QuotedTable();
-$race_week_tbl=RaceWeek::QuotedTable();
-$race_course_tbl = RaceCourse::QuotedTable();
-$grade_tbl=RaceGrade::TABLE;
-$sql=<<<END
-SELECT
-r.*
-,w.month
-,w.umm_month_turn
-,g.short_name as grade_short_name
-,g.css_class_suffix as grade_css_class_suffix
-,c.short_name as race_course_short_name
-FROM {$race_tbl} AS r
-LEFT JOIN {$race_week_tbl} AS w ON r.`week_id`= w.id
-LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name
-LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.unique_name
-END;
 $sql_where_and_parts=[
     "`world_id`=:world_id",
     "`year`=:year",
@@ -100,8 +83,8 @@ if($is_jra_only){
     $sql_where_and_parts[]="r.is_jra=1";
 }
 if(!$show_disabled){ $sql_where_and_parts[]="r.`is_enabled`=1"; }
-$sql.=" WHERE ".implode(' AND ',$sql_where_and_parts);
-$sql_order_parts=[
+$race_list_getter->addWhereParts($sql_where_and_parts);
+$race_list_getter->addOrderParts([
     "w.`umm_month_turn` ASC",
     "w.`sort_number` ASC",
     "`date` ASC",
@@ -111,10 +94,8 @@ $sql_order_parts=[
     "`race_course_name` ASC", // それ以外を名前順
     "`race_number` ASC",
     "`race_id` ASC",
-];
-$sql.=" ORDER BY ".implode(',',$sql_order_parts).";";
-$stmt = $pdo->prepare($sql);
-//$stmt->bindValue(':turn', $umm_month_turn, PDO::PARAM_INT);
+]);
+$stmt = $race_list_getter->getPDOStatement();
 $pre_bind->bindTo($stmt);
 $flag = $stmt->execute();
 ?><!DOCTYPE html>
@@ -293,7 +274,7 @@ foreach($table_data as $data){
         echo (new DateTime($data['date']))->format('m/d');
     }
     echo "</td>";
-    echo "<td>".$data['race_course_short_name']??$data['race_course_name']."</td>";
+    echo "<td>".$data['race_course_mst_short_name']??$data['race_course_name']."</td>";
     echo "<td>".($data['race_number']?:"")."</td>";
     echo "<td>{$data['course_type']}{$data['distance']}</td>";
     echo "<td class=\"grade\">".(($data['grade_short_name']??'')?:$data['grade'])."</td>";
