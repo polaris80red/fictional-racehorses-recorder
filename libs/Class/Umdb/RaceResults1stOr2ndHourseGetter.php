@@ -14,7 +14,7 @@ FROM `{$results_table}` AS `results`
     LEFT JOIN `{$horse_table}` AS `horse`
         ON `horse`.`horse_id`= `results`.`horse_id`
 WHERE
-    `race_results_id` LIKE :race_id 
+    `race_id` LIKE :race_id 
     AND `result_number`<=:result_num 
     AND `results`.`horse_id` NOT LIKE :horse_id
 ORDER BY

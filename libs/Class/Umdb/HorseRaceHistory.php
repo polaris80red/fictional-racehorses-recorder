@@ -79,7 +79,7 @@ class HorseRaceHistory implements Iterator{
             ,`spr`.short_name_2 as special_result_short_name_2
             ,IFNULL(`spr`.is_excluded_from_race_count,0) AS is_excluded_from_race_count
             FROM `{$race_results_tbl}` AS `race_results`
-            LEFT JOIN `{$race_tbl}` AS `race` ON `race`.`race_id`=`race_results`.`race_results_id`
+            LEFT JOIN `{$race_tbl}` AS `race` ON `race`.`race_id`=`race_results`.`race_id`
             LEFT JOIN `{$race_week_tbl}` AS w ON `race`.`week_id` = w.id
             LEFT JOIN `{$grade_tbl}` as g ON `race`.grade LIKE g.unique_name
             LEFT JOIN `{$course_mst_tbl}` as c ON `race`.race_course_name LIKE c.unique_name AND c.is_enabled=1

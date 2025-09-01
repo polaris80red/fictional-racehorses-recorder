@@ -11,11 +11,11 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $delete_confirm_check=filter_input(INPUT_POST,'delete_confirm_check',FILTER_VALIDATE_BOOLEAN);
-$race_results_id=filter_input(INPUT_POST,'race_id');
+$race_id=filter_input(INPUT_POST,'race_id');
 $horse_id=filter_input(INPUT_POST,'horse_id');
 
 $horse_race_result= new RaceResults();
-$horse_race_result->race_results_id=$race_results_id;
+$horse_race_result->race_id=$race_id;
 $horse_race_result->horse_id=$horse_id;
 
 $pdo= getPDO();
@@ -25,7 +25,7 @@ do{
         $page->addErrorMsg("確認チェックボックスがオンになっていません");
         break;
     }   
-    if(empty($race_results_id)){
+    if(empty($race_id)){
         $page->addErrorMsg("レースID未指定");
         break;
     }
@@ -33,7 +33,7 @@ do{
         $page->addErrorMsg("競走馬ID未指定");
         break;
     }
-    if(!$horse_race_result->setDataById($pdo, $race_results_id, $horse_id)){
+    if(!$horse_race_result->setDataById($pdo, $race_id, $horse_id)){
         $page->addErrorMsg("存在しないレース結果");
         break;
     }

@@ -24,7 +24,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`spr`.`is_registration_only`
         FROM `{$race_tbl}` AS `race`
         LEFT JOIN `{$race_results_tbl}` AS `r_results`
-            ON `race`.`race_id`=`r_results`.`race_results_id`
+            ON `race`.`race_id`=`r_results`.`race_id`
         LEFT JOIN `{$horse_tbl}` AS `Horse` ON `r_results`.`horse_id`=`Horse`.`horse_id`
         LEFT JOIN `{$race_special_results_tbl}` as spr ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
         WHERE `race`.`race_id`=:race_id
@@ -69,7 +69,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`spr`.`short_name_2` as `special_result_short_name_2`
         FROM `{$race_results_tbl}` AS `r_results`
         LEFT JOIN `{$race_tbl}` AS `race` ON
-            `race`.`race_id`=`r_results`.`race_results_id`
+            `race`.`race_id`=`r_results`.`race_id`
             AND
             (
                 ((`race`.`year`=:race_year AND `race`.`week_id`<:week_id) OR `race`.`year`<:race_year)
@@ -108,7 +108,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         $stmt2->execute();
         $data['horse_results']=[];
         while($data2 = $stmt2->fetch(PDO::FETCH_ASSOC)){
-            $res= $rr12HourseGetter->get($data2['race_results_id'],$data2['result_number'],$data['horse_id']);
+            $res= $rr12HourseGetter->get($data2['race_id'],$data2['result_number'],$data['horse_id']);
             $data2['winner_or_runner_up']=[
                 'horse_id'=>!empty($res['horse_id'])?$res['horse_id']:'',
                 'name_ja'=>!empty($res['name_ja'])?$res['name_ja']:'',

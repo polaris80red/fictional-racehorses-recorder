@@ -19,7 +19,7 @@ $is_edit_mode = 0;
 if(filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOLEAN)){
     $is_edit_mode = 1;
 }
-$race_results->race_results_id=filter_input(INPUT_POST,'race_id');
+$race_results->race_id=filter_input(INPUT_POST,'race_id');
 $race_results->horse_id=filter_input(INPUT_POST,'horse_id');
 
 $next_race_id=filter_input(INPUT_POST,'next_race_id');
@@ -27,7 +27,7 @@ $next_race_results=null;
 
 $pdo= getPDO();
 do{
-    if($race_results->race_results_id==""){
+    if($race_results->race_id==""){
         $page->addErrorMsg("レースID未指定。");
     }
     if($race_results->horse_id==""){
@@ -50,12 +50,12 @@ do{
     $old_horse_result= new RaceResults();
     $old_horse_result->setDataById(
         $pdo,
-        $race_results->race_results_id,
+        $race_results->race_id,
         $race_results->horse_id);
 
     $horse=new Horse();
     $horse->setDataById($pdo, $race_results->horse_id);
-    $race=new Race($pdo, $race_results->race_results_id);
+    $race=new Race($pdo, $race_results->race_id);
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
             $page->addErrorMsg("編集対象のレース結果が存在しません。");
@@ -120,7 +120,7 @@ if($is_error!==0){
 <table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>レースID</th>
-    <td><?php HTPrint::HiddenAndText('race_id',$race_results->race_results_id); ?></td>
+    <td><?php HTPrint::HiddenAndText('race_id',$race_results->race_id); ?></td>
 </tr>
 <tr>
     <th>レース名</th>
@@ -235,7 +235,7 @@ switch($race_results->is_affliationed_nar){
 <?php if($next_race_results!=null && $next_race_results->record_exists && $next_race_results->non_registered_prev_race_number>0): ?>
 <tr>
     <th rowspan="3">次走から<br>未登録自動減算</th>
-    <td><?php HTPrint::HiddenAndText('next_race_id',$next_race_results->race_results_id); ?></td>
+    <td><?php HTPrint::HiddenAndText('next_race_id',$next_race_results->race_id); ?></td>
 </tr>
 <tr>
     <td><?=h($next_race->race_name)?>(<?=h($next_race->year)?>)</td>

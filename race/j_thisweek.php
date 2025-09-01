@@ -80,7 +80,7 @@ SELECT
 ,`master_horse`.`bms_name`
 ,`race`.*
 FROM `{$race_results_tbl}` AS `race`
-LEFT JOIN `{$race_results_horse_tbl}` AS `r_result` ON `race`.`race_id`=`r_result`.`race_results_id`
+LEFT JOIN `{$race_results_horse_tbl}` AS `r_result` ON `race`.`race_id`=`r_result`.`race_id`
 LEFT JOIN {$horse_tbl} AS `master_horse` ON `r_result`.`horse_id`=`master_horse`.`horse_id`
 WHERE `race`.`race_id`=:race_id
 ORDER BY

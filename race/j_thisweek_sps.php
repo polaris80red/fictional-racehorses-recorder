@@ -80,7 +80,7 @@ SELECT
 ,`master_horse`.`color`
 ,`race`.*
 FROM `{$race_tbl}` AS `race`
-LEFT JOIN `{$race_results_tbl}` AS `r_retults` ON `race`.`race_id`=`r_retults`.`race_results_id`
+LEFT JOIN `{$race_results_tbl}` AS `r_retults` ON `race`.`race_id`=`r_retults`.`race_id`
 LEFT JOIN {$horse_tbl} AS `master_horse` ON `r_retults`.`horse_id`=`master_horse`.`horse_id`
 WHERE `race`.`race_id`=:race_id
 ORDER BY

@@ -10,17 +10,17 @@ $page->ForceNoindex();
 $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
-$race_results_id=filter_input(INPUT_POST,'race_id');
+$race_id=filter_input(INPUT_POST,'race_id');
 $horse_id=filter_input(INPUT_POST,'horse_id');
 
 $horse_race_result= new RaceResults();
-$horse_race_result->race_results_id=$race_results_id;
+$horse_race_result->race_id=$race_id;
 $horse_race_result->horse_id=$horse_id;
 
 $pdo= getPDO();
 # 対象取得
 do{
-    if(empty($race_results_id)){
+    if(empty($race_id)){
         $page->addErrorMsg("レースID未指定");
         break;
     }
@@ -28,13 +28,13 @@ do{
         $page->addErrorMsg("競走馬ID未指定");
         break;
     }
-    if(!$horse_race_result->setDataById($pdo, $race_results_id, $horse_id)){
+    if(!$horse_race_result->setDataById($pdo, $race_id, $horse_id)){
         $page->addErrorMsg("存在しないレース結果");
         break;
     }
     $horse=new Horse();
     $horse->setDataById($pdo, $horse_race_result->horse_id);
-    $race=new Race($pdo, $horse_race_result->race_results_id);
+    $race=new Race($pdo, $horse_race_result->race_id);
 }while(false);
 if($page->error_exists){
     $page->printCommonErrorPage();
@@ -66,7 +66,7 @@ if($page->error_exists){
 <table class="edit-form-table">
 <tr>
     <th>レースID</th>
-    <td><?php HTPrint::HiddenAndText('race_id',$horse_race_result->race_results_id); ?></td>
+    <td><?php HTPrint::HiddenAndText('race_id',$horse_race_result->race_id); ?></td>
 </tr>
 <tr>
     <th>レース名</th>
@@ -92,7 +92,7 @@ if($horse->name_ja){
 <input type="hidden" name="delete_confirm_check" value="0">
 <label style="border:1px solid #999; padding-right:0.3em;" class="font_red"><input id="confirm_check" type="checkbox" name="delete_confirm_check" value="1">このチェックを入れて実行</label><br>
 <br>
-<?php HTPrint::Hidden('race_id',$race_results_id); ?>
+<?php HTPrint::Hidden('race_id',$race_id); ?>
 <?php HTPrint::Hidden('horse_id',$horse_id); ?>
 <input id="submit_btn" type="submit" value="レース結果詳細データ削除実行" disabled>
 <script>

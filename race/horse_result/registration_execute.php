@@ -18,7 +18,7 @@ $is_edit_mode = 0;
 if(filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOLEAN)){
     $is_edit_mode = 1;
 }
-$input->race_results_id=filter_input(INPUT_POST,'race_id');
+$input->race_id=filter_input(INPUT_POST,'race_id');
 $input->horse_id=filter_input(INPUT_POST,'horse_id');
 
 $next_race_id=filter_input(INPUT_POST,'next_race_id');
@@ -32,7 +32,7 @@ do{
         $error_msgs[]="登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）";
         break;
     }
-    if($input->race_results_id==""){
+    if($input->race_id==""){
         $is_error=1;
         $error_msgs[]="レースIDなし。";
         break;
@@ -52,11 +52,11 @@ do{
     $old_horse_result= new RaceResults();
     $old_horse_result->setDataById(
         $pdo,
-        $input->race_results_id,
+        $input->race_id,
         $input->horse_id);
     $horse=new Horse();
     $horse->setDataById($pdo, $input->horse_id);
-    $race=new Race($pdo, $input->race_results_id);
+    $race=new Race($pdo, $input->race_id);
     if(!$race->record_exists){
         $is_error=1;
         $error_msgs[]="存在しないレースID";
@@ -146,15 +146,15 @@ if($sp_result && $sp_result->is_registration_only){
     $url_suffix = '&show_registration_only=true';
 }
 ?>
-<a href="<?=h($page->getRaceResultUrl($input->race_results_id).$url_suffix)?>" style="font-weight: bold;">レース結果</a>
-｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek.php?race_id=<?=h($input->race_results_id.$url_suffix)?>">出走馬情報</a>
-｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek_sps.php?race_id=<?=h($input->race_results_id)?>">SP出馬表紹介文</a><br>
+<a href="<?=h($page->getRaceResultUrl($input->race_id).$url_suffix)?>" style="font-weight: bold;">レース結果</a>
+｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek.php?race_id=<?=h($input->race_id.$url_suffix)?>">出走馬情報</a>
+｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek_sps.php?race_id=<?=h($input->race_id)?>">SP出馬表紹介文</a><br>
 <a href="<?=APP_ROOT_REL_PATH?>horse/?horse_id=<?=h($input->horse_id.$url_suffix)?>" style="font-weight: bold;">競走馬情報</a>
 </div>
 <hr>
 <div>
 <?php
-$race_result=new Race($pdo,$input->race_results_id);
+$race_result=new Race($pdo,$input->race_id);
 ?>
 <?php if($race_result->date!=''): ?>
 <?=(new MkTagA('同日のレース一覧',APP_ROOT_REL_PATH.'race/list/in_date.php?date='.urlencode($race_result->date)))?><br>
@@ -188,7 +188,7 @@ $ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_
 <input type="hidden" name="is_edit_mode" value="<?=$is_edit_mode?1:0?>">
 <table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
-    <th>レースID</th><td><?=h($input->race_results_id)?></td>
+    <th>レースID</th><td><?=h($input->race_id)?></td>
 </tr>
 <tr>
     <th>競走馬ID</th><td><?=h($input->horse_id)?></td>

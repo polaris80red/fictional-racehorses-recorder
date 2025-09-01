@@ -50,7 +50,7 @@ if($page->error_exists){
     exit;
 }
 $updater=new IdUpdater($pdo,$race_result_id,$new_race_result_id);
-$updater->addUpdateTarget(RaceResults::TABLE,'race_results_id');
+$updater->addUpdateTarget(RaceResults::TABLE,'race_id');
 $updater->addUpdateTarget(Race::TABLE,'race_id');
 $updater->execute();
 

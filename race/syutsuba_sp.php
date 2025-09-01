@@ -229,7 +229,7 @@ foreach($data['horse_results'] as $prev_race){
         echo "</div>\n";
 
         echo "<div>";
-        $url=$page->getRaceResultUrl($r->race_results_id);
+        $url=$page->getRaceResultUrl($r->race_id);
         echo "<span style=\"\"><a class=\"race_name\" href=\"".h($url)."\" title=\"".h($r->caption)."\">";
         print_h($r->race_short_name==''?$r->race_name:$r->race_short_name);
         echo "</a></span>";
@@ -264,7 +264,7 @@ foreach($data['horse_results'] as $prev_race){
             if($page->is_editable){
                 $url ="{$page->to_app_root_path}race/horse_result/form.php?";
                 $url.="horse_id={$data['horse_id']}";
-                $url.="&next_race_id={$r->race_results_id}";
+                $url.="&next_race_id={$r->race_id}";
                 print "<td class=\"race_result_column\"><a href=\"".h($url)."\">……</a></td>\n";
             }else{
                 print "<td class=\"race_result_column\">……</td>\n";

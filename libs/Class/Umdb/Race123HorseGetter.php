@@ -17,7 +17,7 @@ class Race123HorseGetter{
         LEFT JOIN `{$horse_table}` AS `Horse`
         ON `Horse`.`horse_id`= `r_results`.`horse_id`
         WHERE
-        `race_results_id` = :race_id
+        `race_id` = :race_id
         AND
         `result_number`<=3
         ORDER BY

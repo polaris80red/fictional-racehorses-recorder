@@ -280,7 +280,7 @@ if($page->error_exists){
 <?php if($next_race_data!=null && $next_race_data->record_exists && $next_race_data->non_registered_prev_race_number>0): ?>
 <tr>
     <th rowspan="3">次走から<br>未登録自動減算</th>
-    <td><?=h($next_race_data->race_results_id)?><input type="hidden" name="next_race_id" value="<?=h($next_race_data->race_results_id)?>"></td>
+    <td><?=h($next_race_data->race_id)?><input type="hidden" name="next_race_id" value="<?=h($next_race_data->race_id)?>"></td>
     <td></td>
 </tr>
 <tr>

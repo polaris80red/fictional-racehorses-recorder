@@ -4,7 +4,7 @@ class RaceResults extends Table{
 
     public $record_exists=false;
 
-    public $race_results_id ='';
+    public $race_id ='';
     public $horse_id ='';
     public $result_number =null;
     public $result_order =null;
@@ -43,7 +43,7 @@ class RaceResults extends Table{
         'jra_thisweek_horse_sort_number',
     ];
     const STR_COLUMNS=[
-        'race_results_id','horse_id',
+        'race_id','horse_id',
         'result_text',
         'handicap',
         'margin',
@@ -59,15 +59,15 @@ class RaceResults extends Table{
     /**
      * キーでデータベースから取得
      */
-    public function setDataById($pdo, string $race_results_id, string $horse_id){
+    public function setDataById($pdo, string $race_id, string $horse_id){
         $target_columns=array_diff(
             array_merge(self::INT_COLUMNS,self::STR_COLUMNS),['number']);
         $sql_select_columns_part=(new SqlMakeColumnNames($target_columns))->quotedString();
 
         $sql ="SELECT {$sql_select_columns_part} FROM `".self::TABLE;
-        $sql.="` WHERE `race_results_id` LIKE :race_results_id AND `horse_id` LIKE :horse_id LIMIT 1;";
+        $sql.="` WHERE `race_id` LIKE :race_id AND `horse_id` LIKE :horse_id LIMIT 1;";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':race_results_id', SqlValueNormalizer::escapeLike($race_results_id), PDO::PARAM_STR);
+        $stmt->bindValue(':race_id', SqlValueNormalizer::escapeLike($race_id), PDO::PARAM_STR);
         $stmt->bindValue(':horse_id', SqlValueNormalizer::escapeLike($horse_id), PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -134,7 +134,7 @@ class RaceResults extends Table{
         END;
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
-        $stmt->bindValue(":race_results_id",$this->race_results_id,PDO::PARAM_STR);
+        $stmt->bindValue(":race_id",$this->race_id,PDO::PARAM_STR);
         $stmt->bindValue(":horse_id",$this->horse_id,PDO::PARAM_STR);
         $flag = $stmt->execute();
     }
@@ -142,17 +142,17 @@ class RaceResults extends Table{
         $target_columns=array_diff(
             array_merge(
                 self::INT_COLUMNS,self::STR_COLUMNS),
-                ['number','race_results_id','horse_id']);
+                ['number','race_id','horse_id']);
         $sql_update_set_part=(new SqlMakeColumnNames($target_columns))->updateSetString();
         $tbl=self::TABLE;
         $sql=<<<END
         UPDATE `{$tbl}`
         SET {$sql_update_set_part}
-        WHERE `race_results_id` LIKE :race_results_id AND `horse_id` LIKE :horse_id;
+        WHERE `race_id` LIKE :race_id AND `horse_id` LIKE :horse_id;
         END;
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
-        $stmt->bindValue(":race_results_id",SqlValueNormalizer::escapeLike($this->race_results_id),PDO::PARAM_STR);
+        $stmt->bindValue(":race_id",SqlValueNormalizer::escapeLike($this->race_id),PDO::PARAM_STR);
         $stmt->bindValue(":horse_id",SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
         return $stmt->execute();
     }
@@ -160,13 +160,13 @@ class RaceResults extends Table{
      * Delete実行
      */
     public function DeleteExec(PDO $pdo){
-        if($this->race_results_id==''){exit;};
+        if($this->race_id==''){exit;};
         if($this->horse_id==''){exit;};
         $sql ="DELETE FROM ".self::TABLE;
-        $sql.= " WHERE `race_results_id` LIKE :race_results_id";
+        $sql.= " WHERE `race_id` LIKE :race_id";
         $sql.= " AND `horse_id` LIKE :horse_id";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(":race_results_id",SqlValueNormalizer::escapeLike($this->race_results_id),PDO::PARAM_STR);
+        $stmt->bindValue(":race_id",SqlValueNormalizer::escapeLike($this->race_id),PDO::PARAM_STR);
         $stmt->bindValue(":horse_id",SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
         $result = $stmt->execute();
     }
@@ -205,10 +205,10 @@ class RaceResults extends Table{
         UPDATE `{$tbl}`
         SET
             `non_registered_prev_race_number` = `non_registered_prev_race_number`-1
-        WHERE `race_results_id` LIKE :race_results_id AND `horse_id` LIKE :horse_id;
+        WHERE `race_id` LIKE :race_id AND `horse_id` LIKE :horse_id;
         END;
         $stmt=$pdo->prepare($sql);
-        $stmt->bindValue(':race_results_id', $this->race_results_id, PDO::PARAM_STR);
+        $stmt->bindValue(':race_id', $this->race_id, PDO::PARAM_STR);
         $stmt->bindValue(':horse_id', $this->horse_id, PDO::PARAM_STR);
         return $stmt->execute();
     }

@@ -117,12 +117,12 @@ $sql=(function(){
     {$sql_part_select_columns}
     FROM `{$race_tbl}` AS `race`
     LEFT JOIN `{$r_results_tbl}` AS `r_results`
-        ON `race`.`race_id`=`r_results`.`race_results_id`
+        ON `race`.`race_id`=`r_results`.`race_id`
     LEFT JOIN `{$horse_tbl}`
         ON `r_results`.`horse_id`=`{$horse_tbl}`.`horse_id`
     LEFT JOIN `{$race_special_results_tbl}` as spr
         ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
-    WHERE `race_id`=:race_id
+    WHERE `race`.`race_id`=:race_id
     ORDER BY
         `r_results`.`result_number` IS NULL,
         `r_results`.`result_number` ASC,
