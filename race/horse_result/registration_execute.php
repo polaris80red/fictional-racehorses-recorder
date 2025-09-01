@@ -132,7 +132,7 @@ do{
 if($is_error!==0){
     echo '<div style="border:solid 1px red;padding:8px;margin-bottom:8px;">';
     echo "<h2>処理中止</h2>";
-    echo implode("<br>\n",$error_msgs);
+    echo nl2br(h(implode("\n",$error_msgs)));
     echo "</div>";
 }
 ?>
@@ -146,10 +146,10 @@ if($sp_result && $sp_result->is_registration_only){
     $url_suffix = '&show_registration_only=true';
 }
 ?>
-<a href="<?=$page->getRaceResultUrl($input->race_results_id).$url_suffix?>" style="font-weight: bold;">レース結果</a>
-｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek.php?race_id=<?=$input->race_results_id.$url_suffix?>">出走馬情報</a>
-｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek_sps.php?race_id=<?=$input->race_results_id?>">SP出馬表紹介文</a><br>
-<a href="<?=APP_ROOT_REL_PATH?>horse/?horse_id=<?=$input->horse_id.$url_suffix?>" style="font-weight: bold;">競走馬情報</a>
+<a href="<?=h($page->getRaceResultUrl($input->race_results_id).$url_suffix)?>" style="font-weight: bold;">レース結果</a>
+｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek.php?race_id=<?=h($input->race_results_id.$url_suffix)?>">出走馬情報</a>
+｜<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek_sps.php?race_id=<?=h($input->race_results_id)?>">SP出馬表紹介文</a><br>
+<a href="<?=APP_ROOT_REL_PATH?>horse/?horse_id=<?=h($input->horse_id.$url_suffix)?>" style="font-weight: bold;">競走馬情報</a>
 </div>
 <hr>
 <div>
@@ -185,49 +185,49 @@ $ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_
 </div>
 <hr>
 <form action="" method="post">
-<input type="hidden" name="is_edit_mode" value="<?php echo ($is_edit_mode)?1:0; ?>">
+<input type="hidden" name="is_edit_mode" value="<?=$is_edit_mode?1:0?>">
 <table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
-    <th>レースID</th><td><?php echo $input->race_results_id; ?></td>
+    <th>レースID</th><td><?=h($input->race_results_id)?></td>
 </tr>
 <tr>
-    <th>競走馬ID</th><td><?php echo $input->horse_id; ?></td>
+    <th>競走馬ID</th><td><?=h($input->horse_id)?></td>
 </tr>
 <tr>
-    <th>着順</th><td><?php echo $input->result_number; ?>着</td>
+    <th>着順</th><td><?=h($input->result_number)?>着</td>
 </tr>
 <tr>
-    <th>表示順補正</th><td><?php echo $input->result_order; ?></td>
+    <th>表示順補正</th><td><?=h($input->result_order)?></td>
 </tr>
 <tr>
-    <th>特殊結果</th><td><?php echo $input->result_text; ?></td>
+    <th>特殊結果</th><td><?=h($input->result_text)?></td>
 </tr>
 <tr>
-    <th>降着前入線順</th><td><?php echo $input->result_before_demotion?:''; ?></td>
+    <th>降着前入線順</th><td><?=h($input->result_before_demotion?:'')?></td>
 </tr>
 <tr>
-    <th>枠番</th><td><?php echo ifZero2Empty($input->frame_number); ?>枠</td>
+    <th>枠番</th><td><?=h(ifZero2Empty($input->frame_number))?>枠</td>
 </tr>
 <tr>
-    <th>馬番</th><td><?php echo ifZero2Empty($input->horse_number); ?>番</td>
+    <th>馬番</th><td><?=h(ifZero2Empty($input->horse_number))?>番</td>
 </tr>
 <tr>
-    <th>斤量</th><td><?php echo $input->handicap; ?>kg</td>
+    <th>斤量</th><td><?=h($input->handicap)?>kg</td>
 </tr>
 <tr>
-    <th>着差</th><td><?php echo $input->margin; ?></td>
+    <th>着差</th><td><?=h($input->margin)?></td>
 </tr>
 <tr>
     <th>コーナー<br>通過順位</th>
     <td><?php
-        print ($input->corner_1?$input->corner_1.'-':'');
-        print ($input->corner_2?$input->corner_2.'-':'');
-        print ($input->corner_3?$input->corner_3.'-':'');
-        print $input->corner_4;
+        print_h($input->corner_1?$input->corner_1.'-':'');
+        print_h($input->corner_2?$input->corner_2.'-':'');
+        print_h($input->corner_3?$input->corner_3.'-':'');
+        print_h($input->corner_4);
     ?></td>
 </tr>
 <tr>
-    <th>単勝人気</th><td><?php echo ifZero2Empty($input->favourite); ?></td>
+    <th>単勝人気</th><td><?=h(ifZero2Empty($input->favourite))?></td>
 </tr>
 <tr>
     <th>性別</th>
@@ -246,10 +246,10 @@ switch($input->sex){
 ?></td>
 </tr>
 <tr>
-    <th>所属上書</th><td><?php echo $input->tc; ?></td>
+    <th>所属上書</th><td><?=h($input->tc)?></td>
 </tr>
 <tr>
-    <th>調教国上書</th><td><?php echo $input->training_country; ?></td>
+    <th>調教国上書</th><td><?=h($input->training_country)?></td>
 </tr>
 <tr>
     <th>地方所属</th>
@@ -271,19 +271,19 @@ switch($input->is_affliationed_nar){
 </tr>
 <tr>
     <th>(火)</th>
-    <td><textarea readonly><?php print_h($input->jra_thisweek_horse_1); ?></textarea></td>
+    <td><textarea readonly><?=h($input->jra_thisweek_horse_1)?></textarea></td>
 </tr>
 <tr>
     <th>(木)</th>
-    <td><textarea readonly><?php print_h($input->jra_thisweek_horse_2); ?></textarea></td>
+    <td><textarea readonly><?=h($input->jra_thisweek_horse_2)?></textarea></td>
 </tr>
 <tr>
     <th>並び順</th>
-    <td><?php echo $input->jra_thisweek_horse_sort_number; ?></td>
+    <td><?=h($input->jra_thisweek_horse_sort_number)?></td>
 </tr>
 <tr><th colspan="2">スペシャル出馬表紹介</th></tr>
 <tr>
-    <td colspan="2"><textarea readonly><?php print_h($input->jra_sps_comment); ?></textarea></td>
+    <td colspan="2"><textarea readonly><?=h($input->jra_sps_comment)?></textarea></td>
 </tr>
 </table>
 </form>

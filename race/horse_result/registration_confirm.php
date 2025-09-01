@@ -104,19 +104,19 @@ if($page->error_exists){
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $page->title; ?><?php echo ($is_edit_mode?"(編集)":"") ?></h1>
+<h1 class="page_title"><?=h($page->title)?><?=$is_edit_mode?"(編集)":""?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
 <?php
 if($is_error!==0){
     echo '<div style="border:solid 1px red;">';
-    echo implode("<br>\n",$error_msgs);
+    echo nl2br(h(implode("\n",$error_msgs)));
     echo "</div>";
 }
 ?>
 <form action="./registration_execute.php" method="post">
-<input type="hidden" name="edit_mode" value="<?php echo ($is_edit_mode)?1:0; ?>">
+<input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0?>">
 <table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>レースID</th>
@@ -124,7 +124,7 @@ if($is_error!==0){
 </tr>
 <tr>
     <th>レース名</th>
-    <td><?php echo $race->year." ".$race->race_name; ?></td>
+    <td><?=h($race->year." ".$race->race_name)?></td>
 </tr>
 <tr>
     <th>競走馬ID</th>
@@ -132,13 +132,7 @@ if($is_error!==0){
 </tr>
 <tr>
     <th>競走馬名</th>
-     <td><?php
-if($horse->name_ja){
-    echo $horse->name_ja;
-} else{
-    echo $horse->name_en?:"";
-}
-?></td>
+     <td><?=h($horse->name_ja?:($horse->name_en?:""))?></td>
 </tr>
 <tr>
     <th>着順</th>
@@ -156,7 +150,7 @@ if($horse->name_ja){
     <th>降着前入線順</th>
     <td><?php
         HTPrint::HiddenAndText('result_before_demotion',$race_detail->result_before_demotion?:'');
-        echo $race_detail->result_before_demotion?"着から降着":''
+        print_h($race_detail->result_before_demotion?"着から降着":'');
     ?></td>
 </tr>
 <tr>
@@ -178,10 +172,10 @@ if($horse->name_ja){
     <th>コーナー<br>通過順位</th>
     <td>
     <?php
-        print ($race_detail->corner_1?$race_detail->corner_1.'-':'');
-        print ($race_detail->corner_2?$race_detail->corner_2.'-':'');
-        print ($race_detail->corner_3?$race_detail->corner_3.'-':'');
-        print $race_detail->corner_4?:'';
+        print_h($race_detail->corner_1?$race_detail->corner_1.'-':'');
+        print_h($race_detail->corner_2?$race_detail->corner_2.'-':'');
+        print_h($race_detail->corner_3?$race_detail->corner_3.'-':'');
+        print_h($race_detail->corner_4?:'');
     ?>
     <?php HTPrint::Hidden('corner_1',$race_detail->corner_1?:''); ?>
     <?php HTPrint::Hidden('corner_2',$race_detail->corner_2?:''); ?>
@@ -244,10 +238,10 @@ switch($race_detail->is_affliationed_nar){
     <td><?php HTPrint::HiddenAndText('next_race_id',$next_race_detail->race_results_id); ?></td>
 </tr>
 <tr>
-    <td><?php echo $next_race->race_name; ?>(<?php echo $next_race->year; ?>)</td>
+    <td><?=h($next_race->race_name)?>(<?=h($next_race->year)?>)</td>
 </tr>
 <tr>
-    <td>現在指定：<?php echo $next_race_detail->non_registered_prev_race_number; ?>走</td>
+    <td>現在指定：<?=h($next_race_detail->non_registered_prev_race_number)?>走</td>
 </tr>
 <?php endif; ?>
 </table>
@@ -257,11 +251,11 @@ switch($race_detail->is_affliationed_nar){
 </tr>
 <tr>
     <th>(火)</th>
-    <td class="in_input"><textarea name="jra_thisweek_horse_1" readonly><?php echo rtrim($race_detail->jra_thisweek_horse_1); ?></textarea></td>
+    <td class="in_input"><textarea name="jra_thisweek_horse_1" readonly><?=h(rtrim($race_detail->jra_thisweek_horse_1))?></textarea></td>
 </tr>
 <tr>
     <th>(木)</th>
-    <td class="in_input"><textarea name="jra_thisweek_horse_2" readonly><?php echo rtrim($race_detail->jra_thisweek_horse_2); ?></textarea></td>
+    <td class="in_input"><textarea name="jra_thisweek_horse_2" readonly><?=h(rtrim($race_detail->jra_thisweek_horse_2))?></textarea></td>
 </tr>
 <tr>
     <th>並び順</th>
@@ -269,11 +263,11 @@ switch($race_detail->is_affliationed_nar){
 </tr>
 <tr><th colspan="2">スペシャル出馬表紹介</th></tr>
 <tr>
-    <td class="in_input" colspan="2"><textarea name="jra_sps_comment" readonly><?php echo rtrim($race_detail->jra_sps_comment); ?></textarea></td>
+    <td class="in_input" colspan="2"><textarea name="jra_sps_comment" readonly><?=h(rtrim($race_detail->jra_sps_comment))?></textarea></td>
 </tr>
 </table>
 <div style="clear: both;">
-<input type="submit" value="登録実行" <?php echo $is_error==0?"":'disabled'; ?>>
+<input type="submit" value="登録実行" <?=h($is_error==0?"":'disabled')?>>
 </div>
 <?php $csrf_token->printHiddenInputTag(); ?>
 </form>
