@@ -12,18 +12,12 @@ class RaceGrade extends Table{
         }
         return (new (static::ROW_CLASS))->setFromArray($result);
     }
-
     public static function getByUniqueName(PDO $pdo, $id){
         $result = self::getByUniqueKey($pdo,'unique_name',$id,PDO::PARAM_STR);
         if($result==false){
             return false;
         }
-        $obj=new RaceGradeRow();
-        $columns=RaceGradeRow::getRowNames();
-        foreach($columns as $col){
-            $obj->{$col}=$result[$col];
-        }
-        return $obj;
+        return (new (static::ROW_CLASS))->setFromArray($result);
     }
     public static function getForSelectbox($pdo){
         $sql_parts[]="SELECT * FROM ".self::QuotedTable();
