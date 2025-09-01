@@ -90,12 +90,12 @@ th{
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php $page->printTitle(); ?>（<?php echo $is_edit_mode?"編集":"新規" ?>）</h1>
+<h1 class="page_title"><?php $page->printTitle(); ?>（<?=$is_edit_mode?"編集":"新規"?>）</h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
 <form action="registration_execute.php" method="post">
-<input type="hidden" name="edit_mode" value="<?php echo $is_edit_mode?1:0; ?>">
+<input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0?>">
 <table class="edit-form-table">
 <tr>
     <th>競走馬ID</th>
@@ -105,7 +105,7 @@ th{
     <th>ワールド</th>
     <td><?php
     $world=new World($pdo,$horse->world_id);
-    print $world->name;
+    print_h($world->name);
     HTPrint::Hidden('world_id',$horse->world_id);
     ?></td>
 </tr>
