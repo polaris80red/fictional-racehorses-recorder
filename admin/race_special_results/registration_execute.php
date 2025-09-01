@@ -56,14 +56,12 @@ if($error_exists){
 }
 if($check_form_item!=false){
     // 編集モード
-    echo "編集";
     $result = ($TableClass)::UpdateFromRowObj($pdo,$form_item);
     if($result){
         redirect_exit("./list.php");
     }
 }else{
     // 新規登録モード
-    echo "新規";
     $result = ($TableClass)::InsertFromRowObj($pdo,$form_item);
     if($result){
         redirect_exit("./list.php");
