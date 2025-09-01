@@ -7,7 +7,7 @@ header('Content-Type: text/plain; charset=UTF-8');
 $pdo=getPDO();
 $race_id=trim(filter_input(INPUT_GET,'race_id'));
 if(!$race_id){ exit; }
-$race_data = new RaceResults($pdo, $race_id);
+$race_data = new Race($pdo, $race_id);
 if(!$race_data->record_exists){
     echo "false";
 }else{

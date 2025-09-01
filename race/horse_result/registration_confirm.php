@@ -55,7 +55,7 @@ do{
 
     $horse=new Horse();
     $horse->setDataById($pdo, $race_detail->horse_id);
-    $race=new RaceResults($pdo, $race_detail->race_results_id);
+    $race=new Race($pdo, $race_detail->race_results_id);
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
             $page->addErrorMsg("編集対象のレース結果が存在しません。");
@@ -84,7 +84,7 @@ do{
         if($next_race_id!=''){
             $next_race_detail=new RaceResultDetail();
             $next_race_detail->setDataById($pdo,$next_race_id,$race_detail->horse_id);
-            $next_race = new RaceResults($pdo,$next_race_id);
+            $next_race = new Race($pdo,$next_race_id);
         }
     }
 }while(false);

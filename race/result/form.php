@@ -14,7 +14,7 @@ $pdo= getPDO();
 $race_id=(string)filter_input(INPUT_GET,'race_id');
 $is_edit_mode=filter_input(INPUT_GET,'edit_mode')?1:0;
 $horse_id=(string)filter_input(INPUT_GET,'horse_id')?:'';// 登録後に馬戦績登録時
-$race= new RaceResults(); 
+$race= new Race(); 
 if($race_id===''){
     $is_edit_mode=0;
     $race->world_id=$setting->world_id;

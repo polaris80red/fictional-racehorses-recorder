@@ -29,7 +29,7 @@ $race_history = (new RaceAccessHistory())->toArray();
 
 # レース情報取得
 $horse_tbl=Horse::TABLE;
-$r_results_tbl=RaceResults::TABLE;
+$race_tbl=Race::TABLE;
 $week_tbl=RaceWeek::TABLE;
 $course_mst_tbl=RaceCourse::TABLE;
 $binder=new StatementBinder();
@@ -70,7 +70,7 @@ SELECT
     ,g.short_name as grade_short_name
     ,g.css_class_suffix as grade_css_class_suffix
     ,c.short_name as race_course_mst_short_name
-FROM `{$r_results_tbl}` AS r
+FROM `{$race_tbl}` AS r
 LEFT JOIN `{$week_tbl}` as w ON r.week_id=w.id
 LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.unique_name
 LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1

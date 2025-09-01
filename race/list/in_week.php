@@ -59,7 +59,7 @@ $page->title=$page_title_text1.$page_title_text2;
 # レース情報取得
 $pre_bind=new StatementBinder();
 $horse_tbl=Horse::TABLE;
-$r_results_tbl=RaceResults::QuotedTable();
+$race_tbl=Race::QuotedTable();
 $race_week_tbl=RaceWeek::QuotedTable();
 $race_course_tbl = RaceCourse::QuotedTable();
 $grade_tbl=RaceGrade::TABLE;
@@ -71,7 +71,7 @@ r.*
 ,g.short_name as grade_short_name
 ,g.css_class_suffix as grade_css_class_suffix
 ,c.short_name as race_course_short_name
-FROM {$r_results_tbl} AS r
+FROM {$race_tbl} AS r
 LEFT JOIN {$race_week_tbl} AS w ON r.`week_id`= w.id
 LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name
 LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.unique_name

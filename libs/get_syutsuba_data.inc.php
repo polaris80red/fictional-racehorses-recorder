@@ -3,7 +3,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
     # このレース情報取得
     $sql = (function(){
         $horse_tbl=Horse::TABLE;
-        $race_results_tbl=RaceResults::TABLE;
+        $race_results_tbl=Race::TABLE;
         $race_results_detail_tbl=RaceResultDetail::TABLE;
         $race_special_results_tbl=RaceSpecialResults::TABLE;
         $sql=<<<END
@@ -20,14 +20,14 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`Horse`.`mare_name`
         ,`Horse`.`bms_name`
         ,`Horse`.`color`
-        ,`RResults`.*
+        ,`race`.*
         ,`spr`.`is_registration_only`
-        FROM `{$race_results_tbl}` AS `RResults`
+        FROM `{$race_results_tbl}` AS `race`
         LEFT JOIN `{$race_results_detail_tbl}` AS `RR_Detail`
-            ON `RResults`.`race_id`=`RR_Detail`.`race_results_id`
+            ON `race`.`race_id`=`RR_Detail`.`race_results_id`
         LEFT JOIN `{$horse_tbl}` AS `Horse` ON `RR_Detail`.`horse_id`=`Horse`.`horse_id`
         LEFT JOIN `{$race_special_results_tbl}` as spr ON `RR_Detail`.result_text LIKE spr.unique_name AND spr.is_enabled=1
-        WHERE `RResults`.`race_id`=:race_id
+        WHERE `race`.`race_id`=:race_id
         ORDER BY
         IFNULL(`RR_Detail`.`frame_number`,32) ASC,
         `RR_Detail`.`horse_number` ASC,
@@ -43,7 +43,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
     $table_data=[];
 
     $result_get_sql=(function($rr_count){
-        $race_results_tbl=RaceResults::TABLE;
+        $race_results_tbl=Race::TABLE;
         $race_results_detail_tbl=RaceResultDetail::TABLE;
         $grade_tbl=RaceGrade::TABLE;
         $race_course_tbl=RaceCourse::TABLE;

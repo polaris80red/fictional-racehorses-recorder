@@ -15,7 +15,7 @@ $race_id=(string)filter_input(INPUT_POST,'race_id');
 $is_edit_mode=filter_input(INPUT_POST,'edit_mode')?1:0;
 $horse_id=(string)filter_input(INPUT_POST,'horse_id')?:'';// 登録後に馬戦績登録時
 # 対象取得
-$race= new RaceResults();
+$race= new Race();
 $pdo= getPDO();
 
 if($race_id!=''){

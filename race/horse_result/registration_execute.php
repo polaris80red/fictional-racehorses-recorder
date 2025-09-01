@@ -56,7 +56,7 @@ do{
         $input->horse_id);
     $horse=new Horse();
     $horse->setDataById($pdo, $input->horse_id);
-    $race=new RaceResults($pdo, $input->race_results_id);
+    $race=new Race($pdo, $input->race_results_id);
     if(!$race->record_exists){
         $is_error=1;
         $error_msgs[]="存在しないレースID";
@@ -154,7 +154,7 @@ if($sp_result && $sp_result->is_registration_only){
 <hr>
 <div>
 <?php
-$race_result=new RaceResults($pdo,$input->race_results_id);
+$race_result=new Race($pdo,$input->race_results_id);
 ?>
 <?php if($race_result->date!=''): ?>
 <?=(new MkTagA('同日のレース一覧',APP_ROOT_REL_PATH.'race/list/in_date.php?date='.urlencode($race_result->date)))?><br>

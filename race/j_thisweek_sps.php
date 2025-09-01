@@ -27,7 +27,7 @@ if(empty($_GET['race_id'])){
 }
 $race_id=filter_input(INPUT_GET,'race_id');
 # レース情報取得
-$race = new RaceResults($pdo, $race_id);
+$race = new Race($pdo, $race_id);
 if(!$race->record_exists){
     $page->error_msgs[]="レース情報取得失敗";
     $page->error_msgs[]="入力ID：{$race_id}";
@@ -62,7 +62,7 @@ p {font-size:90%;}
 
 # レース着順取得
 $horse_tbl=Horse::TABLE;
-$race_results_tbl=RaceResults::TABLE;
+$race_tbl=Race::TABLE;
 $race_results_horse_tbl=RaceResultDetail::TABLE;
 $sql=<<<END
 SELECT
@@ -79,7 +79,7 @@ SELECT
 ,`master_horse`.`bms_name`
 ,`master_horse`.`color`
 ,`rr`.*
-FROM `{$race_results_tbl}` AS `rr`
+FROM `{$race_tbl}` AS `rr`
 LEFT JOIN `{$race_results_horse_tbl}` AS `rr_detail` ON `rr`.`race_id`=`rr_detail`.`race_results_id`
 LEFT JOIN {$horse_tbl} AS `master_horse` ON `rr_detail`.`horse_id`=`master_horse`.`horse_id`
 WHERE `rr`.`race_id`=:race_id

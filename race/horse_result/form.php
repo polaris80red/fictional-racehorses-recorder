@@ -28,7 +28,7 @@ $horse=new Horse();
 if($horse_id){
     $horse->setDataById($pdo, $horse_id);
 }
-$race=new RaceResults();
+$race=new Race();
 if($race_result_id){
     $race->setDataById($pdo, $race_result_id);
 }
@@ -73,7 +73,7 @@ do{
     if(!$is_edit_mode && $next_race_id!=''){
         $next_race_detail = new RaceResultDetail();
         $next_race_detail->setDataById($pdo,$next_race_id,$horse_id);
-        $next_race = new RaceResults($pdo,$next_race_id);
+        $next_race = new Race($pdo,$next_race_id);
     }
 }while(false);
 if($page->error_exists){

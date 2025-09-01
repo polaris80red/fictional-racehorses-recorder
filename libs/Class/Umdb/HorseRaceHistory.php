@@ -48,7 +48,7 @@ class HorseRaceHistory implements Iterator{
         $date_order=$this->date_order;
         # レース着順取得
         $sql=(function()use($date_order){
-            $race_results_tbl=RaceResults::TABLE;
+            $race_tbl=Race::TABLE;
             $race_results_detail_tbl=RaceResultDetail::TABLE;
             $race_week_tbl=RaceWeek::TABLE;
             $grade_tbl=RaceGrade::TABLE;
@@ -79,7 +79,7 @@ class HorseRaceHistory implements Iterator{
             ,spr.short_name_2 as special_result_short_name_2
             ,IFNULL(spr.is_excluded_from_race_count,0) AS is_excluded_from_race_count
             FROM `{$race_results_detail_tbl}` AS `RR_Detail`
-            LEFT JOIN `{$race_results_tbl}` AS `r` ON `r`.`race_id`=`RR_Detail`.`race_results_id`
+            LEFT JOIN `{$race_tbl}` AS `r` ON `r`.`race_id`=`RR_Detail`.`race_results_id`
             LEFT JOIN `{$race_week_tbl}` AS w ON `r`.`week_id` = w.id
             LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.unique_name
             LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1

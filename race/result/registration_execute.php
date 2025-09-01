@@ -20,7 +20,7 @@ if(!(new FormCsrfToken())->isValid()){
     exit;
 }
 # 対象取得
-$race= new RaceResults();
+$race= new Race();
 $pdo= getPDO();
 $race->setDataById($pdo,$race_id);
 if($is_edit_mode==0 && $race->record_exists){

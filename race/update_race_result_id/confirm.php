@@ -29,12 +29,12 @@ do{
         $page->addErrorMsg('新レースIDに特殊文字');
     }
     if($page->error_exists){ break; }
-    $race_data=new RaceResults($pdo,$race_result_id);
+    $race_data=new Race($pdo,$race_result_id);
     if(!$race_data->record_exists){
         $page->addErrorMsg('元IDレース情報取得失敗');
         $page->addErrorMsg("入力元ID：{$race_result_id}");
     }
-    $new_id_race_data=new RaceResults($pdo,$new_race_result_id);
+    $new_id_race_data=new Race($pdo,$new_race_result_id);
     if($new_id_race_data->record_exists){
         $page->addErrorMsg('新IDレースが既に存在');
         $page->addErrorMsg("入力新ID：{$new_race_result_id}");

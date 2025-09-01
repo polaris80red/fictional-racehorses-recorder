@@ -21,7 +21,7 @@ do{
         $page->addErrorMsg('元レースIDに特殊文字');
     }
     if($page->error_exists){ break; }
-    $race_data=new RaceResults($pdo,$race_result_id);
+    $race_data=new Race($pdo,$race_result_id);
     if(!$race_data->record_exists){
         $page->addErrorMsg('元IDレース情報取得失敗');
         $page->addErrorMsg("入力元ID：{$race_result_id}");
@@ -39,7 +39,7 @@ if($page->error_exists){
         $stmt2->bindValue(':old_id',$escaped_race_result_id,PDO::PARAM_STR);
         $stmt2->execute();
 
-        $sql="DELETE FROM `".RaceResults::TABLE."` WHERE `race_id` LIKE :old_id;";
+        $sql="DELETE FROM `".Race::TABLE."` WHERE `race_id` LIKE :old_id;";
         $stmt3=$pdo->prepare($sql);
         $stmt3->bindValue(':old_id',$escaped_race_result_id,PDO::PARAM_STR);
         $stmt3->execute();

@@ -298,7 +298,7 @@ class RaceSearch extends Search{
      * 検索実行
      */
     public function SelectExec(PDO $pdo){
-        $tbl=RaceResults::TABLE;
+        $tbl=Race::TABLE;
         $where_parts=[];
         $pre_bind=new StatementBinder();
         if($this->year!==''){

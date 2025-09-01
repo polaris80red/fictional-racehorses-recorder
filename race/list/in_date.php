@@ -32,7 +32,7 @@ $year_week=getWeekByDate($date_str);
 
 # レース情報取得
 $horse_tbl=Horse::TABLE;
-$r_results_tbl=RaceResults::TABLE;
+$race_tbl=Race::TABLE;
 $grade_tbl=RaceGrade::TABLE;
 $pre_bind=new StatementBinder();
 $race_course_tbl = RaceCourse::QuotedTable();
@@ -41,7 +41,7 @@ $sql ="SELECT `r`.*";
 $sql.=",g.short_name as grade_short_name";
 $sql.=",g.css_class_suffix as grade_css_class_suffix";
 $sql.=",c.short_name as race_course_short_name";
-$sql.=" FROM `{$r_results_tbl}` AS `r`";
+$sql.=" FROM `{$race_tbl}` AS `r`";
 $sql.=" LEFT JOIN {$race_course_tbl} AS c ON r.race_course_name = c.unique_name";
 $sql.=" LEFT JOIN `{$grade_tbl}` as g ON r.grade=g.unique_name";
 $where_parts=[

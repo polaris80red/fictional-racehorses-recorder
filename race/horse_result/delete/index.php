@@ -34,7 +34,7 @@ do{
     }
     $horse=new Horse();
     $horse->setDataById($pdo, $horse_race_result->horse_id);
-    $race=new RaceResults($pdo, $horse_race_result->race_results_id);
+    $race=new Race($pdo, $horse_race_result->race_results_id);
 }while(false);
 if($page->error_exists){
     $page->printCommonErrorPage();

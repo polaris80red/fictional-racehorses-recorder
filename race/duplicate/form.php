@@ -25,8 +25,8 @@ $data=(function($pdo,$id_list){
         $where_in_parts[]=$ph;
         $binder->add($ph,$id);
     }
-    $sql ="SELECT * FROM `".RaceResults::TABLE."`";
-    $sql.=" WHERE `".RaceResults::UNIQUE_KEY_COLUMN."` IN (".implode(',',$where_in_parts).")";
+    $sql ="SELECT * FROM `".Race::TABLE."`";
+    $sql.=" WHERE `".Race::UNIQUE_KEY_COLUMN."` IN (".implode(',',$where_in_parts).")";
     $sql.=" ORDER BY `week_id` ASC, `year` ASC, `date` ASC";
     $stmt=$pdo->prepare($sql);
     $binder->bindTo($stmt);

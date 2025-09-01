@@ -20,9 +20,9 @@ foreach($posted_race_list as $key => $posted_race){
     if(empty($posted_race['save'])){
       continue;
     }
-    $race_obj=new RaceResults($pdo,$posted_race['orig_id']);
+    $race_obj=new Race($pdo,$posted_race['orig_id']);
     $race_obj->race_id= $posted_race['new_id']??'';
-    if($posted_race['new_id']!=='' && (new RaceResults($pdo,$posted_race['new_id']))->record_exists){
+    if($posted_race['new_id']!=='' && (new Race($pdo,$posted_race['new_id']))->record_exists){
       $race_obj->race_id='';
     }
     $race_obj->world_id=$world_id;
@@ -45,8 +45,8 @@ $data=(function($pdo,$id_list){
         $where_in_parts[]=$ph;
         $binder->add($ph,$id);
     }
-    $sql ="SELECT * FROM `".RaceResults::TABLE."`";
-    $sql.=" WHERE `".RaceResults::UNIQUE_KEY_COLUMN."` IN (".implode(',',$where_in_parts).")";
+    $sql ="SELECT * FROM `".Race::TABLE."`";
+    $sql.=" WHERE `".Race::UNIQUE_KEY_COLUMN."` IN (".implode(',',$where_in_parts).")";
     $sql.=" ORDER BY `year` ASC,`week_id` ASC, `date` ASC";
     $stmt=$pdo->prepare($sql);
     $binder->bindTo($stmt);
