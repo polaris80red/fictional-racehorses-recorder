@@ -1,6 +1,6 @@
 <?php
 class RaceResults extends Table{
-    public const TABLE = 'dat_race_results';
+    public const TABLE = 'dat_race';
 
     public $record_exists=false;
     public $error_exists = false;
