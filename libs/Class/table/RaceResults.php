@@ -1,5 +1,5 @@
 <?php
-class RaceResultDetail extends Table{
+class RaceResults extends Table{
     public const TABLE="dat_race_results";
 
     public $record_exists=false;

@@ -8,14 +8,14 @@ class Race123HorseGetter{
 
     public function __construct(PDO $pdo)
     {
-        $results_detail_table=RaceResultDetail::TABLE;
+        $r_results_table=RaceResults::TABLE;
         $horse_table=Horse::TABLE;
         $sql=<<<END
         SELECT
-        `detail`.`horse_id`,`name_ja`,`name_en`,`result_number`
-        FROM `{$results_detail_table}` AS `detail`
+        `r_results`.`horse_id`,`name_ja`,`name_en`,`result_number`
+        FROM `{$r_results_table}` AS `r_results`
         LEFT JOIN `{$horse_table}` AS `Horse`
-        ON `Horse`.`horse_id`= `detail`.`horse_id`
+        ON `Horse`.`horse_id`= `r_results`.`horse_id`
         WHERE
         `race_results_id` = :race_id
         AND

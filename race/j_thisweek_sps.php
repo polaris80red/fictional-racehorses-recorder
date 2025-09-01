@@ -63,10 +63,10 @@ p {font-size:90%;}
 # レース着順取得
 $horse_tbl=Horse::TABLE;
 $race_tbl=Race::TABLE;
-$race_results_horse_tbl=RaceResultDetail::TABLE;
+$race_results_tbl=RaceResults::TABLE;
 $sql=<<<END
 SELECT
-`rr_detail`.*
+`r_retults`.*
 ,`master_horse`.`name_ja`
 ,`master_horse`.`name_en`
 ,`master_horse`.`tc` AS 'horse_tc'
@@ -78,15 +78,15 @@ SELECT
 ,`master_horse`.`mare_name`
 ,`master_horse`.`bms_name`
 ,`master_horse`.`color`
-,`rr`.*
-FROM `{$race_tbl}` AS `rr`
-LEFT JOIN `{$race_results_horse_tbl}` AS `rr_detail` ON `rr`.`race_id`=`rr_detail`.`race_results_id`
-LEFT JOIN {$horse_tbl} AS `master_horse` ON `rr_detail`.`horse_id`=`master_horse`.`horse_id`
-WHERE `rr`.`race_id`=:race_id
+,`race`.*
+FROM `{$race_tbl}` AS `race`
+LEFT JOIN `{$race_results_tbl}` AS `r_retults` ON `race`.`race_id`=`r_retults`.`race_results_id`
+LEFT JOIN {$horse_tbl} AS `master_horse` ON `r_retults`.`horse_id`=`master_horse`.`horse_id`
+WHERE `race`.`race_id`=:race_id
 ORDER BY
-`rr_detail`.`frame_number` IS NULL,
-`rr_detail`.`frame_number` ASC,
-`rr_detail`.`horse_number` ASC,
+`r_retults`.`frame_number` IS NULL,
+`r_retults`.`frame_number` ASC,
+`r_retults`.`horse_number` ASC,
 `master_horse`.`name_ja` ASC, `master_horse`.`name_en` ASC;
 END;
 

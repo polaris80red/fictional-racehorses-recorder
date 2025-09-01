@@ -92,8 +92,8 @@ $turn=$week_data->umm_month_turn??null;
 # レース着順取得
 $sql=(function(){
     $horse_tbl=Horse::TABLE;
-    $r_results_tbl=Race::TABLE;
-    $rr_detail_tbl=RaceResultDetail::TABLE;
+    $race_tbl=Race::TABLE;
+    $r_results_tbl=RaceResults::TABLE;
     $race_special_results_tbl=RaceSpecialResults::TABLE;
 
     $horse_s_columns=new SqlMakeSelectColumns(Horse::TABLE);
@@ -105,7 +105,7 @@ $sql=(function(){
     $horse_s_columns->addColumnAs('training_country','horse_training_country');
     $horse_s_columns->addColumnAs('is_affliationed_nar','horse_is_affliationed_nar');
     $sql_part_select_columns=implode(",\n",[
-        "`det`.*",
+        "`r_results`.*",
         $horse_s_columns->get(true),
         "`race`.*",
         "`spr`.`short_name_2` AS special_result_short_name_2",
@@ -115,22 +115,22 @@ $sql=(function(){
     $sql=<<<END
     SELECT
     {$sql_part_select_columns}
-    FROM `{$r_results_tbl}` AS `race`
-    LEFT JOIN `{$rr_detail_tbl}` AS `det`
-        ON `race`.`race_id`=`det`.`race_results_id`
+    FROM `{$race_tbl}` AS `race`
+    LEFT JOIN `{$r_results_tbl}` AS `r_results`
+        ON `race`.`race_id`=`r_results`.`race_results_id`
     LEFT JOIN `{$horse_tbl}`
-        ON `det`.`horse_id`=`{$horse_tbl}`.`horse_id`
+        ON `r_results`.`horse_id`=`{$horse_tbl}`.`horse_id`
     LEFT JOIN `{$race_special_results_tbl}` as spr
-        ON `det`.result_text LIKE spr.unique_name AND spr.is_enabled=1
+        ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
     WHERE `race_id`=:race_id
     ORDER BY
-        `det`.`result_number` IS NULL,
-        `det`.`result_number` ASC,
-        `det`.`result_order` IS NULL,
-        `det`.`result_order` ASC,
+        `r_results`.`result_number` IS NULL,
+        `r_results`.`result_number` ASC,
+        `r_results`.`result_order` IS NULL,
+        `r_results`.`result_order` ASC,
         `spr`.`sort_number` IS NULL,
         `spr`.`sort_number` ASC,
-        `det`.`result_text` ASC;
+        `r_results`.`result_text` ASC;
     END;
     return $sql;
 })();

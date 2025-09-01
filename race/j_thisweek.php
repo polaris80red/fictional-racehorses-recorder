@@ -64,10 +64,10 @@ p {font-size:90%;}
 # レース着順取得
 $horse_tbl=Horse::TABLE;
 $race_results_tbl=Race::TABLE;
-$race_results_horse_tbl=RaceResultDetail::TABLE;
+$race_results_horse_tbl=RaceResults::TABLE;
 $sql=<<<END
 SELECT
-`rr_detail`.*
+`r_result`.*
 ,`master_horse`.`name_ja`
 ,`master_horse`.`name_en`
 ,`master_horse`.`tc` AS 'horse_tc'
@@ -78,11 +78,11 @@ SELECT
 ,`master_horse`.`sire_name`
 ,`master_horse`.`mare_name`
 ,`master_horse`.`bms_name`
-,`rr`.*
-FROM `{$race_results_tbl}` AS `rr`
-LEFT JOIN `{$race_results_horse_tbl}` AS `rr_detail` ON `rr`.`race_id`=`rr_detail`.`race_results_id`
-LEFT JOIN {$horse_tbl} AS `master_horse` ON `rr_detail`.`horse_id`=`master_horse`.`horse_id`
-WHERE `rr`.`race_id`=:race_id
+,`race`.*
+FROM `{$race_results_tbl}` AS `race`
+LEFT JOIN `{$race_results_horse_tbl}` AS `r_result` ON `race`.`race_id`=`r_result`.`race_results_id`
+LEFT JOIN {$horse_tbl} AS `master_horse` ON `r_result`.`horse_id`=`master_horse`.`horse_id`
+WHERE `race`.`race_id`=:race_id
 ORDER BY
 `jra_thisweek_horse_sort_number` IS NULL,
 `jra_thisweek_horse_sort_number` ASC,

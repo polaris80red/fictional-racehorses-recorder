@@ -17,9 +17,9 @@ $result_number=filter_input(INPUT_GET,'result_number');
 $is_edit_mode=filter_input(INPUT_GET,'edit_mode')?1:0;
 
 $next_race_id=filter_input(INPUT_GET,'next_race_id');
-$next_race_detail=null;
+$next_race_data=null;
 
-$form_data= new RaceResultDetail();
+$form_data= new RaceResults();
 $form_data->result_number=$result_number;
 
 # 対象取得
@@ -71,8 +71,8 @@ do{
         }
     }
     if(!$is_edit_mode && $next_race_id!=''){
-        $next_race_detail = new RaceResultDetail();
-        $next_race_detail->setDataById($pdo,$next_race_id,$horse_id);
+        $next_race_data = new RaceResults();
+        $next_race_data->setDataById($pdo,$next_race_id,$horse_id);
         $next_race = new Race($pdo,$next_race_id);
     }
 }while(false);
@@ -277,10 +277,10 @@ if($page->error_exists){
     <td class="in_input"><input type="number" name="non_registered_prev_race_number" style="width: 3em;" value="<?=h((int)$form_data->non_registered_prev_race_number)?>">走</td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=non_registered_prev_race_number]');"></td>
 </tr>
-<?php if($next_race_detail!=null && $next_race_detail->record_exists && $next_race_detail->non_registered_prev_race_number>0): ?>
+<?php if($next_race_data!=null && $next_race_data->record_exists && $next_race_data->non_registered_prev_race_number>0): ?>
 <tr>
     <th rowspan="3">次走から<br>未登録自動減算</th>
-    <td><?=h($next_race_detail->race_results_id)?><input type="hidden" name="next_race_id" value="<?=h($next_race_detail->race_results_id)?>"></td>
+    <td><?=h($next_race_data->race_results_id)?><input type="hidden" name="next_race_id" value="<?=h($next_race_data->race_results_id)?>"></td>
     <td></td>
 </tr>
 <tr>
@@ -288,7 +288,7 @@ if($page->error_exists){
     <td></td>
 </tr>
 <tr>
-    <td>現在指定：<?=h($next_race_detail->non_registered_prev_race_number)?>走</td>
+    <td>現在指定：<?=h($next_race_data->non_registered_prev_race_number)?>走</td>
     <td></td>
 </tr>
 <?php endif; ?>

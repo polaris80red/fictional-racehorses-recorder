@@ -6,11 +6,11 @@ class RaceResults1stOr2ndHourseGetter{
     private $stmt=null;
     public function __construct($pdo){
         $horse_table=Horse::TABLE;
-        $results_detail_table=RaceResultDetail::TABLE;
+        $results_table=RaceResults::TABLE;
         $sql=<<<END
 SELECT
 `results`.`horse_id`,`name_ja`,`name_en`
-FROM `{$results_detail_table}` AS `results`
+FROM `{$results_table}` AS `results`
     LEFT JOIN `{$horse_table}` AS `horse`
         ON `horse`.`horse_id`= `results`.`horse_id`
 WHERE

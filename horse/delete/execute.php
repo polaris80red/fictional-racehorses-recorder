@@ -41,7 +41,7 @@ if($page->error_exists){
         $stmt1->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
         $stmt1->execute();
 
-        $sql="DELETE FROM `".RaceResultDetail::TABLE."` WHERE `horse_id` LIKE :old_id;";
+        $sql="DELETE FROM `".RaceResults::TABLE."` WHERE `horse_id` LIKE :old_id;";
         $stmt2=$pdo->prepare($sql);
         $stmt2->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
         $stmt2->execute();

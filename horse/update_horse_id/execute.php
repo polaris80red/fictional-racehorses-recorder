@@ -53,7 +53,7 @@ if($page->error_exists){
 }
 $updater=new IdUpdater($pdo,$horse_id,$new_horse_id);
 $updater->addUpdateTarget(Horse::TABLE,'horse_id');
-$updater->addUpdateTarget(RaceResultDetail::TABLE,'horse_id');
+$updater->addUpdateTarget(RaceResults::TABLE,'horse_id');
 $updater->addUpdateTarget(Horse::TABLE,'mare_id');
 $updater->addUpdateTarget(Horse::TABLE,'sire_id');
 $updater->addUpdateTarget(HorseTag::TABLE,'horse_id');

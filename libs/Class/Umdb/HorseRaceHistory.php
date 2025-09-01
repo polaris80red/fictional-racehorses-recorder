@@ -49,46 +49,46 @@ class HorseRaceHistory implements Iterator{
         # レース着順取得
         $sql=(function()use($date_order){
             $race_tbl=Race::TABLE;
-            $race_results_detail_tbl=RaceResultDetail::TABLE;
+            $race_results_tbl=RaceResults::TABLE;
             $race_week_tbl=RaceWeek::TABLE;
             $grade_tbl=RaceGrade::TABLE;
             $course_mst_tbl=RaceCourse::TABLE;
             $race_special_results_tbl=RaceSpecialResults::TABLE;
             $sql=<<<END
             SELECT
-            `r`.`date`
-            ,`r`.`race_course_name`
-            ,`r`.`race_name`
-            ,`RR_Detail`.`result_number`
-            ,`RR_Detail`.`result_before_demotion`
-            ,`RR_Detail`.`result_text`
-            ,`RR_Detail`.`handicap`
-            ,`RR_Detail`.`frame_number`
-            ,`RR_Detail`.`favourite`
+            `race`.`date`
+            ,`race`.`race_course_name`
+            ,`race`.`race_name`
+            ,`race_results`.`result_number`
+            ,`race_results`.`result_before_demotion`
+            ,`race_results`.`result_text`
+            ,`race_results`.`handicap`
+            ,`race_results`.`frame_number`
+            ,`race_results`.`favourite`
             ,`spr`.`is_registration_only`
-            ,`RR_Detail`.`non_registered_prev_race_number`
-            ,`RR_Detail`.`jra_thisweek_horse_1`
-            ,`RR_Detail`.`jra_thisweek_horse_2`
-            ,`r`.`race_id`
-            ,`r`.*
+            ,`race_results`.`non_registered_prev_race_number`
+            ,`race_results`.`jra_thisweek_horse_1`
+            ,`race_results`.`jra_thisweek_horse_2`
+            ,`race`.`race_id`
+            ,`race`.*
             ,w.month AS `w_month`
             ,w.umm_month_turn
             ,g.short_name as grade_short_name
             ,g.css_class_suffix as grade_css_class_suffix
             ,c.short_name as race_course_mst_short_name
-            ,spr.short_name_2 as special_result_short_name_2
-            ,IFNULL(spr.is_excluded_from_race_count,0) AS is_excluded_from_race_count
-            FROM `{$race_results_detail_tbl}` AS `RR_Detail`
-            LEFT JOIN `{$race_tbl}` AS `r` ON `r`.`race_id`=`RR_Detail`.`race_results_id`
-            LEFT JOIN `{$race_week_tbl}` AS w ON `r`.`week_id` = w.id
-            LEFT JOIN `{$grade_tbl}` as g ON r.grade LIKE g.unique_name
-            LEFT JOIN `{$course_mst_tbl}` as c ON r.race_course_name LIKE c.unique_name AND c.is_enabled=1
-            LEFT JOIN `{$race_special_results_tbl}` as spr ON `RR_Detail`.result_text LIKE spr.unique_name AND spr.is_enabled=1
-            WHERE `RR_Detail`.`horse_id`=:horse_id
+            ,`spr`.short_name_2 as special_result_short_name_2
+            ,IFNULL(`spr`.is_excluded_from_race_count,0) AS is_excluded_from_race_count
+            FROM `{$race_results_tbl}` AS `race_results`
+            LEFT JOIN `{$race_tbl}` AS `race` ON `race`.`race_id`=`race_results`.`race_results_id`
+            LEFT JOIN `{$race_week_tbl}` AS w ON `race`.`week_id` = w.id
+            LEFT JOIN `{$grade_tbl}` as g ON `race`.grade LIKE g.unique_name
+            LEFT JOIN `{$course_mst_tbl}` as c ON `race`.race_course_name LIKE c.unique_name AND c.is_enabled=1
+            LEFT JOIN `{$race_special_results_tbl}` as spr ON `race_results`.result_text LIKE `spr`.unique_name AND `spr`.is_enabled=1
+            WHERE `race_results`.`horse_id`=:horse_id
             ORDER BY
-            `r`.`year` {$date_order},
-            `r`.`month` {$date_order},
-            `r`.`date` {$date_order};
+            `race`.`year` {$date_order},
+            `race`.`month` {$date_order},
+            `race`.`date` {$date_order};
             END;
             return $sql;
         })();

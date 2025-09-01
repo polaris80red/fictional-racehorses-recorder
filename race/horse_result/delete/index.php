@@ -13,7 +13,7 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 $race_results_id=filter_input(INPUT_POST,'race_id');
 $horse_id=filter_input(INPUT_POST,'horse_id');
 
-$horse_race_result= new RaceResultDetail();
+$horse_race_result= new RaceResults();
 $horse_race_result->race_results_id=$race_results_id;
 $horse_race_result->horse_id=$horse_id;
 

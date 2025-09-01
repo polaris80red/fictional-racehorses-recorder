@@ -13,7 +13,7 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 $is_error=0;
 $error_msgs=[];
 
-$input = new RaceResultDetail();
+$input = new RaceResults();
 $is_edit_mode = 0;
 if(filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOLEAN)){
     $is_edit_mode = 1;
@@ -49,7 +49,7 @@ do{
     }
     
     $pdo= getPDO();
-    $old_horse_result= new RaceResultDetail();
+    $old_horse_result= new RaceResults();
     $old_horse_result->setDataById(
         $pdo,
         $input->race_results_id,
@@ -90,7 +90,7 @@ do{
             $result = $input->InsertExec($pdo);
             // 空き区間への追加なら未登録数を減算
             if($next_race_id!=''){
-                $next_race=new RaceResultDetail();
+                $next_race=new RaceResults();
                 $next_race->setDataById($pdo,$next_race_id,$input->horse_id);
                 if($next_race->record_exists){
                     $next_race->SubtractionNonRegisteredPrevRaceNumber($pdo);
