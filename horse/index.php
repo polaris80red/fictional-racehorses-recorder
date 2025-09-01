@@ -174,14 +174,14 @@ print_h("{$horse->color} {$sex_str}");
             $sire_search->sire_id=$horse->sire_id;
             $sire_search->order='birth_year__asc';
             $url .= $sire_search->getUrlParam();
-            (new MkTagA(h($horse->sire_name)?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->sire_id}"))->print();
+            (new MkTagA($horse->sire_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->sire_id}"))->print();
             $a_tag_sanku->href($url)->print();
         } else if($horse->sire_name!=''){
             $sire_search=new HorseSearch();
             $sire_search->sire_name=$horse->sire_name;
             $sire_search->order='birth_year__asc';
             $url .= $sire_search->getUrlParam();
-            (new MkTagA(h($horse->sire_name),$url))->print();
+            (new MkTagA($horse->sire_name,$url))->print();
             $a_tag_sanku->href($url)->print();
         }
         ?></td>
@@ -195,14 +195,14 @@ print_h("{$horse->color} {$sex_str}");
             $mare_search->mare_id=$horse->mare_id;
             $mare_search->order='birth_year__asc';
             $url .= $mare_search->getUrlParam();
-            (new MkTagA(h($horse->mare_name)?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->mare_id}"))->print();
+            (new MkTagA($horse->mare_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->mare_id}"))->print();
             $a_tag_sanku->href($url)->print();
         } else if($horse->mare_name!=''){
             $mare_search=new HorseSearch();
             $mare_search->mare_name=$horse->mare_name;
             $mare_search->order='birth_year__asc';
             $url .= $mare_search->getUrlParam();
-            (new MkTagA(h($horse->mare_name),$url))->print();
+            (new MkTagA($horse->mare_name,$url))->print();
             $a_tag_sanku->href($url)->print();
         }
         ?></td>
@@ -214,7 +214,7 @@ print_h("{$horse->color} {$sex_str}");
             $bms_name_search=new HorseSearch();
             $bms_name_search->bms_name=$horse->bms_name;
             $url =$page->to_horse_search_path.'?'.$bms_name_search->getUrlParam();
-            (new MkTagA(h($horse->bms_name),$url))->print();
+            (new MkTagA($horse->bms_name,$url))->print();
         }
         ?></td>
     </tr>
@@ -290,24 +290,24 @@ $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id=''
     }
 };
 $registration_only_race_is_exists=false;
-$latest_race_is_exists=false;
-foreach ($race_history as $data) {
-    $data=(array)$data;
+$latest_race_is_exists=false; ?>
+<?php foreach ($race_history as $data):?>
+<?php
     $tr_class=new Imploader(' ');
 
-    if(empty($data['race_id'])){ continue; }
+    if(empty($data->race_id)){ continue; }
     if(!empty($session->latest_race['id'])&&
-        $session->latest_race['id']===$data['race_id'])
+        $session->latest_race['id']===$data->race_id)
     {
         $latest_race_is_exists=true;
     }
     // 空行の追加
     if($date_order=='ASC'){
-        $FUNC_print_empty_row($data['non_registered_prev_race_number'],$data['race_id']);
+        $FUNC_print_empty_row($data->non_registered_prev_race_number,$data->race_id);
     }
     // 特別登録のみのデータは表示フラグがなければスキップ
     $race_url_add_param='';
-    if($data['is_registration_only']==1){
+    if($data->is_registration_only==1){
         $registration_only_race_is_exists=true;
         if(!$show_registration_only){
             continue;
@@ -316,109 +316,106 @@ foreach ($race_history as $data) {
             $race_url_add_param='&show_registration_only=true';
         }
     }
-    $tr_class->add('race_grade_'.$data['grade_css_class_suffix']);
-    if($data['is_enabled']===0){ $tr_class->add('disabled_row'); }
+    $tr_class->add('race_grade_'.$data->grade_css_class_suffix);
+    if($data->is_enabled===0){ $tr_class->add('disabled_row'); }
     echo '<tr class="'.h($tr_class).'">';
 
     $datetime=null;
-    if($data['date']!=null && $data['is_tmp_date']==0){
-        $datetime=new DateTime($data['date']);
+    if($data->date!=null && $data->is_tmp_date==0){
+        $datetime=new DateTime($data->date);
     }
-    $month=$data['month'];
+    $month=$data->month;
     // ウマ娘ターン表記の場合は補正済み月を優先
-    if($setting->horse_record_date==='umm' && $data['w_month']>0){
-        $month=$data['w_month'];
+    if($setting->horse_record_date==='umm' && $data->w_month > 0){
+        $month=$data->w_month;
     }
     $day=is_null($datetime)?0:(int)$datetime->format('d');
     $date_str=$setting->getRaceListDate([
-        'year'=>$data['year'],
+        'year'=>$data->year,
         'month'=>$month,
         'day'=>$day,
-        'turn'=>$data['umm_month_turn'],
-        'age'=>$data['year']-$horse->birth_year]);
+        'turn'=>$data->umm_month_turn,
+        'age'=>$data->year - $horse->birth_year]);
     $url = '';
     if($setting->horse_record_date==='umm'){
-        if($data['umm_month_turn']>0){
-            $url = $page->getTurnRaceListUrl($data['year'],$month,$data['umm_month_turn']);
+        if($data->umm_month_turn > 0){
+            $url = $page->getTurnRaceListUrl($data->year,$month,$data->umm_month_turn);
         }
     }else if($datetime!==null){
         $url=$page->getDateRaceListUrl($datetime);
     }else{
-        $url = $page->getTurnRaceListUrl($data['year'],$month,null,['week'=>$data['week_id']]);
+        $url = $page->getTurnRaceListUrl($data->year,$month,null,['week'=>$data->week_id]);
     }
     $date_str=(new MkTagA($date_str,$url))->get();
     echo "<td>{$date_str}</td>";
 
-    $race_course_show_name = $data['race_course_mst_short_name']??$data['race_course_name'];
+    $race_course_show_name = $data->race_course_mst_short_name??$data->race_course_name;
     $a_tag=new MkTagA($race_course_show_name);
     if($datetime!==null){
         $a_tag->href($page->getDateRaceListUrl(
             $datetime,
-            ['race_course_name'=>$data['race_course_name']]
+            ['race_course_name'=>$data->race_course_name]
         ));
-        $a_tag->title($data['race_course_name']);
+        $a_tag->title($data->race_course_name);
     }
     echo "<td class=\"race_course_name\">{$a_tag}</td>";
-    echo "<td class=\"distance\">{$data['course_type']}{$data['distance']}</td>";
-    echo "<td class=\"track_condition\">{$data['track_condition']}</td>";
+    echo "<td class=\"distance\">".h($data->course_type.$data->distance)."</td>";
+    echo "<td class=\"track_condition\">".h($data->track_condition)."</td>";
 
-    echo "<td class=\"grade\">".(($data['grade_short_name']??'')?:$data['grade'])."</td>";
+    echo "<td class=\"grade\">".h(($data->grade_short_name??'')?:$data->grade)."</td>";
     echo "<td class=\"race_name\">";
-    echo '<a href="'.$page->getRaceResultUrl($data['race_id']).$race_url_add_param.'" title="'.h($data['race_name'].($data['caption']?'：'.$data['caption']:'')).'">';
-    echo h($data['race_name']);
+    echo '<a href="'.h($page->getRaceResultUrl($data->race_id).$race_url_add_param).'" title="'.h($data->race_name.($data->caption?'：'.$data->caption:'')).'">';
+    echo h($data->race_name);
     echo "</a>\t";
     echo "</td>";
 
-    $add_class=getResultClass($data['result_number']);
-    echo "<td class=\"number_of_starters\">{$data['number_of_starters']}</td>";
-    echo "<td class=\"frame_number\">{$data['frame_number']}</td>";
-    echo "<td class=\"favourite favourite_{$data['favourite']}\">{$data['favourite']}</td>";
-    $result_txt='';
-    if($data['result_text']!=''){
-        $result_txt=$data['special_result_short_name_2']?:$data['result_text'];
-    }else if($data['result_number']>0){
-        if($data['result_before_demotion']>0){
-            $result_txt.="<span title=\"※".$data['result_before_demotion']."位入線降着\">(降)</span>";
+    $add_class=getResultClass($data->result_number);
+    echo "<td class=\"number_of_starters\">".h($data->number_of_starters)."</td>";
+    echo "<td class=\"frame_number\">".h($data->frame_number)."</td>";
+    echo "<td class=\"favourite favourite_".h($data->favourite)."\">".h($data->favourite)."</td>";
+    $h_result_txt='';
+    if($data->result_text!=''){
+        $h_result_txt=h($data->special_result_short_name_2?:$data->result_text);
+    }else if($data->result_number > 0){
+        if($data->result_before_demotion > 0){
+            $h_result_txt.="<span title=\"※".h($data->result_before_demotion)."位入線降着\">(降)</span>";
         }
-        $result_txt.=$data['result_number']."着";
+        $h_result_txt.=h($data->result_number."着");
     }
-    echo "<td class=\"result_number {$add_class}\">{$result_txt}</td>";
-    echo "<td class=\"handicap\">{$data['handicap']}</td>";
+    echo "<td class=\"result_number ".h($add_class)."\">{$h_result_txt}</td>";
+    echo "<td class=\"handicap\">{$data->handicap}</td>";
     echo "<td class=\"r_horse\">";
-    if($data['result_number']==1){ echo "("; }
-    echo '<a href="'.h(InAppUrl::to('horse/',['horse_id'=>$data['r_horse_id']])).'">';
-    echo ($data['r_name_ja']?:$data['r_name_en']);
+    if($data->result_number == 1){ echo "("; }
+    echo '<a href="'.h(InAppUrl::to('horse/',['horse_id'=>$data->r_horse_id])).'">';
+    echo ($data->r_name_ja?:$data->r_name_en);
     echo "</a>";
-    if($data['result_number']==1){ echo ")"; }
+    if($data->result_number == 1){ echo ")"; }
     echo "</td>";
     $a_tag=new MkTagA();
-    if($data['has_jra_thisweek']){
+    if($data->has_jra_thisweek){
         $a_tag->setLinkText('記');
-        $a_tag->href(InAppUrl::to('race/j_thisweek.php',['race_id'=>$data['race_id'],'show_registration_only'=>($race_url_add_param?true:null)]));
+        $a_tag->href(InAppUrl::to('race/j_thisweek.php',['race_id'=>$data->race_id,'show_registration_only'=>($race_url_add_param?true:null)]));
     }
     echo "<td>{$a_tag}</td>";
     if($page->is_editable){
         echo "<td class=\"edit_link\">";
-        if(!empty($data['race_id'])){
+        if(!empty($data->race_id)){
             $url=InAppUrl::to("race/horse_result/form.php",[
-                'race_id'=>$data['race_id'],
+                'race_id'=>$data->race_id,
                 'horse_id'=>$horse->horse_id,
                 'edit_mode'=>1,
             ]);
             echo '<a href="'.h($url).'">編</a>';
         }
         echo "</td>";
-    }
-    #echo "<td>".$data['race_id']."</td>";
-    
-    #echo "<pre>".var_dump($data)."</pre>"."\n";
+    }    
     echo "</tr>\n";
     // 空行の追加
     if($date_order=='DESC'){
-        $FUNC_print_empty_row($data['non_registered_prev_race_number'],$data['race_id']);
+        $FUNC_print_empty_row($data->non_registered_prev_race_number,$data->race_id);
     }
-}
-?></table>
+?><?php endforeach; ?>
+</table>
 <hr>
 <table class="horse_base_data">
 <tr><th>馬名意味</th><td><?=h($horse->meaning)?></td></tr>
