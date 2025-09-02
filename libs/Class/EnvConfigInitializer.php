@@ -34,11 +34,6 @@ class EnvConfigInitializer {
         define('PARENT_SITE_LINK_TEXT',$cfg['PARENT_SITE_LINK_TEXT']);
         define('PARENT_SITE_URL',$cfg['PARENT_SITE_URL']);
 
-        // phpMyAdmin設定 URLがない場合は強制的にオフにする
-        define('PHPMYADMIN_URL',$cfg['PHPMYADMIN_URL']);
-        $show_phpmyadmin_link=filter_var($cfg['SHOW_PHPMYADMIN_LINK'],FILTER_VALIDATE_BOOL);
-        define('SHOW_PHPMYADMIN_LINK',PHPMYADMIN_URL===''?false:$show_phpmyadmin_link);
-
         define('STORAGE_DIR',$cfg['STORAGE_DIR']);
 
         define('LOG_DIR_PATH',$cfg['LOG_DIR_PATH']);
