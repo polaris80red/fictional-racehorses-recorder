@@ -10,7 +10,7 @@ $page->ForceNoindex();
 $session=new Session();
 
 if(!$session->is_logined()){
-    header('Location: '.APP_ROOT_REL_PATH.'sign-in/');
+    header('Location: '.InAppUrl::to('sign-in/'));
 }
 ?><!DOCTYPE html>
 <html lang="ja">
