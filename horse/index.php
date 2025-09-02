@@ -59,6 +59,15 @@ if(!$horse->record_exists){
     $page->printCommonErrorPage();
     exit;
 }
+$sire=new Horse();
+if($horse->sire_id){
+    $sire->setDataById($pdo,$horse->sire_id);
+}
+$mare=new Horse();
+if($horse->mare_id){
+    $mare->setDataById($pdo,$horse->mare_id);
+}
+
 $session->latest_horse=[
     'id'=>$horse_id,
     'name'=>$horse->name_ja?:$horse->name_en
@@ -186,7 +195,11 @@ print_h("{$horse->color} {$sex_str}");
             $sire_search->sire_id=$horse->sire_id;
             $sire_search->order='birth_year__asc';
             $url .= $sire_search->getUrlParam();
-            (new MkTagA($horse->sire_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->sire_id}"))->print();
+            $sire_name='';
+            if($sire->record_exists && $sire->is_enabled==1){
+                $sire_name=$sire->name_ja?:$sire->name_en;
+            }
+            (new MkTagA($sire_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->sire_id}"))->print();
             $a_tag_sanku->href($url)->print();
         } else if($horse->sire_name!=''){
             $sire_search=new HorseSearch();
@@ -207,7 +220,11 @@ print_h("{$horse->color} {$sex_str}");
             $mare_search->mare_id=$horse->mare_id;
             $mare_search->order='birth_year__asc';
             $url .= $mare_search->getUrlParam();
-            (new MkTagA($horse->mare_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->mare_id}"))->print();
+            $mare_name='';
+            if($mare->record_exists && $mare->is_enabled==1){
+                $mare_name=$mare->name_ja?:$mare->name_en;
+            }
+            (new MkTagA($mare_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->mare_id}"))->print();
             $a_tag_sanku->href($url)->print();
         } else if($horse->mare_name!=''){
             $mare_search=new HorseSearch();
@@ -222,11 +239,25 @@ print_h("{$horse->color} {$sex_str}");
     <tr>
         <th>母の父</th>
         <td><?php
-        if($horse->bms_name!=''){
+        $bms_name='';
+        if($mare->record_exists && $mare->is_enabled==1){
+            $bms=new Horse();
+            $bms->setDataById($pdo,$mare->sire_id);
+            if($bms->record_exists && $bms->is_enabled==1){
+                $bms_name=$bms->name_ja?:$bms->name_en;
+            }else{
+                $bms_name=$mare->sire_name;
+            }
+        }
+        if(!$bms_name){
+            // 馬自身の母父を使用
+            $bms_name = $horse->bms_name;
+        }
+        if($bms_name!=''){
             $bms_name_search=new HorseSearch();
-            $bms_name_search->bms_name=$horse->bms_name;
+            $bms_name_search->bms_name=$bms_name;
             $url =$page->to_horse_search_path.'?'.$bms_name_search->getUrlParam();
-            (new MkTagA($horse->bms_name,$url))->print();
+            (new MkTagA($bms_name,$url))->print();
         }
         ?></td>
     </tr>
