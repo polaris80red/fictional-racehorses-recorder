@@ -13,9 +13,10 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'race_course_id',FILTER_VALIDATE_INT);
+$edit_target_race_course=false;
 $race_course=new RaceCourseRow();
 if($id>0){
-    $check_race_course=RaceCourse::getById($pdo,$id);
+    $edit_target_race_course=RaceCourse::getById($pdo,$id);
     $race_course->id=$id;
 }
 $race_course->unique_name=filter_input(INPUT_POST,'unique_name');
@@ -31,36 +32,30 @@ if($race_course->sort_number===''){
 }
 $race_course->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
-$error_exists=false;
 do{
     if(!(new FormCsrfToken())->isValid()){
-        $error_exists=true;
         ELog::error($page->title.": CSRFトークンエラー|".__FILE__);
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
-    if($id>0 && $check_race_course===false){
-        $error_exists=true;
+    if($id>0 && $edit_target_race_course===false){
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定ID '{$input_id}' が指定されていますが該当する{$base_title}がありません");
     }
     if($race_course->unique_name===''){
-        $error_exists=true;
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定名称未設定");
         break;
     }
-    $name_check_obj=new RaceCourse();
-    $name_check_obj->getByUniqueName($pdo,$race_course->unique_name);
-    if(!$id && $name_check_obj->record_exists){
+    if(!$id && false!==RaceCourse::getByUniqueName($pdo,$race_course->unique_name)){
         $page->addErrorMsg("キー名 '{$race_course->unique_name}' は既に存在します");
     }
 }while(false);
-if($error_exists){
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($check_race_course!=false){
+if($edit_target_race_course!=false){
     // 編集モード
     $result = RaceCourse::UpdateFromRowObj($pdo,$race_course);
     if($result){

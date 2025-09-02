@@ -32,7 +32,6 @@ if($race_course->sort_number===''){
 }
 $race_course->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
-$error_exists=false;
 do{
     if($id>0 && $check_race_course===false){
         $page->debug_dump_var[]=['POST'=>$_POST];
@@ -43,9 +42,7 @@ do{
         $page->addErrorMsg("{$base_title}設定名称未設定");
         break;
     }
-    $name_check_obj=new RaceCourse();
-    $name_check_obj->getByUniqueName($pdo,$race_course->unique_name);
-    if(!$id && $name_check_obj->record_exists){
+    if(!$id && false!==RaceCourse::getByUniqueName($pdo,$race_course->unique_name)){
         $page->addErrorMsg("キー名 '{$race_course->unique_name}' は既に存在します");
     }
 }while(false);

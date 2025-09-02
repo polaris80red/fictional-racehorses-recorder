@@ -2,33 +2,9 @@
 class RaceCourse extends Table{
     public const TABLE = 'mst_race_course';
     public const UNIQUE_KEY_COLUMN="id";
-    protected const INT_COLUMNS=[
-        'id',
-        'sort_number',
-        'show_in_select_box',
-        'is_enabled',
-    ];
-    protected const STR_COLUMNS=[
-        'unique_name',
-        'short_name',
-        'short_name_m',
-    ];
     protected const DEFAULT_ORDER_BY ='`sort_priority` DESC, `sort_number` IS NULL, `sort_number` ASC, `id` ASC';
     public const ROW_CLASS = RaceCourseRow::class;
 
-    public $id                  =0;
-    public $unique_name         ='';
-    public $short_name          ='';
-    public $short_name_m        =null;
-    public $sort_number         =null;
-    public $show_in_select_box  =1;
-    public $is_enabled          =1;
-
-    public function __construct(PDO|null $pdo=null, int $key=0){
-        if(!is_null($pdo)&& $key>0){
-            $this->getDataById($pdo,$key);
-        }
-    }
     public static function getById(PDO $pdo, $id, $pdo_param_mode=PDO::PARAM_STR){
         $result = self::getByUniqueKey($pdo,'id',$id,PDO::PARAM_INT);
         if($result==false){
@@ -36,34 +12,12 @@ class RaceCourse extends Table{
         }
         return (new (static::ROW_CLASS))->setFromArray($result);
     }
-    public function getDataById(PDO $pdo, int $id){
-        $this->id = $id;
-        $result=$this->getById($pdo,$id,PDO::PARAM_INT);
-        if(!$result){ return false; }
-
-        $this->record_exists=true;
-        $column_names=array_merge(self::INT_COLUMNS,self::STR_COLUMNS);
-        foreach($column_names as $name){
-            $this->{$name}=$result[$name];
+    public static function getByUniqueName(PDO $pdo, $id){
+        $result = self::getByUniqueKey($pdo,'unique_name',$id,PDO::PARAM_STR);
+        if($result==false){
+            return false;
         }
-        return $result;
-    }
-    public function getByUniqueName(PDO $pdo, $unique_name){
-        $result = self::getByUniqueKey($pdo,'unique_name',$unique_name,PDO::PARAM_STR);
-        if(!$result){ return false; }
-        $this->record_exists=true;
-
-        $column_names=array_merge(self::INT_COLUMNS,self::STR_COLUMNS);
-        foreach($column_names as $col){
-            $this->{$col}=$result[$col];
-        }
-        return $result;
-    }
-    public function InsertExec(PDO $pdo){
-        return $this->SimpleInsertExec($pdo);
-    }
-    public function UpdateExec(PDO $pdo){
-        return $this->SimpleUpdateExec($pdo);
+        return (new (static::ROW_CLASS))->setFromArray($result);
     }
     public static function getForSelectbox($pdo){
         $sql_parts[]="SELECT * FROM ".self::QuotedTable();
