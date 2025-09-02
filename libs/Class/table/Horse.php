@@ -2,6 +2,7 @@
 class Horse extends Table{
     public const TABLE = 'dat_horse';
     public const UNIQUE_KEY_COLUMN="horse_id";
+    public const ROW_CLASS = HorseRow::class;
 
     public $record_exists = false;
     public $error_exists = false;
@@ -50,28 +51,11 @@ class Horse extends Table{
     public function setDataById(PDO $pdo, string $horse_id){
         $result=self::getById($pdo,$horse_id,PDO::PARAM_STR);
         if(!$result){ return false; }
-        $result = (object)$result;
-        $this->horse_id = $result->horse_id;
-        $this->world_id = $result->world_id;
-        $this->name_ja = $result->name_ja;
-        $this->name_en = $result->name_en;
-        $this->birth_year = $result->birth_year;
-        $this->sex = $result->sex;
-        $this->color = $result->color;
-        $this->birth_year = $result->birth_year;
-        $this->tc = $result->tc;
-        $this->training_country = $result->training_country;
-        $this->is_affliationed_nar = $result->is_affliationed_nar;
-        $this->sire_id = $result->sire_id;
-        $this->sire_name = $result->sire_name;
-        $this->mare_id = $result->mare_id;
-        $this->mare_name = $result->mare_name;
-        $this->bms_name = $result->bms_name;
-        $this->is_sire_or_dam = $result->is_sire_or_dam;
-        $this->meaning = $result->meaning;
-        $this->note = $result->note;
-        $this->is_enabled = $result->is_enabled;
 
+        $colmun_names=(self::ROW_CLASS)::getColumnNames();
+        foreach($colmun_names as $name){
+            $this->{$name} = $result[$name];
+        }
         $this->record_exists=true;
         return true;
     }
@@ -116,9 +100,7 @@ class Horse extends Table{
      * Insert
      */
     public function InsertExec(PDO $pdo){
-        $columns=['horse_id','world_id','name_ja','name_en','birth_year','sex','color'
-        ,'tc','training_country','is_affliationed_nar'
-        ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','is_enabled'];
+        $columns=(self::ROW_CLASS)::getColumnNames();
         $sql=SqlMake::InsertSql(self::TABLE,$columns);
 
         if($this->horse_id==''){
@@ -144,8 +126,8 @@ class Horse extends Table{
             $this->horse_id=$id;
         }
         $stmt = $pdo->prepare($sql);
-        $stmt = $this->BindValues($stmt);
-        $stmt->bindValue(':horse_id',$this->horse_id,PDO::PARAM_STR);
+        $stmt=$this->BindValuesFromThis($stmt,(self::ROW_CLASS)::getStrColmunNames(),PDO::PARAM_STR);
+        $stmt=$this->BindValuesFromThis($stmt,(self::ROW_CLASS)::getIntColmunNames(),PDO::PARAM_INT);
         try{
             $result = $stmt->execute();
         }catch (Exception $e){
@@ -156,26 +138,16 @@ class Horse extends Table{
         return true;
     }
     public function UpdateExec(PDO $pdo){
-        $update_columns=['world_id','name_ja','name_en','birth_year','sex','color'
-            ,'tc','training_country','is_affliationed_nar'
-            ,'sire_id','sire_name','mare_id','mare_name','bms_name','is_sire_or_dam','meaning','note','is_enabled'];
+        $update_where_column='horse_id';
+        $update_set_columns=(self::ROW_CLASS)::getColumnNames($update_where_column);
 
-        $sql=SqlMake::UpdateSqlWhereRaw(self::TABLE,$update_columns, "`horse_id` LIKE :horse_id");
+        $sql=SqlMake::UpdateSqlWhereRaw(self::TABLE,$update_set_columns, "`horse_id` LIKE :horse_id");
 
         $stmt = $pdo->prepare($sql);
-        $stmt = $this->BindValues($stmt);
+        $stmt=$this->BindValuesFromThis($stmt,(self::ROW_CLASS)::getStrColmunNames($update_where_column),PDO::PARAM_STR);
         $stmt->bindValue(':horse_id',SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
+        $stmt=$this->BindValuesFromThis($stmt,(self::ROW_CLASS)::getIntColmunNames(),PDO::PARAM_INT);
         $result = $stmt->execute();
         return;
-    }
-    private function BindValues($stmt){
-        $stmt=$this->BindValuesFromThis($stmt, [
-            'name_ja','name_en','color','tc','training_country',
-            'sire_id','sire_name','mare_id','mare_name','bms_name','meaning','note'
-        ],PDO::PARAM_STR);
-        $stmt=$this->BindValuesFromThis($stmt, [
-            'world_id','birth_year','sex','is_affliationed_nar','is_sire_or_dam','is_enabled'
-        ],PDO::PARAM_INT);
-        return $stmt;
     }
 }
