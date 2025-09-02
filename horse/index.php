@@ -139,7 +139,14 @@ if($horse->birth_year>0){
 }
 print_h("{$horse->color} {$sex_str}");
 ?>
-</div><div style="float:right;<?=$page->is_editable?'':'display:none;'?>"><a href="#edit_menu" style="text-decoration: none;" title="下部編集メニューへ">▽</a></div>
+</div>
+<div style="float:right;">
+    <?php if($page->is_editable): ?>
+    <a href="#edit_menu" style="text-decoration: none;" title="下部編集メニューへスクロール">▽</a>
+    <?php else: ?>
+    <a href="#under_results_table" style="text-decoration: none;" title="下部へスクロール">▽</a>
+    <?php endif; ?>
+</div>
 <hr style="clear: both;">
 <table class="horse_base_data">
     <tr>
@@ -422,6 +429,7 @@ $latest_race_is_exists=false; ?>
 ?><?php endforeach; ?>
 </table>
 <hr>
+<a id="under_results_table"></a>
 <table class="horse_base_data">
 <tr><th>馬名意味</th><td><?=h($horse->meaning)?></td></tr>
 <tr><th>備考</th><td><?=nl2br(h($horse->note))?></td></tr>
