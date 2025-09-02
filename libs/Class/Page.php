@@ -187,7 +187,7 @@ class Page{
 <a href="<?php echo $pref; ?>">[HOME]</a>
 <span class="nowrap">
 <a href="<?php echo $this->to_horse_search_path; ?>">[競走馬検索]</a>
-<a href="<?php echo $this->to_race_list_path; ?>?set_by_session=true">[レース検索]</a>
+<a href="<?php echo $this->to_race_list_path; ?>?set_by_session=false&session_is_not_update=1">[レース検索]</a>
 </span>
 <?php
 $race_history_count=(new RaceAccessHistory())->count();

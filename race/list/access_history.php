@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
+InAppUrl::init(2);
 defineAppRootRelPath(2);
 $page=new Page(2);
 $setting=new Setting(); 
@@ -117,6 +118,14 @@ if(!is_null($stmt)){
 <!--<?php print "<a href=\"#foot\" title=\"最下部検索フォームに移動\" style=\"text-decoration:none;\">▽検索結果</a>｜"; ?>
 <hr>
 -->
+<?php
+    $search2=new RaceSearch();
+    $search2->setBySession();
+?>
+<?php if(!$search2->is_empty()): ?>
+<a href="<?=h(InAppUrl::to('race/list/',['set_by_session'=>true]))?>">最後の検索条件で検索</a>
+<hr>
+<?php endif; ?>
 <?php
 $link=new MkTagA('アクセス新着順');
 $link->title("最近アクセスしたレースを新しいものから");
