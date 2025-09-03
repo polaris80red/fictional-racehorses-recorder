@@ -198,6 +198,11 @@ if($page->error_exists){
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=frame_number]');clearElmVal('*[name=horse_number]');clearElmVal('*[name=horse_number_select]');"></td>
 </tr>
 <tr>
+    <th>騎手</th>
+    <td class="in_input"><input type="text" name="jockey" style="width:10em;" value="<?=h($form_data->jockey)?>"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=jockey]');"></td>
+</tr>
+<tr>
     <th>斤量</th>
     <td class="in_input"><input type="text" name="handicap" style="width:6em;" list="handicap_list" value="<?=h($form_data->handicap)?>">kg</td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=handicap]');"></td>

@@ -161,6 +161,17 @@ if($is_error!==0){
     </td>
 </tr>
 <tr>
+    <th>騎手</th>
+    <td><?php HTPrint::HiddenAndText('jockey',$race_results->jockey?:''); ?></td>
+</tr>
+<?php if($race_results->jockey): ?>
+<?php $mst_jockey=Jockey::getByUniqueName($pdo,$race_results->jockey);?>
+<tr>
+    <th>騎手マスタ</th>
+    <td><?=$mst_jockey!==false?($mst_jockey->short_name_10):'登録外'?></td>
+</tr>
+<?php endif; ?>
+<tr>
     <th>斤量</th>
     <td><?php HTPrint::HiddenAndText('handicap',$race_results->handicap?:''); ?>kg</td>
 </tr>

@@ -212,6 +212,9 @@ $ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_
     <th>馬番</th><td><?=h(ifZero2Empty($input->horse_number))?>番</td>
 </tr>
 <tr>
+    <th>騎手</th><td><?=h($input->jockey)?></td>
+</tr>
+<tr>
     <th>斤量</th><td><?=h($input->handicap)?>kg</td>
 </tr>
 <tr>
