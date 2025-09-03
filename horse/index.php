@@ -67,6 +67,23 @@ $mare=new Horse();
 if($horse->mare_id){
     $mare->setDataById($pdo,$horse->mare_id);
 }
+$trainer_name='';
+$trainer_is_anonymous=false;
+do{
+    $trainer=Trainer::getByUniqueName($pdo,$horse->trainer);
+    if($trainer===false || $trainer->is_enabled==0){
+        $trainer_name=$horse->trainer;
+        break;
+    }
+    if($trainer->is_anonymous==1){
+        $trainer_is_anonymous=true;
+        if(!$page->is_editable){
+            $trainer_name='□□□□';
+            break;
+        }
+    }
+    $trainer_name=$trainer->name?:$horse->trainer;
+}while(false);
 
 $session->latest_horse=[
     'id'=>$horse_id,
@@ -169,6 +186,10 @@ print_h("{$horse->color} {$sex_str}");
     <tr>
         <th>所属</th>
         <td><?=h($horse->tc)?></td>
+    </tr>
+    <tr>
+        <th>調教師</th>
+        <td><?=h($trainer_name)?></td>
     </tr>
     <tr>
         <th><?=$setting->birth_year_mode===0?"生年":"世代"?></th>
