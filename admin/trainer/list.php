@@ -82,7 +82,8 @@ $next_tag  =new MkTagA("[次へ]",($master_table->has_next_page?('?'.$url_param-
 <?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
 <hr>
 [ <a href="./form.php"><?php print $base_title; ?>設定新規登録</a> ]<br>
-[ <a href="./unregistered_list.php">マスタ未登録の調教師を確認・登録</a> ]
+マスタ未登録の調教師を確認・登録<br>
+[ <a href="./unregistered_list.php">競走馬</a>｜<a href="./unregistered_list_2.php">レース個別結果</a> ]
 <hr class="no-css-fallback">
 </main>
 <footer>

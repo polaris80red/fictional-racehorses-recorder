@@ -265,6 +265,11 @@ if($page->error_exists){
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=tc]');"></td>
 </tr>
 <tr>
+    <th>調教師上書</th>
+    <td class="in_input"><input type="text" name="trainer" value="<?=h($form_data->trainer)?>" placeholder="このレース時点の所属"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=trainer]');"></td>
+</tr>
+<tr>
     <th>調教国上書</th>
     <td class="in_input"><input type="text" name="training_country" value="<?=h($form_data->training_country)?>" placeholder="このレース時点の所属"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=training_country]');"></td>

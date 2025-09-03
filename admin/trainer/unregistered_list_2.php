@@ -6,7 +6,7 @@ $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
 $base_title="調教師マスタ";
-$page->title="{$base_title}未登録リスト（競走馬）";
+$page->title="{$base_title}未登録リスト（個別結果）";
 $page->ForceNoindex();
 
 $session=new Session();
@@ -18,11 +18,11 @@ $current_page=max(filter_input(INPUT_GET,'page',FILTER_VALIDATE_INT),1);
 // $per_page = ($input_per_page===0?'10':$input_per_page);
 $per_page=20;
 $table_data=(function(int $current_page,int $per_page)use($pdo){
-    $parts[]="SELECT DISTINCT `h`.trainer";
-    $parts[]="FROM `".Horse::TABLE."` as `h`";
-    $parts[]="LEFT JOIN `".Trainer::TABLE."` AS `t` ON `h`.trainer LIKE `t`.unique_name";
-    $parts[]="WHERE `t`.unique_name IS NULL AND `h`.trainer NOT LIKE ''";
-    $parts[]="ORDER BY `h`.trainer ASC";
+    $parts[]="SELECT DISTINCT `rr`.trainer";
+    $parts[]="FROM `".RaceResults::TABLE."` as `rr`";
+    $parts[]="LEFT JOIN `".Trainer::TABLE."` AS `t` ON `rr`.trainer LIKE `t`.unique_name";
+    $parts[]="WHERE `t`.unique_name IS NULL AND `rr`.trainer NOT LIKE ''";
+    $parts[]="ORDER BY `rr`.trainer ASC";
     if($per_page>0){
         $parts[]="LIMIT {$per_page}";
         if($current_page>1){
@@ -63,7 +63,7 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
 <main id="content">
 <hr class="no-css-fallback">
 <a href="./list.php">一覧に戻る</a><br>
-<p>競走馬データだけに存在し、調教師マスタにない名前の一覧です。</p>
+<p>レース個別結果だけに存在し、調教師マスタにない名前の一覧です。</p>
 <?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
 <table>
 <tr>

@@ -223,6 +223,10 @@ switch($race_results->sex){
     <td><?php HTPrint::HiddenAndText('tc',$race_results->tc); ?></td>
 </tr>
 <tr>
+    <th>調教師上書</th>
+    <td><?php HTPrint::HiddenAndText('trainer',$race_results->trainer); ?></td>
+</tr>
+<tr>
     <th>調教国上書</th>
     <td><?php HTPrint::HiddenAndText('training_country',$race_results->training_country); ?></td>
 </tr>

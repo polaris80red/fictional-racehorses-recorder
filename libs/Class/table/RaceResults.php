@@ -23,6 +23,7 @@ class RaceResults extends Table{
     public $syuutoku =0;
     public $sex =0;
     public $tc =null;
+    public $trainer =null;
     public $training_country ='';
     public $is_affliationed_nar =0;
     public $non_registered_prev_race_number =0;
@@ -50,6 +51,7 @@ class RaceResults extends Table{
         'handicap',
         'margin',
         'tc',
+        'trainer',
         'training_country',
         'jra_thisweek_horse_1',
         'jra_thisweek_horse_2',
@@ -114,6 +116,7 @@ class RaceResults extends Table{
         $this->syuutoku = (int)filter_input($input_type,'syuutoku',FILTER_VALIDATE_INT);
         $this->sex = filter_input($input_type,'sex');
         $this->tc = filter_input($input_type,'tc');
+        $this->trainer = filter_input($input_type,'trainer')?:null;
         $this->training_country = filter_input($input_type,'training_country');
         $this->is_affliationed_nar = (int)filter_input($input_type,'is_affliationed_nar');
         $this->non_registered_prev_race_number = (int)filter_input($input_type,'non_registered_prev_race_number');
@@ -194,6 +197,7 @@ class RaceResults extends Table{
         $stmt->bindValue(':syuutoku', $this->syuutoku, PDO::PARAM_INT);
         $stmt->bindValue(':sex', $this->sex, PDO::PARAM_INT);
         $stmt->bindValue(':tc', $this->tc, PDO::PARAM_STR);
+        $stmt->bindValue(':trainer', $this->trainer?:null, PDO::PARAM_STR);
         $stmt->bindValue(':training_country', $this->training_country, PDO::PARAM_STR);
         $stmt->bindValue(':is_affliationed_nar', $this->is_affliationed_nar, PDO::PARAM_STR);
         $stmt->bindValue(':non_registered_prev_race_number', $this->non_registered_prev_race_number, PDO::PARAM_INT);

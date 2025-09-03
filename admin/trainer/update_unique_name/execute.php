@@ -40,6 +40,7 @@ if(!$new_id_exists){
     $updater->addUpdateTarget(Trainer::TABLE,'unique_name');
 }
 $updater->addUpdateTarget(Horse::TABLE,'trainer');
+$updater->addUpdateTarget(RaceResults::TABLE,'trainer');
 $updater->execute();
 ?><!DOCTYPE html>
 <html>

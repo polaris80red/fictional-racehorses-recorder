@@ -104,6 +104,7 @@ $sql=(function(){
     ]);
     $horse_s_columns->addColumnAs('sex','horse_sex');
     $horse_s_columns->addColumnAs('tc','horse_tc');
+    $horse_s_columns->addColumnAs('trainer','horse_trainer');
     $horse_s_columns->addColumnAs('training_country','horse_training_country');
     $horse_s_columns->addColumnAs('is_affliationed_nar','horse_is_affliationed_nar');
     $sql_part_select_columns=implode(",\n",[
@@ -118,6 +119,9 @@ $sql=(function(){
         "`trainer`.`short_name_10` as trainer_mst_short_name_10",
         "`trainer`.`is_anonymous` as trainer_mst_is_anonymous",
         "`trainer`.`is_enabled` as trainer_mst_is_enabled",
+        "`race_trainer`.`short_name_10` as race_trainer_mst_short_name_10",
+        "`race_trainer`.`is_anonymous` as race_trainer_mst_is_anonymous",
+        "`race_trainer`.`is_enabled` as race_trainer_mst_is_enabled",
     ]);
      
     $sql=<<<END
@@ -134,6 +138,8 @@ $sql=(function(){
         ON `r_results`.`jockey`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
     LEFT JOIN `{$trainer_tbl}` as `trainer`
         ON `{$horse_tbl}`.`trainer`=`trainer`.`unique_name` AND `trainer`.`is_enabled`=1
+    LEFT JOIN `{$trainer_tbl}` as `race_trainer`
+        ON `r_results`.`trainer`=`race_trainer`.`unique_name` AND `race_trainer`.`is_enabled`=1
     WHERE `race`.`race_id`=:race_id
     ORDER BY
         `r_results`.`result_number` IS NULL,
@@ -164,13 +170,21 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
         }
         if($page->is_editable){}
     }
-    if($data['trainer_mst_is_enabled']==1){
+    if($data['race_trainer_mst_is_enabled']==1){
+        if($data['race_trainer_mst_is_anonymous']==1){
+            $data['trainer']=(!$page->is_editable)?'□□□□':($data['race_trainer_mst_short_name_10']?:$data['horse_trainer']);
+        }else{
+            $data['trainer']=$data['race_trainer_mst_short_name_10']?:$data['horse_trainer'];
+        }
+    }else if($data['trainer_mst_is_enabled']==1){
         if($data['trainer_mst_is_anonymous']==1){
             $data['trainer']=(!$page->is_editable)?'□□□□':($data['trainer_mst_short_name_10']?:$data['trainer']);
         }else{
             $data['trainer']=$data['trainer_mst_short_name_10']?:$data['trainer'];
         }
-        if($page->is_editable){}
+    }else{
+        // レース側だけ空の場合馬側の値を採用
+        $data['trainer']=$data['trainer']?:$data['horse_trainer'];
     }
     $table_data[]=$data;
 }
