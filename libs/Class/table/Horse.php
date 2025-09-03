@@ -16,6 +16,7 @@ class Horse extends Table{
     public $sex =0;
     public $color ='';
     public $tc ='';
+    public $trainer =null;
     public $training_country ='JPN';
     public $is_affliationed_nar =0;
     public $sire_id =null;
@@ -78,6 +79,7 @@ class Horse extends Table{
         }
         $this->color=(string)(filter_input(INPUT_POST,'color')?:filter_input(INPUT_POST,'color_select'));
         $this->tc=(string)(filter_input(INPUT_POST,'tc')?:filter_input(INPUT_POST,'tc_select'));
+        $this->trainer=filter_input(INPUT_POST,'trainer')?:null;
         $this->training_country=filter_input(INPUT_POST,'training_country');
         $this->is_affliationed_nar=filter_input(INPUT_POST,'is_affliationed_nar');
         $this->sire_id=filter_input(INPUT_POST,'sire_id');

@@ -150,6 +150,10 @@ th{
     <td><?php HTPrint::HiddenAndText('tc',$horse->tc) ?></td>
 </tr>
 <tr>
+    <th>調教師</th>
+    <td><?php HTPrint::HiddenAndText('trainer',$horse->trainer) ?></td>
+</tr>
+<tr>
     <th>調教国</th>
     <td><?php HTPrint::HiddenAndText('training_country',$horse->training_country) ?></td>
 </tr>

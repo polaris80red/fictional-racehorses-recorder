@@ -163,6 +163,10 @@ if(count($affiliation_list)>0){
     </td>
 </tr>
 <tr>
+    <th>調教師</th>
+    <td class="in_input"><input type="text" name="trainer" value="<?=h($horse->trainer)?>"></td>
+</tr>
+<tr>
     <th>調教国</th>
     <td class="in_input"><input type="text" name="training_country" value="<?=h($horse->training_country)?>"></td>
 </tr>
