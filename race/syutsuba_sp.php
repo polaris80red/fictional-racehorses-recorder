@@ -282,7 +282,7 @@ foreach($data['horse_results'] as $prev_race){
         echo "</span>";
         echo "</div>\n";
         echo "<div style=\"clear:both;\">\n";
-        echo $r->course_type.$r->distance."<br>\n";
+        echo h($r->course_type.$r->distance)."<br>\n";
 
         if(!empty($r->winner_or_runner_up['horse_id'])){
             echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.h($r->winner_or_runner_up['horse_id']).'">';
