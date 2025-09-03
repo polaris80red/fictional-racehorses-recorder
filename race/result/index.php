@@ -96,6 +96,7 @@ $sql=(function(){
     $r_results_tbl=RaceResults::TABLE;
     $race_special_results_tbl=RaceSpecialResults::TABLE;
     $jockey_tbl=Jockey::TABLE;
+    $trainer_tbl=Trainer::TABLE;
 
     $horse_s_columns=new SqlMakeSelectColumns(Horse::TABLE);
     $horse_s_columns->addColumnsByArray([
@@ -114,6 +115,9 @@ $sql=(function(){
         "`jk`.`short_name_10` as jockey_mst_short_name_10",
         "`jk`.`is_anonymous` as jockey_mst_is_anonymous",
         "`jk`.`is_enabled` as jockey_mst_is_enabled",
+        "`trainer`.`short_name_10` as trainer_mst_short_name_10",
+        "`trainer`.`is_anonymous` as trainer_mst_is_anonymous",
+        "`trainer`.`is_enabled` as trainer_mst_is_enabled",
     ]);
      
     $sql=<<<END
@@ -128,6 +132,8 @@ $sql=(function(){
         ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
     LEFT JOIN `{$jockey_tbl}` as `jk`
         ON `r_results`.`jockey`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
+    LEFT JOIN `{$trainer_tbl}` as `trainer`
+        ON `{$horse_tbl}`.`trainer`=`trainer`.`unique_name` AND `trainer`.`is_enabled`=1
     WHERE `race`.`race_id`=:race_id
     ORDER BY
         `r_results`.`result_number` IS NULL,
@@ -158,10 +164,24 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
         }
         if($page->is_editable){}
     }
+    if($data['trainer_mst_is_enabled']==1){
+        if($data['trainer_mst_is_anonymous']==1){
+            $data['trainer']=(!$page->is_editable)?'□□□□':($data['trainer_mst_short_name_10']?:$data['trainer']);
+        }else{
+            $data['trainer']=$data['trainer_mst_short_name_10']?:$data['trainer'];
+        }
+        if($page->is_editable){}
+    }
     $table_data[]=$data;
 }
+$mode_umm=false;
+switch($setting->age_view_mode){
+    case Setting::AGE_VIEW_MODE_UMAMUSUME:
+    case Setting::AGE_VIEW_MODE_UMAMUSUME_S:
+        $mode_umm=true;
+}
 $empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td><td></td><td></td><td></td><td></td><td></td><td></td>";
-if($setting->age_view_mode!==1){ $empty_row_2.="<td></td>"; }
+if(!$mode_umm){ $empty_row_2.="<td></td><td></td>"; }
 ?>
 <table class="race_results">
 <tr>
@@ -174,12 +194,15 @@ if($setting->age_view_mode!==1){ $empty_row_2.="<td></td>"; }
     }else{ print '性齢'; }
     ?></th>
 <th>負担<br>重量</th>
-<?php if($setting->age_view_mode!==1): ?>
+<?php if(!$mode_umm): ?>
 <th>騎手</th>
 <?php endif; ?>
 <th>着差</th>
 <th>コーナー<br>通過順位</th>
 <th>所属</th>
+<?php if(!$mode_umm): ?>
+<th>調教師</th>
+<?php endif; ?>
 <th>人気</th>
 <?php if($page->is_editable): ?><th>編</th><?php endif; ?>
 </tr><?php
@@ -289,6 +312,9 @@ if($data['result_text']!=''){
     if($data['corner_4']>0){ $corner_numbers[]=$data['corner_4']; }
 ?><td class="col_corner_numbers"><?=h(implode('-',$corner_numbers))?></td>
 <td><?=h(!empty($data['tc'])?$data['tc']:$data['horse_tc'])?></td>
+<?php if($setting->age_view_mode!==1): ?>
+<td><?=h($data['trainer']??'')?></td>
+<?php endif; ?>
 <td class="col_favourite favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
 <?php
     if(!empty($data['horse_id'])){
