@@ -140,7 +140,7 @@ if($search->limit>0){
         if($row['sire_id']!=''){
             $url ="./?".$search->getUrlParam($search_reset_array);
             $url.="&".(new UrlParams(['sire_id'=>$row['sire_id'],'order'=>'birth_year__asc']));
-            $a_tag=new MkTagA($row['sire_name']?:ANNONYMOUS_HORSE_NAME,$url);
+            $a_tag=new MkTagA(($row['sire_name_ja']?:$row['sire_name_en'])?:ANNONYMOUS_HORSE_NAME,$url);
             $a_tag->title("父ID: {$row['sire_id']}")->print();
         }else if($row['sire_name']!=''){
             $url ="./?".$search->getUrlParam($search_reset_array);
@@ -152,7 +152,7 @@ if($search->limit>0){
         if($row['mare_id']!=''){
             $url ="./?".$search->getUrlParam($search_reset_array);
             $url.="&".(new UrlParams(['mare_id'=>$row['mare_id'],'order'=>'birth_year__asc']));
-            $a_tag=new MkTagA($row['mare_name']?:ANNONYMOUS_HORSE_NAME,$url);
+            $a_tag=new MkTagA(($row['mare_name_ja']?:$row['mare_name_en'])?:ANNONYMOUS_HORSE_NAME,$url);
             $a_tag->title("母ID: {$row['mare_id']}")->print();
         }else if($row['mare_name']!==''){
             $url ="./?".$search->getUrlParam($search_reset_array);
@@ -161,11 +161,15 @@ if($search->limit>0){
         }
     ?></td>
     <td><?php
-        if($row['bms_name']!==''){
+        if($row['mare_id']!='' && ($row['mare_sire_id']!=''||$row['mare_sire_name']!='')){
+            $bms_name=(($row['bms_name_ja']?:$row['bms_name_en'])?:$row['mare_sire_name'])?:'';
+            $url ="./?".$search->getUrlParam($search_reset_array);
+            $url.="&".(new UrlParams(['bms_name'=>$bms_name,'order'=>'birth_year__asc']));
+            (new MkTagA($bms_name,$url))->print();
+        }else if($row['bms_name']!==''){
             $url ="./?".$search->getUrlParam($search_reset_array);
             $url.="&".(new UrlParams(['bms_name'=>$row['bms_name'],'order'=>'birth_year__asc']));
             (new MkTagA($row['bms_name'],$url))->print();
-
         }
     ?></td>
     <td><?php
