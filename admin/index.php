@@ -61,6 +61,10 @@ if(!$session->is_logined()){
         <td></td>
     </tr>
     <tr>
+        <td><?=(new MkTagA("騎手マスタ管理",InAppUrl::to('admin/jockey/list.php')));?></td>
+        <td></td>
+    </tr>
+    <tr>
         <td colspan="2"></td>
     </tr>
     <tr>
