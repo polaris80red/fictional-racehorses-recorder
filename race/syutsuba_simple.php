@@ -92,6 +92,7 @@ $sql=(function(){
     $race_tbl=Race::TABLE;
     $r_results_tbl=RaceResults::TABLE;
     $race_special_results_tbl=RaceSpecialResults::TABLE;
+    $jockey_tbl=Jockey::TABLE;
 
     $horse_s_columns=new SqlMakeSelectColumns(Horse::TABLE);
     $horse_s_columns->addColumnsByArray([
@@ -105,6 +106,9 @@ $sql=(function(){
         $horse_s_columns->get(true),
         "`race`.*",
         "`spr`.`is_registration_only`",
+        "`jk`.`short_name_10` as jockey_mst_short_name_10",
+        "`jk`.`is_anonymous` as jockey_mst_is_anonymous",
+        "`jk`.`is_enabled` as jockey_mst_is_enabled",
     ]);
      
     $sql=<<<END
@@ -117,6 +121,8 @@ $sql=(function(){
         ON `r_results`.`horse_id`=`{$horse_tbl}`.`horse_id`
     LEFT JOIN `{$race_special_results_tbl}` as spr
         ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
+    LEFT JOIN `{$jockey_tbl}` as `jk`
+        ON `r_results`.`jockey`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
     WHERE `race`.`race_id`=:race_id
     ORDER BY
         `r_results`.`frame_number` IS NULL,
@@ -136,6 +142,13 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if(empty($data['horse_id'])){ continue; }
     $data['sex_str']=sex2String((int)$data['sex']);
     $data['age']=empty($data['birth_year'])?'':($race->year-$data['birth_year']);
+    if($data['jockey_mst_is_enabled']==1){
+        if($data['jockey_mst_is_anonymous']==1){
+            $data['jockey']=(!$page->is_editable)?'□□□□':($data['jockey_mst_short_name_10']?:$data['jockey']);
+        }else{
+            $data['jockey']=$data['jockey_mst_short_name_10']?:$data['jockey'];
+        }
+    }
     $table_data[]=$data;
 }
 
@@ -208,7 +221,7 @@ foreach ($table_data as $data) {
 ?>
 <td class="sex_<?=h($data['sex'])?>"><?=h($age_sex_str)?></td>
 <td><?=h($data['handicap'])?></td>
-<?php if($setting->age_view_mode!==1): ?><td><?php /* 騎手 */ ?></td><?php endif; ?>
+<?php if($setting->age_view_mode!==1): ?><td><?=h($data['jockey']??'')?></td><?php endif; ?>
 <td><?=h(!empty($data['tc'])?$data['tc']:$data['horse_tc'])?></td>
 <?php if($setting->age_view_mode!==1): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>
 <td class="favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
