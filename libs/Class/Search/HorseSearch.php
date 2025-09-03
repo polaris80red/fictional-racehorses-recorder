@@ -242,8 +242,24 @@ class HorseSearch extends Search{
     public function SelectExec(PDO $pdo){
         $sql_parts=[];
         $where_parts=[];
-        $sql_parts[]='SELECT * FROM `'.Horse::TABLE.'` AS h';
+        $sql_parts[]='SELECT '.implode(',',[
+            'h.*',
+            'sire.name_ja AS `sire_name_ja`',
+            'sire.name_en AS `sire_name_en`',
+            'mare.name_ja AS `mare_name_ja`',
+            'mare.name_en AS `mare_name_en`',
+            'bms.name_ja AS `bms_name_ja`',
+            'bms.name_en AS `bms_name_en`',
+            'mare.sire_id AS `mare_sire_id`',
+            'mare.sire_name AS `mare_sire_name`',
+        ]).' FROM `'.Horse::TABLE.'` AS h';
         $pre_bind=new StatementBinder();
+            $sql_parts[]='LEFT JOIN `'.Horse::TABLE.'` AS sire';
+            $sql_parts[]='ON h.sire_id LIKE sire.horse_id';
+            $sql_parts[]='LEFT JOIN `'.Horse::TABLE.'` AS mare';
+            $sql_parts[]='ON h.mare_id LIKE mare.horse_id';
+            $sql_parts[]='LEFT JOIN `'.Horse::TABLE.'` AS bms';
+            $sql_parts[]='ON mare.sire_id LIKE bms.horse_id';
         if($this->search_text!=''){
             $sql_parts[]='LEFT JOIN `'.HorseTag::TABLE.'` AS t';
             $sql_parts[]='ON h.horse_id LIKE t.horse_id';
@@ -252,40 +268,53 @@ class HorseSearch extends Search{
             $pre_bind->add(':tag', $this->search_text, PDO::PARAM_STR);
         }
         if($this->keyword!=''){
-            $where_parts[]='(`name_ja` LIKE :name_ja OR `name_en` LIKE :name_en)';
+            $where_parts[]='(h.`name_ja` LIKE :name_ja OR h.`name_en` LIKE :name_en)';
             $pre_bind->add(':name_ja', "%{$this->keyword}%", PDO::PARAM_STR);
             $pre_bind->add(':name_en', "%{$this->keyword}%", PDO::PARAM_STR);
         }
         if($this->birth_year!==''){
-            $where_parts[]='`birth_year` = :birth_year';
+            $where_parts[]='h.`birth_year` = :birth_year';
             $pre_bind->add(':birth_year', $this->birth_year, PDO::PARAM_INT);
         }else if($this->null_birth_year){
             $where_parts[]='`birth_year` IS NULL';
         }
         if($this->sire_id!=''){
-            $where_parts[]='`sire_id` LIKE :sire_id';
+            $where_parts[]='h.`sire_id` LIKE :sire_id';
             $pre_bind->add(':sire_id', "{$this->sire_id}", PDO::PARAM_STR);
         }
         if($this->sire_name!=''){
-            $where_parts[]='`sire_name` LIKE :sire_name';
+            $where_parts[]='('.implode(' OR ',[
+                'h.`sire_name` LIKE :sire_name',
+                '`sire`.`name_ja` LIKE :sire_name',
+                '`sire`.`name_en` LIKE :sire_name',
+            ]).')';
             $pre_bind->add(':sire_name', "%{$this->sire_name}%", PDO::PARAM_STR);
         }
         if($this->mare_id!=''){
-            $where_parts[]='`mare_id` LIKE :mare_id';
+            $where_parts[]='h.`mare_id` LIKE :mare_id';
             $pre_bind->add(':mare_id', "{$this->mare_id}", PDO::PARAM_STR);
         }
         if($this->mare_name!=''){
-            $where_parts[]='`mare_name` LIKE :mare_name';
+            $where_parts[]='('.implode(' OR ',[
+                'h.`mare_name` LIKE :mare_name',
+                '`mare`.`name_ja` LIKE :mare_name',
+                '`mare`.`name_en` LIKE :mare_name',
+            ]).')';
             $pre_bind->add(':mare_name', "%{$this->mare_name}%", PDO::PARAM_STR);
         }
         if($this->bms_name!=''){
-            $where_parts[]='`bms_name` LIKE :bms_name';
+            $where_parts[]='('.implode(' OR ',[
+                'h.`bms_name` LIKE :bms_name',
+                '`mare`.`sire_name` LIKE :bms_name',
+                '`bms`.`name_ja` LIKE :bms_name',
+                '`bms`.`name_en` LIKE :bms_name',
+            ]).')';
             $pre_bind->add(':bms_name', "%{$this->bms_name}%", PDO::PARAM_STR);
         }
         if(count($where_parts)>0){
             // 手動検索条件がある場合のみ固定の条件を追加して実行
             if($this->world_id>0){
-                $where_parts[]='`world_id` LIKE :world_id';
+                $where_parts[]='h.`world_id` LIKE :world_id';
                 $pre_bind->add(':world_id', $this->world_id, PDO::PARAM_INT);
             }
             $where_parts[]='h.is_enabled = 1';
@@ -297,19 +326,19 @@ class HorseSearch extends Search{
         $order_parts=[];
         switch($this->order){
             case self::ORDER_BIRTH‗YEAR__ASC:
-                $order_parts[]="`birth_year` ASC";
+                $order_parts[]="h.`birth_year` ASC";
                 break;
             case self::ORDER_BIRTH‗YEAR__DESC:
-                $order_parts[]="`birth_year` DESC";
+                $order_parts[]="h.`birth_year` DESC";
                 break;
             case self::ORDER_ID__ASC:
-                $order_parts[]="`horse_id` ASC";
+                $order_parts[]="h.`horse_id` ASC";
                 break;
             default:
                 break;
         }
-        $order_parts[]="`name_ja` ASC";
-        $order_parts[]="`name_en` ASC";
+        $order_parts[]="h.`name_ja` ASC";
+        $order_parts[]="h.`name_en` ASC";
         if(count($order_parts)>0){
             $sql_parts[]="ORDER BY ".implode(', ',$order_parts);
         }
