@@ -174,9 +174,9 @@ foreach ($table_data as $data) {
         echo "（{$data['horse_tc']}）";
     }
 ?><br>
-父：<?=h($data['sire_name']?:"□□□□□□")?><br>
-母：<?=h($data['mare_name']?:"□□□□□□")?><br>
-母の父：<?=h($data['bms_name']?:"□□□□□□")?><br>
+父：<?=h(($data['sire_name_ja']?:$data['sire_name_en'])?:$data['sire_name']?:"□□□□□□")?><br>
+母：<?=h(($data['mare_name_ja']?:$data['mare_name_en'])?:$data['mare_name']?:"□□□□□□")?><br>
+母の父：<?=h(($data['bms_name_ja']?:$data['bms_name_en'])?:($data['mare_sire_name']?:($data['bms_name']?:"□□□□□□")))?><br>
 </td>
 <td>
     <span class="nowrap"><?=h($data['sex_str'].$data['age']."歳")?></span><?php

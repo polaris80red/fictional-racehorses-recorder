@@ -22,6 +22,13 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`Horse`.`mare_name`
         ,`Horse`.`bms_name`
         ,`Horse`.`color`
+        ,`sire`.`name_ja` as `sire_name_ja`
+        ,`sire`.`name_en` as `sire_name_en`
+        ,`mare`.`name_ja` as `mare_name_ja`
+        ,`mare`.`name_en` as `mare_name_en`
+        ,`mare`.`sire_name` as `mare_sire_name`
+        ,`bms`.`name_ja` as `bms_name_ja`
+        ,`bms`.`name_en` as `bms_name_en`
         ,`race`.*
         ,`spr`.`is_registration_only`
         ,`jk`.`short_name_10` as `jockey_mst_short_name_10`
@@ -37,6 +44,9 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         LEFT JOIN `{$race_results_tbl}` AS `r_results`
             ON `race`.`race_id`=`r_results`.`race_id`
         LEFT JOIN `{$horse_tbl}` AS `Horse` ON `r_results`.`horse_id`=`Horse`.`horse_id`
+        LEFT JOIN `{$horse_tbl}` AS `sire` ON `Horse`.`sire_id`=`sire`.`horse_id`
+        LEFT JOIN `{$horse_tbl}` AS `mare` ON `Horse`.`mare_id`=`mare`.`horse_id`
+        LEFT JOIN `{$horse_tbl}` AS `bms` ON `mare`.`sire_id`=`bms`.`horse_id`
         LEFT JOIN `{$race_special_results_tbl}` as spr ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
         LEFT JOIN `{$jockey_tbl}` as `jk` ON `r_results`.`jockey`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
         LEFT JOIN `{$trainer_tbl}` as `trainer` ON `Horse`.`trainer`=`trainer`.`unique_name` AND `trainer`.`is_enabled`=1
