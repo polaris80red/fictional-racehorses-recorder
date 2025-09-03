@@ -67,9 +67,7 @@ $turn=$week_data->umm_month_turn;
 .race_results td:nth-child(1){ text-align:center; }
 .race_results td:nth-child(2){ text-align:center; }
 .race_results td:nth-child(4){ text-align:center; }
-.race_results td:nth-child(<?php
-    print($setting->age_view_mode!==Setting::AGE_VIEW_MODE_UMAMUSUME?9:7);
-?>){ text-align:center; }
+.race_results td.col_favourite{ text-align:center; }
 
 .edit_menu table { margin-top: 8px;}
 .edit_menu table a:link {text-decoration: none;}
@@ -93,6 +91,7 @@ $sql=(function(){
     $r_results_tbl=RaceResults::TABLE;
     $race_special_results_tbl=RaceSpecialResults::TABLE;
     $jockey_tbl=Jockey::TABLE;
+    $trainer_tbl=Trainer::TABLE;
 
     $horse_s_columns=new SqlMakeSelectColumns(Horse::TABLE);
     $horse_s_columns->addColumnsByArray([
@@ -109,6 +108,9 @@ $sql=(function(){
         "`jk`.`short_name_10` as jockey_mst_short_name_10",
         "`jk`.`is_anonymous` as jockey_mst_is_anonymous",
         "`jk`.`is_enabled` as jockey_mst_is_enabled",
+        "`trainer`.`short_name_10` as trainer_mst_short_name_10",
+        "`trainer`.`is_anonymous` as trainer_mst_is_anonymous",
+        "`trainer`.`is_enabled` as trainer_mst_is_enabled",
     ]);
      
     $sql=<<<END
@@ -123,6 +125,8 @@ $sql=(function(){
         ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
     LEFT JOIN `{$jockey_tbl}` as `jk`
         ON `r_results`.`jockey`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
+    LEFT JOIN `{$trainer_tbl}` as `trainer`
+        ON `{$horse_tbl}`.`trainer`=`trainer`.`unique_name` AND `trainer`.`is_enabled`=1
     WHERE `race`.`race_id`=:race_id
     ORDER BY
         `r_results`.`frame_number` IS NULL,
@@ -149,19 +153,33 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $data['jockey']=$data['jockey_mst_short_name_10']?:$data['jockey'];
         }
     }
+    if($data['trainer_mst_is_enabled']==1){
+        if($data['trainer_mst_is_anonymous']==1){
+            $data['trainer']=(!$page->is_editable)?'□□□□':($data['trainer_mst_short_name_10']?:$data['trainer']);
+        }else{
+            $data['trainer']=$data['trainer_mst_short_name_10']?:$data['trainer'];
+        }
+        if($page->is_editable){}
+    }
     $table_data[]=$data;
 }
-
+$mode_umm=false;
+switch($setting->age_view_mode){
+    case Setting::AGE_VIEW_MODE_UMAMUSUME:
+    case Setting::AGE_VIEW_MODE_UMAMUSUME_S:
+        $mode_umm=true;
+}
 $empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td><td></td><td></td><td></td><td></td>";
 ?><table class="race_results">
 <tr>
 <th>枠</th><th>馬番</th>
 <th style="min-width:12em;">馬名</th>
-<th><?=h($setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME?"級":"性齢")?></th>
+<th><?=h($mode_umm?"級":"性齢")?></th>
 <th>負担<br>重量</th>
-<?php if($setting->age_view_mode!==Setting::AGE_VIEW_MODE_UMAMUSUME): ?><th>騎手</th><?php endif; ?>
+<?php if(!$mode_umm): ?><th>騎手</th><?php endif; ?>
 <th>所属</th>
-<?php if($setting->age_view_mode!==Setting::AGE_VIEW_MODE_UMAMUSUME): ?><th>馬体重</th><?php endif; ?>
+<?php if(!$mode_umm): ?><th>調教師</th><?php endif; ?>
+<?php if(!$mode_umm): ?><th>馬体重</th><?php endif; ?>
 <th>人気</th>
 <?php if($page->is_editable): ?><th>編</th><?php endif; ?>
 </tr><?php
@@ -221,10 +239,11 @@ foreach ($table_data as $data) {
 ?>
 <td class="sex_<?=h($data['sex'])?>"><?=h($age_sex_str)?></td>
 <td><?=h($data['handicap'])?></td>
-<?php if($setting->age_view_mode!==1): ?><td><?=h($data['jockey']??'')?></td><?php endif; ?>
+<?php if(!$mode_umm): ?><td><?=h($data['jockey']??'')?></td><?php endif; ?>
 <td><?=h(!empty($data['tc'])?$data['tc']:$data['horse_tc'])?></td>
-<?php if($setting->age_view_mode!==1): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>
-<td class="favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
+<?php if(!$mode_umm): ?><td><?=h($data['trainer']??'')?></td><?php endif; ?>
+<?php if(!$mode_umm): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>
+<td class="col_favourite favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
 <?php
     if(!empty($data['horse_id'])){
         $url=$page->to_app_root_path."race/horse_result/form.php?race_id={$race->race_id}&horse_id={$data['horse_id']}&edit_mode=1";
