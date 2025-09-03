@@ -290,6 +290,13 @@ if($is_sire){
     echo "｜";
     $a_tag->print();
 }
+$mode_umm=false;
+switch($setting->age_view_mode){
+    case Setting::AGE_VIEW_MODE_UMAMUSUME:
+    case Setting::AGE_VIEW_MODE_UMAMUSUME_S:
+        $mode_umm = true;
+    break;
+}
 ?>
 <hr>
 <table class="horse_history">
@@ -303,24 +310,20 @@ if($is_sire){
     $a_tag->print();
     ?></th>
     <th>開催</th><th>距離</th><th>馬場</th><th>格付</th><th>レース名</th>
-    <th><?php
-        if($setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME
-        || $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME_S){
-            print '人数';
-        }else{
-            print '頭数';
-        }
-    ?></th>
+    <th><?=$mode_umm?'人数':'頭数'?></th>
     <th>枠</th>
-    <th>人気</th><th>着順</th><th>斤量</th>
+    <th>人気</th><th>着順</th>
+    <?php if(!$mode_umm): ?><th>騎手</th><?php endif; ?>
+    <th>斤量</th>
     <th>1着馬<span class="nowrap">(2着馬)</span></th><th>　</th>
-<?php if($page->is_editable): ?><th></th><?php endif; ?>
+    <?php if($page->is_editable): ?><th></th><?php endif; ?>
 </tr><?php
 
-$FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id='') use($page,$horse_id){
+$FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id='') use($page,$horse_id,$mode_umm){
     if($non_registered_prev_race_number>0){
         print "<tr><td style=\"color:#999999;\">（{$non_registered_prev_race_number}戦～）</td>";
         print "<td></td>"."<td></td>"."<td></td>"."<td></td>"."<td>……</td>"."<td></td>"."<td></td>"."<td></td>"."<td></td>"."<td></td><td></td><td></td>";
+        if(!$mode_umm) { print "<td></td>"; }
         if($page->is_editable){
             $params=['horse_id'=>$horse_id];
             if($next_race_id!==''){
@@ -426,6 +429,21 @@ $latest_race_is_exists=false; ?>
         $h_result_txt.=h($data->result_number."着");
     }
     echo "<td class=\"result_number ".h($add_class)."\">{$h_result_txt}</td>";
+    if(!$mode_umm){
+        $jockey=$data->jockey;
+        if($data->jockey_mst_is_enabled===1){
+            if($data->jockey_mst_is_anonymous==1){
+                if($page->is_editable){
+                    $jockey = $data->jockey_mst_short_name_10?:$data->jockey;
+                }else{
+                    $jockey='□□□□';
+                }
+            }else{
+                $jockey = $data->jockey_mst_short_name_10?:$data->jockey;
+            }
+        }
+        echo "<td class=\"jockey\"".(!$data->jockey_mst_is_anonymous?'':' style="color:#999;"').">".h($jockey)."</td>";
+    }
     echo "<td class=\"handicap\">{$data->handicap}</td>";
     echo "<td class=\"r_horse\">";
     if($data->result_number == 1){ echo "("; }

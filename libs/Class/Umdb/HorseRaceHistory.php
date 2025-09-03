@@ -54,6 +54,7 @@ class HorseRaceHistory implements Iterator{
             $grade_tbl=RaceGrade::TABLE;
             $course_mst_tbl=RaceCourse::TABLE;
             $race_special_results_tbl=RaceSpecialResults::TABLE;
+            $jockey_tbl=Jockey::TABLE;
             $sql=<<<END
             SELECT
             `race`.`date`
@@ -62,10 +63,15 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`result_number`
             ,`race_results`.`result_before_demotion`
             ,`race_results`.`result_text`
+            ,`race_results`.`jockey`
             ,`race_results`.`handicap`
             ,`race_results`.`frame_number`
             ,`race_results`.`favourite`
             ,`spr`.`is_registration_only`
+            ,`jk`.`name` as `jockey_mst_name`
+            ,`jk`.`short_name_10` as `jockey_mst_short_name_10`
+            ,`jk`.`is_anonymous` as `jockey_mst_is_anonymous`
+            ,`jk`.`is_enabled` as `jockey_mst_is_enabled`
             ,`race_results`.`non_registered_prev_race_number`
             ,`race_results`.`jra_thisweek_horse_1`
             ,`race_results`.`jra_thisweek_horse_2`
@@ -84,6 +90,7 @@ class HorseRaceHistory implements Iterator{
             LEFT JOIN `{$grade_tbl}` as g ON `race`.grade LIKE g.unique_name
             LEFT JOIN `{$course_mst_tbl}` as c ON `race`.race_course_name LIKE c.unique_name AND c.is_enabled=1
             LEFT JOIN `{$race_special_results_tbl}` as spr ON `race_results`.result_text LIKE `spr`.unique_name AND `spr`.is_enabled=1
+            LEFT JOIN `{$jockey_tbl}` as `jk` ON `race_results`.`jockey`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
             WHERE `race_results`.`horse_id`=:horse_id
             ORDER BY
             `race`.`year` {$date_order},

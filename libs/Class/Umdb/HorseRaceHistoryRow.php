@@ -21,6 +21,7 @@ class HorseRaceHistoryRow{
         'result_text',
         'frame_number',
         'horse_number',
+        'jockey',
         'handicap',
 
         'date',
@@ -34,6 +35,11 @@ class HorseRaceHistoryRow{
         'non_registered_prev_race_number',
     
         'special_result_short_name_2',
+
+        'jockey_mst_name',
+        'jockey_mst_short_name_10',
+        'jockey_mst_is_anonymous',
+        'jockey_mst_is_enabled',
     ];
 
     // レース結果詳細テーブルのパラメータ
@@ -42,6 +48,7 @@ class HorseRaceHistoryRow{
     public $result_text;    // 特殊着順
     public $frame_number;
     public $horse_number;
+    public $jockey;       // 騎手
     public $handicap;       // 斤量
     public $favourite;      // 単勝人気
     public $is_registration_only;
@@ -84,6 +91,12 @@ class HorseRaceHistoryRow{
 
     // 競馬場マスタから使用するデータ
     public $race_course_mst_short_name;
+
+    // 騎手マスタから使用するデータ
+    public $jockey_mst_name;
+    public $jockey_mst_short_name_10;
+    public $jockey_mst_is_anonymous;
+    public $jockey_mst_is_enabled;
 
     // 1・2着馬
     public $r_horse_id;
