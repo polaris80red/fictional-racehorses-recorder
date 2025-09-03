@@ -82,7 +82,7 @@ do{
             break;
         }
     }
-    $trainer_name=$trainer->name?:$horse->trainer;
+    $trainer_name=$trainer->name?:($trainer->short_name_10?:$horse->trainer);
 }while(false);
 
 $session->latest_horse=[
