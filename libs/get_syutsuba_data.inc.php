@@ -7,6 +7,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         $race_results_tbl=RaceResults::TABLE;
         $race_special_results_tbl=RaceSpecialResults::TABLE;
         $jockey_tbl=Jockey::TABLE;
+        $trainer_tbl=Trainer::TABLE;
         $sql=<<<END
         SELECT
         `r_results`.*
@@ -26,12 +27,20 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`jk`.`short_name_10` as `jockey_mst_short_name_10`
         ,`jk`.`is_anonymous` as `jockey_mst_is_anonymous`
         ,`jk`.`is_enabled` as `jockey_mst_is_enabled`
+        ,`trainer`.`short_name_10` as `trainer_mst_short_name_10`
+        ,`trainer`.`is_anonymous` as `trainer_mst_is_anonymous`
+        ,`trainer`.`is_enabled` as `trainer_mst_is_enabled`
+        ,`race_trainer`.`short_name_10` as `race_trainer_mst_short_name_10`
+        ,`race_trainer`.`is_anonymous` as `race_trainer_mst_is_anonymous`
+        ,`race_trainer`.`is_enabled` as `race_trainer_mst_is_enabled`
         FROM `{$race_tbl}` AS `race`
         LEFT JOIN `{$race_results_tbl}` AS `r_results`
             ON `race`.`race_id`=`r_results`.`race_id`
         LEFT JOIN `{$horse_tbl}` AS `Horse` ON `r_results`.`horse_id`=`Horse`.`horse_id`
         LEFT JOIN `{$race_special_results_tbl}` as spr ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
         LEFT JOIN `{$jockey_tbl}` as `jk` ON `r_results`.`jockey`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
+        LEFT JOIN `{$trainer_tbl}` as `trainer` ON `Horse`.`trainer`=`trainer`.`unique_name` AND `trainer`.`is_enabled`=1
+        LEFT JOIN `{$trainer_tbl}` as `race_trainer` ON `r_results`.`trainer`=`race_trainer`.`unique_name` AND `race_trainer`.`is_enabled`=1
         WHERE `race`.`race_id`=:race_id
         ORDER BY
         IFNULL(`r_results`.`frame_number`,32) ASC,

@@ -12,6 +12,11 @@ $page->title="出馬表";
 $session=new Session();
 // 暫定でログイン＝編集可能
 $page->is_editable=Session::is_logined();
+// ログイン中でも強制的にプレビュー表示にできるパラメータ
+$is_preview=filter_input(INPUT_GET,'preview',FILTER_VALIDATE_BOOL);
+if($is_preview){
+    $page->is_editable=false;
+}
 
 $page->error_return_url=$page->to_race_list_path;
 $page->error_return_link_text="レース検索に戻る";
@@ -148,7 +153,21 @@ foreach ($table_data as $data) {
         echo "<span style=\"\"> (".($data['training_country']?:$data['horse_training_country']).")</span> ";
     }
     echo "<br>";
-    echo "□□□□";
+    $trainer=$data['trainer']?:'□□□□';
+    if($data['race_trainer_mst_is_enabled']==1){
+        if($data['race_trainer_mst_is_anonymous']==1){
+            $trainer=(!$page->is_editable)?'□□□□':($data['race_trainer_mst_short_name_10']?:$data['trainer']);
+        }else{
+            $trainer=$data['race_trainer_mst_short_name_10']?:$data['trainer'];
+        }
+    }else if($data['trainer_mst_is_enabled']==1){
+        if($data['trainer_mst_is_anonymous']==1){
+            $trainer=(!$page->is_editable)?'□□□□':($data['trainer_mst_short_name_10']?:$data['trainer']);
+        }else{
+            $trainer=$data['trainer_mst_short_name_10']?:$data['trainer'];
+        }
+    }
+    print_h($trainer);
     if(!empty($data['tc'])){
         echo "（{$data['tc']}）";
     }else{
