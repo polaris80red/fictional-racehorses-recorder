@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,3).'/libs/init.php';
-defineAppRootRelPath(3);
+InAppUrl::init(3);
 $page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -49,8 +49,7 @@ try{
         $redirect_url=$page->getRaceResultUrl($race->race_id);
         if($horse_id!==''){
             // 新規登録かつ競走馬ID指定の場合は個別結果登録画面に転送
-            $urlparam=new UrlParams(['horse_id'=>$horse_id,'race_id'=>$race->race_id]);
-            $redirect_url=APP_ROOT_REL_PATH.'race/horse_result/form.php?'.$urlparam;
+            $redirect_url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$horse_id,'race_id'=>$race->race_id]);
         }
     }
     $pdo->commit();
