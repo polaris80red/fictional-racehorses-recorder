@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
-defineAppRootRelPath(2);
+InAppUrl::init(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -21,7 +21,7 @@ if($search->SelectExec($pdo)){
 // 検索結果が1件の場合のみ転送
 if(count($search_results)===1 && $search->executed_by_form){
     $id=$search_results[0]['horse_id'];
-    redirect_exit($page->to_app_root_path."horse/?horse_id=".$id);
+    redirect_exit(InAppUrl::to('horse/',['horse_id'=>$id]));
 }
 $horse_id_is_visibled = filter_var($search->horse_id_is_visibled,FILTER_VALIDATE_BOOLEAN);
 
@@ -114,25 +114,22 @@ if($search->limit>0){
 <?php foreach($search_results as $row): ?>
 <tr>
     <?php if($horse_id_is_visibled): ?><td><?=h($row['horse_id'])?></td><?php endif; ?>
-    <?php $url="{$page->to_app_root_path}horse/?horse_id={$row['horse_id']}"; ?>
-    <td><?php
+    <?php
     $name=$row['name_ja']?:$row['name_en'];
-    $a_tag = new MkTagA($name?:ANNONYMOUS_HORSE_NAME,$url);
+    $a_tag = new MkTagA($name?:ANNONYMOUS_HORSE_NAME,InAppUrl::to('horse',['horse_id'=>$row['horse_id']]));
     if(!$name){
         $a_tag->title("競走馬ID：{$row['horse_id']}");
     }
-    $a_tag->print();
-    ?></td>
-    <td><?php
+    ?><td><?=$a_tag?></td>
+    <?php
         if($row['birth_year']>0){
             $birth_year_str=$setting->getBirthYearFormat($row['birth_year'],false);
             $a_tag=new MkTagA($birth_year_str);
             if($row['birth_year']!=='' && $search->birth_year===''){
                 $a_tag->href("./?".$search->getUrlParam($search_reset_array)."&birth_year=".$row['birth_year']);
             }
-            $a_tag->print();
         }
-    ?></td>
+    ?><td><?=$a_tag?></td>
     <td><a><?=h($row['color'])?></a></td>
     <td><a><?=h(sex2String($row['sex']))?></a></td>
     <td><a><?=h($row['tc'])?></a></td>
@@ -199,7 +196,7 @@ if($search->limit>0){
 <?php endif; ?>
 <?php if($page->is_editable): ?>
 <hr>
-<a href="<?php echo $page->to_app_root_path; ?>horse/form.php">競走馬新規登録</a><br>
+<a href="<?=InAppUrl::to('horse/form.php')?>">競走馬新規登録</a><br>
 <?php endif; /* is_editable */ ?>
 <hr class="no-css-fallback">
 </main>
