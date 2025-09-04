@@ -276,7 +276,7 @@ class HorseSearch extends Search{
             $where_parts[]='h.`birth_year` = :birth_year';
             $pre_bind->add(':birth_year', $this->birth_year, PDO::PARAM_INT);
         }else if($this->null_birth_year){
-            $where_parts[]='`birth_year` IS NULL';
+            $where_parts[]='h.`birth_year` IS NULL';
         }
         if($this->sire_id!=''){
             $where_parts[]='h.`sire_id` LIKE :sire_id';
