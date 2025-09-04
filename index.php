@@ -29,9 +29,6 @@ $page->is_editable=SESSION::is_logined();
 <?php HorseSearch::printSimpleForm($page); ?>
 <hr>
 <?php TemplateImporter::include('index.description.inc.php'); ?>
-<a href="<?php echo $page->to_horse_search_path; ?>?reset=true">競走馬検索</a><br>
-<a href="<?=h(InAppUrl::to('race/search.php?',['search_reset'=>1]))?>">レース検索</a><br>
-<hr>
 <?php
 $year_min=$setting->select_zero_year - $setting->year_select_min_diff;
 $year_max=$setting->select_zero_year + $setting->year_select_max_diff;
@@ -50,10 +47,14 @@ $url_param=['session_is_not_update'=>1,'search_detail_tgl_status'=>'open'];
             if($setting->year_view_mode==2){ echo "年"; }
         ?></a>｜
         <a href="<?=h(InAppUrl::to($race_list_url,array_merge($url_param,['grade_g1'=>1,'show_organization_jra'=>1,'limit'=>30])))?>">[中央G1]</a>｜
-        <a href="<?=h(InAppUrl::to($race_list_url,array_merge($url_param,['grade_g1'=>1,'grade_g2'=>1,'grade_g3'=>1,'show_organization_jra'=>1,'limit'=>150])))?>">[中央重賞]</a>
+        <a href="<?=h(InAppUrl::to($race_list_url,array_merge($url_param,['grade_g1'=>1,'grade_g2'=>1,'grade_g3'=>1,'show_organization_jra'=>1,'limit'=>150])))?>">[中央重賞]</a>｜
+        <a href="<?=h(InAppUrl::to("horse/search/",['birth_year'=>($i-3)]))?>">[世代馬]</a>
     </li>
 <?php endfor; ?>
 </ul>
+<hr>
+<a href="<?php echo $page->to_horse_search_path; ?>?reset=true">競走馬検索</a><br>
+<a href="<?=h(InAppUrl::to('race/search.php?',['search_reset'=>1]))?>">レース検索</a><br>
 <?php if($page->is_editable){ ?>
 <hr>
 <a href="<?=h(InAppUrl::to('horse/form.php'))?>">競走馬新規登録</a><br>
