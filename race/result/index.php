@@ -398,7 +398,7 @@ if($data['result_text']!=''){
         <td><a href="<?=$url?>">このレースの情報を編集</a></td>
 <?php $url=APP_ROOT_REL_PATH."race/horse_result/form.php?race_id={$race->race_id}"; ?>
         <td><a href="<?=h($url)?>">このレースに戦績を追加</a></td>
-        <td><a href="<?=APP_ROOT_REL_PATH?>race/update_race_result_id/form.php?race_id=<?=h($race->race_id)?>&edit_mode=1">レースID修正</a></td>
+        <td><a href="<?=APP_ROOT_REL_PATH?>race/manage/update_race_result_id/?race_id=<?=h($race->race_id)?>&edit_mode=1">レースID修正</a></td>
     </tr>
     <tr>
 <?php
