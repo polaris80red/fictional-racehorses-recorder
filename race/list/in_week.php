@@ -165,7 +165,7 @@ if($next_month>=13){
     $url_param_str=$url_params->toString(['year'=>$next_year,'month'=>$next_month,'turn'=>$next_turn]);
     echo (new MkTagA('次ターン',"?{$url_param_str}"));
     if(Session::is_logined()){
-        echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/result/form.php?year={$year}&month={$month}\">この月のレースを登録</a> ]";
+        echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/manage/edit/?year={$year}&month={$month}\">この月のレースを登録</a> ]";
     }
 ?>
 <?php elseif($week_id==0): ?>
@@ -176,7 +176,7 @@ if($next_month>=13){
     $url_param_str=$url_params->toString(['year'=>$next_year,'month'=>$next_month]);
     echo (new MkTagA('次月',"?{$url_param_str}"));
     if(Session::is_logined()){
-        echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/result/form.php?year={$year}&month={$month}\">この月のレースを登録</a> ]";
+        echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/manage/edit/?year={$year}&month={$month}\">この月のレースを登録</a> ]";
     }
 ?>
 <?php elseif($week_id!=0): ?>
@@ -201,7 +201,7 @@ if($next_month>=13){
 if(Session::is_logined()){
     $week_obj=RaceWeek::getById($pdo,$week_id);
     $week_name=$week_obj?$week_obj->name:'';
-    echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/result/form.php?year={$year}&week_id={$week_id}\">この週のレースを登録</a> ]";
+    echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/manage/edit/?year={$year}&week_id={$week_id}\">この週のレースを登録</a> ]";
 }
 ?>
 <?php endif; ?>
@@ -255,7 +255,7 @@ foreach($table_data as $data){
         $week_obj=RaceWeek::getById($pdo,$data['week_id']);
         $week_name=$week_obj?$week_obj->name:'';
         if(Session::is_logined()){
-            echo "　<a href=\"".APP_ROOT_REL_PATH."race/result/form.php?{$new_race_url_param}\">この週のレースを登録｜第{$data['week_id']}週（{$week_name}）</a>";
+            echo "　<a href=\"".APP_ROOT_REL_PATH."race/manage/edit/?{$new_race_url_param}\">この週のレースを登録｜第{$data['week_id']}週（{$week_name}）</a>";
         }else{
             echo "第{$data['week_id']}週（{$week_name}）";
         }

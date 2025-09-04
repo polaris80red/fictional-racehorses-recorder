@@ -591,7 +591,7 @@ if($registration_only_race_is_exists||$show_registration_only){
         <td colspan="3" style="text-align: right;">
 <?php
 $params=['horse_id'=>$horse->horse_id];
-$url='race/result/form.php';
+$url='race/manage/edit/';
 $params['year']=$horse->birth_year+2;
 echo (new MkTagA('[2歳年]'))->href(InAppUrl::to($url,$params));
 echo "　";

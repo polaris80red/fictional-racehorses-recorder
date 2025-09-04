@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once dirname(__DIR__,2).'/libs/init.php';
-defineAppRootRelPath(2);
-$page=new Page(2);
+require_once dirname(__DIR__,3).'/libs/init.php';
+defineAppRootRelPath(3);
+$page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果情報登録";
@@ -77,7 +77,7 @@ if(count($race_course_list_results)>0){
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<form action="registration_confirm.php" method="post">
+<form action="./confirm.php" method="post">
 <input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0; ?>">
 
 <table class="edit-form-table">
@@ -359,7 +359,7 @@ HTPrint::DataList('distance_list',[
     ]);
 ?>
 <?php if($is_edit_mode): ?>
-<form action="./delete/" method="post" style="text-align:right;">
+<form action="../delete/" method="post" style="text-align:right;">
 <input type="hidden" name="race_id" value="<?=h($race_id)?>">
 <input type="submit" value="レース結果データ削除確認" style="color:red;">
 </form>

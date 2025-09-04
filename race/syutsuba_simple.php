@@ -279,7 +279,7 @@ foreach ($table_data as $data) {
 <input type="hidden" id="edit_menu_states" value="0">
 <table>
     <tr>
-<?php $url=APP_ROOT_REL_PATH."race/result/form.php?race_id={$race->race_id}&edit_mode=1"; ?>
+<?php $url=APP_ROOT_REL_PATH."race/manage/edit/?race_id={$race->race_id}&edit_mode=1"; ?>
         <td><a href="<?=$url?>">このレースの情報を編集</a></td>
 <?php $url=APP_ROOT_REL_PATH."race/horse_result/form.php?race_id={$race->race_id}"; ?>
         <td><a href="<?=h($url)?>">このレースに戦績を追加</a></td>
@@ -313,7 +313,7 @@ if($latest_horse->record_exists){
     </tr>
     <tr>
         <td>
-<a href="<?=APP_ROOT_REL_PATH?>race/result/form.php?race_id=<?=h($race->race_id);?>&edit_mode=0">コピーして新規登録</a>
+<a href="<?=APP_ROOT_REL_PATH?>race/manage/edit/?race_id=<?=h($race->race_id);?>&edit_mode=0">コピーして新規登録</a>
         </td>
 <?php
     $a_tag=new MkTagA('同日同場で新規登録');
@@ -322,14 +322,14 @@ if($latest_horse->record_exists){
         $urlparam=new UrlParams([
             'date'=>$race->date,
             'race_course_name'=>$race->race_course_name]);
-        $a_tag->href(APP_ROOT_REL_PATH."race/result/form.php?".$urlparam);
+        $a_tag->href(APP_ROOT_REL_PATH."race/manage/edit/?".$urlparam);
     }else{
         $a_tag->setLinkText('同週同場で新規登録');
         $urlparam=new UrlParams([
             'year'=>$race->year,
             'week_id'=>$race->week_id,
             'race_course_name'=>$race->race_course_name]);
-        $a_tag->href(APP_ROOT_REL_PATH."race/result/form.php?".$urlparam);
+        $a_tag->href(APP_ROOT_REL_PATH."race/manage/edit/?".$urlparam);
     }
     ?>
         <td><?=$a_tag?></td>

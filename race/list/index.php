@@ -79,7 +79,7 @@ $search->current_page_results_count=count($table_data);
  <a href="?year=<?=$next?>&<?=h($search->getUrlParam(['year','page']))?>">[翌年へ]</a>
 <hr>
 <?php endif; ?>
-<form method="get" action="<?=APP_ROOT_REL_PATH?>race/duplicate/form.php">
+<form method="get" action="<?=APP_ROOT_REL_PATH?>race/manage/duplicate/">
 <?php if($page->is_editable && $search->is_one_year_only): ?>
 <input type="button" value="全てチェック" onclick="toggleIdList();">
 <input type="submit" value="チェックしたレースを一括複写">

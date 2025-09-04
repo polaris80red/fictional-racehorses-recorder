@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once dirname(__DIR__,2).'/libs/init.php';
-defineAppRootRelPath(2);
-$page=new Page(2);
+require_once dirname(__DIR__,3).'/libs/init.php';
+defineAppRootRelPath(3);
+$page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果登録実行";

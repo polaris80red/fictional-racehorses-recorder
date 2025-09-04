@@ -58,7 +58,7 @@ $url_param=['session_is_not_update'=>1,'search_detail_tgl_status'=>'open'];
 <?php if($page->is_editable){ ?>
 <hr>
 <a href="<?=h(InAppUrl::to('horse/form.php'))?>">競走馬新規登録</a><br>
-<a href="<?=h(InAppUrl::to('race/result/form.php'))?>">レース結果新規登録</a><br>
+<a href="<?=h(InAppUrl::to('race/manage/edit/'))?>">レース結果新規登録</a><br>
 <?php } ?>
 <hr>
 <a href="<?=h(InAppUrl::to('race/list/access_history.php'))?>">最近アクセスしたレースの一覧</a><br>
