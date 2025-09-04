@@ -17,12 +17,19 @@ class HorseRaceHistoryRow{
         'number_of_starters',
         'favourite',
         'result_number',
+        'result_order',
         'result_before_demotion',
         'result_text',
         'frame_number',
         'horse_number',
         'jockey',
         'handicap',
+        
+        'tc',
+        'trainer',
+        'training_country',
+        'sex',
+        'is_affliationed_nar',
 
         'date',
         'is_tmp_date',
@@ -44,6 +51,7 @@ class HorseRaceHistoryRow{
 
     // レース結果詳細テーブルのパラメータ
     public $result_number;  // 着順
+    public $result_order;  // 着順補正
     public $result_before_demotion;    // 降着馬入線順
     public $result_text;    // 特殊着順
     public $frame_number;
@@ -53,6 +61,12 @@ class HorseRaceHistoryRow{
     public $favourite;      // 単勝人気
     public $is_registration_only;
     public $non_registered_prev_race_number;
+    
+    public $tc;
+    public $trainer;
+    public $training_country;
+    public $sex;
+    public $is_affliationed_nar;
 
     // レース結果テーブルに存在する列
     public $race_id;

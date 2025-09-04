@@ -61,11 +61,13 @@ class HorseRaceHistory implements Iterator{
             ,`race`.`race_course_name`
             ,`race`.`race_name`
             ,`race_results`.`result_number`
-            ,`race_results`.`result_before_demotion`
             ,`race_results`.`result_text`
+            ,`race_results`.`result_order`
+            ,`race_results`.`result_before_demotion`
             ,`race_results`.`jockey`
             ,`race_results`.`handicap`
             ,`race_results`.`frame_number`
+            ,`race_results`.`horse_number`
             ,`race_results`.`favourite`
             ,`spr`.`is_registration_only`
             ,`jk`.`name` as `jockey_mst_name`
@@ -75,6 +77,11 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`non_registered_prev_race_number`
             ,`race_results`.`jra_thisweek_horse_1`
             ,`race_results`.`jra_thisweek_horse_2`
+            ,`race_results`.`tc`
+            ,`race_results`.`trainer`
+            ,`race_results`.`training_country`
+            ,`race_results`.`sex`
+            ,`race_results`.`is_affliationed_nar`
             ,`race`.`race_id`
             ,`race`.*
             ,w.month AS `w_month`

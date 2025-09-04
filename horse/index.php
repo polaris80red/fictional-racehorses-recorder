@@ -554,6 +554,10 @@ if($registration_only_race_is_exists||$show_registration_only){
             <?=(new MkTagA('競走馬ID修正',"./update_horse_id/form.php?horse_id=".urlencode($horse->horse_id)))?>
         </td>
     </tr>
+    <tr>
+        <td><?=(new MkTagA('レース結果一括編集',$race_history->race_count_all>0?InAppUrl::to('horse/bulk_edit/',['horse_id'=>$horse_id]):''))?></td>
+        <td></td><td></td>
+    </tr>
 <?php if($horse->birth_year!==null): ?>
     <tr>
         <td colspan="2">
