@@ -141,6 +141,10 @@ function getWeekByDate($input_date){
     while ($arima_date->format('w') != 0) {
         $arima_date->modify('-1 day');
     }
+    // 有馬記念より後は日数差に関係なく第52週に補正
+    if($date>$arima_date){
+        return 52;
+    }
     // 有馬記念が52になる週数に補正
     $diff=$date->diff($arima_date);
     $diff_days=$diff->days;
