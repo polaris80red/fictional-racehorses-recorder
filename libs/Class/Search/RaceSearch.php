@@ -32,6 +32,7 @@ class RaceSearch extends Search{
     const Grade_All     = 0b001111111111;
 
     public $show_disabled=false;
+    public $show_empty=true;
 
     public $race_course='';
 
@@ -58,6 +59,8 @@ class RaceSearch extends Search{
     public $session_is_not_update=false;
 
     function __construct($do_set=false){
+        // 結果無しレースの検索初期値はログイン中オン・非ログインはオフ
+        $this->show_empty=Session::is_logined()?true:false;
         if($do_set){
             $this->setByUrl();
         }
@@ -162,7 +165,11 @@ class RaceSearch extends Search{
         
         $this->max_year_is_enabled_for_generation_search=filter_input(INPUT_GET,'max_year_is_enabled_for_generation_search',FILTER_VALIDATE_BOOL);
         $this->show_disabled=filter_input(INPUT_GET,'show_disabled',FILTER_VALIDATE_BOOL);
-
+        // 入力値が空の場合はデフォルト値、明示的に指定されている場合に適用
+        $show_empty=(string)filter_input(INPUT_GET,'show_empty');
+        if($show_empty!==''){
+            $this->show_empty=filter_var($show_empty,FILTER_VALIDATE_BOOL);
+        }
         $limit=filter_input(INPUT_GET,'limit');
         if(isset($_GET['limit']) && $limit!==''){
             $this->limit=$limit;
@@ -182,7 +189,7 @@ class RaceSearch extends Search{
                 'grade',
                 'race_course',
                 'course_type_tf','course_type_dt','course_type_hd',
-                'distance','show_disabled',
+                'distance','show_disabled','show_empty',
                 'limit','page',
                 'max_year_is_enabled_for_generation_search',
                 'search_detail_tgl_status',
@@ -225,7 +232,7 @@ class RaceSearch extends Search{
             'show_organization_other',
             'race_course',
             'course_type_tf','course_type_dt','course_type_hd',
-            'distance','show_disabled',
+            'distance','show_disabled','show_empty',
             'limit','page',
             'max_year_is_enabled_for_generation_search',
             'search_detail_tgl_status'
@@ -528,7 +535,11 @@ class RaceSearch extends Search{
         if(!$this->show_disabled){
             $where_parts[]="r.`is_enabled`=1";
         }
-        
+
+        // 結果値0件のレースを除外する
+        if(!$this->show_empty){
+            $where_parts[]="EXISTS( SELECT 1 FROM `".RaceResults::TABLE."` AS `rr` WHERE r.`race_id`=`rr`.`race_id` )";
+        }
         if($this->world_id>0){
             $where_parts[]="r.`world_id`=:world_id";
             $pre_bind->add(':world_id', $this->world_id, PDO::PARAM_INT);
@@ -711,8 +722,10 @@ foreach([20=>20, 24=>"24（中央平地G1）", 25=>25, 26=>"26（中央G1）", 3
 </select>件
 <input type="hidden" name="page" value="0">
 <input type="hidden" name="session_is_not_update" value="0">
-<span style="white-space:nowrap;"><label><input type="checkbox" name="session_is_not_update" value="1">条件をセッションに保存しない</label></span>
+<span style="white-space:nowrap;"><label><input type="checkbox" name="session_is_not_update" value="1">条件をセッションに保存しない</label></span><br>
 <span style="white-space:nowrap;"><label><input type="checkbox" name="show_disabled" value="1"<?php HTPrint::CheckedIfNotEmpty($this->show_disabled); ?>>非表示レースを表示</label></span>
+<input type="hidden" name="show_empty" value="false">
+<span style="white-space:nowrap;"><label><input type="checkbox" name="show_empty" value="true"<?php HTPrint::CheckedIfNotEmpty($this->show_empty); ?>>結果未登録レースを表示</label></span>
 <hr>
 <span style="white-space:nowrap;"><a href="?search_reset=1">[初期化して開きなおす]</a></span>
 </div>
