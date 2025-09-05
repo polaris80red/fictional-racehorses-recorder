@@ -41,6 +41,9 @@ if(!$race->record_exists){
     $page->printCommonErrorPage();
     exit;
 }
+if(ENABLE_ACCESS_COUNTER){
+    ArticleCounter::countup($pdo,ArticleCounter::TYPE_RACE_SYUTSUBA_SIMPLE,$race_id);
+}
 $session->latest_race=[
     'id'=>$race_id,
     'year'=>$race->year,

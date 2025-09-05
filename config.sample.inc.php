@@ -37,6 +37,13 @@ $cfg['SHOW_LOGIN_LINK']=true;
  *  false   :ログインするには「アプリのルート/admin/」にアクセスしてください
  */
 
+// 表示回数カウントのオン・オフ
+$cfg['ENABLE_ACCESS_COUNTER']=false;
+/**   ENABLE_ACCESS_COUNTER
+ *  true    :競走馬ページなどの表示回数を記録します
+ *  false   :記録しません（独自のカウンターを設置する場合など）
+ */
+
 // 読み取り専用モード（簡易的なWEB公開用設定）
 $cfg['READONLY_MODE']=false;
 /**   READONLY_MODE

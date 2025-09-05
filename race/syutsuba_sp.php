@@ -45,6 +45,9 @@ if(!$race->record_exists){
     $page->printCommonErrorPage();
     exit;
 }
+if(ENABLE_ACCESS_COUNTER){
+    ArticleCounter::countup($pdo,ArticleCounter::TYPE_RACE_SYUTSUBA_SP,$race_id);
+}
 $week_data=RaceWeek::getById($pdo,$race->week_id);
 $week_month=$week_data->month;
 $turn=$week_data->umm_month_turn;

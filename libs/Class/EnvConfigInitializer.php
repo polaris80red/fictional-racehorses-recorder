@@ -29,6 +29,9 @@ class EnvConfigInitializer {
         if(READONLY_MODE){ $show_login_link=false; }
         define('SHOW_LOGIN_LINK',$show_login_link);
 
+        define('ENABLE_ACCESS_COUNTER',
+            filter_var($cfg['ENABLE_ACCESS_COUNTER'],FILTER_VALIDATE_BOOL));
+
         define('SHOW_PARENT_SITE_LINK',
             filter_var($cfg['SHOW_PARENT_SITE_LINK'],FILTER_VALIDATE_BOOL));
         define('PARENT_SITE_LINK_TEXT',$cfg['PARENT_SITE_LINK_TEXT']);

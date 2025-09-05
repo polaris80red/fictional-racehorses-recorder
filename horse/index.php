@@ -59,6 +59,9 @@ if(!$horse->record_exists){
     $page->printCommonErrorPage();
     exit;
 }
+if(ENABLE_ACCESS_COUNTER){
+    ArticleCounter::countup($pdo,ArticleCounter::TYPE_HORSE,$horse_id);
+}
 $sire=new Horse();
 if($horse->sire_id){
     $sire->setDataById($pdo,$horse->sire_id);
