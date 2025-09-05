@@ -125,7 +125,7 @@ class Race extends Table{
         if($this->date!=''){
             $datetime=new dateTime($this->date);
         }
-        $this->is_tmp_date=filter_input(INPUT_POST,'is_tmp_date');
+        $this->is_tmp_date=$this->date!=''?filter_input(INPUT_POST,'is_tmp_date'):1;
         $this->year=filter_input(INPUT_POST,'year')?:filter_input(INPUT_POST,'year_select');
         if(empty($this->year)){
             if($datetime!==null){
