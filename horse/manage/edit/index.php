@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once dirname(__DIR__).'/libs/init.php';
-defineAppRootRelPath(1);
-$page=new Page(1);
+require_once dirname(__DIR__,3).'/libs/init.php';
+defineAppRootRelPath(3);
+$page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="競走馬登録";
@@ -44,7 +44,7 @@ $world_list=World::getAll($pdo);
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<form action="registration_confirm.php" method="post">
+<form action="./confirm.php" method="post">
 <input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0;?>">
 <table class="edit-form-table">
 <tr>
@@ -232,7 +232,7 @@ if(count($affiliation_list)>0){
 </form>
 <?php if($is_edit_mode){ ?>
 <hr>
-<form action="./delete/" method="post" style="text-align:right;">
+<form action="../delete/" method="post" style="text-align:right;">
 <input type="hidden" name="horse_id" value="<?=h($horse_id)?>">
 <input type="submit" value="競走馬データ削除確認" style="color:red;">
 </form>

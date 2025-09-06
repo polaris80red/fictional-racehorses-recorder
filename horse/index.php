@@ -528,7 +528,7 @@ if($registration_only_race_is_exists||$show_registration_only){
 <table>
     <tr>
         <td>
-            <?=(new MkTagA('この馬の情報を編集',InAppUrl::to('horse/form.php',['horse_id'=>$page->horse->horse_id])))?>
+            <?=(new MkTagA('この馬の情報を編集',InAppUrl::to('horse/manage/edit/',['horse_id'=>$page->horse->horse_id])))?>
         </td>
         <td>
 <?php
@@ -543,11 +543,11 @@ if($registration_only_race_is_exists||$show_registration_only){
 ?>
         </td>
         <td>
-            <?=(new MkTagA('競走馬ID修正',"./update_horse_id/form.php?horse_id=".urlencode($page->horse->horse_id)))?>
+            <?=(new MkTagA('競走馬ID修正',"./manage/update_horse_id/?horse_id=".urlencode($page->horse->horse_id)))?>
         </td>
     </tr>
     <tr>
-        <td><?=(new MkTagA('レース結果一括編集',$race_history->race_count_all>0?InAppUrl::to('horse/bulk_edit/',['horse_id'=>$page->horse->horse_id]):''))?></td>
+        <td><?=(new MkTagA('レース結果一括編集',$race_history->race_count_all>0?InAppUrl::to('horse/manage/bulk_edit/',['horse_id'=>$page->horse->horse_id]):''))?></td>
         <td></td><td></td>
     </tr>
 <?php if($page->horse->birth_year!==null): ?>

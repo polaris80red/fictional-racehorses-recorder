@@ -196,7 +196,7 @@ if($search->limit>0){
 <?php endif; ?>
 <?php if($page->is_editable): ?>
 <hr>
-<a href="<?=InAppUrl::to('horse/form.php')?>">競走馬新規登録</a><br>
+<a href="<?=h(InAppUrl::to('horse/manage/edit/'))?>">競走馬新規登録</a><br>
 <?php endif; /* is_editable */ ?>
 <hr class="no-css-fallback">
 </main>
