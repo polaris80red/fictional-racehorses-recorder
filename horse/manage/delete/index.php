@@ -58,7 +58,7 @@ th{
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?=h($page->title)?></h1>
+<h1 class="page_title" style="color:red;"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
