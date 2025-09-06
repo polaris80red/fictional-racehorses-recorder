@@ -203,8 +203,8 @@ $nar_override=0;
         $has_change=true;
         $changed->handicap=true;
     }
-    if((string)$race_result->jockey!==(string)$posted_race->jockey){
-        $race_result->jockey=$posted_race->jockey?:null;
+    if((string)$race_result->jockey_unique_name!==(string)$posted_race->jockey){
+        $race_result->jockey_unique_name=$posted_race->jockey?:null;
         $has_change=true;
         $changed->jockey=true;
     }
@@ -320,8 +320,8 @@ $nar_override=0;
     <input type="hidden" name="race[<?=h($data->race_id)?>][result_before_demotion]" value="<?=h($race_result->result_before_demotion)?>">
 </td>
 <td class="<?=!$changed->jockey?'':'changed'?>">
-    <?=h($race_result->jockey)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][jockey]" value="<?=h($race_result->jockey)?>">
+    <?=h($race_result->jockey_unique_name)?>
+    <input type="hidden" name="race[<?=h($data->race_id)?>][jockey]" value="<?=h($race_result->jockey_unique_name)?>">
 </td>
 <td class="handicap <?=!$changed->handicap?'':'changed'?>">
     <?=h($race_result->handicap)?>

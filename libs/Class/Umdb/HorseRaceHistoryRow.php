@@ -10,7 +10,7 @@ class HorseRaceHistoryRow{
         'result_text',
         'frame_number',
         'horse_number',
-        'jockey',
+        'jockey_unique_name',
         'handicap',
         
         'tc',
@@ -37,7 +37,7 @@ class HorseRaceHistoryRow{
     public $result_text;    // 特殊着順
     public $frame_number;
     public $horse_number;
-    public $jockey;       // 騎手
+    public $jockey_unique_name; // 騎手
     public $handicap;       // 斤量
     public $favourite;      // 単勝人気
     public $is_registration_only;

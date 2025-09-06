@@ -138,7 +138,7 @@ $sql=(function(){
     LEFT JOIN `{$race_special_results_tbl}` as spr
         ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
     LEFT JOIN `{$jockey_tbl}` as `jk`
-        ON `r_results`.`jockey`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
+        ON `r_results`.`jockey_unique_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
     LEFT JOIN `{$trainer_tbl}` as `trainer`
         ON `{$horse_tbl}`.`trainer`=`trainer`.`unique_name` AND `trainer`.`is_enabled`=1
     LEFT JOIN `{$trainer_tbl}` as `race_trainer`
@@ -165,11 +165,12 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $data['sex']=(int)($data['sex']?:$data['horse_sex']);
     $data['sex_str']=sex2String($data['sex']);
     $data['age']=empty($data['birth_year'])?'':($race->year-$data['birth_year']);
+    $data['jocky_name']='';
     if($data['jockey_mst_is_enabled']==1){
         if($data['jockey_mst_is_anonymous']==1){
-            $data['jockey']=(!$page->is_editable)?'□□□□':($data['jockey_mst_short_name_10']?:$data['jockey']);
+            $data['jocky_name']=(!$page->is_editable)?'□□□□':($data['jockey_mst_short_name_10']?:$data['jockey_unique_name']);
         }else{
-            $data['jockey']=$data['jockey_mst_short_name_10']?:$data['jockey'];
+            $data['jocky_name']=$data['jockey_mst_short_name_10']?:$data['jockey_unique_name'];
         }
         if($page->is_editable){}
     }
@@ -318,7 +319,7 @@ if($data['result_text']!=''){
 </td>
 <td><?=h($data['handicap'])?></td>
 <?php if($setting->age_view_mode!==1): ?>
-<td><?=h($data['jockey']??'')?></td>
+<td><?=h($data['jocky_name']??'')?></td>
 <?php endif; ?>
 <td><?=h($data['margin'])?></td>
 <?php

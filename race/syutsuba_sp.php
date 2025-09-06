@@ -186,12 +186,12 @@ foreach ($table_data as $data) {
 if($data['color']){ print_h("/".$data['color']);}
 if($data['handicap']){ print_h(" ".$data['handicap']."kg");}
 
-$jockey=$data['jockey']?:'□□□□';
+$jockey=$data['jockey_unique_name']?:'□□□□';
 if($data['jockey_mst_is_enabled']==1){
     if($data['jockey_mst_is_anonymous']==1){
-        $jockey=(!$page->is_editable)?'□□□□':($data['jockey_mst_short_name_10']?:$data['jockey']);
+        $jockey=(!$page->is_editable)?'□□□□':($data['jockey_mst_short_name_10']?:$data['jockey_unique_name']);
     }else{
-        $jockey=$data['jockey_mst_short_name_10']?:$data['jockey'];
+        $jockey=$data['jockey_mst_short_name_10']?:$data['jockey_unique_name'];
     }
 }
 echo "<br>".h($jockey);
@@ -270,12 +270,12 @@ foreach($data['horse_results'] as $prev_race){
         echo "<div>";
         echo "<div style=\"display:inline-block;float:left;\">";
         echo "<span style=\"\" class=\"ib grade\">".h($r->grade_short_name??$r->grade)."</span><br>";
-        $jockey=$r->jockey?:'□□□□';
+        $jockey=$r->jockey_unique_name?:'□□□□';
         if($r->jockey_mst_is_enabled==1){
             if($r->jockey_mst_is_anonymous==1){
-                $jockey=(!$page->is_editable)?'□□□□':($r->jockey_mst_short_name_10?:$r->jockey);
+                $jockey=(!$page->is_editable)?'□□□□':($r->jockey_mst_short_name_10?:$r->jockey_unique_name);
             }else{
-                $jockey=$r->jockey_mst_short_name_10?:$r->jockey;
+                $jockey=$r->jockey_mst_short_name_10?:$r->jockey_unique_name;
             }
         }
         echo "<span>".h($jockey)."</span>";

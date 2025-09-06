@@ -18,11 +18,11 @@ $current_page=max(filter_input(INPUT_GET,'page',FILTER_VALIDATE_INT),1);
 // $per_page = ($input_per_page===0?'10':$input_per_page);
 $per_page=20;
 $table_data=(function(int $current_page,int $per_page)use($pdo){
-    $parts[]="SELECT DISTINCT r.jockey";
+    $parts[]="SELECT DISTINCT r.jockey_unique_name";
     $parts[]="FROM `".RaceResults::TABLE."` as r";
-    $parts[]="LEFT JOIN `".Jockey::TABLE."` AS j ON r.jockey LIKE j.unique_name";
-    $parts[]="WHERE j.unique_name IS NULL AND r.jockey NOT LIKE ''";
-    $parts[]="ORDER BY r.jockey ASC";
+    $parts[]="LEFT JOIN `".Jockey::TABLE."` AS j ON r.jockey_unique_name LIKE j.unique_name";
+    $parts[]="WHERE j.unique_name IS NULL AND r.jockey_unique_name NOT LIKE ''";
+    $parts[]="ORDER BY r.jockey_unique_name ASC";
     if($per_page>0){
         $parts[]="LIMIT {$per_page}";
         if($current_page>1){
@@ -31,7 +31,7 @@ $table_data=(function(int $current_page,int $per_page)use($pdo){
     }
     $stmt=$pdo->prepare(implode(' ',$parts));
     $stmt->execute();
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
 })($current_page,$per_page);
 if($table_data===false){ $table_data=[]; }
 
@@ -72,10 +72,10 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
 </tr>
 <?php foreach($table_data as $row): ?>
 <tr class="">
-<?php $url="./form.php?id={$row['jockey']}"; ?>
-    <td><?=h($row['jockey'])?></td>
-    <td><a href="./form.php?unique_name=<?=h(urlencode($row['jockey']))?>">マスタ登録</a></td>
-    <td><a href="./update_unique_name/form.php?u_name=<?=h(urlencode($row['jockey']))?>">レース結果を変換</a></td>
+<?php $url="./form.php?id={$row}"; ?>
+    <td><?=h($row)?></td>
+    <td><a href="./form.php?unique_name=<?=h(urlencode($row))?>">マスタ登録</a></td>
+    <td><a href="./update_unique_name/form.php?u_name=<?=h(urlencode($row))?>">レース結果を変換</a></td>
 </tr>
 <?php endforeach; ?>
 </table>

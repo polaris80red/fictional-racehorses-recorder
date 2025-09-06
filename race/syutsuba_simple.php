@@ -131,7 +131,7 @@ $sql=(function(){
     LEFT JOIN `{$race_special_results_tbl}` as spr
         ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
     LEFT JOIN `{$jockey_tbl}` as `jk`
-        ON `r_results`.`jockey`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
+        ON `r_results`.`jockey_unique_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
     LEFT JOIN `{$trainer_tbl}` as `trainer`
         ON `{$horse_tbl}`.`trainer`=`trainer`.`unique_name` AND `trainer`.`is_enabled`=1
     LEFT JOIN `{$trainer_tbl}` as `race_trainer`
@@ -155,11 +155,12 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if(empty($data['horse_id'])){ continue; }
     $data['sex_str']=sex2String((int)$data['sex']);
     $data['age']=empty($data['birth_year'])?'':($race->year-$data['birth_year']);
+    $data['jockey_name']='';
     if($data['jockey_mst_is_enabled']==1){
         if($data['jockey_mst_is_anonymous']==1){
-            $data['jockey']=(!$page->is_editable)?'□□□□':($data['jockey_mst_short_name_10']?:$data['jockey']);
+            $data['jockey_name']=(!$page->is_editable)?'□□□□':($data['jockey_mst_short_name_10']?:$data['jockey_unique_name']);
         }else{
-            $data['jockey']=$data['jockey_mst_short_name_10']?:$data['jockey'];
+            $data['jockey_name']=$data['jockey_mst_short_name_10']?:$data['jockey_unique_name'];
         }
     }
     if($data['race_trainer_mst_is_enabled']==1){
@@ -256,7 +257,9 @@ foreach ($table_data as $data) {
 ?>
 <td class="sex_<?=h($data['sex'])?>"><?=h($age_sex_str)?></td>
 <td><?=h($data['handicap'])?></td>
-<?php if(!$mode_umm): ?><td><?=h($data['jockey']??'')?></td><?php endif; ?>
+<?php if(!$mode_umm): ?>
+    <td><?=h($data['jockey_name']??'')?></td>
+<?php endif; ?>
 <td><?=h(!empty($data['tc'])?$data['tc']:$data['horse_tc'])?></td>
 <?php if(!$mode_umm): ?><td><?=h($data['trainer']??'')?></td><?php endif; ?>
 <?php if(!$mode_umm): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>

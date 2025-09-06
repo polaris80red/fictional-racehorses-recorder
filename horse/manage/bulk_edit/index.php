@@ -244,7 +244,7 @@ $latest_race_is_exists=false; ?>
     <input type="text" name="race[<?=h($data->race_id)?>][result_before_demotion]" style="width: 1.5em;" value="<?=h($data->result_before_demotion?:'')?>" placeholder="降">
 </td>
 <td class="in_input">
-    <input type="text" name="race[<?=h($data->race_id)?>][jockey]" style="width: 6em;" value="<?=h($data->jockey)?>" placeholder="騎手">
+    <input type="text" name="race[<?=h($data->race_id)?>][jockey]" style="width: 6em;" value="<?=h($data->jockey_unique_name)?>" placeholder="騎手">
 </td>
 <td class="in_input handicap">
     <input type="text" name="race[<?=h($data->race_id)?>][handicap]" style="width: 2.5em;" value="<?=h($data->handicap)?>" placeholder="斤量">

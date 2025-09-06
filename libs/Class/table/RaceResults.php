@@ -12,7 +12,7 @@ class RaceResults extends Table{
     public $result_text =null;
     public $frame_number =0;
     public $horse_number =0;
-    public $jockey =null;
+    public $jockey_unique_name =null;
     public $handicap =null;
     public $margin ='';
     public $corner_1 ='';
@@ -47,7 +47,7 @@ class RaceResults extends Table{
     const STR_COLUMNS=[
         'race_id','horse_id',
         'result_text',
-        'jockey',
+        'jockey_unique_name',
         'handicap',
         'margin',
         'tc',
@@ -102,7 +102,7 @@ class RaceResults extends Table{
         if($this->horse_number==0){
             $this->horse_number = (int)filter_input($input_type,'horse_number_select');
         }
-        $this->jockey = filter_input($input_type,'jockey')?:null;
+        $this->jockey_unique_name = filter_input($input_type,'jockey')?:null;
         $this->handicap = filter_input($input_type,'handicap');
         $this->favourite = (int)filter_input($input_type,'favourite');
         if($this->favourite==0){
@@ -186,7 +186,7 @@ class RaceResults extends Table{
         $stmt->bindValue(':result_text', $this->result_text, PDO::PARAM_STR);
         $stmt->bindValue(':frame_number', intOrNullIfZero($this->frame_number), PDO::PARAM_INT);
         $stmt->bindValue(':horse_number', intOrNullIfZero($this->horse_number), PDO::PARAM_INT);
-        $stmt->bindValue(':jockey', $this->jockey, PDO::PARAM_STR);
+        $stmt->bindValue(':jockey_unique_name', $this->jockey_unique_name, PDO::PARAM_STR);
         $stmt->bindValue(':handicap', $this->handicap, PDO::PARAM_STR);
         $stmt->bindValue(':margin', $this->margin, PDO::PARAM_STR);
         $stmt->bindValue(':corner_1', intOrNullIfZero($this->corner_1), PDO::PARAM_INT);
