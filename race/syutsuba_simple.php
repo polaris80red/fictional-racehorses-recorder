@@ -87,99 +87,16 @@ $turn=$week_data->umm_month_turn;
 <?php require_once APP_ROOT_DIR."/race/race_content_header.inc.php"; ?>
 <hr>
 <?php
-# レース着順取得
-$sql=(function(){
-    $horse_tbl=Horse::TABLE;
-    $race_tbl=Race::TABLE;
-    $r_results_tbl=RaceResults::TABLE;
-    $race_special_results_tbl=RaceSpecialResults::TABLE;
-    $jockey_tbl=Jockey::TABLE;
-    $trainer_tbl=Trainer::TABLE;
-
-    $horse_s_columns=new SqlMakeSelectColumns(Horse::TABLE);
-    $horse_s_columns->addColumnsByArray([
-        'name_ja','name_en','sex','birth_year'
-    ]);
-    $jockey_select_clause=Jockey::getPrefixedSelectClause('jk');
-    $race_trainer_select_clause=Trainer::getPrefixedSelectClause('r_trainer','r_trainer__');
-    $horse_trainer_select_clause=Trainer::getPrefixedSelectClause('h_trainer','h_trainer__');
-    $horse_s_columns->addColumnAs('tc','horse_tc');
-    $horse_s_columns->addColumnAs('trainer','horse_trainer');
-    $horse_s_columns->addColumnAs('training_country','horse_training_country');
-    $horse_s_columns->addColumnAs('is_affliationed_nar','horse_is_affliationed_nar');
-    $sql_part_select_columns=implode(",\n",[
-        "`r_results`.*",
-        $horse_s_columns->get(true),
-        "`race`.*",
-        "`spr`.`is_registration_only`",
-        $jockey_select_clause,
-        $race_trainer_select_clause,
-        $horse_trainer_select_clause,
-    ]);
-     
-    $sql=<<<END
-    SELECT
-    {$sql_part_select_columns}
-    FROM `{$race_tbl}` AS `race`
-    LEFT JOIN `{$r_results_tbl}` AS `r_results`
-        ON `race`.`race_id`=`r_results`.`race_id`
-    LEFT JOIN `{$horse_tbl}`
-        ON `r_results`.`horse_id`=`{$horse_tbl}`.`horse_id`
-    LEFT JOIN `{$race_special_results_tbl}` as spr
-        ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
-    LEFT JOIN `{$jockey_tbl}` as `jk`
-        ON `r_results`.`jockey_unique_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
-    LEFT JOIN `{$trainer_tbl}` as `h_trainer`
-        ON `{$horse_tbl}`.`trainer`=`h_trainer`.`unique_name` AND `h_trainer`.`is_enabled`=1
-    LEFT JOIN `{$trainer_tbl}` as `r_trainer`
-        ON `r_results`.`trainer`=`r_trainer`.`unique_name` AND `r_trainer`.`is_enabled`=1
-    WHERE `race`.`race_id`=:race_id
-    ORDER BY
-        `r_results`.`frame_number` IS NULL,
-        `r_results`.`frame_number` ASC,
-        `r_results`.`horse_number` IS NULL,
-        `r_results`.`horse_number` ASC,
-        `{$horse_tbl}`.`name_en` ASC;
-    END;
-    return $sql;
-})();
-
-$stmt = $pdo->prepare($sql);
-$stmt->bindValue(':race_id', $race_id, PDO::PARAM_STR);
-$flag = $stmt->execute();
-$table_data=[];
-while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    if(empty($data['horse_id'])){ continue; }
-    $data['sex_str']=sex2String((int)$data['sex']);
-    $data['age']=empty($data['birth_year'])?'':($race->year-$data['birth_year']);
-    $data['jockey_name']='';
-    $jockey=(new JockeyRow())->setFromArray($data,'jk');
-    if($jockey->is_enabled==1){
-        if($jockey->is_anonymous==1){
-            $data['jockey_name']=(!$page->is_editable)?'□□□□':($jockey->short_name_10?:$data['jockey_unique_name']);
-        }else{
-            $data['jockey_name']=$jockey->short_name_10?:$data['jockey_unique_name'];
-        }
-    }
-    $race_trainer=(new TrainerRow())->setFromArray($data,'r_trainer__');
-    $horse_trainer=(new TrainerRow())->setFromArray($data,'h_trainer__');
-    if($data['trainer']){
-        if($race_trainer->is_anonymous==1){
-            $data['trainer']=(!$page->is_editable)?'□□□□':($race_trainer->short_name_10?:$data['trainer']);
-        }else{
-            $data['trainer']=$race_trainer->short_name_10?:$data['trainer'];
-        }
-    }else if($data['horse_trainer']){
-        // レース側が空の場合は馬側の値を採用
-        $data['trainer']=$data['horse_trainer'];
-        if($horse_trainer->is_anonymous==1){
-            $data['trainer']=(!$page->is_editable)?'□□□□':($horse_trainer->short_name_10?:$data['horse_trainer']);
-        }else{
-            $data['trainer']=$horse_trainer->short_name_10?:$data['horse_trainer'];
-        }
-    }
-    $table_data[]=$data;
-}
+$resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
+$resultsGetter->pageIsEditable=$page->is_editable;
+$resultsGetter->addOrderParts([
+    "`r_results`.`frame_number` IS NULL",
+    "`r_results`.`frame_number` ASC",
+    "`r_results`.`horse_number` IS NULL",
+    "`r_results`.`horse_number` ASC",
+    "`".Horse::TABLE."`.`name_en` ASC",
+]);
+$table_data=$resultsGetter->getTableData();
 $mode_umm=false;
 switch($setting->age_view_mode){
     case Setting::AGE_VIEW_MODE_UMAMUSUME:
@@ -204,11 +121,6 @@ $i=0;
 $latest_horse_exists=false;
 foreach ($table_data as $data) {
     $i++;
-    // 1件目からない場合
-    if(empty($data['horse_id'])){
-        echo "<tr><td></td>".$empty_row_2."</tr>\n";
-        continue;
-    }
     if($data['horse_id']==($session->latest_horse['id']??'')){
         $latest_horse_exists=true;
     }
@@ -221,13 +133,7 @@ foreach ($table_data as $data) {
 <td><?=h($data['horse_number'])?></td>
 <td class="horse_name">
 <?php
-    $training_country='';
-    if(!empty($data['training_country'])){
-        $training_country=$data['training_country'];
-    }else{
-        $training_country=$data['horse_training_country'];
-    }
-    if(($data['is_jra']==1 || $data['is_nar']==1)&& $training_country!='JPN'){
+    if(($race->is_jra==1 || $race->is_nar==1)&& $data['training_country']!='JPN'){
         echo "[外] ";
     }
     $is_affliationed_nar=0;
@@ -236,13 +142,13 @@ foreach ($table_data as $data) {
     }else{
         $is_affliationed_nar=$data['is_affliationed_nar'];
     }
-    if($data['is_jra']==1&& $is_affliationed_nar==1){
+    if($race->is_jra==1&& $is_affliationed_nar==1){
         echo "[地] ";
     }
     echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.h($data['horse_id']).'">';
     print_h($data['name_ja']?:$data['name_en']);
-    if($data['is_jra']==0 && $data['is_nar']==0){
-        echo " <span>(".h($training_country).")</span> ";
+    if($race->is_jra==0 && $race->is_nar==0){
+        echo " <span>(".h($data['training_country']).")</span> ";
     }
     echo "</a>";
 ?></td>
@@ -257,10 +163,14 @@ foreach ($table_data as $data) {
 <td class="sex_<?=h($data['sex'])?>"><?=h($age_sex_str)?></td>
 <td><?=h($data['handicap'])?></td>
 <?php if(!$mode_umm): ?>
-    <td><?=h($data['jockey_name']??'')?></td>
+    <td style="<?=$data['jockey_row']->is_anonymous?'color:#999;':''?>"><?=h($data['jockey_name']??'')?></td>
 <?php endif; ?>
-<td><?=h(!empty($data['tc'])?$data['tc']:$data['horse_tc'])?></td>
-<?php if(!$mode_umm): ?><td><?=h($data['trainer']??'')?></td><?php endif; ?>
+<td><?=h($data['tc'])?></td>
+<?php if(!$mode_umm): ?>
+    <td style="<?=$data['trainer_row']->is_anonymous?'color:#999;':''?>">
+        <?=h($data['trainer_name']??'')?>
+    </td>
+<?php endif; ?>
 <?php if(!$mode_umm): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>
 <td class="col_favourite favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
 <?php
