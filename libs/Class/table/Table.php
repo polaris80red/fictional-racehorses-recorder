@@ -224,4 +224,29 @@ abstract class Table{
         }
         return $results;
     }
+    /**
+     * カラム名にPrefixをつけてSELECTのカラム指定部分を生成する
+     * @param string $table_alias_name テーブル名またはテーブル名のエイリアス、空ならテーブル名をそのまま使用
+     * @param string $prefix 付与するprefix、なければテーブル名とアンダースコア2つ '__'
+     * @return string prefixを追加済みのカラム名の配列をカンマ,でimplodeした文字列
+     */
+    public static function getPrefixedSelectClause(string $table_alias_name='',string $prefix=''){
+        return implode(',',self::getPrefixedSelectColmuns($table_alias_name,$prefix));
+    }
+    /**
+     * カラム名にPrefixをつけてSELECTのカラム指定部分を生成する
+     * @param string $table_alias_name テーブル名またはテーブル名のエイリアス、空ならテーブル名をそのまま使用
+     * @param string $prefix 付与するprefix、なければテーブル名とアンダースコア2つ '__'
+     * @return array prefixを追加済みのカラム名の配列
+     */
+    public static function getPrefixedSelectColmuns(string $table_alias_name='',string $prefix=''){
+        $table_alias_name = $table_alias_name?:static::TABLE;
+        $prefix = $prefix?:static::TABLE.'__';
+        $columns=(static::ROW_CLASS)::getColumnNames();
+        $parts=[];
+        foreach($columns as $column){
+            $parts[]="`{$table_alias_name}`.`{$column}` AS `{$prefix}{$column}`";
+        }
+        return $parts;
+    }
 }

@@ -42,11 +42,6 @@ class HorseRaceHistoryRow{
         'non_registered_prev_race_number',
     
         'special_result_short_name_2',
-
-        'jockey_mst_name',
-        'jockey_mst_short_name_10',
-        'jockey_mst_is_anonymous',
-        'jockey_mst_is_enabled',
     ];
 
     // レース結果詳細テーブルのパラメータ
@@ -106,12 +101,6 @@ class HorseRaceHistoryRow{
     // 競馬場マスタから使用するデータ
     public $race_course_mst_short_name;
 
-    // 騎手マスタから使用するデータ
-    public $jockey_mst_name;
-    public $jockey_mst_short_name_10;
-    public $jockey_mst_is_anonymous;
-    public $jockey_mst_is_enabled;
-
     // 1・2着馬
     public $r_horse_id;
     public $r_name_ja;
@@ -122,6 +111,7 @@ class HorseRaceHistoryRow{
     // 特殊結果のマスタ版略称
     public $special_result_short_name_2;
 
+    public JockeyRow $jockey_row;
     // 指定したパラメータだけを取り込む
     public function setByArray(array $row_data){
         $import_params=array_fill_keys(self::IMPORT_PARAM_NAMES,0);

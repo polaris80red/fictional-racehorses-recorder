@@ -4,11 +4,13 @@ abstract class TableRow {
     public const STR_COLUMNS=[];
     /**
      * 行相当の配列からこのオブジェクトにセットする
+     * @param array $input_data DBやPOSTから取得した配列
+     * @param string $select_prefix JOINしてのSELECTの場合などカラム名の前に付与していたprefix
      */
-    public function setFromArray(array $input_data){
+    public function setFromArray(array $input_data, string $select_prefix=''){
         $columns=static::getColumnNames();
         foreach($columns as $col){
-            $this->{$col}=$input_data[$col];
+            $this->{$col}=$input_data[$select_prefix.$col]??null;
         }
         return $this;
     }

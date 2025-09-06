@@ -363,11 +363,14 @@ $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id=''
 $registration_only_race_is_exists=false;
 $latest_race_is_exists=false; ?>
 <?php foreach ($race_history as $data):?>
+    <?php
+        if(empty($data->race_id)){ continue; }
+        $jockey=$data->jockey_row;
+    ?>
     <?php if($date_order=='ASC'):// 空行の追加 ?>
         <?=$FUNC_print_empty_row($data->non_registered_prev_race_number,$data->race_id)?>
     <?php endif; ?>
     <?php
-        if(empty($data->race_id)){ continue; }
         if(!empty($session->latest_race['id'])&&
             $session->latest_race['id']===$data->race_id)
             {
@@ -454,20 +457,20 @@ $latest_race_is_exists=false; ?>
         <td class="result_number <?=h($add_class)?>"><?=$h_result_txt?></td>
         <?php if(!$mode_umm): ?>
             <?php
-                $jockey=$data->jockey;
-                if($data->jockey_mst_is_enabled===1){
-                    if($data->jockey_mst_is_anonymous==1){
+                $jockey_name=$data->jockey;
+                if($jockey->is_enabled===1){
+                    if($jockey->is_anonymous==1){
                         if($page->is_editable){
-                            $jockey = $data->jockey_mst_short_name_10?:$data->jockey;
+                            $jockey_name = $jockey->short_name_10?:$data->jockey;
                         }else{
-                            $jockey='□□□□';
+                            $jockey_name='□□□□';
                         }
                     }else{
-                        $jockey = $data->jockey_mst_short_name_10?:$data->jockey;
+                        $jockey_name = $jockey->short_name_10?:$data->jockey;
                     }
                 }
             ?>
-            <td class="jockey" <?=(!$data->jockey_mst_is_anonymous?'':'style="color:#999;"')?>><?=h($jockey)?></td>
+            <td class="jockey" <?=(!$jockey->is_anonymous?'':'style="color:#999;"')?>><?=h($jockey_name)?></td>
         <?php endif; ?>
         <td class="handicap"><?=h($data->handicap)?></td>
         <?php

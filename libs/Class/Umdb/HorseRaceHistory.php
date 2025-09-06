@@ -55,6 +55,8 @@ class HorseRaceHistory implements Iterator{
             $course_mst_tbl=RaceCourse::TABLE;
             $race_special_results_tbl=RaceSpecialResults::TABLE;
             $jockey_tbl=Jockey::TABLE;
+
+            $jockey_select_col=Jockey::getPrefixedSelectClause('jk');
             $sql=<<<END
             SELECT
             `race`.`date`
@@ -70,10 +72,6 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`horse_number`
             ,`race_results`.`favourite`
             ,`spr`.`is_registration_only`
-            ,`jk`.`name` as `jockey_mst_name`
-            ,`jk`.`short_name_10` as `jockey_mst_short_name_10`
-            ,`jk`.`is_anonymous` as `jockey_mst_is_anonymous`
-            ,`jk`.`is_enabled` as `jockey_mst_is_enabled`
             ,`race_results`.`non_registered_prev_race_number`
             ,`race_results`.`jra_thisweek_horse_1`
             ,`race_results`.`jra_thisweek_horse_2`
@@ -84,6 +82,7 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`is_affliationed_nar`
             ,`race`.`race_id`
             ,`race`.*
+            ,{$jockey_select_col}
             ,w.month AS `w_month`
             ,w.umm_month_turn
             ,g.short_name as grade_short_name
@@ -115,10 +114,22 @@ class HorseRaceHistory implements Iterator{
         # 自身以外の1着馬取得
         $rr12HourseGetter=new RaceResults1stOr2ndHourseGetter($pdo);
 
+        // 騎手のキー=>インスタンスのキャッシュ
+        $jockey_list=[];
+        $empty_jockey=new JockeyRow();
         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row=new HorseRaceHistoryRow();
             $row->setByArray($data);
 
+            // 騎手行をセット
+            if($row->jockey==''){
+                $row->jockey_row=$empty_jockey;
+            }else if(isset($jockey_list[$row->jockey])){
+                $row->jockey_row = $jockey_list[$row->jockey];
+            }else{
+                $jockey_list[$row->jockey]=(new JockeyRow())->setFromArray($data,Jockey::TABLE."__");
+                $row->jockey_row = $jockey_list[$row->jockey];
+            }
             if(empty($data['race_id'])){ continue; }
             $res= $rr12HourseGetter->get($data['race_id'],$data['result_number'],$horse_id);
             $row->r_horse_id=$data['r_horse_id']=isset($res['horse_id'])?$res['horse_id']:"";
