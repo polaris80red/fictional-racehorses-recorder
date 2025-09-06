@@ -31,6 +31,13 @@ class Horse extends Table{
 
     public function __construct(){
     }
+    /**
+     * 行クラス形式用の暫定的な新しい取得処理
+     */
+    public static function getByHorseId(PDO $pdo, string $horse_id){
+        $result = self::getByUniqueKey($pdo,'horse_id',$horse_id,PDO::PARAM_STR);
+        return $result==false ? false : (new (static::ROW_CLASS))->setFromArray($result);
+    }
     public function setHorseId($horse_id){
         if(exists_htmlspecialchars($horse_id)){
             $this->error_msgs[]="IDに使用できない文字（HTML）を含んでいます";
