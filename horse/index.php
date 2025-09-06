@@ -365,14 +365,16 @@ $latest_race_is_exists=false; ?>
 <?php foreach ($race_history as $data):?>
     <?php
         if(empty($data->race_id)){ continue; }
+        $race = $data->race_row;
+        $grade = $data->grade_row;
         $jockey=$data->jockey_row;
     ?>
     <?php if($date_order=='ASC'):// 空行の追加 ?>
-        <?=$FUNC_print_empty_row($data->non_registered_prev_race_number,$data->race_id)?>
+        <?=$FUNC_print_empty_row($data->non_registered_prev_race_number,$race->race_id)?>
     <?php endif; ?>
     <?php
         if(!empty($session->latest_race['id'])&&
-            $session->latest_race['id']===$data->race_id)
+            $session->latest_race['id']===$race->race_id)
             {
                 $latest_race_is_exists=true;
             }
@@ -388,58 +390,58 @@ $latest_race_is_exists=false; ?>
                 $race_url_add_param='&show_registration_only=true';
             }
         }
-        $tr_class->add('race_grade_'.$data->grade_css_class_suffix);
-        if($data->is_enabled===0){ $tr_class->add('disabled_row'); }
+        $tr_class->add('race_grade_'.$grade->css_class_suffix);
+        if($race->is_enabled===0){ $tr_class->add('disabled_row'); }
     ?>
     <tr class="<?=h($tr_class)?>">
         <?php
             $datetime=null;
-            if($data->date!=null && $data->is_tmp_date==0){
-                $datetime=new DateTime($data->date);
+            if($race->date!=null && $race->is_tmp_date==0){
+                $datetime=new DateTime($race->date);
             }
-            $month=$data->month;
+            $month=$race->month;
             // ウマ娘ターン表記の場合は補正済み月を優先
             if($setting->horse_record_date==='umm' && $data->w_month > 0){
                 $month=$data->w_month;
             }
             $day=is_null($datetime)?0:(int)$datetime->format('d');
             $date_str=$setting->getRaceListDate([
-                'year'=>$data->year,
+                'year'=>$race->year,
                 'month'=>$month,
                 'day'=>$day,
                 'turn'=>$data->umm_month_turn,
-                'age'=>$data->year - $horse->birth_year]);
+                'age'=>$race->year - $horse->birth_year]);
             $url = '';
             if($setting->horse_record_date==='umm'){
                 if($data->umm_month_turn > 0){
-                    $url = $page->getTurnRaceListUrl($data->year,$month,$data->umm_month_turn);
+                    $url = $page->getTurnRaceListUrl($race->year,$month,$data->umm_month_turn);
                 }
             }else if($datetime!==null){
                 $url=$page->getDateRaceListUrl($datetime);
             }else{
-                $url = $page->getTurnRaceListUrl($data->year,$month,null,['week'=>$data->week_id]);
+                $url = $page->getTurnRaceListUrl($race->year,$month,null,['week'=>$race->week_id]);
             }
         ?>
         <td><?=(new MkTagA($date_str,$url))?></td>
         <?php
-            $race_course_show_name = $data->race_course_mst_short_name??$data->race_course_name;
+            $race_course_show_name = $data->race_course_mst_short_name??$race->race_course_name;
             $a_tag=new MkTagA($race_course_show_name);
             if($datetime!==null){
                 $a_tag->href($page->getDateRaceListUrl(
                     $datetime,
-                    ['race_course_name'=>$data->race_course_name]
+                    ['race_course_name'=>$race->race_course_name]
                 ));
-                $a_tag->title($data->race_course_name);
+                $a_tag->title($race->race_course_name);
             }
         ?>
         <td class="race_course_name"><?=$a_tag?></td>
-        <td class="distance"><?=h($data->course_type.$data->distance)?></td>
-        <td class="track_condition"><?=h($data->track_condition)?></td>
-        <td class="grade"><?=h(($data->grade_short_name??'')?:$data->grade)?></td>
+        <td class="distance"><?=h($race->course_type.$race->distance)?></td>
+        <td class="track_condition"><?=h($race->track_condition)?></td>
+        <td class="grade"><?=h(($grade->short_name??'')?:$race->grade)?></td>
         <td class="race_name">
-            <?=(new MkTagA($data->race_name,$page->getRaceResultUrl($data->race_id).$race_url_add_param))->title($data->race_name.($data->caption?'：'.$data->caption:''))?>
+            <?=(new MkTagA($race->race_name,$page->getRaceResultUrl($race->race_id).$race_url_add_param))->title($race->race_name.($race->caption?'：'.$race->caption:''))?>
         </td>
-        <td class="number_of_starters"><?=h($data->number_of_starters)?></td>
+        <td class="number_of_starters"><?=h($race->number_of_starters)?></td>
         <td class="frame_number"><?=h($data->frame_number)?></td>
         <td class="favourite favourite_<?=h($data->favourite)?>"><?=h($data->favourite)?></td>
         <?php
@@ -479,17 +481,17 @@ $latest_race_is_exists=false; ?>
             ]));
         ?>
         <td class="r_horse"><?=$data->result_number==1?"({$a_tag})":$a_tag?></td>
-        <td><?=!$data->has_jra_thisweek?'':new MkTagA('記',InAppUrl::to('race/j_thisweek.php',['race_id'=>$data->race_id,'show_registration_only'=>($race_url_add_param?true:null)]))?></td>
+        <td><?=!$data->has_jra_thisweek?'':new MkTagA('記',InAppUrl::to('race/j_thisweek.php',['race_id'=>$race->race_id,'show_registration_only'=>($race_url_add_param?true:null)]))?></td>
         <?php if($page->is_editable): ?>
         <td class="edit_link"><?=(new MkTagA('編',InAppUrl::to("race/horse_result/form.php",[
-                    'race_id'=>$data->race_id,
+                    'race_id'=>$race->race_id,
                     'horse_id'=>$horse->horse_id,
                     'edit_mode'=>1,
                 ])))?></td>
         <?php endif; ?>
     </tr>
     <?php if($date_order=='DESC'):// 空行の追加 ?>
-        <?=$FUNC_print_empty_row($data->non_registered_prev_race_number,$data->race_id)?>
+        <?=$FUNC_print_empty_row($data->non_registered_prev_race_number,$race->race_id)?>
     <?php endif; ?>
 <?php endforeach; ?>
 </table>

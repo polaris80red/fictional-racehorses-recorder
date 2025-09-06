@@ -140,6 +140,10 @@ $latest_race_is_exists=false; ?>
     $tr_class=new Imploader(' ');
 
     if(empty($data->race_id)){ continue; }
+    $race = $data->race_row;
+    $grade = $data->grade_row;
+    $jockey=$data->jockey_row;
+
     if(!empty($session->latest_race['id'])&&
         $session->latest_race['id']===$data->race_id)
     {
@@ -150,55 +154,55 @@ $latest_race_is_exists=false; ?>
         $registration_only_race_is_exists=true;
         $tr_class->add('disabled_row');
     }
-    $tr_class->add('race_grade_'.$data->grade_css_class_suffix);
-    if($data->is_enabled===0){ $tr_class->add('disabled_row'); }
+    $tr_class->add('race_grade_'.$grade->css_class_suffix);
+    if($race->is_enabled===0){ $tr_class->add('disabled_row'); }
 ?>
 <tr class="<?=h($tr_class)?>">
 <?php
     $datetime=null;
-    if($data->date!=null && $data->is_tmp_date==0){
-        $datetime=new DateTime($data->date);
+    if($race->date!=null && $race->is_tmp_date==0){
+        $datetime=new DateTime($race->date);
     }
-    $month=$data->month;
+    $month=$race->month;
     // ウマ娘ターン表記の場合は補正済み月を優先
     if($setting->horse_record_date==='umm' && $data->w_month > 0){
         $month=$data->w_month;
     }
     $day=is_null($datetime)?0:(int)$datetime->format('d');
     $date_str=$setting->getRaceListDate([
-        'year'=>$data->year,
+        'year'=>$race->year,
         'month'=>$month,
         'day'=>$day,
         'turn'=>$data->umm_month_turn,
-        'age'=>$data->year - $horse->birth_year]);
+        'age'=>$race->year - $horse->birth_year]);
     $url = '';
     if($setting->horse_record_date==='umm'){
         if($data->umm_month_turn > 0){
-            $url = $page->getTurnRaceListUrl($data->year,$month,$data->umm_month_turn);
+            $url = $page->getTurnRaceListUrl($race->year,$month,$data->umm_month_turn);
         }
     }else if($datetime!==null){
         $url=$page->getDateRaceListUrl($datetime);
     }else{
-        $url = $page->getTurnRaceListUrl($data->year,$month,null,['week'=>$data->week_id]);
+        $url = $page->getTurnRaceListUrl($race->year,$month,null,['week'=>$race->week_id]);
     }
     $date_str=(new MkTagA($date_str,$url))->get();
 ?>
 <td><?=$date_str?></td>
 <?php
-    $race_course_show_name = $data->race_course_mst_short_name??$data->race_course_name;
+    $race_course_show_name = $data->race_course_mst_short_name??$race->race_course_name;
     $a_tag=new MkTagA($race_course_show_name);
     if($datetime!==null){
         $a_tag->href($page->getDateRaceListUrl(
             $datetime,
-            ['race_course_name'=>$data->race_course_name]
+            ['race_course_name'=>$race->race_course_name]
         ));
-        $a_tag->title($data->race_course_name);
+        $a_tag->title($race->race_course_name);
     }
 ?>
 <td class="race_course_name"><?=$a_tag?></td>
-<td class="grade"><?=h(($data->grade_short_name??'')?:$data->grade)?></td>
+<td class="grade"><?=h(($grade->short_name??'')?:$race->grade)?></td>
 <td class="race_name">
-    <a href="<?=h($page->getRaceResultUrl($data->race_id).$race_url_add_param)?>" title="<?=h($data->race_name.($data->caption?'：'.$data->caption:''))?>"><?=h($data->race_short_name?:$data->race_name)?></a>
+    <a href="<?=h($page->getRaceResultUrl($data->race_id).$race_url_add_param)?>" title="<?=h($race->race_name.($race->caption?'：'.$race->caption:''))?>"><?=h($race->race_short_name?:$race->race_name)?></a>
 </td>
 <td class="in_input frame_number">
     <input type="text" name="race[<?=h($data->race_id)?>][frame_number]" style="width: 1.5em;" value="<?=h($data->frame_number)?>" placeholder="枠">

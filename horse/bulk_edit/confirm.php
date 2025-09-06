@@ -128,6 +128,10 @@ $nar_override=0;
 <?php
     $tr_class=new Imploader(' ');
     if(empty($data->race_id)){ continue; }
+    $race = $data->race_row;
+    $grade = $data->grade_row;
+    $jockey=$data->jockey_row;
+
     $posted_race=isset($posted_race_list[$data->race_id])?(object)$posted_race_list[$data->race_id]:false;
     if($posted_race===false){ continue; }
 
@@ -258,40 +262,40 @@ $nar_override=0;
     if($data->is_registration_only==1){
         $tr_class->add('disabled_row');
     }
-    $tr_class->add('race_grade_'.$data->grade_css_class_suffix);
-    if($data->is_enabled===0){ $tr_class->add('disabled_row'); }
+    $tr_class->add('race_grade_'.$grade->css_class_suffix);
+    if($race->is_enabled===0){ $tr_class->add('disabled_row'); }
 ?>
 <tr class="<?=h($tr_class)?>">
 <?php
     $datetime=null;
-    if($data->date!=null && $data->is_tmp_date==0){
-        $datetime=new DateTime($data->date);
+    if($race->date!=null && $race->is_tmp_date==0){
+        $datetime=new DateTime($race->date);
     }
-    $month=$data->month;
+    $month=$race->month;
     // ウマ娘ターン表記の場合は補正済み月を優先
     if($setting->horse_record_date==='umm' && $data->w_month > 0){
         $month=$data->w_month;
     }
     $day=is_null($datetime)?0:(int)$datetime->format('d');
     $date_str=$setting->getRaceListDate([
-        'year'=>$data->year,
+        'year'=>$race->year,
         'month'=>$month,
         'day'=>$day,
         'turn'=>$data->umm_month_turn,
-        'age'=>$data->year - $horse->birth_year]);
+        'age'=>$race->year - $horse->birth_year]);
     $date_str=(new MkTagA($date_str))->get();
 ?>
 <td><?=$date_str?></td>
 <?php
-    $race_course_show_name = $data->race_course_mst_short_name??$data->race_course_name;
+    $race_course_show_name = $data->race_course_mst_short_name??$race->race_course_name;
     $a_tag=new MkTagA($race_course_show_name);
     if($datetime!==null){
-        $a_tag->title($data->race_course_name);
+        $a_tag->title($race->race_course_name);
     }
 ?>
 <td class="race_course_name"><?=$a_tag?></td>
-<td class="grade"><?=h(($data->grade_short_name??'')?:$data->grade)?></td>
-<td class="race_name"><?=h($data->race_short_name?:$data->race_name)?></td>
+<td class="grade"><?=h(($grade->short_name??'')?:$race->grade)?></td>
+<td class="race_name"><?=h($race->race_short_name?:$race->race_name)?></td>
 <td class="frame_number <?=!$changed->frame_number?'':'changed'?>"><?=h($race_result->frame_number)?>
     <input type="hidden" name="race[<?=h($data->race_id)?>][frame_number]" style="width: 2.5em;" value="<?=h($race_result->frame_number)?>">
 </td>

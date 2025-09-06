@@ -1,6 +1,7 @@
 <?php
 class Race extends Table{
     public const TABLE = 'dat_race';
+    public const ROW_CLASS = RaceRow::class;
 
     public $record_exists=false;
     public $error_exists = false;

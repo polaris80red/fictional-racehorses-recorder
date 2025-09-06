@@ -57,11 +57,11 @@ class HorseRaceHistory implements Iterator{
             $jockey_tbl=Jockey::TABLE;
 
             $jockey_select_col=Jockey::getPrefixedSelectClause('jk');
+            $race_select_col=Race::getPrefixedSelectClause('race');
+            $grade_select_col=RaceGrade::getPrefixedSelectClause('g');
             $sql=<<<END
             SELECT
-            `race`.`date`
-            ,`race`.`race_course_name`
-            ,`race`.`race_name`
+            `race_results`.`race_id`
             ,`race_results`.`result_number`
             ,`race_results`.`result_text`
             ,`race_results`.`result_order`
@@ -80,13 +80,12 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`training_country`
             ,`race_results`.`sex`
             ,`race_results`.`is_affliationed_nar`
-            ,`race`.`race_id`
-            ,`race`.*
+            ,`race_results`.`race_id`
+            ,{$race_select_col}
             ,{$jockey_select_col}
             ,w.month AS `w_month`
             ,w.umm_month_turn
-            ,g.short_name as grade_short_name
-            ,g.css_class_suffix as grade_css_class_suffix
+            ,{$grade_select_col}
             ,c.short_name as race_course_mst_short_name
             ,`spr`.short_name_2 as special_result_short_name_2
             ,IFNULL(`spr`.is_excluded_from_race_count,0) AS is_excluded_from_race_count
@@ -117,6 +116,10 @@ class HorseRaceHistory implements Iterator{
         // 騎手のキー=>インスタンスのキャッシュ
         $jockey_list=[];
         $empty_jockey=new JockeyRow();
+        // グレードのキー=>インスタンスのキャッシュ
+        $grade_list=[];
+        $empty_grade=new RaceGradeRow();
+
         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row=new HorseRaceHistoryRow();
             $row->setByArray($data);
@@ -129,6 +132,17 @@ class HorseRaceHistory implements Iterator{
             }else{
                 $jockey_list[$row->jockey]=(new JockeyRow())->setFromArray($data,Jockey::TABLE."__");
                 $row->jockey_row = $jockey_list[$row->jockey];
+            }
+            // レース行をセット
+            $row->race_row = (new RaceRow())->setFromArray($data,Race::TABLE."__");
+            // グレード行をセット
+            if($row->race_row->grade==''){
+                $row->grade_row=$empty_grade;
+            }else if(isset($grade_list[$row->race_row->grade])){
+                $row->grade_row = $grade_list[$row->race_row->grade];
+            }else{
+                $grade_list[$row->race_row->grade]=(new RaceGradeRow())->setFromArray($data,RaceGrade::TABLE."__");
+                $row->grade_row = $grade_list[$row->race_row->grade];
             }
             if(empty($data['race_id'])){ continue; }
             $res= $rr12HourseGetter->get($data['race_id'],$data['result_number'],$horse_id);
