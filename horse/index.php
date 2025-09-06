@@ -50,43 +50,18 @@ $page_urlparam=new UrlParams([
     'show_registration_only'=>$show_registration_only,
 ]);
 # 馬情報取得
-$horse=new Horse();
-$horse->setDataById($pdo, $horse_id);
-if(!$horse->record_exists){
+$horse=Horse::getByHorseId($pdo,$horse_id);
+if($horse===false){
     $page->error_msgs[]="競走馬情報取得失敗";
     $page->error_msgs[]="入力ID：{$horse_id}";
     header("HTTP/1.1 404 Not Found");
     $page->printCommonErrorPage();
     exit;
 }
+$page->horse = $horse;
 if(ENABLE_ACCESS_COUNTER){
     ArticleCounter::countup($pdo,ArticleCounter::TYPE_HORSE,$horse_id);
 }
-$sire=new Horse();
-if($horse->sire_id){
-    $sire->setDataById($pdo,$horse->sire_id);
-}
-$mare=new Horse();
-if($horse->mare_id){
-    $mare->setDataById($pdo,$horse->mare_id);
-}
-$trainer_name='';
-$trainer_is_anonymous=false;
-do{
-    $trainer=Trainer::getByUniqueName($pdo,$horse->trainer);
-    if($trainer===false || $trainer->is_enabled==0){
-        $trainer_name=$horse->trainer;
-        break;
-    }
-    if($trainer->is_anonymous==1){
-        $trainer_is_anonymous=true;
-        if(!$page->is_editable){
-            $trainer_name='□□□□';
-            break;
-        }
-    }
-    $trainer_name=$trainer->name?:($trainer->short_name_10?:$horse->trainer);
-}while(false);
 
 $session->latest_horse=[
     'id'=>$horse_id,
@@ -180,16 +155,35 @@ print_h("{$horse->color} {$sex_str}");
 <table class="horse_base_data">
     <tr>
         <th>馬名</th>
-        <td style="min-width: 12em;"><?=h($horse->name_ja)?></td>
+        <td style="min-width: 12em;"><?=h($page->horse->name_ja)?></td>
     </tr>
     <tr>
         <th>馬名(欧字)</th>
-        <td><?=h($horse->name_en)?></td>
+        <td><?=h($page->horse->name_en)?></td>
     </tr>
     <tr>
         <th>所属</th>
-        <td><?=h($horse->tc)?></td>
+        <td><?=h($page->horse->tc)?></td>
     </tr>
+    <?php
+        $trainer_name='';
+        $trainer_is_anonymous=false;
+        do{
+            $trainer=Trainer::getByUniqueName($pdo,$page->horse->trainer);
+            if($trainer===false || $trainer->is_enabled==0){
+                $trainer_name=$page->horse->trainer;
+                break;
+            }
+            if($trainer->is_anonymous==1){
+                $trainer_is_anonymous=true;
+                if(!$page->is_editable){
+                    $trainer_name='□□□□';
+                    break;
+                }
+            }
+            $trainer_name=$trainer->name?:($trainer->short_name_10?:$page->horse->trainer);
+        }while(false);
+    ?>
     <tr>
         <th>調教師</th>
         <td><?=h($trainer_name)?></td>
@@ -197,11 +191,11 @@ print_h("{$horse->color} {$sex_str}");
     <tr>
         <th><?=$setting->birth_year_mode===0?"生年":"世代"?></th>
         <td><?php
-        if($horse->birth_year>0){
+        if($page->horse->birth_year>0){
             $birth_year_search=new HorseSearch();
-            $birth_year_search->birth_year=$horse->birth_year;
+            $birth_year_search->birth_year=$page->horse->birth_year;
             $url =$page->to_horse_search_path.'?'.$birth_year_search->getUrlParam();
-            $birth_year_str=$setting->getBirthYearFormat($horse->birth_year);
+            $birth_year_str=$setting->getBirthYearFormat($page->horse->birth_year);
             (new MkTagA(h($birth_year_str),$url))->print();
         }
         ?></td>
@@ -214,23 +208,21 @@ print_h("{$horse->color} {$sex_str}");
         <th>父</th>
         <td><?php
         $url =$page->to_horse_search_path.'?';
-        if($horse->sire_id!=''){
+        $sire=Horse::getByHorseId($pdo,$page->horse->sire_id);
+        if($sire!==false){
             $sire_search=new HorseSearch();
-            $sire_search->sire_id=$horse->sire_id;
+            $sire_search->sire_id=$sire->horse_id;
             $sire_search->order='birth_year__asc';
             $url .= $sire_search->getUrlParam();
-            $sire_name='';
-            if($sire->record_exists && $sire->is_enabled==1){
-                $sire_name=$sire->name_ja?:$sire->name_en;
-            }
-            (new MkTagA($sire_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->sire_id}"))->print();
+            $sire_name=$sire->name_ja?:$sire->name_en;
+            (new MkTagA($sire_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$sire->horse_id}"))->print();
             $a_tag_sanku->href($url)->print();
-        } else if($horse->sire_name!=''){
+        } else if($page->horse->sire_name!=''){
             $sire_search=new HorseSearch();
-            $sire_search->sire_name=$horse->sire_name;
+            $sire_search->sire_name=$page->horse->sire_name;
             $sire_search->order='birth_year__asc';
             $url .= $sire_search->getUrlParam();
-            (new MkTagA($horse->sire_name,$url))->print();
+            (new MkTagA($page->horse->sire_name,$url))->print();
             $a_tag_sanku->href($url)->print();
         }
         ?></td>
@@ -239,23 +231,21 @@ print_h("{$horse->color} {$sex_str}");
         <th>母</th>
         <td><?php
         $url =$page->to_horse_search_path.'?';
-        if($horse->mare_id!=''){
+        $mare=Horse::getByHorseId($pdo,$page->horse->mare_id);
+        if($mare!==false){
             $mare_search=new HorseSearch();
-            $mare_search->mare_id=$horse->mare_id;
+            $mare_search->mare_id=$mare->horse_id;
             $mare_search->order='birth_year__asc';
             $url .= $mare_search->getUrlParam();
-            $mare_name='';
-            if($mare->record_exists && $mare->is_enabled==1){
-                $mare_name=$mare->name_ja?:$mare->name_en;
-            }
-            (new MkTagA($mare_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$horse->mare_id}"))->print();
+            $mare_name=$mare->name_ja?:$mare->name_en;
+            (new MkTagA($mare_name?:ANNONYMOUS_HORSE_NAME,"?horse_id={$mare->horse_id}"))->print();
             $a_tag_sanku->href($url)->print();
-        } else if($horse->mare_name!=''){
+        } else if($page->horse->mare_name!=''){
             $mare_search=new HorseSearch();
-            $mare_search->mare_name=$horse->mare_name;
+            $mare_search->mare_name=$page->horse->mare_name;
             $mare_search->order='birth_year__asc';
             $url .= $mare_search->getUrlParam();
-            (new MkTagA($horse->mare_name,$url))->print();
+            (new MkTagA($page->horse->mare_name,$url))->print();
             $a_tag_sanku->href($url)->print();
         }
         ?></td>
@@ -264,19 +254,24 @@ print_h("{$horse->color} {$sex_str}");
         <th>母の父</th>
         <td><?php
         $bms_name='';
-        if($mare->record_exists && $mare->is_enabled==1){
-            $bms=new Horse();
-            $bms->setDataById($pdo,$mare->sire_id);
-            if($bms->record_exists && $bms->is_enabled==1){
-                $bms_name=$bms->name_ja?:$bms->name_en;
-            }else{
+        do{
+            if($mare!==false && $mare->is_enabled==1){
+                if($mare->sire_id){
+                    // 母に父IDがある場合は母の父レコードか母の父名
+                    $bms=Horse::getByHorseId($pdo,$mare->sire_id);
+                    if($bms!==false && $bms->is_enabled==1){
+                        // 母父の馬レコードがある場合はその名前
+                        $bms_name=$bms->name_ja?:$bms->name_en;
+                        break;
+                    }
+                }
+                // 母に有効な父のレコードがない場合は母の父名
                 $bms_name=$mare->sire_name;
+                break;
             }
-        }
-        if(!$bms_name){
-            // 馬自身の母父を使用
-            $bms_name = $horse->bms_name;
-        }
+            // 母に父IDがない場合は自身の母父名
+            $bms_name = $page->horse->bms_name;
+        }while(false);
         if($bms_name!=''){
             $bms_name_search=new HorseSearch();
             $bms_name_search->bms_name=$bms_name;
@@ -498,8 +493,8 @@ $latest_race_is_exists=false; ?>
 <hr>
 <a id="under_results_table"></a>
 <table class="horse_base_data">
-<tr><th>馬名意味</th><td><?=h($horse->meaning)?></td></tr>
-<tr><th>備考</th><td><?=nl2br(h($horse->note))?></td></tr>
+<tr><th>馬名意味</th><td><?=h($page->horse->meaning)?></td></tr>
+<tr><th>備考</th><td><?=nl2br(h($page->horse->note))?></td></tr>
 </table>
 <?php
 if($registration_only_race_is_exists||$show_registration_only){
@@ -509,7 +504,7 @@ if($registration_only_race_is_exists||$show_registration_only){
     $a_tag->print();
 }
 ?>
-<?php $horse_tags=(new HorseTag($pdo))->getTagNames($horse->horse_id); ?>
+<?php $horse_tags=(new HorseTag($pdo))->getTagNames($page->horse->horse_id); ?>
 <?php if(count($horse_tags)>0):?>
 <hr>
 検索タグ：<?php
@@ -525,22 +520,22 @@ if($registration_only_race_is_exists||$show_registration_only){
 <?php endif; ?>
 <?php if($page->is_editable): ?>
 <hr><input type="button" id="edit_tgl" value="編集" style="<?=EDIT_MENU_TOGGLE===false?'display:none;':'';?>">
-<input type="hidden" id="hiddden_horse_id" value="<?=h($horse->horse_id)?>">
+<input type="hidden" id="hiddden_horse_id" value="<?=h($page->horse->horse_id)?>">
 <input type="button" value="競走馬IDをクリップボードにコピー" onclick="copyToClipboard('#hiddden_horse_id');">
-(horse_id=<?=h($horse->horse_id)?>)<a id="edit_menu"></a>
+(horse_id=<?=h($page->horse->horse_id)?>)<a id="edit_menu"></a>
 <input type="hidden" id="edit_menu_states" value="0">
 <div class="edit_menu" style="<?=EDIT_MENU_TOGGLE?'display:none;':'';?>">
 <table>
     <tr>
         <td>
-            <?=(new MkTagA('この馬の情報を編集',InAppUrl::to('horse/form.php',['horse_id'=>$horse->horse_id])))?>
+            <?=(new MkTagA('この馬の情報を編集',InAppUrl::to('horse/form.php',['horse_id'=>$page->horse->horse_id])))?>
         </td>
         <td>
 <?php
-    $url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$horse->horse_id]);
+    $url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$page->horse->horse_id]);
     $a_tag=new MkTagA('この馬の戦績を追加');
         $a_tag->href($url);
-    if($horse->birth_year==null){
+    if($page->horse->birth_year==null){
         $a_tag->href('')->setStyle('text-decoration','line-through');
         $a_tag->title("生年仮登録馬のため戦績追加不可");
     }
@@ -548,20 +543,20 @@ if($registration_only_race_is_exists||$show_registration_only){
 ?>
         </td>
         <td>
-            <?=(new MkTagA('競走馬ID修正',"./update_horse_id/form.php?horse_id=".urlencode($horse->horse_id)))?>
+            <?=(new MkTagA('競走馬ID修正',"./update_horse_id/form.php?horse_id=".urlencode($page->horse->horse_id)))?>
         </td>
     </tr>
     <tr>
-        <td><?=(new MkTagA('レース結果一括編集',$race_history->race_count_all>0?InAppUrl::to('horse/bulk_edit/',['horse_id'=>$horse_id]):''))?></td>
+        <td><?=(new MkTagA('レース結果一括編集',$race_history->race_count_all>0?InAppUrl::to('horse/bulk_edit/',['horse_id'=>$page->horse->horse_id]):''))?></td>
         <td></td><td></td>
     </tr>
-<?php if($horse->birth_year!==null): ?>
+<?php if($page->horse->birth_year!==null): ?>
     <tr>
         <td colspan="2">
 <?php
     $a_tag=new MkTagA('最後に開いたレースにこの馬の戦績を追加');
     if(!empty($session->latest_race['id'])){
-        $url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$horse->horse_id,'race_id'=>$session->latest_race['id']]);
+        $url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$page->horse->horse_id,'race_id'=>$session->latest_race['id']]);
         $a_tag->href($url);
         if($latest_race_is_exists===true){
             $a_tag->href('')->setStyle('text-decoration','line-through');
@@ -587,18 +582,18 @@ if($registration_only_race_is_exists||$show_registration_only){
     <tr>
         <td colspan="3" style="text-align: right;">
 <?php
-$params=['horse_id'=>$horse->horse_id];
+$params=['horse_id'=>$page->horse->horse_id];
 $url='race/manage/edit/';
-$params['year']=$horse->birth_year+2;
+$params['year']=$page->horse->birth_year+2;
 echo (new MkTagA('[2歳年]'))->href(InAppUrl::to($url,$params));
 echo "　";
-$params['year']=$horse->birth_year+3;
+$params['year']=$page->horse->birth_year+3;
 echo (new MkTagA('[3歳年]'))->href(InAppUrl::to($url,$params));
 echo "　";
-$params['year']=$horse->birth_year+4;
+$params['year']=$page->horse->birth_year+4;
 echo (new MkTagA('[4歳年]'))->href(InAppUrl::to($url,$params));
 echo "　";
-$params['year']=$horse->birth_year+5;
+$params['year']=$page->horse->birth_year+5;
 echo (new MkTagA('[5歳年]'))->href(InAppUrl::to($url,$params));
 ?>
         </td>
@@ -610,10 +605,10 @@ echo (new MkTagA('[5歳年]'))->href(InAppUrl::to($url,$params));
 <?php
 $url_param=new UrlParams(['session_is_not_update'=>1,'grade_g1'=>1,'grade_g2'=>1,'grade_g3'=>1]);
 $url=InAppUrl::to("race/list/?");
-echo (new MkTagA('[2歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+2,'age[20]'=>1]));
-echo "　".(new MkTagA('[3歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+3,'age[30]'=>1,'age[31]'=>1]));
-echo "　".(new MkTagA('[4歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+4,'age[31]'=>1,'age[41]'=>1]));
-echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+5,'age[31]'=>1,'age[41]'=>1]));
+echo (new MkTagA('[2歳年]'))->href($url.$url_param->toString(['year'=>$page->horse->birth_year+2,'age[20]'=>1]));
+echo "　".(new MkTagA('[3歳年]'))->href($url.$url_param->toString(['year'=>$page->horse->birth_year+3,'age[30]'=>1,'age[31]'=>1]));
+echo "　".(new MkTagA('[4歳年]'))->href($url.$url_param->toString(['year'=>$page->horse->birth_year+4,'age[31]'=>1,'age[41]'=>1]));
+echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$page->horse->birth_year+5,'age[31]'=>1,'age[41]'=>1]));
 ?>
         </td>
     </tr>
@@ -622,7 +617,7 @@ echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$h
 <?php
     $url_param=new UrlParams(['session_is_not_update'=>1,'grade_g1'=>1,'grade_g2'=>1,'grade_g3'=>1,'show_organization_jra'=>1]);
     $url=InAppUrl::to("race/list/?");
-    echo (new MkTagA('[世代基準・中央重賞]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+3,'is_generation_search'=>1]));
+    echo (new MkTagA('[世代基準・中央重賞]'))->href($url.$url_param->toString(['year'=>$page->horse->birth_year+3,'is_generation_search'=>1]));
 ?>
         </td>
     </tr>
@@ -630,13 +625,13 @@ echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$h
         <td>レース検索（すべて）</td>
         <td colspan="2" style="text-align: right;">
 <?php
-if($horse->birth_year!==null){
+if($page->horse->birth_year!==null){
     $url_param=new UrlParams(['session_is_not_update'=>1]);
     $url=InAppUrl::to('race/list/?');
-    echo (new MkTagA('[2歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+2,'age[20]'=>1]));
-    echo "　".(new MkTagA('[3歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+3,'age[30]'=>1,'age[31]'=>1]));
-    echo "　".(new MkTagA('[4歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+4,'age[31]'=>1,'age[41]'=>1]));
-    echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$horse->birth_year+5,'age[31]'=>1,'age[41]'=>1]));
+    echo (new MkTagA('[2歳年]'))->href($url.$url_param->toString(['year'=>$page->horse->birth_year+2,'age[20]'=>1]));
+    echo "　".(new MkTagA('[3歳年]'))->href($url.$url_param->toString(['year'=>$page->horse->birth_year+3,'age[30]'=>1,'age[31]'=>1]));
+    echo "　".(new MkTagA('[4歳年]'))->href($url.$url_param->toString(['year'=>$page->horse->birth_year+4,'age[31]'=>1,'age[41]'=>1]));
+    echo "　".(new MkTagA('[5歳年]'))->href($url.$url_param->toString(['year'=>$page->horse->birth_year+5,'age[31]'=>1,'age[41]'=>1]));
 }
 ?>
         </td>
