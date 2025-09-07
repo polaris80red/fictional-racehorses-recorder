@@ -38,7 +38,7 @@ class RaceResultsGetter{
         $race_trainer_select_clause=Trainer::getPrefixedSelectClause('r_trainer','r_trainer__');
         $horse_trainer_select_clause=Trainer::getPrefixedSelectClause('h_trainer','h_trainer__');
         $horse_s_columns->addColumnAs('tc','horse_tc');
-        $horse_s_columns->addColumnAs('trainer','horse_trainer');
+        $horse_s_columns->addColumnAs('trainer_unique_name','horse_trainer_unique_name');
         $horse_s_columns->addColumnAs('training_country','horse_training_country');
         $horse_s_columns->addColumnAs('is_affliationed_nar','horse_is_affliationed_nar');
         $sql_part_select_columns=implode(",\n",[
@@ -64,9 +64,9 @@ class RaceResultsGetter{
         LEFT JOIN `{$jockey_tbl}` as `jk`
             ON `r_results`.`jockey_unique_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
         LEFT JOIN `{$trainer_tbl}` as `h_trainer`
-            ON `{$horse_tbl}`.`trainer`=`h_trainer`.`unique_name` AND `h_trainer`.`is_enabled`=1
+            ON `{$horse_tbl}`.`trainer_unique_name`=`h_trainer`.`unique_name` AND `h_trainer`.`is_enabled`=1
         LEFT JOIN `{$trainer_tbl}` as `r_trainer`
-            ON `r_results`.`trainer`=`r_trainer`.`unique_name` AND `r_trainer`.`is_enabled`=1
+            ON `r_results`.`trainer_unique_name`=`r_trainer`.`unique_name` AND `r_trainer`.`is_enabled`=1
         WHERE `r_results`.`race_id` LIKE :race_id
         END;
         if(count($this->where_and_parts)>0){
@@ -105,20 +105,20 @@ class RaceResultsGetter{
             $horse_trainer=(new TrainerRow())->setFromArray($data,'h_trainer__');
             $data['trainer_name']='';
             $data['trainer_row']=new TrainerRow();
-            if($data['trainer']){
+            if($data['trainer_unique_name']){
                 if($race_trainer->is_anonymous==1){
                     $data['trainer_name']=(!$this->pageIsEditable)?'□□□□':($race_trainer->short_name_10?:$data['trainer']);
                 }else{
-                    $data['trainer_name']=$race_trainer->short_name_10?:$data['trainer'];
+                    $data['trainer_name']=$race_trainer->short_name_10?:$data['trainer_unique_name'];
                 }
                 $data['trainer_row']=$race_trainer;
-            }else if($data['horse_trainer']){
+            }else if($data['horse_trainer_unique_name']){
                 // レース側の調教師が空の場合は馬側の値を採用
-                $data['trainer']=$data['horse_trainer'];
+                $data['trainer']=$data['horse_trainer_unique_name'];
                 if($horse_trainer->is_anonymous==1){
-                    $data['trainer_name']=(!$this->pageIsEditable)?'□□□□':($horse_trainer->short_name_10?:$data['horse_trainer']);
+                    $data['trainer_name']=(!$this->pageIsEditable)?'□□□□':($horse_trainer->short_name_10?:$data['horse_trainer_unique_name']);
                 }else{
-                    $data['trainer_name']=$horse_trainer->short_name_10?:$data['horse_trainer'];
+                    $data['trainer_name']=$horse_trainer->short_name_10?:$data['horse_trainer_unique_name'];
                 }
                 $data['trainer_row']=$horse_trainer;
             }

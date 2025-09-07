@@ -14,7 +14,7 @@ class HorseRaceHistoryRow{
         'handicap',
         
         'tc',
-        'trainer',
+        'trainer_unique_name',
         'training_country',
         'sex',
         'is_affliationed_nar',
@@ -44,7 +44,7 @@ class HorseRaceHistoryRow{
     public $non_registered_prev_race_number;
     
     public $tc;
-    public $trainer;
+    public $trainer_unique_name;
     public $training_country;
     public $sex;
     public $is_affliationed_nar;

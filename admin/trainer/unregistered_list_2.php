@@ -18,11 +18,11 @@ $current_page=max(filter_input(INPUT_GET,'page',FILTER_VALIDATE_INT),1);
 // $per_page = ($input_per_page===0?'10':$input_per_page);
 $per_page=20;
 $table_data=(function(int $current_page,int $per_page)use($pdo){
-    $parts[]="SELECT DISTINCT `rr`.trainer";
+    $parts[]="SELECT DISTINCT `rr`.trainer_unique_name";
     $parts[]="FROM `".RaceResults::TABLE."` as `rr`";
-    $parts[]="LEFT JOIN `".Trainer::TABLE."` AS `t` ON `rr`.trainer LIKE `t`.unique_name";
-    $parts[]="WHERE `t`.unique_name IS NULL AND `rr`.trainer NOT LIKE ''";
-    $parts[]="ORDER BY `rr`.trainer ASC";
+    $parts[]="LEFT JOIN `".Trainer::TABLE."` AS `t` ON `rr`.trainer_unique_name LIKE `t`.unique_name";
+    $parts[]="WHERE `t`.unique_name IS NULL AND `rr`.trainer_unique_name NOT LIKE ''";
+    $parts[]="ORDER BY `rr`.trainer_unique_name ASC";
     if($per_page>0){
         $parts[]="LIMIT {$per_page}";
         if($current_page>1){

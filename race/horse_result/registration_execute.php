@@ -252,7 +252,7 @@ switch($input->sex){
     <th>所属上書</th><td><?=h($input->tc)?></td>
 </tr>
 <tr>
-    <th>調教師上書</th><td><?=h($input->trainer)?></td>
+    <th>調教師上書</th><td><?=h($input->trainer_unique_name)?></td>
 </tr>
 <tr>
     <th>調教国上書</th><td><?=h($input->training_country)?></td>

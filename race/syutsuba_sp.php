@@ -156,18 +156,18 @@ foreach ($table_data as $data) {
         echo "<span style=\"\"> (".($data['training_country']?:$data['horse_training_country']).")</span> ";
     }
     echo "<br>";
-    $trainer=$data['trainer']?:'□□□□';
+    $trainer=$data['trainer_unique_name']?:'□□□□';
     if($data['race_trainer_mst_is_enabled']==1){
         if($data['race_trainer_mst_is_anonymous']==1){
             $trainer=(!$page->is_editable)?'□□□□':($data['race_trainer_mst_short_name_10']?:$data['trainer']);
         }else{
-            $trainer=$data['race_trainer_mst_short_name_10']?:$data['trainer'];
+            $trainer=$data['race_trainer_mst_short_name_10']?:$data['trainer_unique_name'];
         }
     }else if($data['trainer_mst_is_enabled']==1){
         if($data['trainer_mst_is_anonymous']==1){
-            $trainer=(!$page->is_editable)?'□□□□':($data['trainer_mst_short_name_10']?:$data['trainer']);
+            $trainer=(!$page->is_editable)?'□□□□':($data['trainer_mst_short_name_10']?:$data['trainer_unique_name']);
         }else{
-            $trainer=$data['trainer_mst_short_name_10']?:$data['trainer'];
+            $trainer=$data['trainer_mst_short_name_10']?:$data['trainer_unique_name'];
         }
     }
     print_h($trainer);
