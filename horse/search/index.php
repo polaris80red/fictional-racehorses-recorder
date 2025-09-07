@@ -100,6 +100,7 @@ if($search->limit>0){
     <th>毛色</th>
     <th>性</th>
     <th>所属</th>
+    <th>厩舎</th>
     <th>父</th>
     <th>母</th>
     <th>母父</th> 
@@ -112,6 +113,15 @@ if($search->limit>0){
     'order','null_birth_year'
 ]; ?>
 <?php foreach($search_results as $row): ?>
+<?php
+    $trainer=(new TrainerRow())->setFromArray($row,Trainer::TABLE.'__');
+    $trainer_name=$row['trainer_unique_name'];
+    if($trainer->is_enabled && $trainer->is_anonymous && !$page->is_editable){
+        $trainer_name='□□□□';
+    }else{
+        $trainer_name=$trainer->short_name_10?:($trainer->name?:$row['trainer_unique_name']);
+    }
+?>
 <tr>
     <?php if($horse_id_is_visibled): ?><td><?=h($row['horse_id'])?></td><?php endif; ?>
     <?php
@@ -133,6 +143,7 @@ if($search->limit>0){
     <td><a><?=h($row['color'])?></a></td>
     <td><a><?=h(sex2String($row['sex']))?></a></td>
     <td><a><?=h($row['tc'])?></a></td>
+    <td><a><?=h($trainer_name)?></a></td>
     <td><?php
         if($row['sire_id']!=''){
             $url ="./?".$search->getUrlParam($search_reset_array);

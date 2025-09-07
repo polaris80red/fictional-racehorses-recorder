@@ -252,6 +252,7 @@ class HorseSearch extends Search{
             'bms.name_en AS `bms_name_en`',
             'mare.sire_id AS `mare_sire_id`',
             'mare.sire_name AS `mare_sire_name`',
+            Trainer::getPrefixedSelectClause('trainer'),
         ]).' FROM `'.Horse::TABLE.'` AS h';
         $pre_bind=new StatementBinder();
             $sql_parts[]='LEFT JOIN `'.Horse::TABLE.'` AS sire';
@@ -260,6 +261,8 @@ class HorseSearch extends Search{
             $sql_parts[]='ON h.mare_id LIKE mare.horse_id';
             $sql_parts[]='LEFT JOIN `'.Horse::TABLE.'` AS bms';
             $sql_parts[]='ON mare.sire_id LIKE bms.horse_id';
+            $sql_parts[]='LEFT JOIN `'.Trainer::TABLE.'` AS trainer';
+            $sql_parts[]='ON trainer.unique_name = `h`.`trainer_unique_name`';
         if($this->search_text!=''){
             $sql_parts[]='LEFT JOIN `'.HorseTag::TABLE.'` AS t';
             $sql_parts[]='ON h.horse_id LIKE t.horse_id';
