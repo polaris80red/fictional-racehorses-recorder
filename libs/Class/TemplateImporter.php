@@ -3,8 +3,28 @@ class TemplateImporter {
     private static string $defaultDir='';
     private static string $themeDir='';
     private static string $userDir='';
+    private $templatePath='';
 
-    private function __construct() {}
+    /**
+     * グローバルスコープにincludeする際用のパス取得
+     */
+    public function __construct($templatePath) {
+        $this->templatePath=$templatePath;
+    }
+    public function getPath(){
+        $path=self::$userDir.'/'.$this->templatePath;
+        if(self::$userDir!=='' && file_exists($path)){
+            return $path;
+        }
+        $path=self::$themeDir.'/'.$this->templatePath;
+        if(self::$themeDir!=='' && file_exists($path)){
+            return $path;
+        }
+        return self::$defaultDir.'/'.$this->templatePath;   
+    }
+    public function __toString(){
+        return $this->getPath();
+    }
     public static function setDefalutDir(string $defaultDir){
         self::$defaultDir=$defaultDir;
     }
