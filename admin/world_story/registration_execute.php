@@ -26,6 +26,12 @@ $story->sort_number=intOrNull(filter_input(INPUT_POST,'sort_number'));
 $story->is_read_only=filter_input(INPUT_POST,'is_read_only',FILTER_VALIDATE_BOOL)?1:0;
 $story->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
+$story->config_json=json_decode(filter_input(INPUT_POST,'config_json'));
+
+$save_to_session=filter_input(INPUT_POST,'save_to_session',FILTER_VALIDATE_BOOL);
+$save_to_defaults=filter_input(INPUT_POST,'save_to_defaults',FILTER_VALIDATE_BOOL);
+
+
 $error_exists=false;
 do{
     if(!(new FormCsrfToken())->isValid()){
@@ -49,6 +55,15 @@ do{
 if($error_exists){
     $page->printCommonErrorPage();
     exit;
+}
+$setting->setByStdClass($story->config_json);
+// 現在のセッションへの反映処理
+if($save_to_session){
+    $setting->saveToSessionAll();
+}
+// デフォルト設定への反映処理
+if($save_to_defaults){
+    (new ConfigTable($pdo))->setTimestamp(PROCESS_STARTED_AT)->saveAllParams($setting->getSettingArray());
 }
 if($story->record_exists){
     // 編集モード

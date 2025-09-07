@@ -63,19 +63,27 @@ class WorldStory extends Table{
             self::UNIQUE_KEY_COLUMN,
             'config_json',
         ];
-        $result = self::InsertExecFromThisProp($pdo,$excluded_columns);
-        return $result;
+        $columns=array_diff(array_merge(self::STR_COLUMNS,self::INT_COLUMNS),[self::UNIQUE_KEY_COLUMN]);
+        $sql=SqlMake::InsertSql(static::TABLE,$columns);
+        $stmt = $pdo->prepare($sql);
+        $stmt=$this->BindValuesFromThis($stmt, array_diff(self::STR_COLUMNS,$excluded_columns),PDO::PARAM_STR);
+        $stmt=$this->BindValuesFromThis($stmt, array_diff(self::INT_COLUMNS,$excluded_columns),PDO::PARAM_INT);
+        $json_str=json_encode($this->config_json,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        $stmt->bindValue(':config_json', $json_str, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt;
     }
     public function UpdateExec(PDO $pdo, array $excluded_columns=[]){
         $columns=array_merge(self::STR_COLUMNS,self::INT_COLUMNS);
         $excluded_columns[]='config_json';
 
-        // UPDATE対象からユニークキーと設定JSONを取り除く
-        $update_set_columns=array_diff($columns,[self::UNIQUE_KEY_COLUMN],$excluded_columns);
+        $update_set_columns=array_diff($columns,[self::UNIQUE_KEY_COLUMN]);
         $sql=SqlMake::UpdateSqlWhereRaw(self::TABLE,$update_set_columns, "`id`=:id");
         $stmt = $pdo->prepare($sql);
         $stmt=$this->BindValuesFromThis($stmt, array_diff(self::STR_COLUMNS,$excluded_columns),PDO::PARAM_STR);
         $stmt=$this->BindValuesFromThis($stmt, array_diff(self::INT_COLUMNS,$excluded_columns),PDO::PARAM_INT);
+        $json_str=json_encode($this->config_json,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        $stmt->bindValue(':config_json', $json_str, PDO::PARAM_STR);
         try{
             $stmt->execute();
         }catch (Exception $e){

@@ -25,6 +25,29 @@ $story->sort_number=filter_input(INPUT_POST,'sort_number');
 $story->is_read_only=filter_input(INPUT_POST,'is_read_only',FILTER_VALIDATE_BOOL)?1:0;
 $story->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
+$save_to_session=filter_input(INPUT_POST,'save_to_session',FILTER_VALIDATE_BOOL);
+$save_to_defaults=filter_input(INPUT_POST,'save_to_defaults',FILTER_VALIDATE_BOOL);
+
+$save_setting=new Setting();
+$save_setting->setByStdClass($_POST);
+$config_json_data=$save_setting->getSettingArray();
+if(isset($_POST['save_target']) && is_array($_POST['save_target'])){
+    $diff_array=$_POST['save_target'];
+    // 複数欄共通チェックボックスは比較用配列を差し替え
+    if(!empty($diff_array['year_select_min_max_diff'])){
+        unset($diff_array['year_select_min_max_diff']);
+        $diff_array['year_select_max_diff']=1;
+        $diff_array['year_select_min_diff']=1;
+    }
+    if(!empty($diff_array['race_search_org'])){
+        unset($diff_array['race_search_org']);
+        $diff_array['race_search_org_jra']=1;
+        $diff_array['race_search_org_nar']=1;
+        $diff_array['race_search_org_other']=1;
+    }
+    $config_json_data=array_intersect_key($config_json_data,$diff_array);
+}
+
 $error_exists=false;
 do{
     if($input_id>0 && !$story->record_exists){
@@ -114,7 +137,11 @@ if($input_id>0){
 </tr>
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>
 </table>
-<textarea name="config_json" style="min-width: 25em;min-height: 20em;" readonly><?=h($story->getConfigJsonEncodeText()); ?></textarea>
+<input type="hidden" name="save_to_session" value="<?=$save_to_session?"true":"false"?>">
+セッションへの反映：<?=$save_to_session?"する":"しない"?><br>
+<input type="hidden" name="save_to_defaults" value="<?=$save_to_defaults?"true":"false"?>">
+デフォルト設定の上書き：<?=$save_to_defaults?"する":"しない"?><br>
+<textarea name="config_json" style="min-width: 25em;min-height: 20em;" readonly><?=h(json_encode($config_json_data,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE)); ?></textarea>
 <?php (new FormCsrfToken())->printHiddenInputTag(); ?>
 </form>
 <hr class="no-css-fallback">
