@@ -14,6 +14,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`Horse`.`name_ja`
         ,`Horse`.`name_en`
         ,`Horse`.`tc` AS 'horse_tc'
+        ,`Horse`.`trainer_unique_name` AS 'horse_trainer_unique_name'
         ,`Horse`.`training_country` AS 'horse_training_country'
         ,`Horse`.`is_affliationed_nar` AS 'horse_is_affliationed_nar'
         ,`Horse`.`sex` AS 'horse_sex'
