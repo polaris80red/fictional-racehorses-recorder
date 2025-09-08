@@ -453,21 +453,7 @@ $latest_race_is_exists=false; ?>
         ?>
         <td class="result_number <?=h($add_class)?>"><?=$h_result_txt?></td>
         <?php if(!$mode_umm): ?>
-            <?php
-                $jockey_name=$data->jockey_unique_name;
-                if($jockey->is_enabled===1){
-                    if($jockey->is_anonymous==1){
-                        if($page->is_editable){
-                            $jockey_name = $jockey->short_name_10?:$data->jockey_unique_name;
-                        }else{
-                            $jockey_name='□□□□';
-                        }
-                    }else{
-                        $jockey_name = $jockey->short_name_10?:$data->jockey_unique_name;
-                    }
-                }
-            ?>
-            <td class="jockey" <?=(!$jockey->is_anonymous?'':'style="color:#999;"')?>><?=h($jockey_name)?></td>
+            <td class="jockey" <?=(!$jockey->is_anonymous?'':'style="color:#999;"')?>><?=h($data->getJockeyName($page->is_editable))?></td>
         <?php endif; ?>
         <td class="handicap"><?=h($data->handicap)?></td>
         <?php

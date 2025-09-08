@@ -75,4 +75,20 @@ class HorseRaceHistoryRow{
             $this->$key=$value;
         }
     }
+    /**
+     * 騎手名を取得
+     */
+    public function getJockeyName(bool $show_anonymous = false){
+        $jockey=$this->jockey_row;
+        $jockey_name=$this->jockey_unique_name;
+        if($jockey->is_enabled===1){
+            if($jockey->is_anonymous==1 && $show_anonymous===false){
+                // 匿名フラグがオンで、匿名レコードを表示しない場合は伏せる
+                $jockey_name='□□□□';
+            }else{
+                $jockey_name = $jockey->short_name_10?:$this->jockey_unique_name;
+            }
+        }
+        return (string)$jockey_name;
+    }
 }
