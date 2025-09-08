@@ -69,6 +69,9 @@ if($input_world_id>0){
 <main id="content">
 <hr class="no-css-fallback">
 <form method="post" action="./registration_execute.php">
+<?php if(!$world->id): ?>
+新規登録の場合、登録完了後はストーリー設定（表示設定）の新規登録に進みます。
+<?php endif; ?>
 <table class="edit-form-table">
 <tr>
     <th>ID</th>

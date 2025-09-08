@@ -48,6 +48,10 @@ if($input_id>0){
 <hr class="no-css-fallback">
 <a href="./list.php">一覧に戻る</a>
 <form method="post" action="./registration_confirm.php">
+<hr>
+<?php if(!$world->id): ?>
+新規登録の場合、登録完了後はストーリー設定（表示設定）の新規登録に進みます。
+<?php endif; ?>
 <table class="edit-form-table">
 <tr>
     <th>ID</th>
