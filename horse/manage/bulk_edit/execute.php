@@ -266,8 +266,7 @@ $sex_gelding_override=false;
 ?>
 <td><?=$date_str?></td>
 <?php
-    $race_course_show_name = $data->race_course_mst_short_name??$race->race_course_name;
-    $a_tag=new MkTagA($race_course_show_name);
+    $a_tag=new MkTagA($data->course_row->short_name??$race->race_course_name);
     if($datetime!==null){
         $a_tag->title($race->race_course_name);
     }

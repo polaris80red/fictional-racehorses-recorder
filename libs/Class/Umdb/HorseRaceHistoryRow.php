@@ -21,7 +21,6 @@ class HorseRaceHistoryRow{
 
         'w_month',
         'umm_month_turn',
-        'race_course_mst_short_name',
         'is_registration_only',
         'non_registered_prev_race_number',
     
@@ -53,9 +52,6 @@ class HorseRaceHistoryRow{
     public $w_month;
     public $umm_month_turn;
 
-    // 競馬場マスタから使用するデータ
-    public $race_course_mst_short_name;
-
     // 1・2着馬
     public $r_horse_id;
     public $r_name_ja;
@@ -69,6 +65,7 @@ class HorseRaceHistoryRow{
     public JockeyRow $jockey_row;
     public RaceRow $race_row;
     public RaceGradeRow $grade_row;
+    public RaceCourseRow $course_row;
 
     // 指定したパラメータだけを取り込む
     public function setByArray(array $row_data){

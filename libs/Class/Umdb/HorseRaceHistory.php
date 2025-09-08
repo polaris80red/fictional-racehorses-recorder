@@ -58,6 +58,7 @@ class HorseRaceHistory implements Iterator{
 
             $jockey_select_col=Jockey::getPrefixedSelectClause('jk');
             $race_select_col=Race::getPrefixedSelectClause('race');
+            $course_select_col=RaceCourse::getPrefixedSelectClause('c');
             $grade_select_col=RaceGrade::getPrefixedSelectClause('g');
             $sql=<<<END
             SELECT
@@ -86,7 +87,7 @@ class HorseRaceHistory implements Iterator{
             ,w.month AS `w_month`
             ,w.umm_month_turn
             ,{$grade_select_col}
-            ,c.short_name as race_course_mst_short_name
+            ,{$course_select_col}
             ,`spr`.short_name_2 as special_result_short_name_2
             ,IFNULL(`spr`.is_excluded_from_race_count,0) AS is_excluded_from_race_count
             FROM `{$race_results_tbl}` AS `race_results`
@@ -119,6 +120,9 @@ class HorseRaceHistory implements Iterator{
         // グレードのキー=>インスタンスのキャッシュ
         $grade_list=[];
         $empty_grade=new RaceGradeRow();
+        // コースのキー=>インスタンスのキャッシュ
+        $course_list=[];
+        $empty_course=new RaceCourseRow();
 
         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $row=new HorseRaceHistoryRow();
@@ -143,6 +147,15 @@ class HorseRaceHistory implements Iterator{
             }else{
                 $grade_list[$row->race_row->grade]=(new RaceGradeRow())->setFromArray($data,RaceGrade::TABLE."__");
                 $row->grade_row = $grade_list[$row->race_row->grade];
+            }
+            // コース行のセット
+            if($row->race_row->race_course_name==''){
+                $row->course_row=$empty_course;
+            }else if(isset($course_list[$row->race_row->race_course_name])){
+                $row->course_row = $course_list[$row->race_row->race_course_name];
+            }else{
+                $course_list[$row->race_row->race_course_name]=(new RaceCourseRow())->setFromArray($data,RaceCourse::TABLE."__");
+                $row->course_row = $course_list[$row->race_row->race_course_name];
             }
             if(empty($data['race_id'])){ continue; }
             $res= $rr12HourseGetter->get($data['race_id'],$data['result_number'],$horse_id);
