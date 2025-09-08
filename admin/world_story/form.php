@@ -13,6 +13,7 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+$input_world_id=filter_input(INPUT_GET,'world_id',FILTER_VALIDATE_INT);
 $story=new WorldStory();
 $s_setting=new Setting(false);
 if($input_id>0){
@@ -24,7 +25,17 @@ if($input_id>0){
         $story->id=0;
     }
 }
+$story_setting=$story->config_json;
+// 現在値の設定インスタンスにストーリー設定の保存値を反映する
+$setting->setByStdClass($story_setting);
 
+// 新規登録かつワールド設定がある場合、ワールドだけ指定を変更する
+if($input_id==0 && $input_world_id>0){
+    $world=new World();
+    $world->getDataById($pdo,$input_world_id);
+    $setting->world_id=$input_world_id;
+    $story->name=$world->name;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -104,11 +115,6 @@ if($input_id>0){
 </table>
 <label><input type="checkbox" name="save_to_session" value="true" checked>登録完了時に以下の設定を現在のセッションにも反映する</label><br>
 <label><input type="checkbox" name="save_to_defaults" value="true">登録完了時に全体デフォルト設定を以下の設定で上書きする</label><br>
-<?php
-$story_setting=$story->config_json;
-// 現在値の設定インスタンスにストーリー設定の保存値を反映する
-$setting->setByStdClass($story_setting);
-?>
 <table class="edit-form-table">
 <tr><td colspan="4" style="text-align: right;">※ 右のチェックボックスにONがある場合、ONの項目だけをプリセット設定にする</td></tr>
 <tr><td colspan="4" style="text-align: right;">
@@ -123,13 +129,7 @@ $setting->setByStdClass($story_setting);
 </tr>
 <tr>
     <th>ワールド</th>
-    <td><?php
-        if($setting->world_id>0){
-            $world=new World();
-            $world->getDataById($pdo,$setting->world_id);
-            echo $world->name;
-        }
-    ?></td>
+    <td><?=h($setting->world_id>0?$world->name:'')?></td>
     <td class="in_input"><select name="world_id">
 <?php if($session->is_logined()): ?>
     <option value="">未選択</option>

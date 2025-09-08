@@ -57,6 +57,6 @@ if($world->record_exists){
     // 新規登録モード
     $result = $world->InsertExec($pdo);
     if($result){
-        redirect_exit("./list.php");
+        redirect_exit("../world_story/form.php?".http_build_query(['world_id'=>$pdo->lastInsertId()]));
     }
 }
