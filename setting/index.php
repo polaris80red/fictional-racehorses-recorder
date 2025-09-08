@@ -63,7 +63,7 @@ $story_list=WorldStory::getAll($pdo);
 </tr>
 <tr><td colspan="4" style="text-align: right;">※ 読み込む場合、 設定に存在する項目は以下での変更より優先</td></tr>
 <tr>
-    <th>初期設定ファイルに書出し</th>
+    <th>初期設定に書出し</th>
     <td>
         <label><input type="radio" name="save_to_file" value="0" checked>しない</label>
         <label><input type="radio" name="save_to_file" value="1"<?php echo Session::is_logined()?'':' disabled'; ?>>する</label>
