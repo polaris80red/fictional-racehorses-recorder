@@ -1,7 +1,7 @@
 <?php
 // データベース接続情報
 $cfg['DB_HOST']     ='localhost';
-$cfg['DB_NAME']     ='test';
+$cfg['DB_NAME']     ='umdb';
 $cfg['DB_USER']     ='root';
 $cfg['DB_PASS']     ='';
 $cfg['DB_CHARSET']  ='utf8mb4';
