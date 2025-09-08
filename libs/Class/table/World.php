@@ -9,7 +9,6 @@ class World extends Table{
     protected const INT_COLUMNS=[
         'id',
         'guest_visible',
-        'use_exact_date',
         'sort_priority',
         'is_enabled',
     ];
@@ -20,7 +19,6 @@ class World extends Table{
     public $id=0;
     public $name='';
     public $guest_visible=1;
-    public $use_exact_date=1;
 
     public $auto_id_prefix='';
 

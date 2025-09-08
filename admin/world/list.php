@@ -46,7 +46,6 @@ $story_list=WorldStory::getAll($pdo);
     <th>ID</th>
     <th>名称</th>
     <th>非ログイン時</th>
-    <th>正規日付</th>
     <th>表示順優先度</th>
     <th>選択肢</th>
     <th></th>
@@ -59,7 +58,6 @@ $story_list=WorldStory::getAll($pdo);
     <td><?=h($world['id'])?></td>
     <td><?=h($world['name'])?></td>
     <td class="<?=$world['guest_visible']?'':'select_box_disabled'?>"><?=$world['guest_visible']?'表示':'非表示'?></td>
-    <td><?=$world['use_exact_date']?'あり前提':'なし前提'?></td>
     <td><?=h($world['sort_priority'])?></td>
     <td><?=$world['is_enabled']?'表示':'非表示'?></td>
     <td><?=(new MkTagA('編',$url))?></td>

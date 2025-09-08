@@ -72,13 +72,6 @@ if($input_id>0){
     </td>
 </tr>
 <tr>
-    <th>正規日付</th>
-    <td>
-        <label><?php HTPrint::Radio('use_exact_date',1,$world->use_exact_date); ?>あり前提</label><br>
-        <label><?php HTPrint::Radio('use_exact_date',0,$world->use_exact_date); ?>なし前提</label>
-    </td>
-</tr>
-<tr>
     <th>表示順優先度</th>
     <td class="in_input"><input type="number" name="sort_priority" value="<?=h($world->sort_priority)?>"></td>
 </tr>
