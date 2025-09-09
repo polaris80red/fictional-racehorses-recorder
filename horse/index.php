@@ -105,6 +105,7 @@ td.number_of_starters{ text-align:right; }
 td.frame_number{ text-align:center; }
 td.favourite{ text-align:right; }
 td.result_number{ text-align:right; }
+td.h_weight{ text-align:center; }
 table.horse_base_data a {text-decoration: none;}
 
 .edit_menu table { margin-top: 8px;}
@@ -340,6 +341,7 @@ switch($setting->age_view_mode){
     <th>人気</th><th>着順</th>
     <?php if(!$mode_umm): ?><th>騎手</th><?php endif; ?>
     <th>斤量</th>
+    <?php if(!$mode_umm): ?><th>馬体重</th><?php endif; ?>
     <th>タイム</th>
     <th>1着馬<span class="nowrap">(2着馬)</span></th><th>　</th>
     <?php if($page->is_editable): ?><th></th><?php endif; ?>
@@ -349,7 +351,7 @@ $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id=''
     if($non_registered_prev_race_number>0){
         $ret_text.="<tr><td style=\"color:#999999;\">（{$non_registered_prev_race_number}戦～）</td>";
         $ret_text.=str_repeat("<td></td>",4)."<td>……</td>".str_repeat("<td></td>",8);
-        if(!$mode_umm) { $ret_text.="<td></td>"; }
+        if(!$mode_umm) { $ret_text.=str_repeat("<td></td>",2); }
         if($page->is_editable){
             $params=['horse_id'=>$horse_id];
             if($next_race_id!==''){
@@ -463,6 +465,9 @@ $latest_race_is_exists=false; ?>
             <td class="jockey" <?=(!$jockey->is_anonymous?'':'style="color:#999;"')?>><?=h($data->getJockeyName($page->is_editable))?></td>
         <?php endif; ?>
         <td class="handicap"><?=h($data->handicap)?></td>
+        <?php if(!$mode_umm): ?>
+            <td class="h_weight"><?=h($data->h_weight)?></td>
+        <?php endif; ?>
         <td class="time"><?=h($data->time)?></td>
         <?php
             $a_tag=new MkTagA($data->r_name_ja?:$data->r_name_en,InAppUrl::to('horse/',[

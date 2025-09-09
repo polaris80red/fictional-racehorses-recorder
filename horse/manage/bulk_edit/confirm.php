@@ -113,6 +113,7 @@ print_h("{$horse->color} {$sex_str}");
     <th>馬</th>
     <th>人気</th><th>着順</th><th>補正</th><th>降</th><th>騎手</th>
     <th>斤量</th>
+    <th>馬体重</th>
     <th>タイム</th>
     <th>所属</th>
     <th>厩舎</th>
@@ -149,6 +150,7 @@ $nar_override=0;
         'result_text',
         'favourite',
         'handicap',
+        'h_weight',
         'time',
         'jockey',
         'tc',
@@ -204,6 +206,11 @@ $nar_override=0;
         $race_result->handicap=$posted_race->handicap?:null;
         $has_change=true;
         $changed->handicap=true;
+    }
+    if((string)$race_result->h_weight!==(string)$posted_race->h_weight){
+        $race_result->h_weight=$posted_race->h_weight?:null;
+        $has_change=true;
+        $changed->h_weight=true;
     }
     if((string)$race_result->time!==(string)$posted_race->time){
         $race_result->time=$posted_race->time?:null;
@@ -332,6 +339,10 @@ $nar_override=0;
 <td class="handicap <?=!$changed->handicap?'':'changed'?>">
     <?=h($race_result->handicap)?>
     <input type="hidden" name="race[<?=h($data->race_id)?>][handicap]" value="<?=h($race_result->handicap)?>">
+</td>
+<td class="h_weight <?=!$changed->h_weight?'':'changed'?>">
+    <?=h($race_result->h_weight)?>
+    <input type="hidden" name="race[<?=h($data->race_id)?>][h_weight]" value="<?=h($race_result->h_weight)?>">
 </td>
 <td class="time <?=!$changed->time?'':'changed'?>">
     <?=h($race_result->time)?>

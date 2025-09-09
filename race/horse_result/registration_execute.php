@@ -233,6 +233,12 @@ $ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_
     ?></td>
 </tr>
 <tr>
+    <th>推定上り</th><td><?=h($input->f_time)?></td>
+</tr>
+<tr>
+    <th>馬体重</th><td><?=h($input->h_weight)?></td>
+</tr>
+<tr>
     <th>単勝人気</th><td><?=h(ifZero2Empty($input->favourite))?></td>
 </tr>
 <tr>

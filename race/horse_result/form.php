@@ -229,6 +229,16 @@ if($page->error_exists){
 </tr>
 <tr><td colspan="2">3角以下コースは右詰め</td></tr>
 <tr>
+    <th>推定上り</th>
+    <td class="in_input"><input type="text" name="f_time" value="<?=h($form_data->f_time)?>"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=f_time]');"></td>
+</tr>
+<tr>
+    <th>馬体重</th>
+    <td class="in_input"><input type="number" name="h_weight" value="<?=h($form_data->h_weight)?>"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=h_weight]');"></td>
+</tr>
+<tr>
     <th>単勝人気</th>
     <td class="in_input">
         <select name="favourite_select" style="width:7em;" onchange="clearElmVal('*[name=favourite]');">

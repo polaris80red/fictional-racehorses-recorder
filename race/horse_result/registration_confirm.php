@@ -199,6 +199,14 @@ if($is_error!==0){
     </td>
 </tr>
 <tr>
+    <th>推定上り</th>
+    <td><?php HTPrint::HiddenAndText('f_time',$race_results->f_time); ?></td>
+</tr>
+<tr>
+    <th>馬体重</th>
+    <td><?php HTPrint::HiddenAndText('h_weight',$race_results->h_weight?:''); ?></td>
+</tr>
+<tr>
     <th>単勝人気</th>
     <td><?php HTPrint::HiddenAndText('favourite',ifZero2Empty($race_results->favourite)); ?>番人気</td>
 </tr>

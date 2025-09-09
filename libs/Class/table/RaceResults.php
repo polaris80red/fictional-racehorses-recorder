@@ -20,6 +20,8 @@ class RaceResults extends Table{
     public $corner_2 ='';
     public $corner_3 ='';
     public $corner_4 ='';
+    public $f_time =null;
+    public $h_weight ='';
     public $favourite =0;
     public $syuutoku =0;
     public $sex =0;
@@ -38,6 +40,7 @@ class RaceResults extends Table{
         'result_number','result_order','result_before_demotion',
         'frame_number','horse_number',
         'corner_1','corner_2','corner_3','corner_4',
+        'h_weight',
         'favourite',
         'syuutoku',
         'sex',
@@ -52,6 +55,7 @@ class RaceResults extends Table{
         'handicap',
         'time',
         'margin',
+        'f_time',
         'tc',
         'trainer_unique_name',
         'training_country',
@@ -116,6 +120,8 @@ class RaceResults extends Table{
         $this->corner_2 = filter_input($input_type,'corner_2');
         $this->corner_3 = filter_input($input_type,'corner_3');
         $this->corner_4 = filter_input($input_type,'corner_4');
+        $this->f_time = filter_input($input_type,'f_time');
+        $this->h_weight = filter_input($input_type,'h_weight');
         $this->syuutoku = (int)filter_input($input_type,'syuutoku',FILTER_VALIDATE_INT);
         $this->sex = filter_input($input_type,'sex');
         $this->tc = filter_input($input_type,'tc');
@@ -197,6 +203,8 @@ class RaceResults extends Table{
         $stmt->bindValue(':corner_2', intOrNullIfZero($this->corner_2), PDO::PARAM_INT);
         $stmt->bindValue(':corner_3', intOrNullIfZero($this->corner_3), PDO::PARAM_INT);
         $stmt->bindValue(':corner_4', intOrNullIfZero($this->corner_4), PDO::PARAM_INT);
+        $stmt->bindValue(':f_time', $this->f_time?:null, PDO::PARAM_STR);
+        $stmt->bindValue(':h_weight', $this->h_weight?:null, PDO::PARAM_INT);
         $stmt->bindValue(':favourite', intOrNullIfZero($this->favourite), PDO::PARAM_INT);
         $stmt->bindValue(':syuutoku', $this->syuutoku, PDO::PARAM_INT);
         $stmt->bindValue(':sex', $this->sex, PDO::PARAM_INT);

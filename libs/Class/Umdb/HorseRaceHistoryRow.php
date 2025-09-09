@@ -13,6 +13,8 @@ class HorseRaceHistoryRow{
         'jockey_unique_name',
         'handicap',
         'time',
+        'f_time',
+        'h_weight',
         
         'tc',
         'trainer_unique_name',
@@ -40,6 +42,8 @@ class HorseRaceHistoryRow{
     public $jockey_unique_name; // 騎手
     public $handicap;       // 斤量
     public $time;       // タイム
+    public $f_time;       // 上り
+    public $h_weight;       // 馬体重
     public $favourite;      // 単勝人気
     public $is_registration_only;
     public $non_registered_prev_race_number;
