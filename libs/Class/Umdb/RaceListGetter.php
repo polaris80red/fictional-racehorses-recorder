@@ -25,6 +25,12 @@ class RaceListGetter{
         $age_tbl=RaceCategoryAge::TABLE;
         $grade_tbl=RaceGrade::TABLE;
         $course_mst_tbl=RaceCourse::TABLE;
+
+        $race_select_col=Race::getPrefixedSelectClause('r');
+        $course_select_col=RaceCourse::getPrefixedSelectClause('c');
+        $grade_select_col=RaceGrade::getPrefixedSelectClause('g');
+        $week_select_col=RaceWeek::getPrefixedSelectClause('w');
+
         $sql=<<<END
         SELECT
             r.*
@@ -34,6 +40,10 @@ class RaceListGetter{
             ,g.css_class_suffix as grade_css_class_suffix
             ,c.short_name as race_course_mst_short_name
             ,c.short_name_m as race_course_mst_short_name_m
+            ,$race_select_col
+            ,$course_select_col
+            ,$grade_select_col
+            ,$week_select_col
         FROM `{$tbl}` AS r
         LEFT JOIN `{$week_tbl}` as w ON r.week_id=w.id
         LEFT JOIN `{$age_tbl}` as age ON r.age_category_id=age.id
