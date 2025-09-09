@@ -215,10 +215,10 @@ $ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_
     <th>騎手</th><td><?=h($input->jockey_unique_name)?></td>
 </tr>
 <tr>
-    <th>斤量</th><td><?=h($input->handicap)?>kg</td>
+    <th>斤量</th><td><?=h($input->handicap)?>kg ｜馬体重<?=h($input->h_weight)?>kg</td>
 </tr>
 <tr>
-    <th>タイム</th><td><?=h($input->time)?></td>
+    <th>タイム</th><td><?=h($input->time)?>（上り：<?=h($input->f_time)?>）</td>
 </tr>
 <tr>
     <th>着差</th><td><?=h($input->margin)?></td>
@@ -233,16 +233,12 @@ $ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_
     ?></td>
 </tr>
 <tr>
-    <th>推定上り</th><td><?=h($input->f_time)?></td>
-</tr>
-<tr>
-    <th>馬体重</th><td><?=h($input->h_weight)?></td>
-</tr>
-<tr>
     <th>単勝人気</th><td><?=h(ifZero2Empty($input->favourite))?></td>
 </tr>
+</table>
+<table class="edit-form-table floatLeft">
 <tr>
-    <th>性別</th>
+    <th>性別上書</th>
     <td><?php
 switch($input->sex){
     case 0:
@@ -279,8 +275,9 @@ switch($input->is_affliationed_nar){
 }
 ?></td>
 </tr>
-</table>
-<table class="edit-form-table floatLeft">
+<tr>
+    <th colspan="2"></th>
+</tr>
 <tr>
     <th colspan="2">今週の注目レース</th>
 </tr>

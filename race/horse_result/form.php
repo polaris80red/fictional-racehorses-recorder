@@ -204,17 +204,21 @@ if($page->error_exists){
 </tr>
 <tr>
     <th>斤量</th>
-    <td class="in_input"><input type="text" name="handicap" style="width:6em;" list="handicap_list" value="<?=h($form_data->handicap)?>">kg</td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=handicap]');"></td>
+    <td class="in_input" colspan="2">
+        <input type="text" name="handicap" style="width:3.5em;" list="handicap_list" value="<?=h($form_data->handicap)?>"><input type="button" value="C" onclick="clearElmVal('*[name=handicap]');">
+        ｜馬体重 <input type="number" name="h_weight" style="width:3.5em;" value="<?=h($form_data->h_weight)?>"><input type="button" value="C" onclick="clearElmVal('*[name=h_weight]');">
+    </td>
 </tr>
 <tr>
     <th>タイム</th>
-    <td class="in_input"><input type="text" name="time" value="<?=h($form_data->time)?>"></td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=time]');"></td>
+    <td class="in_input" colspan="2">
+        <input type="text" name="time" style="width:3.5em;" value="<?=h($form_data->time)?>"><input type="button" value="C" onclick="clearElmVal('*[name=time]');">
+        （ 上り <input type="text" name="f_time" style="width:3.5em;" value="<?=h($form_data->f_time)?>"><input type="button" value="C" onclick="clearElmVal('*[name=f_time]');"> ）
+    </td>
 </tr>
 <tr>
     <th>着差</th>
-    <td class="in_input"><input type="text" name="margin" list="margin_list" value="<?=h($form_data->margin)?>"></td>
+    <td class="in_input"><input type="text" name="margin" style="width:3.5em;" list="margin_list" value="<?=h($form_data->margin)?>"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=margin]');"></td>
 </tr>
 <tr>
@@ -228,16 +232,6 @@ if($page->error_exists){
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=corner_1]');clearElmVal('*[name=corner_2]');clearElmVal('*[name=corner_3]');clearElmVal('*[name=corner_4]');"></td>
 </tr>
 <tr><td colspan="2">3角以下コースは右詰め</td></tr>
-<tr>
-    <th>推定上り</th>
-    <td class="in_input"><input type="text" name="f_time" value="<?=h($form_data->f_time)?>"></td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=f_time]');"></td>
-</tr>
-<tr>
-    <th>馬体重</th>
-    <td class="in_input"><input type="number" name="h_weight" value="<?=h($form_data->h_weight)?>"></td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=h_weight]');"></td>
-</tr>
 <tr>
     <th>単勝人気</th>
     <td class="in_input">
@@ -261,7 +255,8 @@ if($page->error_exists){
     <td class="in_input"><input type="number" name="syuutoku" list="syuutoku_list" value="<?=h($form_data->syuutoku)?>">万円</td>
     <td></td>
 </tr>-->
-<tr><td colspan="3" style="height: 4px;"></td></tr>
+</table>
+<table class="edit-form-table floatLeft">
 <tr>
     <th>性別上書</th>
     <td>
@@ -298,7 +293,7 @@ if($page->error_exists){
     </td>
 </tr>
 <tr>
-    <th>未登録の前走</th>
+    <th>未登録前走</th>
     <td class="in_input"><input type="number" name="non_registered_prev_race_number" style="width: 3em;" value="<?=h((int)$form_data->non_registered_prev_race_number)?>">走</td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=non_registered_prev_race_number]');"></td>
 </tr>
@@ -317,26 +312,25 @@ if($page->error_exists){
     <td></td>
 </tr>
 <?php endif; ?>
-</table>
-<table class="edit-form-table floatLeft">
+<tr><td colspan="3" style="height: 4px;"></td></tr>
 <tr>
-    <th colspan="2">今週の注目レース</th>
+    <th colspan="3">今週の注目レース</th>
 </tr>
 <tr>
     <th>(火)<br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_1]','今週の注目レース（火曜日）');"></th>
-    <td class="in_input">
+    <td class="in_input" colspan="2">
         <textarea name="jra_thisweek_horse_1" style="width: 20em; min-height:5.5em;"><?=h($form_data->jra_thisweek_horse_1)?></textarea>
     </td>
 </tr>
 <tr>
     <th>(木)<br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_2]','今週の注目レース（木曜日）');"></th>
-    <td class="in_input">
+    <td class="in_input" colspan="2">
         <textarea name="jra_thisweek_horse_2" style="width: 20em; min-height:5.5em;"><?=h($form_data->jra_thisweek_horse_2)?></textarea><br>
     </td>
 </tr>
 <tr>
     <th>並び順</th>
-    <td class="in_input">
+    <td class="in_input" colspan="2">
         <input type="number" name="jra_thisweek_horse_sort_number" style="width:6em;" value="<?=h($form_data->jra_thisweek_horse_sort_number)?>">
         <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_thisweek_horse_sort_number]');">
     </td>
@@ -346,14 +340,14 @@ if($page->error_exists){
 </tr>
 <?php if(in_array($race->grade,['G1','Jpn1'])): ?>
 <tr>
-    <td class="in_input" colspan="2">
+    <td class="in_input" colspan="3">
         <textarea name="jra_sps_comment" style="width: 95%;min-height:6em;"><?=h($form_data->jra_sps_comment)?></textarea><br>
         <input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_sps_comment]','スペシャル出馬表紹介');">
     </td>
 </tr>
 <?php else: ?>
 <tr>
-    <td class="in_input" colspan="2">
+    <td class="in_input" colspan="3">
         <textarea name="jra_sps_comment" style="width: 95%;min-height:6em;" disabled></textarea><br>
         <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_sps_comment]');" disabled>
         <?php HTPrint::Hidden('jra_sps_comment',$form_data->jra_sps_comment) ?>

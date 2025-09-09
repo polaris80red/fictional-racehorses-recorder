@@ -173,11 +173,17 @@ if($is_error!==0){
 <?php endif; ?>
 <tr>
     <th>斤量</th>
-    <td><?php HTPrint::HiddenAndText('handicap',$race_results->handicap?:''); ?>kg</td>
+    <td>
+        <?php HTPrint::HiddenAndText('handicap',$race_results->handicap?:'');?>kg
+        ｜馬体重 <?php HTPrint::HiddenAndText('h_weight',$race_results->h_weight?:'');?>kg
+    </td>
 </tr>
 <tr>
     <th>タイム</th>
-    <td><?php HTPrint::HiddenAndText('time',$race_results->time); ?></td>
+    <td>
+        <?php HTPrint::HiddenAndText('time',$race_results->time); ?>
+        （上り：<?php HTPrint::HiddenAndText('f_time',$race_results->f_time); ?>）
+    </td>
 </tr>
 <tr>
     <th>着差</th>
@@ -199,14 +205,6 @@ if($is_error!==0){
     </td>
 </tr>
 <tr>
-    <th>推定上り</th>
-    <td><?php HTPrint::HiddenAndText('f_time',$race_results->f_time); ?></td>
-</tr>
-<tr>
-    <th>馬体重</th>
-    <td><?php HTPrint::HiddenAndText('h_weight',$race_results->h_weight?:''); ?></td>
-</tr>
-<tr>
     <th>単勝人気</th>
     <td><?php HTPrint::HiddenAndText('favourite',ifZero2Empty($race_results->favourite)); ?>番人気</td>
 </tr>
@@ -214,6 +212,8 @@ if($is_error!==0){
     <th>収得賞金</th>
     <td><?php HTPrint::HiddenAndText('syuutoku',ifZero2Empty($race_results->syuutoku)); ?>万円</td>
 </tr>-->
+</table>
+<table class="edit-form-table floatLeft">
 <tr>
     <th>性別</th>
     <td><?php
@@ -271,8 +271,7 @@ switch($race_results->is_affliationed_nar){
     <td>現在指定：<?=h($next_race_results->non_registered_prev_race_number)?>走</td>
 </tr>
 <?php endif; ?>
-</table>
-<table class="edit-form-table floatLeft">
+<tr><td colspan="2"></td></tr>
 <tr>
     <th colspan="2">今週の注目レース</th>
 </tr>
