@@ -101,12 +101,12 @@ $search->current_page_results_count=count($table_rows);
     if($race->is_enabled===0){ $class->add('disabled_row'); }
 ?>
 <tr class="<?=$class?>">
+<?php if($page->is_editable && $search->is_one_year_only): ?>
+    <td class="in_input">
+        <label style="width:100%;height:100%;"><?=(new MkTagInput('checkbox',"id_list[]",$race->race_id))?></label>
+    </td>
+<?php endif; ?>
 <?php
-    if($page->is_editable && $search->is_one_year_only){
-        echo "<td class=\"in_input\"><label style=\"width:100%;height:100%;\">";
-        echo (new MkTagInput('checkbox',"id_list[]",$race->race_id));
-        echo "</label></td>";
-    }
     // 正規日付があり、仮日付でない場合　と　それ以外
     $datetime=null;
     if(!is_null($race->date) && $race->is_tmp_date==0){
@@ -162,41 +162,23 @@ $search->current_page_results_count=count($table_rows);
         ));
         $a_tag->title($race->race_course_name);
     }
-    echo "<td class=\"race_course_name\">{$a_tag}</td>";
-    echo "<td>{$race->course_type}{$race->distance}</td>";
-    echo "<td class=\"grade\">".(($raceGrade->short_name??'')?:$race->grade)."</td>";
-    echo "<td>";
-    echo '<a href="'.$page->getRaceResultUrl($race->race_id).'" title="'.$race->race_name.($race->caption?'：'.$race->caption:'').'">';
-    echo $race->race_name;
-    echo "</a>\t";
-    echo "</td>";
-    echo "<td>";
+?>
+    <td class="race_course_name"><?=$a_tag?></td>
+    <td><?=h($race->course_type.$race->distance)?></td>
+    <td class="grade"><?=h(($raceGrade->short_name??'')?:$race->grade)?></td>
+    <td>
+        <a href="<?=h($page->getRaceResultUrl($race->race_id))?>" title="<?=h($race->race_name.($race->caption?'：'.$race->caption:''))?>"><?=h($race->race_name)?></a>
+    </td>
+<?php
     $race123horse=$race123horseGetter($race->race_id);
     $h1=(object)($race123horse['r1']??null);
     $h2=(object)($race123horse['r2']??null);
     $h3=(object)($race123horse['r3']??null);
-    $a_tag=new MkTagA();
-    if(!empty($h1->horse_id)){
-        $a_tag->setLinkText($h1->name_ja?:$h1->name_en);
-        $a_tag->href($page->getHorsePageUrl($h1->horse_id));
-        echo $a_tag;
-    }
-    echo "</td>";
-    echo "<td>";
-    if(!empty($h2->horse_id)){
-        $a_tag->setLinkText($h2->name_ja?:$h2->name_en);
-        $a_tag->href($page->getHorsePageUrl($h2->horse_id));
-        echo $a_tag;
-    }
-    echo "</td>";
-    echo "<td>";
-    if(!empty($h3->horse_id)){
-        $a_tag->setLinkText($h3->name_ja?:$h3->name_en);
-        $a_tag->href($page->getHorsePageUrl($h3->horse_id));
-        echo $a_tag;
-    }
-    echo "</td>";
-?></tr>
+?>
+<td><?=empty($h1->horse_id)?'':(new MkTagA(($h1->name_ja?:$h1->name_en),$page->getHorsePageUrl($h1->horse_id)))?></td>
+<td><?=empty($h2->horse_id)?'':(new MkTagA(($h2->name_ja?:$h2->name_en),$page->getHorsePageUrl($h2->horse_id)))?></td>
+<td><?=empty($h3->horse_id)?'':(new MkTagA(($h3->name_ja?:$h3->name_en),$page->getHorsePageUrl($h3->horse_id)))?></td>
+</tr>
 <?php endforeach; ?>
 </table>
 <?php if($search->limit>0): ?>
