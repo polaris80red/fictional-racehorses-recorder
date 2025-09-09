@@ -218,6 +218,9 @@ $ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_
     <th>斤量</th><td><?=h($input->handicap)?>kg</td>
 </tr>
 <tr>
+    <th>タイム</th><td><?=h($input->time)?></td>
+</tr>
+<tr>
     <th>着差</th><td><?=h($input->margin)?></td>
 </tr>
 <tr>

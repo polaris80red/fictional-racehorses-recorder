@@ -95,6 +95,7 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`result_before_demotion`
             ,`race_results`.`jockey_unique_name`
             ,`race_results`.`handicap`
+            ,`race_results`.`time`
             ,`race_results`.`frame_number`
             ,`race_results`.`horse_number`
             ,`race_results`.`favourite`

@@ -110,8 +110,8 @@ switch($setting->age_view_mode){
     case Setting::AGE_VIEW_MODE_UMAMUSUME_S:
         $mode_umm=true;
 }
-$empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td><td></td><td></td><td></td><td></td><td></td><td></td>";
-if(!$mode_umm){ $empty_row_2.="<td></td><td></td>"; }
+$empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td>".str_repeat('<td></td>',7);
+if(!$mode_umm){ $empty_row_2.=str_repeat('<td></td>',2); }
 ?>
 <table class="race_results">
 <tr>
@@ -127,6 +127,7 @@ if(!$mode_umm){ $empty_row_2.="<td></td><td></td>"; }
 <?php if(!$mode_umm): ?>
 <th>騎手</th>
 <?php endif; ?>
+<th>タイム</th>
 <th>着差</th>
 <th>コーナー<br>通過順位</th>
 <th>所属</th>
@@ -221,6 +222,7 @@ if($data['result_text']!=''){
 <?php if($setting->age_view_mode!==1): ?>
 <td style="<?=$data['jockey_row']->is_anonymous?'color:#999;':''?>"><?=h($data['jockey_name']??'')?></td>
 <?php endif; ?>
+<td><?=h($data['time'])?></td>
 <td><?=h($data['margin'])?></td>
 <?php
     $corner_numbers=[];

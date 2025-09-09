@@ -127,6 +127,7 @@ switch($setting->age_view_mode){
     <th>馬<br>番</th>
     <th>人<br>気</th><th colspan="2">着順</th><th colspan="2">着補正</th><th>騎手</th>
     <th>斤量</th>
+    <th>タイム</th>
     <th>所属</th>
     <th>厩舎</th>
     <th>調教</th>
@@ -247,6 +248,9 @@ $latest_race_is_exists=false; ?>
 </td>
 <td class="in_input handicap">
     <input type="text" name="race[<?=h($data->race_id)?>][handicap]" style="width: 2.5em;" value="<?=h($data->handicap)?>" placeholder="斤量">
+</td>
+<td class="in_input time">
+    <input type="text" name="race[<?=h($data->race_id)?>][time]" style="width: 3em;" value="<?=h($data->time)?>" placeholder="タイム">
 </td>
 <td class="in_input">
     <input type="text" name="race[<?=h($data->race_id)?>][tc]" style="width: 3em;" value="<?=h($data->tc)?>" placeholder="所属">

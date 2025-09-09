@@ -208,6 +208,11 @@ if($page->error_exists){
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=handicap]');"></td>
 </tr>
 <tr>
+    <th>タイム</th>
+    <td class="in_input"><input type="text" name="time" value="<?=h($form_data->time)?>"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=time]');"></td>
+</tr>
+<tr>
     <th>着差</th>
     <td class="in_input"><input type="text" name="margin" list="margin_list" value="<?=h($form_data->margin)?>"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=margin]');"></td>

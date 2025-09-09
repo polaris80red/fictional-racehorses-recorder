@@ -176,6 +176,10 @@ if($is_error!==0){
     <td><?php HTPrint::HiddenAndText('handicap',$race_results->handicap?:''); ?>kg</td>
 </tr>
 <tr>
+    <th>タイム</th>
+    <td><?php HTPrint::HiddenAndText('time',$race_results->time); ?></td>
+</tr>
+<tr>
     <th>着差</th>
     <td><?php HTPrint::HiddenAndText('margin',$race_results->margin); ?></td>
 </tr>
