@@ -29,6 +29,9 @@ class EnvConfigInitializer {
         if(READONLY_MODE){ $show_login_link=false; }
         define('SHOW_LOGIN_LINK',$show_login_link);
 
+        define('SHOW_DISPLAY_SETTINGS_FOR_GUESTS',
+            filter_var($cfg['SHOW_DISPLAY_SETTINGS_FOR_GUESTS'],FILTER_VALIDATE_BOOL));
+
         define('ENABLE_ACCESS_COUNTER',
             filter_var($cfg['ENABLE_ACCESS_COUNTER'],FILTER_VALIDATE_BOOL));
 

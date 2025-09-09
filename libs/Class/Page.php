@@ -184,10 +184,10 @@ class Page{
 <?php if(SHOW_PARENT_SITE_LINK): ?>
 <a href="<?=PARENT_SITE_URL?>"><?=PARENT_SITE_LINK_TEXT?></a>
 <?php endif; ?>
-<a href="<?php echo $pref; ?>">[HOME]</a>
+<a href="<?=$pref?>">[HOME]</a>
 <span class="nowrap">
-<a href="<?php echo $this->to_horse_search_path; ?>">[競走馬検索]</a>
-<a href="<?php echo $this->to_race_list_path; ?>?set_by_session=false&session_is_not_update=1">[レース検索]</a>
+<a href="<?=$this->to_horse_search_path;?>">[競走馬検索]</a>
+<a href="<?=$this->to_race_list_path;?>?set_by_session=false&session_is_not_update=1">[レース検索]</a>
 </span>
 <?php
 $race_history_count=(new RaceAccessHistory())->count();
@@ -195,23 +195,25 @@ if( !empty($_SESSION[Session::PUBLIC_PARAM_KEY]['latest_horse']['id'])||$race_hi
 <span class="nowrap">（ 最新：
 <?php if(!empty($_SESSION[Session::PUBLIC_PARAM_KEY]['latest_horse']['id'])):
 $url=$pref.'horse/?horse_id='.$_SESSION[Session::PUBLIC_PARAM_KEY]['latest_horse']['id']; ?>
-<a href="<?php echo $url; ?>">[馬]</a>
+<a href="<?=$url?>">[馬]</a>
 <?php endif; ?>
 <?php if($race_history_count>0):
 $url=$this->to_app_root_path."race/list/access_history.php";
 ?>
-<a href="<?php echo $url; ?>">[レース履歴]</a>
+<a href="<?=$url?>">[レース履歴]</a>
 <?php endif; ?>）</span>
 <?php endif; ?>
 </div><!-- /float_left -->
 <div style="width:20%;float:right;text-align:right;">
-<a href="<?php echo $pref;?>setting/">[設定]</a>
-<?php if(!Session::is_logined()): ?>
-<?php if(SHOW_LOGIN_LINK): ?>
-<a href="<?php echo $pref."sign-in/"; ?>" class="nowrap">[ログイン]</a>
+<?php if(SHOW_DISPLAY_SETTINGS_FOR_GUESTS||Session::is_logined()): ?>
+    <a href="<?=$pref?>setting/">[設定]</a>
 <?php endif; ?>
-<?php else: ?>
-<a href="<?php echo $pref; ?>sign-out.php" class="nowrap">[ログアウト]</a>
+<?php if(SHOW_LOGIN_LINK): ?>
+    <?php if(!Session::is_logined()): ?>
+    <a href="<?=$pref?>sign-in/" class="nowrap">[ログイン]</a>
+    <?php else: ?>
+    <a href="<?=$pref?>sign-out.php" class="nowrap">[ログアウト]</a>
+    <?php endif; ?>
 <?php endif; ?>
 </div><!-- /float_right -->
 </div>

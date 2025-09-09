@@ -37,6 +37,13 @@ $cfg['SHOW_LOGIN_LINK']=true;
  *  false   :ログインするには「アプリのルート/admin/」にアクセスしてください
  */
 
+// 表示設定のリンクをログイン中でない閲覧者に表示するかどうか
+$cfg['SHOW_DISPLAY_SETTINGS_FOR_GUESTS']=false;
+/**   SHOW_DISPLAY_SETTINGS_FOR_GUESTS
+ *  true    :常にリンクを表示します
+ *  false   :ログインしていなければリンクを表示しません
+ */
+
 // 表示回数カウントのオン・オフ
 $cfg['ENABLE_ACCESS_COUNTER']=false;
 /**   ENABLE_ACCESS_COUNTER
