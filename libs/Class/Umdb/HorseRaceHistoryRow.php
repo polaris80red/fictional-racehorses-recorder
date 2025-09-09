@@ -39,7 +39,7 @@ class HorseRaceHistoryRow{
     public $horse_number;
     public $jockey_unique_name; // 騎手
     public $handicap;       // 斤量
-    public $time;       // 斤量
+    public $time;       // タイム
     public $favourite;      // 単勝人気
     public $is_registration_only;
     public $non_registered_prev_race_number;
