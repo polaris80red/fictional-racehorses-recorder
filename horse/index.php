@@ -183,10 +183,16 @@ print_h("{$horse->color} {$sex_str}");
             }
             $trainer_name=$trainer->name?:($trainer->short_name_10?:$page->horse->trainer_unique_name);
         }while(false);
+        $trainer_search_tag=new MkTagA($trainer_name??'');
+        $trainer_search=new HorseSearch();
+        if($page->horse->trainer_unique_name!=''){
+            $trainer_search->trainer=$page->horse->trainer_unique_name;
+            $trainer_search_tag->href($page->to_horse_search_path.'?'.$trainer_search->getUrlParam());
+        }
     ?>
     <tr>
         <th>調教師</th>
-        <td><?=h($trainer_name)?></td>
+        <td><?=$trainer_search_tag?></td>
     </tr>
     <tr>
         <th><?=$setting->birth_year_mode===0?"生年":"世代"?></th>
