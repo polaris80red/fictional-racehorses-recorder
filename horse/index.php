@@ -78,9 +78,9 @@ if($horse->is_sire_or_dam===1){
         $is_sire=true;
     }
 }
-$race_history=new HorseRaceHistory();
+$race_history=new HorseRaceHistory($pdo,$horse_id);
 $race_history->setDateOrder($date_order);
-$race_history->getDataByHorseId($pdo,$horse_id);
+$race_history->getData();
 
 $sex_str=sex2String($horse->sex);
 ?><!DOCTYPE html>

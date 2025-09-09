@@ -36,9 +36,9 @@ if(!$horse->record_exists){
     $page->printCommonErrorPage();
     exit;
 }
-$race_history=new HorseRaceHistory();
+$race_history=new HorseRaceHistory($pdo,$horse_id);
 $race_history->setDateOrder('ASC');
-$race_history->getDataByHorseId($pdo,$horse_id);
+$race_history->getData();
 
 $sex_str=sex2String($horse->sex);
 ?><!DOCTYPE html>

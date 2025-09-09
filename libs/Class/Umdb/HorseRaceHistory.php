@@ -21,10 +21,24 @@ class HorseRaceHistory implements Iterator{
     public function valid(): bool {
         return isset($this->data[$this->pos]);
     }
-    protected $data=[];
 
-    public $date_order='ASC';
-    public $horse_id='';
+    protected $data=[];
+    protected string $horse_id='';
+
+    protected PDO $pdo;
+    protected PDOStatement $stmt;
+    protected RaceResults1stOr2ndHourseGetter $rr12HourseGetter;
+    // 騎手のキー=>インスタンスのキャッシュ
+    protected array $jockey_list;
+    protected JockeyRow $empty_jockey;
+    // グレードのキー=>インスタンスのキャッシュ
+    protected array $grade_list;
+    protected RaceGradeRow $empty_grade;
+    // コースのキー=>インスタンスのキャッシュ
+    protected array $course_list;
+    protected RaceCourseRow $empty_course;
+
+    protected $date_order='ASC';
 
     public $race_count_1=0;
     public $race_count_2=0;
@@ -36,6 +50,18 @@ class HorseRaceHistory implements Iterator{
 
     public $has_unregistered_race_results=false;
 
+    public function __construct(PDO $pdo,string $horse_id){
+        $this->pdo = $pdo;
+        $this->horse_id = $horse_id;
+
+        $this->rr12HourseGetter=new RaceResults1stOr2ndHourseGetter($pdo);
+        $this->jockey_list=[];
+        $this->empty_jockey=new JockeyRow();
+        $this->grade_list=[];
+        $this->empty_grade=new RaceGradeRow();
+        $this->course_list=[];
+        $this->empty_course=new RaceCourseRow();
+    }
     public function setDateOrder($order){
         if($order==='DESC'){
             $this->date_order='DESC';
@@ -44,7 +70,7 @@ class HorseRaceHistory implements Iterator{
         }
         return $this;
     }
-    public function getDataByHorseId(PDO $pdo, string $horse_id){
+    public function getData(){
         $date_order=$this->date_order;
         # レース着順取得
         $sql=(function()use($date_order){
@@ -106,98 +132,85 @@ class HorseRaceHistory implements Iterator{
             return $sql;
         })();
 
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':horse_id', $horse_id, PDO::PARAM_STR);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':horse_id', $this->horse_id, PDO::PARAM_STR);
         $stmt->execute();
+        $this->stmt=$stmt;
 
-        $table_data=[];
-        # 自身以外の1着馬取得
-        $rr12HourseGetter=new RaceResults1stOr2ndHourseGetter($pdo);
-
-        // 騎手のキー=>インスタンスのキャッシュ
-        $jockey_list=[];
-        $empty_jockey=new JockeyRow();
-        // グレードのキー=>インスタンスのキャッシュ
-        $grade_list=[];
-        $empty_grade=new RaceGradeRow();
-        // コースのキー=>インスタンスのキャッシュ
-        $course_list=[];
-        $empty_course=new RaceCourseRow();
-
-        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $row=new HorseRaceHistoryRow();
-            $row->setByArray($data);
-
-            // 騎手行をセット
-            if($row->jockey_unique_name==''){
-                $row->jockey_row=$empty_jockey;
-            }else if(isset($jockey_list[$row->jockey_unique_name])){
-                $row->jockey_row = $jockey_list[$row->jockey_unique_name];
-            }else{
-                $jockey_list[$row->jockey_unique_name]=(new JockeyRow())->setFromArray($data,Jockey::TABLE."__");
-                $row->jockey_row = $jockey_list[$row->jockey_unique_name];
-            }
-            // レース行をセット
-            $row->race_row = (new RaceRow())->setFromArray($data,Race::TABLE."__");
-            // グレード行をセット
-            if($row->race_row->grade==''){
-                $row->grade_row=$empty_grade;
-            }else if(isset($grade_list[$row->race_row->grade])){
-                $row->grade_row = $grade_list[$row->race_row->grade];
-            }else{
-                $grade_list[$row->race_row->grade]=(new RaceGradeRow())->setFromArray($data,RaceGrade::TABLE."__");
-                $row->grade_row = $grade_list[$row->race_row->grade];
-            }
-            // コース行のセット
-            if($row->race_row->race_course_name==''){
-                $row->course_row=$empty_course;
-            }else if(isset($course_list[$row->race_row->race_course_name])){
-                $row->course_row = $course_list[$row->race_row->race_course_name];
-            }else{
-                $course_list[$row->race_row->race_course_name]=(new RaceCourseRow())->setFromArray($data,RaceCourse::TABLE."__");
-                $row->course_row = $course_list[$row->race_row->race_course_name];
-            }
-            if(empty($data['race_id'])){ continue; }
-            $res= $rr12HourseGetter->get($data['race_id'],$data['result_number'],$horse_id);
-            $row->r_horse_id=$data['r_horse_id']=isset($res['horse_id'])?$res['horse_id']:"";
-            $row->r_name_ja=$data['r_name_ja'] =isset($res['name_ja'])?$res['name_ja']:"";
-            $row->r_name_en=$data['r_name_en'] =isset($res['name_en'])?$res['name_en']:"";
-
-            if($data['jra_thisweek_horse_1']||$data['jra_thisweek_horse_2']){
-                $row->has_jra_thisweek = true;
-            }
-
-            # レース数カウント
-            if($data['result_number']===1){
-                $this->race_count_1+=1;
-            }else if($data['result_number']===2){
-                $this->race_count_2+=1;
-            }else if($data['result_number']===3){
-                $this->race_count_3+=1;
-            }else if($data['result_number']===4){
-                $this->race_count_4+=1;
-            }else if($data['result_number']===5){
-                $this->race_count_5+=1;
-            }else{
-                $this->race_count_n+=1;
-            }
-            $this->race_count_all+=1;
-            // 除外判定が1のレコードはカウントしない
-            if($data['is_excluded_from_race_count']){
-                $this->race_count_n-=1;
-                $this->race_count_all-=1;
-            }
-            if($data['non_registered_prev_race_number']>0){
-                $this->race_count_n+=$data['non_registered_prev_race_number'];
-                $this->race_count_all+=$data['non_registered_prev_race_number'];
-                $this->has_unregistered_race_results=true;
-            }
-            $table_data[]=$data;
-
+        while (($row = $this->fetch())!==false){
             $this->data[]=$row;
         }
+        return;
     }
-    public function getAllData(){
-        return $this->data;
+    protected function fetch(){
+        if(($data = $this->stmt->fetch(PDO::FETCH_ASSOC))===false){
+            return false;
+        }
+        $row=new HorseRaceHistoryRow();
+        $row->setByArray($data);
+
+        // 騎手行をセット
+        if($row->jockey_unique_name==''){
+            $row->jockey_row=$this->empty_jockey;
+        }else if(isset($this->jockey_list[$row->jockey_unique_name])){
+            $row->jockey_row = $this->jockey_list[$row->jockey_unique_name];
+        }else{
+            $this->jockey_list[$row->jockey_unique_name]=(new JockeyRow())->setFromArray($data,Jockey::TABLE."__");
+            $row->jockey_row = $this->jockey_list[$row->jockey_unique_name];
+        }
+        // レース行をセット
+        $row->race_row = (new RaceRow())->setFromArray($data,Race::TABLE."__");
+        // グレード行をセット
+        if($row->race_row->grade==''){
+            $row->grade_row=$this->empty_grade;
+        }else if(isset($this->grade_list[$row->race_row->grade])){
+            $row->grade_row = $this->grade_list[$row->race_row->grade];
+        }else{
+            $this->grade_list[$row->race_row->grade]=(new RaceGradeRow())->setFromArray($data,RaceGrade::TABLE."__");
+            $row->grade_row = $this->grade_list[$row->race_row->grade];
+        }
+        // コース行のセット
+        if($row->race_row->race_course_name==''){
+            $row->course_row=$this->empty_course;
+        }else if(isset($this->course_list[$row->race_row->race_course_name])){
+            $row->course_row = $this->course_list[$row->race_row->race_course_name];
+        }else{
+            $this->course_list[$row->race_row->race_course_name]=(new RaceCourseRow())->setFromArray($data,RaceCourse::TABLE."__");
+            $row->course_row = $this->course_list[$row->race_row->race_course_name];
+        }
+        $res= $this->rr12HourseGetter->get($data['race_id'],$data['result_number'],$this->horse_id);
+        $row->r_horse_id=$data['r_horse_id']=isset($res['horse_id'])?$res['horse_id']:"";
+        $row->r_name_ja=$data['r_name_ja'] =isset($res['name_ja'])?$res['name_ja']:"";
+        $row->r_name_en=$data['r_name_en'] =isset($res['name_en'])?$res['name_en']:"";
+
+        if($data['jra_thisweek_horse_1']||$data['jra_thisweek_horse_2']){
+            $row->has_jra_thisweek = true;
+        }
+        # レース数カウント
+        if($data['result_number']===1){
+            $this->race_count_1+=1;
+        }else if($data['result_number']===2){
+            $this->race_count_2+=1;
+        }else if($data['result_number']===3){
+            $this->race_count_3+=1;
+        }else if($data['result_number']===4){
+            $this->race_count_4+=1;
+        }else if($data['result_number']===5){
+            $this->race_count_5+=1;
+        }else{
+            $this->race_count_n+=1;
+        }
+        $this->race_count_all+=1;
+        // 除外判定が1のレコードはカウントしない
+        if($data['is_excluded_from_race_count']){
+            $this->race_count_n-=1;
+            $this->race_count_all-=1;
+        }
+        if($data['non_registered_prev_race_number']>0){
+            $this->race_count_n+=$data['non_registered_prev_race_number'];
+            $this->race_count_all+=$data['non_registered_prev_race_number'];
+            $this->has_unregistered_race_results=true;
+        }
+        return $row;
     }
 }
