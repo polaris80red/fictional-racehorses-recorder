@@ -108,7 +108,7 @@ if($search->limit>0){
 </tr>
 <?php $search_reset_array=[
     'keyword','birth_year',
-    'sire_name','mare_name','bms_name',
+    'sire_name','mare_name','bms_name','trainer',
     'sire_id','mare_id','search_text',
     'order','null_birth_year'
 ]; ?>
@@ -143,7 +143,17 @@ if($search->limit>0){
     <td><a><?=h($row['color'])?></a></td>
     <td><a><?=h(sex2String($row['sex']))?></a></td>
     <td><a><?=h($row['tc'])?></a></td>
-    <td><a><?=h($trainer_name)?></a></td>
+    <td><?php
+        if($row['trainer_unique_name']!=''){
+            $url='';
+            if($row['trainer_unique_name']!==$search->trainer){
+                $url ="./?".$search->getUrlParam($search_reset_array);
+                $url.="&".(new UrlParams(['trainer'=>$row['trainer_unique_name'],'order'=>'']));
+            }
+            $a_tag=new MkTagA(($trainer_name)?:'□□□□',$url);
+            $a_tag->print();
+        }
+    ?></td>
     <td><?php
         if($row['sire_id']!=''){
             $url ="./?".$search->getUrlParam($search_reset_array);
