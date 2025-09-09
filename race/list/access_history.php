@@ -99,18 +99,18 @@ $race123horseGetter=new Race123HorseGetter($pdo);
 // 事前加工用
 $table_data=[];
 if(!is_null($stmt)){
+    $search_results=new RaceSearchResults($stmt);
     if($date_sort){
-        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        while ($data = $search_results->fetch()) {
             $table_data[]=$data;
         }
     }else{
         $race_id_to_sort=array_flip($race_history);
-        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $table_data[(int)$race_id_to_sort[$data['race_id']]]=$data;
+        while ($data = $search_results->fetch()) {
+            $table_data[(int)$race_id_to_sort[$data->raceRow->race_id]]=$data;
         }
         ksort($table_data);
     }
-
 }
 ?>
 <?php //$search->printForm($page,true,null); ?>
@@ -147,32 +147,37 @@ if(!$date_sort){
 <?php if($show_column_umm_turn): ?><th>時期</th><?php endif; ?>
 <?php if($show_column_date): ?><th>日付</th><?php endif; ?>
 <th>場</th><th style="min-width:3.5em;">距離</th><th>格付</th><th>名称</th><th>1着馬</th><th>2着馬</th><th>3着馬</th>
-</tr><?php
-foreach($table_data as $data){
-    $data=array_merge($data,$race123horseGetter($data['race_id']));
-    $class=[];
-    $class[]="race_grade_".$data['grade_css_class_suffix']??'';
-    if($data['is_enabled']===0){ $class[]='disabled_row'; }
-    echo '<tr class="'.implode(' ',$class).'">';
+</tr>
+<?php foreach($table_data as $key => $row): ?>
+<?php
+    $race=$row->raceRow;
+    $raceWeek=$row->weekRow;
+    $raceGrade=$row->gradeRow;
+    $raceCourse=$row->courseRow;
+    $class=(new Imploader(' '))->add("race_grade_".$raceGrade->css_class_suffix??'');
+    if($race->is_enabled===0){ $class->add('disabled_row'); }
+?>
+<tr class="<?=$class?>">
+<?php
     // 正規日付があり、仮日付でない場合　と　それ以外
     $datetime=null;
-    if(!is_null($data['date']) && $data['is_tmp_date']==0){
-        $datetime=new DateTime($data['date']);
+    if(!is_null($race->date) && $race->is_tmp_date==0){
+        $datetime=new DateTime($race->date);
         $day=(int)$datetime->format('d');
     }else{
         $day=null;
     }
     // ウマ娘ターンモードでは週マスタの月指定を優先
-    $month=$data['month'];
+    $month=$race->month;
     if($setting->horse_record_date==='umm'){
-        $month=$data['w_month']??$data['month'];
+        $month=$raceWeek->month??$race->month;
     }
     $umdb_date=$setting->getRaceListDate([
-        'year'=>$data['year'],  // レースの年
+        'year'=>$race->year,  // レースの年
         'month'=>$month,        // レースの月
         'day'=>$day,            // レースの日
-        'turn'=>$data['umm_month_turn'], // レースのターン
-        null // 計算基準年がある場合は年齢
+        'turn'=>$raceWeek->umm_month_turn, // レースのターン
+        'age'=>null
         ]
     );
     $date_str=(string)$umdb_date;
@@ -180,8 +185,8 @@ foreach($table_data as $data){
     // ウマ娘ターンカラム
     if($show_column_umm_turn){
         $url='';
-        if($data['umm_month_turn']>0){
-            $url = $page->getTurnRaceListUrl($data['year'],$month,$data['umm_month_turn']);
+        if($raceWeek->umm_month_turn>0){
+            $url = $page->getTurnRaceListUrl($race->year,$month,$raceWeek->umm_month_turn);
         }
         echo "<td class=\"turn\">";
         (new MkTagA($date_str,$url))->print();
@@ -194,52 +199,57 @@ foreach($table_data as $data){
             $date_url=$page->getDateRaceListUrl($datetime);
         }else{
             $date_url=$page->getTurnRaceListUrl(
-                $data['year'],$month,null,['week'=>$data['week_id']]);
+                $race->year,$month,null,['week'=>$race->week_id]);
         }
         echo "<td>".(new MkTagA($date_str,$date_url))."</td>";
     }
-    $race_course_show_name = $data['race_course_mst_short_name']??$data['race_course_name'];
+    // 競馬場カラム
+    $race_course_show_name = $raceCourse->short_name??$race->race_course_name;
     $a_tag=new MkTagA($race_course_show_name);
     if($datetime!==null){
         $a_tag->href($page->getDateRaceListUrl(
             $datetime,
-            ['race_course_name'=>$data['race_course_name']]
+            ['race_course_name'=>$race->race_course_name]
         ));
-        $a_tag->title($data['race_course_name']);
+        $a_tag->title($race->race_course_name);
     }
     echo "<td class=\"race_course_name\">{$a_tag}</td>";
-    echo "<td>{$data['course_type']}{$data['distance']}</td>";
-    echo "<td class=\"grade\">".(($data['grade_short_name']??'')?:$data['grade'])."</td>";
+    echo "<td>{$race->course_type}{$race->distance}</td>";
+    echo "<td class=\"grade\">".(($raceGrade->short_name??'')?:$race->grade)."</td>";
     echo "<td>";
-    echo '<a href="'.$page->getRaceResultUrl($data['race_id']).'" title="'.$data['race_name'].($data['caption']?'：'.$data['caption']:'').'">';
-    echo $data['race_name'];
+    echo '<a href="'.$page->getRaceResultUrl($race->race_id).'" title="'.$race->race_name.($race->caption?'：'.$race->caption:'').'">';
+    echo $race->race_name;
     echo "</a>\t";
     echo "</td>";
     echo "<td>";
-    if(!empty($data['r1']['horse_id'])){
-        $a_tag=(new MkTagA($data['r1']['name_ja']?:$data['r1']['name_en']));
-        $a_tag->href($page->getHorsePageUrl($data['r1']['horse_id']));
+    $race123horse=$race123horseGetter($race->race_id);
+    $h1=(object)($race123horse['r1']??null);
+    $h2=(object)($race123horse['r2']??null);
+    $h3=(object)($race123horse['r3']??null);
+    $a_tag=new MkTagA();
+    if(!empty($h1->horse_id)){
+        $a_tag->setLinkText($h1->name_ja?:$h1->name_en);
+        $a_tag->href($page->getHorsePageUrl($h1->horse_id));
         echo $a_tag;
     }
     echo "</td>";
     echo "<td>";
-    if(!empty($data['r2']['horse_id'])){
-        $a_tag=(new MkTagA($data['r2']['name_ja']?:$data['r2']['name_en']));
-        $a_tag->href($page->getHorsePageUrl($data['r2']['horse_id']));
+    if(!empty($h2->horse_id)){
+        $a_tag->setLinkText($h2->name_ja?:$h2->name_en);
+        $a_tag->href($page->getHorsePageUrl($h2->horse_id));
         echo $a_tag;
     }
     echo "</td>";
     echo "<td>";
-    if(!empty($data['r3']['horse_id'])){
-        $a_tag=(new MkTagA($data['r3']['name_ja']?:$data['r3']['name_en']));
-        $a_tag->href($page->getHorsePageUrl($data['r3']['horse_id']));
+    if(!empty($h3->horse_id)){
+        $a_tag->setLinkText($h3->name_ja?:$h3->name_en);
+        $a_tag->href($page->getHorsePageUrl($h3->horse_id));
         echo $a_tag;
     }
     echo "</td>";
-    echo "</tr>\n";
-}
-echo "</table>\n";
-?>
+?></tr>
+<?php endforeach; ?>
+</table>
 <hr class="no-css-fallback">
 </main>
 <footer>
