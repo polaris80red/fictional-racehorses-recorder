@@ -122,28 +122,25 @@ table.horse_base_data a {text-decoration: none;}
 <main id="content">
 <hr class="no-css-fallback">
 <div style="float:left">
-<?php
-$name_line=[];
-if($horse->name_ja){
-    $name_line[]="<span style=\"font-size:1.2em;\">".h($horse->name_ja)."</span> ";
-}else if($horse->name_en===''){
-    $name_line[]="<span style=\"font-size:1.2em;\">".h(ANNONYMOUS_HORSE_NAME)."</span>";
-}
-if($horse->name_en){
-    $name_line[]="<span style=\"font-size:1.1em;\">{$horse->name_en}</span>";
-}
-echo implode(' ',$name_line);
-if($horse->birth_year>0){
-    if($setting->year_view_mode===Setting::YEAR_VIEW_MODE_DEFAULT){
-        print_h("（{$horse->birth_year}）");
-    }else{
-        print_h("（{$setting->getBirthYearFormat($horse->birth_year)}）");
-    }
-}else{
-    print "　";
-}
-print_h("{$horse->color} {$sex_str}");
-?>
+    <?php $horse_main_name=($horse->name_ja?:($horse->name_en===''?ANNONYMOUS_HORSE_NAME:''));?>
+    <?php if($horse_main_name): ?>
+        <span style="font-size:1.2em;"><?=h($horse_main_name)?></span>
+    <?php endif; ?>
+    <?php if($horse->name_en): ?>
+        <?=$horse_main_name?'&nbsp;':''?>
+        <span style="font-size:1.1em;"><?=h($horse->name_en)?></span>
+    <?php endif; ?>
+    <?php if($horse->birth_year>0): ?>
+        <?php
+            if($setting->year_view_mode===Setting::YEAR_VIEW_MODE_DEFAULT){
+                $birth_year_str="（{$horse->birth_year}）";
+            }else{
+                $birth_year_str="（{$setting->getBirthYearFormat($horse->birth_year)}）";
+            }
+        ?>
+        <?=h($birth_year_str)?>
+    <?php endif; ?>
+    <?=h("{$horse->color} {$sex_str}")?>
 </div>
 <div style="float:right;">
     <?php if($page->is_editable): ?>
