@@ -3,34 +3,61 @@ class TemplateImporter {
     private static string $defaultDir='';
     private static string $themeDir='';
     private static string $userDir='';
-    private $templatePath='';
+    private bool $fileExists=false;
+    private string $templateFullPath='';
 
     /**
-     * グローバルスコープにincludeする際用のパス取得
+     * グローバルスコープにincludeする際用にインスタンスを生成してパスをセット
      */
-    public function __construct($templatePath) {
-        $this->templatePath=$templatePath;
-    }
-    public function getPath(){
-        $path=self::$userDir.'/'.$this->templatePath;
+    public function __construct(string $templatePath) {
+        $path=self::$userDir.'/'.$templatePath;
         if(self::$userDir!=='' && file_exists($path)){
-            return $path;
+            $this->templateFullPath=$path;
+            $this->fileExists=true;
+            return;
         }
-        $path=self::$themeDir.'/'.$this->templatePath;
+        $path=self::$themeDir.'/'.$templatePath;
         if(self::$themeDir!=='' && file_exists($path)){
-            return $path;
+            $this->templateFullPath=$path;
+            $this->fileExists=true;
+            return;
         }
-        return self::$defaultDir.'/'.$this->templatePath;   
+        $path=self::$defaultDir.'/'.$templatePath;
+        $this->templateFullPath=$path;
+        if(file_exists($path)){
+            $this->fileExists=true;
+            return;
+        }
+    }
+    /**
+     * 指定ファイルが存在していればtrue
+     * （必須にしないテンプレートでエラーを起こさないようincludeを省略する場合の事前判定用）
+     */
+    public function fileExists():bool
+    {
+        return $this->fileExists;
     }
     public function __toString(){
-        return $this->getPath();
+        return $this->templateFullPath;
     }
+    /**
+     * デフォルトのディレクトリの設定
+     * @param string $defaultDir デフォルト読み込み元ディレクトリのパス
+     */
     public static function setDefalutDir(string $defaultDir){
         self::$defaultDir=$defaultDir;
     }
+    /**
+     * テーマ用ディレクトリの設定
+     * @param string $themeDir テーマ別ディレクトリのパス
+     */
     public static function setThemeDir(string $themeDir){
         self::$themeDir=$themeDir;
     }
+    /**
+     * ユーザー用ディレクトリの設定
+     * @param string $userDir ユーザーディレクトリのパス
+     */
     public static function setUserDir(string $userDir){
         self::$userDir=$userDir;
     }
