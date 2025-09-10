@@ -199,26 +199,26 @@ if($page->error_exists){
 </tr>
 <tr>
     <th>騎手</th>
-    <td class="in_input"><input type="text" name="jockey" style="width:10em;" value="<?=h($form_data->jockey_unique_name)?>"></td>
+    <td class="in_input"><input type="text" name="jockey" style="width:10em;" value="<?=h($form_data->jockey_unique_name)?>" placeholder="騎手"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=jockey]');"></td>
 </tr>
 <tr>
     <th>斤量</th>
     <td class="in_input" colspan="2">
-        <input type="text" name="handicap" style="width:3.5em;" list="handicap_list" value="<?=h($form_data->handicap)?>"><input type="button" value="C" onclick="clearElmVal('*[name=handicap]');">
-        ｜馬体重 <input type="number" name="h_weight" style="width:3.5em;" value="<?=h($form_data->h_weight)?>"><input type="button" value="C" onclick="clearElmVal('*[name=h_weight]');">
+        <input type="text" name="handicap" style="width:3.5em;" list="handicap_list" value="<?=h($form_data->handicap)?>" placeholder="斤量"><input type="button" value="C" onclick="clearElmVal('*[name=handicap]');">
+        ｜馬体重 <input type="number" name="h_weight" style="width:4.5em;" value="<?=h($form_data->h_weight)?>" placeholder="馬体重"><input type="button" value="C" onclick="clearElmVal('*[name=h_weight]');">
     </td>
 </tr>
 <tr>
     <th>タイム</th>
     <td class="in_input" colspan="2">
-        <input type="text" name="time" style="width:3.5em;" value="<?=h($form_data->time)?>"><input type="button" value="C" onclick="clearElmVal('*[name=time]');">
-        （ 上り <input type="text" name="f_time" style="width:3.5em;" value="<?=h($form_data->f_time)?>"><input type="button" value="C" onclick="clearElmVal('*[name=f_time]');"> ）
+        <input type="text" name="time" style="width:3.5em;" value="<?=h($form_data->time)?>" placeholder="タイム"><input type="button" value="C" onclick="clearElmVal('*[name=time]');">
+        （ 上り <input type="text" name="f_time" style="width:3.5em;" value="<?=h($form_data->f_time)?>" placeholder="上り"><input type="button" value="C" onclick="clearElmVal('*[name=f_time]');"> ）
     </td>
 </tr>
 <tr>
     <th>着差</th>
-    <td class="in_input"><input type="text" name="margin" style="width:3.5em;" list="margin_list" value="<?=h($form_data->margin)?>"></td>
+    <td class="in_input"><input type="text" name="margin" style="width:3.5em;" list="margin_list" value="<?=h($form_data->margin)?>" placeholder="着差"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=margin]');"></td>
 </tr>
 <tr>
@@ -294,12 +294,12 @@ if($page->error_exists){
 </tr>
 <tr>
     <th>未登録前走</th>
-    <td class="in_input"><input type="number" name="non_registered_prev_race_number" style="width: 3em;" value="<?=h((int)$form_data->non_registered_prev_race_number)?>">走</td>
+    <td class="in_input"><input type="number" name="non_registered_prev_race_number" style="width: 3em;" value="<?=h((int)$form_data->non_registered_prev_race_number)?>">走以上</td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=non_registered_prev_race_number]');"></td>
 </tr>
 <?php if($next_race_data!=null && $next_race_data->record_exists && $next_race_data->non_registered_prev_race_number>0): ?>
 <tr>
-    <th rowspan="3">次走から<br>未登録自動減算</th>
+    <th rowspan="3">次走から<br>未登録を<br>自動減算</th>
     <td><?=h($next_race_data->race_id)?><input type="hidden" name="next_race_id" value="<?=h($next_race_data->race_id)?>"></td>
     <td></td>
 </tr>
@@ -371,9 +371,11 @@ HTPrint::DataList('syuutoku_list',
 HTPrint::DataList('tc_list',['美浦','栗東','地方','海外']);
 HTPrint::DataList('margin_list',['ハナ','クビ','大差','同着']);
 ?>
-<div style="clear: both;"><input type="submit" value="登録・編集　内容確認"></div>
+<div style="clear: both;">
+    <hr>
+    <input type="submit" value="登録・編集　内容確認">
+</div>
 </form>
-<hr>
 <script>
 $(document).ready(function() {
     $('input[type="number"]').on('input', function() {
@@ -453,13 +455,13 @@ function randomSet(){
     $('input#dice_result').val(dice_str_1);
 }
 </script>
-<?php if($is_edit_mode){ ?>
+<?php if($is_edit_mode): ?>
 <form action="./delete/" method="post" style="text-align:right;">
 <input type="hidden" name="race_id" value="<?=h($race_result_id)?>">
 <input type="hidden" name="horse_id" value="<?=h($horse_id)?>">
 <input type="submit" value="レース結果詳細データ削除確認" style="color:red;">
 </form>
-<?php } ?>
+<?php endif; ?>
 <hr class="no-css-fallback">
 </main>
 <footer>
