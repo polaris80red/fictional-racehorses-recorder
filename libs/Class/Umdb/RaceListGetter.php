@@ -33,14 +33,7 @@ class RaceListGetter{
 
         $sql=<<<END
         SELECT
-            r.*
-            ,w.month AS 'w_month'
-            ,w.umm_month_turn
-            ,g.short_name as grade_short_name
-            ,g.css_class_suffix as grade_css_class_suffix
-            ,c.short_name as race_course_mst_short_name
-            ,c.short_name_m as race_course_mst_short_name_m
-            ,$race_select_col
+            $race_select_col
             ,$course_select_col
             ,$grade_select_col
             ,$week_select_col
