@@ -57,7 +57,7 @@ p {font-size:90%;}
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<?php require_once APP_ROOT_DIR."/race/race_content_header.inc.php"; ?>
+<?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <hr>
 <?php
 
