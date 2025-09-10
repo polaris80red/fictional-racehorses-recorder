@@ -27,3 +27,6 @@
     <?php endif; ?>
 </div>
 <hr style="clear: both;">
+<?php $param=http_build_query(['horse_id'=>$horse->horse_id,'show_registration_only'=>$show_registration_only??false]); ?>
+<div style="font-size:0.9em;"><a href="./?<?=h($param)?>">TOP</a>｜<a href="./results_detail.php?<?=h($param)?>">詳細戦績</a></div>
+<hr>

@@ -4,6 +4,9 @@ class HorseRaceHistoryRow{
         'race_id',
 
         'favourite',
+        'odds',
+        'earnings',
+        'syuutoku',
         'result_number',
         'result_order',
         'result_before_demotion',
@@ -13,6 +16,11 @@ class HorseRaceHistoryRow{
         'jockey_unique_name',
         'handicap',
         'time',
+        'margin',
+        'corner_1',
+        'corner_2',
+        'corner_3',
+        'corner_4',
         'f_time',
         'h_weight',
         
@@ -42,10 +50,18 @@ class HorseRaceHistoryRow{
     public $jockey_unique_name; // 騎手
     public $handicap;       // 斤量
     public $time;       // タイム
+    public $margin;
+    public $corner_1;
+    public $corner_2;
+    public $corner_3;
+    public $corner_4;
     public $f_time;       // 上り
     public $h_weight;       // 馬体重
     public $favourite;      // 単勝人気
+    public $odds;      // 単勝オッズ
     public $is_registration_only;
+    public $earnings;
+    public $syuutoku;
     public $non_registered_prev_race_number;
     
     public $tc;

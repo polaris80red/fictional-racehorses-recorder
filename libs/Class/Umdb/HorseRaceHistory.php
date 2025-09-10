@@ -47,6 +47,8 @@ class HorseRaceHistory implements Iterator{
     public $race_count_5=0;
     public $race_count_n=0;
     public $race_count_all=0;
+    public $earnings=0;
+    public $syuutoku=0;
 
     public $has_unregistered_race_results=false;
 
@@ -96,11 +98,19 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`jockey_unique_name`
             ,`race_results`.`handicap`
             ,`race_results`.`time`
+            ,`race_results`.`margin`
+            ,`race_results`.`corner_1`
+            ,`race_results`.`corner_2`
+            ,`race_results`.`corner_3`
+            ,`race_results`.`corner_4`
             ,`race_results`.`f_time`
             ,`race_results`.`h_weight`
             ,`race_results`.`frame_number`
             ,`race_results`.`horse_number`
             ,`race_results`.`favourite`
+            ,`race_results`.`odds`
+            ,`race_results`.`earnings`
+            ,`race_results`.`syuutoku`
             ,`spr`.`is_registration_only`
             ,`race_results`.`non_registered_prev_race_number`
             ,`race_results`.`jra_thisweek_horse_1`
@@ -214,6 +224,9 @@ class HorseRaceHistory implements Iterator{
             $this->race_count_all+=$data['non_registered_prev_race_number'];
             $this->has_unregistered_race_results=true;
         }
+        # 賞金カウント
+        $this->earnings += $row->earnings>0?$row->earnings:0;
+        $this->syuutoku += $row->syuutoku>0?$row->syuutoku:0;
         return $row;
     }
 }
