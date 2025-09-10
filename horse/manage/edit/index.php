@@ -171,6 +171,10 @@ if(count($affiliation_list)>0){
     <td class="in_input"><input type="text" name="training_country" value="<?=h($horse->training_country)?>"></td>
 </tr>
 <tr>
+    <th>生産国</th>
+    <td class="in_input"><input type="text" name="breeding_country" value="<?=h($horse->breeding_country)?>"></td>
+</tr>
+<tr>
     <th>地方所属馬</th>
     <td>
     <label><?php HTPrint::Radio("is_affliationed_nar",0,$horse->is_affliationed_nar);?>いいえ</label>

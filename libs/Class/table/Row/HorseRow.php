@@ -16,6 +16,7 @@ class HorseRow extends TableRow {
         'tc',
         'trainer_unique_name',
         'training_country',
+        'breeding_country',
         'sire_id',
         'sire_name',
         'mare_id',
@@ -34,6 +35,7 @@ class HorseRow extends TableRow {
     public $tc ='';
     public $trainer_unique_name =null;
     public $training_country ='JPN';
+    public $breeding_country ='';
     public $is_affliationed_nar =0;
     public $sire_id =null;
     public $sire_name ='';

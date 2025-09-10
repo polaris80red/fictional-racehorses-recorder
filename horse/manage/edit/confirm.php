@@ -158,6 +158,10 @@ th{
     <td><?php HTPrint::HiddenAndText('training_country',$horse->training_country) ?></td>
 </tr>
 <tr>
+    <th>生産国</th>
+    <td><?php HTPrint::HiddenAndText('breeding_country',$horse->breeding_country) ?></td>
+</tr>
+<tr>
     <th>地方所属馬</th>
     <td><?php
         print $horse->is_affliationed_nar?'はい':'いいえ';
