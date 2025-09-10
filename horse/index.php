@@ -324,12 +324,14 @@ $latest_race_is_exists=false; ?>
     <?php endif; ?>
 <?php endforeach; ?>
 </table>
-<hr>
 <a id="under_results_table"></a>
-<table class="horse_base_data">
-<tr><th>馬名意味</th><td><?=h($page->horse->meaning)?></td></tr>
-<tr><th>備考</th><td><?=nl2br(h($page->horse->note))?></td></tr>
-</table>
+<?php
+    $tpl=new TemplateImporter('horse/horse_page-profile_2.inc.php');
+    if($tpl->fileExists()){
+        print('<hr>');
+        include $tpl;
+    }
+?>
 <?php
 if($registration_only_race_is_exists||$show_registration_only){
     print('<hr>');
