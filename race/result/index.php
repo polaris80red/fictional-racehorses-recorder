@@ -116,163 +116,175 @@ if(!$mode_umm){ $empty_row_2.=str_repeat('<td></td>',3); }
 ?>
 <table class="race_results">
 <tr>
-<th>着順</th><th>枠</th><th>馬番</th>
-<th style="min-width:12em;">馬名</th>
-<th><?php if(
-    $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME||
-    $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME_S){
-        print '級';
-    }else{ print '性齢'; }
+    <th>着順</th>
+    <th>枠</th>
+    <th>馬番</th>
+    <th style="min-width:12em;">馬名</th>
+    <th><?php if(
+        $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME||
+        $setting->age_view_mode===Setting::AGE_VIEW_MODE_UMAMUSUME_S){
+            print '級';
+        }else{ print '性齢'; }
     ?></th>
-<th>負担<br>重量</th>
-<?php if(!$mode_umm): ?>
-<th>騎手</th>
-<?php endif; ?>
-<th>タイム</th>
-<th>着差</th>
-<th>コーナー<br>通過順位</th>
-<th><?=$race->course_type==='障'?'平均<br>1f':'推定<br>上り'?></th>
-<?php if(!$mode_umm): ?>
-<th>馬体重</th>
-<?php endif; ?>
-<th>所属</th>
-<?php if(!$mode_umm): ?>
-<th>調教師</th>
-<?php endif; ?>
-<th>人気</th>
-<?php if($page->is_editable): ?><th>編</th><?php endif; ?>
+    <th>負担<br>重量</th>
+    <?php if(!$mode_umm): ?>
+        <th>騎手</th>
+    <?php endif; ?>
+    <th>タイム</th>
+    <th>着差</th>
+    <th>コーナー<br>通過順位</th>
+    <th><?=$race->course_type==='障'?'平均<br>1f':'推定<br>上り'?></th>
+    <?php if(!$mode_umm): ?>
+        <th>馬体重</th>
+    <?php endif; ?>
+    <th>所属</th>
+    <?php if(!$mode_umm): ?>
+        <th>調教師</th>
+    <?php endif; ?>
+    <th>人気</th>
+    <?php if($page->is_editable): ?><th>編</th><?php endif; ?>
 </tr><?php
 $i=0;
 $registration_only_horse_is_exists=false;
-$latest_horse_exists=false;
-foreach ($table_data as $data) {
-    $i++;
-    $tr_class=new Imploader(' ');
-    if($data['horse_id']==($session->latest_horse['id']??'')){
-        $latest_horse_exists=true;
-    }
-    // 特別登録のみのデータは表示フラグがなければスキップ
-    $horse_url_add_param='';
-    if($data['is_registration_only']){
-        $registration_only_horse_is_exists=true;
-        if(!$show_registration_only){
-            continue;
-        }else{
-            $horse_url_add_param='&show_registration_only=true';
-            $tr_class->add('disabled_row');
+$latest_horse_exists=false; ?>
+<?php foreach ($table_data as $data): ?>
+    <?php
+        $i++;
+        $tr_class=new Imploader(' ');
+        if($data['horse_id']==($session->latest_horse['id']??'')){
+            $latest_horse_exists=true;
         }
-    }
-    // 途中着順の場合
-    /*
-    18着以内かつ現在処理中の行より先の着順が出てきたときはその着順まで空行を挟む。
-    */
-    if($data['result_number']>$i && $data['result_number']<=18){
-        for($j=$i;$j<$data['result_number'];$j++){
-            echo "<tr class=\"result_number_{$j}\"><td>{$j}</td>".$empty_row_2;
-            if($page->is_editable){
-                echo "<td>";
-                if(!empty($data['horse_id'])){
-                    $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id,'result_number'=>$i]);
-                    echo '<a href="'.$url.'" title="新規登録">新</a><br>';
-                }
-                echo "</td>";
+        // 特別登録のみのデータは表示フラグがなければスキップ
+        $horse_url_add_param='';
+        if($data['is_registration_only']){
+            $registration_only_horse_is_exists=true;
+            if(!$show_registration_only){
+                continue;
+            }else{
+                $horse_url_add_param='&show_registration_only=true';
+                $tr_class->add('disabled_row');
             }
-            echo "</tr>\n";
-            $i++;
         }
-    }
-    $tr_class->add('result_number_'.$data['result_number']);
-?><tr class="<?php echo $tr_class; ?>">
-<td><?php
-if($data['result_text']!=''){
-    print_h($data['special_result_short_name_2']?:$data['result_text']);
-}else if($data['result_number']>0){
-    print_h($data['result_number']);
-    if($data['result_before_demotion']>0){ print"<span title=\"※".$data['result_before_demotion']."位入線降着\">(降)</span>";}
-}
-?></td>
-<td class="waku_<?=h($data['frame_number'])?>"><?=h($data['frame_number'])?></td>
-<td><?=h($data['horse_number'])?></td>
-<?php
-    $is_affliationed_nar=0;
-    if($data['is_affliationed_nar']===null){
-        $is_affliationed_nar=$data['horse_is_affliationed_nar'];
-    }else{
-        $is_affliationed_nar=$data['is_affliationed_nar'];
-    }
-    $marks=new Imploader('');
-    if(($race->is_jra==1 || $race->is_nar==1)){
-        // 中央競馬または地方競馬の場合、調教国・生産国でカク外・マル外マークをつける
-        if($data['training_country']!='' && $data['training_country']!='JPN'){
-            // 外国調教馬にカク外表記
-            $marks->add("[外]");
-        }else{
-            // 中央競馬の場合のみ地方所属馬と元地方所属馬のカク地・マル地マーク
-            if($race->is_jra){
-                if($is_affliationed_nar==1){
-                    $marks->add("[地]");
-                }else if($is_affliationed_nar==2){
-                    $marks->add("(地)");
+    ?>
+    <?php if($data['result_number']>$i && $data['result_number']<=18): ?>
+        <?php /* 18着以内かつ現在処理中の行より先の着順が出てきたときはその着順まで空行を挟む。*/ ?>
+        <?php for($j=$i;$j<$data['result_number'];$j++):?>
+            <tr class="result_number_<?=$j?>">
+                <td><?=$j?></td>
+                <?=$empty_row_2?>
+                <?php if($page->is_editable):?>
+                    <td>
+                    <?php if(!empty($data['horse_id'])):?>
+                        <?php $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id,'result_number'=>$i]);?>
+                        <a href="<?=h($url)?>" title="新規登録">新</a>
+                    <?php endif;?>
+                    </td>
+                <?php endif;?>
+            </tr>
+            <?php $i++; ?>
+        <?php endfor;?>
+    <?php endif;?>
+    <tr class="<?=$tr_class->add('result_number_'.$data['result_number'])?>">
+        <?php
+            $h_result_str='';
+            if($data['result_text']!=''){
+                $h_result_str=h($data['special_result_short_name_2']?:$data['result_text']);
+            }else if($data['result_number']>0){
+                $h_result_str=h($data['result_number']);
+                if($data['result_before_demotion']>0){
+                    $h_result_str.="<span title=\"※".h($data['result_before_demotion'])."位入線降着\">(降)</span>";
                 }
             }
-            // 外国産馬のマル外表記
-            if($data['breeding_country']!='' && $data['breeding_country']!='JPN'){
-                $marks->add("(外)");
+        ?>
+        <td><?=$h_result_str?></td>
+        <td class="waku_<?=h($data['frame_number'])?>"><?=h($data['frame_number'])?></td>
+        <td><?=h($data['horse_number'])?></td>
+        <?php
+            $is_affliationed_nar=0;
+            if($data['is_affliationed_nar']===null){
+                $is_affliationed_nar=$data['horse_is_affliationed_nar'];
+            }else{
+                $is_affliationed_nar=$data['is_affliationed_nar'];
             }
-        }
-    }
-    $a_tag=new MkTagA($data['name_ja']?:$data['name_en']);
-    $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$data['horse_id']);
-    $country=($race->is_jra==0 && $race->is_nar==0)?"<span>(".h($data['training_country']).")</span> ":'';
-?>
-<td class="horse_name"><?=implode(' ',[$marks,$a_tag,$country])?></td>
-<?php
-    $s_str='';
-    if($setting->age_view_mode===Setting::AGE_VIEW_MODE_DEFAULT){
-        // 通常表記の場合
-        $s_str.=$data['sex_str'];
-    }
-    $s_str.=$setting->getAgeSexSpecialFormat($data['age'],$data['sex']);
-?><td class="sex_<?=h($data['sex'])?>"><?=h($s_str)?></td>
-</td>
-<td><?=h($data['handicap'])?></td>
-<?php if($setting->age_view_mode!==1): ?>
-<td style="<?=$data['jockey_row']->is_anonymous?'color:#999;':''?>"><?=h($data['jockey_name']??'')?></td>
-<?php endif; ?>
-<td><?=h($data['time'])?></td>
-<td><?=h($data['margin'])?></td>
-<?php
-    $corner_numbers=[];
-    if($data['corner_1']>0){ $corner_numbers[]=$data['corner_1']; }
-    if($data['corner_2']>0){ $corner_numbers[]=$data['corner_2']; }
-    if($data['corner_3']>0){ $corner_numbers[]=$data['corner_3']; }
-    if($data['corner_4']>0){ $corner_numbers[]=$data['corner_4']; }
-?><td class="col_corner_numbers"><?=h(implode('-',$corner_numbers))?></td>
-<td><?=h($data['f_time'])?></td>
-<?php if(!$mode_umm): ?>
-    <td><?=h($data['h_weight'])?></td>
-<?php endif; ?>
-<td><?=h($data['tc'])?></td>
-<?php if(!$mode_umm): ?>
-    <td style="<?=$data['trainer_row']->is_anonymous?'color:#999;':''?>">
-        <?=h($data['trainer_name']??'')?>
-    </td>
-<?php endif; ?>
-<td class="col_favourite favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
-<?php
-    if(!empty($data['horse_id'])){
-        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,[
-            'race_id'=>$race->race_id,
-            'horse_id'=>$data['horse_id'],
-            'edit_mode'=>1
-        ]);
-    }
-?>
-<?php if($page->is_editable): ?>
-<td><a href="<?=h($url)?>" title="編集">編</a></td>
-<?php endif; ?>
-</tr>
-<?php } ?></table>
+            $marks=new Imploader('');
+            if(($race->is_jra==1 || $race->is_nar==1)){
+                // 中央競馬または地方競馬の場合、調教国・生産国でカク外・マル外マークをつける
+                if($data['training_country']!='' && $data['training_country']!='JPN'){
+                    // 外国調教馬にカク外表記
+                    $marks->add("[外]");
+                }else{
+                    // 中央競馬の場合のみ地方所属馬と元地方所属馬のカク地・マル地マーク
+                    if($race->is_jra){
+                        if($is_affliationed_nar==1){
+                            $marks->add("[地]");
+                        }else if($is_affliationed_nar==2){
+                            $marks->add("(地)");
+                        }
+                    }
+                    // 外国産馬のマル外表記
+                    if($data['breeding_country']!='' && $data['breeding_country']!='JPN'){
+                        $marks->add("(外)");
+                    }
+                }
+            }
+            $a_tag=new MkTagA($data['name_ja']?:$data['name_en']);
+            $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$data['horse_id']);
+            $country=($race->is_jra==0 && $race->is_nar==0)?"<span>(".h($data['training_country']).")</span> ":'';
+        ?>
+        <td class="horse_name"><?=implode(' ',[$marks,$a_tag,$country])?></td>
+        <?php
+            $s_str='';
+            if($setting->age_view_mode===Setting::AGE_VIEW_MODE_DEFAULT){
+                // 通常表記の場合
+                $s_str.=$data['sex_str'];
+            }
+            $s_str.=$setting->getAgeSexSpecialFormat($data['age'],$data['sex']);
+        ?>
+        <td class="sex_<?=h($data['sex'])?>"><?=h($s_str)?></td>
+        <td><?=h($data['handicap'])?></td>
+        <?php if($setting->age_view_mode!==1): ?>
+            <td style="<?=$data['jockey_row']->is_anonymous?'color:#999;':''?>">
+                <?=h($data['jockey_name']??'')?>
+            </td>
+        <?php endif; ?>
+        <td><?=h($data['time'])?></td>
+        <td><?=h($data['margin'])?></td>
+        <?php
+            $corner_numbers=[];
+            if($data['corner_1']>0){ $corner_numbers[]=$data['corner_1']; }
+            if($data['corner_2']>0){ $corner_numbers[]=$data['corner_2']; }
+            if($data['corner_3']>0){ $corner_numbers[]=$data['corner_3']; }
+            if($data['corner_4']>0){ $corner_numbers[]=$data['corner_4']; }
+        ?>
+        <td class="col_corner_numbers"><?=h(implode('-',$corner_numbers))?></td>
+        <td><?=h($data['f_time'])?></td>
+        <?php if(!$mode_umm): ?>
+            <td><?=h($data['h_weight'])?></td>
+        <?php endif; ?>
+        <td><?=h($data['tc'])?></td>
+        <?php if(!$mode_umm): ?>
+            <td style="<?=$data['trainer_row']->is_anonymous?'color:#999;':''?>">
+                <?=h($data['trainer_name']??'')?>
+            </td>
+        <?php endif; ?>
+        <td class="col_favourite favourite_<?=h($data['favourite'])?>">
+            <?=h($data['favourite'])?>
+        </td>
+        <?php
+            if(!empty($data['horse_id'])){
+                $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,[
+                    'race_id'=>$race->race_id,
+                    'horse_id'=>$data['horse_id'],
+                    'edit_mode'=>1
+                ]);
+            }
+        ?>
+        <?php if($page->is_editable): ?>
+            <td><a href="<?=h($url)?>" title="編集">編</a></td>
+        <?php endif; ?>
+    </tr>
+<?php endforeach; ?>
+</table>
 <hr>
 <a href="<?=h($page->getRaceNameSearchUrl($race->race_name))?>" style="">他年度の<?=h($race->race_name)?>を検索</a>
 <?php
@@ -284,38 +296,48 @@ if($data['result_text']!=''){
     ?>
 <hr>
 <table class="race_info">
-<tr><th>名称</th><td><?=h($race->race_name)?></td></tr>
-<tr><th>略名</th><td><?=h($race->race_short_name)?></td></tr>
-<tr><th>補足</th><td style="min-width: 200px;"><?=h($race->caption)?></td></tr>
-<?php if($race->date): ?>
-<tr>
-    <th>日付</th>
-    <?php
-    $a_tag=new MkTagA($race->date.($race->date&&$race->is_tmp_date?'(仮)':''));
-    if(!$race->is_tmp_date){
-        $a_tag->href($page->getDateRaceListUrl($race->date));
-    }
-    ?>
-    <td><?=$a_tag; ?></td></tr>
-<?php endif; ?>
-<?php if(!empty($race->week_id)): ?>
-<tr><th>ターン</th><td><?php
-    print_h($setting->getYearSpecialFormat($race->year)."｜");
-    $week_url_param=new UrlParams(['year'=>$race->year,'week'=>$race->week_id]);
-    $a_tag=new MkTagA("第{$race->week_id}週");
-    $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$week_url_param);
-    $a_tag->print();
-    print "｜";
-    $turn_url_param=new UrlParams(['year'=>$race->year,'month'=>$week_month,'turn'=>$turn]);
-    $a_tag=new MkTagA("{$week_month}月".($turn===2?"後半":"前半"));
-    $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$turn_url_param);
-    $a_tag->print();
-?></td></tr>
-<?php endif; ?>
-<?php if(!empty($page->is_editable)): ?>
-<tr><th>ワールド</th><td><?=h((new World($pdo,$race->world_id))->name??'')?></td></tr>
-<?php endif; ?>
-<tr><th>備考</th><td><?=nl2br(h($race->note))?></td></tr>
+    <tr><th>名称</th><td><?=h($race->race_name)?></td></tr>
+    <tr><th>略名</th><td><?=h($race->race_short_name)?></td></tr>
+    <tr><th>補足</th><td style="min-width: 200px;"><?=h($race->caption)?></td></tr>
+    <?php if($race->date): ?>
+        <tr>
+            <th>日付</th>
+            <?php
+            $a_tag=new MkTagA($race->date.($race->date&&$race->is_tmp_date?'(仮)':''));
+            if(!$race->is_tmp_date){
+                $a_tag->href($page->getDateRaceListUrl($race->date));
+            }
+            ?>
+            <td><?=$a_tag; ?></td>
+        </tr>
+    <?php endif; ?>
+    <?php if(!empty($race->week_id)): ?>
+        <tr>
+            <th>ターン</th>
+            <td><?php
+                print_h($setting->getYearSpecialFormat($race->year)."｜");
+                $week_url_param=new UrlParams(['year'=>$race->year,'week'=>$race->week_id]);
+                $a_tag=new MkTagA("第{$race->week_id}週");
+                $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$week_url_param);
+                $a_tag->print();
+                print "｜";
+                $turn_url_param=new UrlParams(['year'=>$race->year,'month'=>$week_month,'turn'=>$turn]);
+                $a_tag=new MkTagA("{$week_month}月".($turn===2?"後半":"前半"));
+                $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$turn_url_param);
+                $a_tag->print();
+            ?></td>
+        </tr>
+    <?php endif; ?>
+    <?php if(!empty($page->is_editable)): ?>
+        <tr>
+            <th>ワールド</th>
+            <td><?=h((new World($pdo,$race->world_id))->name??'')?></td>
+        </tr>
+    <?php endif; ?>
+    <tr>
+        <th>備考</th>
+        <td><?=nl2br(h($race->note))?></td>
+    </tr>
 </table>
 <?php if($page->is_editable): ?>
     <?php include (new TemplateImporter('race/race_page-edit_menu.inc.php'));?>
