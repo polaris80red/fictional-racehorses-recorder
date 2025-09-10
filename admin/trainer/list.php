@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
-defineAppRootRelPath(2);
+InAppUrl::init(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -69,7 +69,7 @@ $next_tag  =new MkTagA("[次へ]",($master_table->has_next_page?('?'.$url_param-
 <tr class="<?=$row->is_enabled?'':"disabled"?>">
 <?php $url="./form.php?id={$row->id}"; ?>
     <td class="col_id"><?=h($row->id);?></td>
-    <td><?=h($row->unique_name);?></td>
+    <td><?=(new MkTagA($row->unique_name,InAppUrl::to('horse/search/',['trainer'=>$row->unique_name])))?></td>
     <td class=""><?=h($row->name);?></td>
     <td class=""><?=h($row->short_name_10);?></td>
     <td class=""><?=h($row->affiliation_name);?></td>

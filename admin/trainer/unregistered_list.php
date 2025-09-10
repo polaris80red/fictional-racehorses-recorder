@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
-defineAppRootRelPath(2);
+InAppUrl::init(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -72,7 +72,7 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
 </tr>
 <?php foreach($table_data as $row): ?>
 <tr class="">
-    <td><?=h($row)?></td>
+    <td><?=(new MkTagA($row,InAppUrl::to('horse/search/',['trainer'=>$row])))?></td>
     <td><a href="./form.php?unique_name=<?=h(urlencode($row))?>">マスタ登録</a></td>
     <td><a href="./update_unique_name/form.php?u_name=<?=h(urlencode($row))?>">既存データを変換</a></td>
 </tr>
