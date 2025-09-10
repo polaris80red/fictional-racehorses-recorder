@@ -143,11 +143,26 @@ foreach ($table_data as $data) {
     }else{
         $training_country=$data['horse_training_country'];
     }
-    if(($data['is_jra']==1 || $data['is_nar']==1)&& $training_country!='JPN'){
-        echo "[外] ";
-    }
-    if($data['is_jra']==1&& $data['is_affliationed_nar']==1){
-        echo "[地] ";
+    if(($data['is_jra']==1 || $data['is_nar']==1)){
+        // 中央競馬または地方競馬の場合、調教国・生産国でカク外・マル外マークをつける
+        if($training_country!='' && $training_country!='JPN'){
+            // 外国調教馬にカク外表記
+            echo "[外]";
+        }else{
+            // 中央競馬の場合のみ地方所属馬と元地方所属馬のカク地・マル地マーク
+            if($data['is_jra']){
+                if($data['is_affliationed_nar']==1){
+                    echo "[地]";
+                }
+                if($data['is_affliationed_nar']==2){
+                    echo "(地)";
+                }
+            }
+            // 外国産馬のマル外表記
+            if($data['breeding_country']!='' && $data['breeding_country']!='JPN'){
+                echo "(外)";
+            }
+        }
     }
     echo '<a class="horse_name" href="'.$page->to_app_root_path.'horse/?horse_id='.h($data['horse_id']).'">';
     print_h($data['name_ja']?:$data['name_en']);

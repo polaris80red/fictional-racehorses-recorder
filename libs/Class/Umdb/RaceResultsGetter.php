@@ -32,7 +32,7 @@ class RaceResultsGetter{
 
         $horse_s_columns=new SqlMakeSelectColumns(Horse::TABLE);
         $horse_s_columns->addColumnsByArray([
-            'name_ja','name_en','sex','birth_year'
+            'name_ja','name_en','sex','birth_year','breeding_country'
         ]);
         $jockey_select_clause=Jockey::getPrefixedSelectClause('jk');
         $race_trainer_select_clause=Trainer::getPrefixedSelectClause('r_trainer','r_trainer__');

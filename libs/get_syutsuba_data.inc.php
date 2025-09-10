@@ -23,6 +23,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`Horse`.`mare_name`
         ,`Horse`.`bms_name`
         ,`Horse`.`color`
+        ,`Horse`.`breeding_country`
         ,`sire`.`name_ja` as `sire_name_ja`
         ,`sire`.`name_en` as `sire_name_en`
         ,`mare`.`name_ja` as `mare_name_ja`

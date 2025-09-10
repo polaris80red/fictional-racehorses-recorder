@@ -131,27 +131,39 @@ foreach ($table_data as $data) {
 ?><tr class="">
 <td class="waku_<?php echo $data['frame_number']; ?>"><?php echo $data['frame_number']; ?></td>
 <td><?=h($data['horse_number'])?></td>
-<td class="horse_name">
 <?php
-    if(($race->is_jra==1 || $race->is_nar==1)&& $data['training_country']!='JPN'){
-        echo "[外] ";
-    }
     $is_affliationed_nar=0;
     if($data['is_affliationed_nar']===null){
         $is_affliationed_nar=$data['horse_is_affliationed_nar'];
     }else{
         $is_affliationed_nar=$data['is_affliationed_nar'];
     }
-    if($race->is_jra==1&& $is_affliationed_nar==1){
-        echo "[地] ";
+    $marks=new Imploader('');
+    if(($race->is_jra==1 || $race->is_nar==1)){
+        // 中央競馬または地方競馬の場合、調教国・生産国でカク外・マル外マークをつける
+        if($data['training_country']!='' && $data['training_country']!='JPN'){
+            // 外国調教馬にカク外表記
+            $marks->add("[外]");
+        }else{
+            // 中央競馬の場合のみ地方所属馬と元地方所属馬のカク地・マル地マーク
+            if($race->is_jra){
+                if($is_affliationed_nar==1){
+                    $marks->add("[地]");
+                }else if($is_affliationed_nar==2){
+                    $marks->add("(地)");
+                }
+            }
+            // 外国産馬のマル外表記
+            if($data['breeding_country']!='' && $data['breeding_country']!='JPN'){
+                $marks->add("(外)");
+            }
+        }
     }
-    echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.h($data['horse_id']).'">';
-    print_h($data['name_ja']?:$data['name_en']);
-    if($race->is_jra==0 && $race->is_nar==0){
-        echo " <span>(".h($data['training_country']).")</span> ";
-    }
-    echo "</a>";
-?></td>
+    $a_tag=new MkTagA($data['name_ja']?:$data['name_en']);
+    $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$data['horse_id']);
+    $country=($race->is_jra==0 && $race->is_nar==0)?" <span>(".h($data['training_country']).")</span> ":'';
+?>
+<td class="horse_name"><?=implode(' ',[$marks,$a_tag,$country])?></td>
 <?php
     $age_sex_str='';
     if($setting->age_view_mode===Setting::AGE_VIEW_MODE_DEFAULT){
