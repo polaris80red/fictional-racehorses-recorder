@@ -171,10 +171,8 @@ $table_data=[];
 // 1～3着馬を取得
 $race123horseGetter=new Race123HorseGetter($pdo);
 
-while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $data=array_merge($data,$race123horseGetter($data['race_id']));
-    $table_data[]=$data;
-}
+$search_results=new RaceSearchResults($stmt);
+$table_rows=$search_results->getAll();
 ?><hr>
 [ <?php echo (new MkTagA('全て','?'.$url_params->toString([],['is_jra_only','race_course_name']))); ?>｜
 <?php echo (new MkTagA('中央競馬',$is_jra_only?'':('?'.$url_params->toString(['is_jra_only'=>true],['race_course_name'])))); ?>
@@ -182,50 +180,47 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
  ]
 <table class="race_list_date">
 <tr><th>場</th><th>R</th><th>距離</th><th>格付</th><th>名称</th><th>1着馬</th><th>2着馬</th><th>3着馬</th></tr><?php
-$func_get_horse_link=function($id,$name_ja,$name_en)use($page){
-    $a_tag=new MkTagA($name_ja?:$name_en);
-    $a_tag->href($page->getHorsePageUrl($id));
-    return $a_tag->get();
-};
-$prev_row_course='';
-foreach($table_data as $data){
-    if($prev_row_course && $prev_row_course!==$data['race_course_name']){
-        echo "<tr><td colspan=\"8\" style=\"height:0.2em;background-color:#EEE;\"></tr>\n";
-    }
-    $prev_row_course=$data['race_course_name'];
-    $class=new Imploader(' ');
-    $class->add("race_grade_".$data['grade_css_class_suffix']??'');
-    if($data['is_enabled']===0){ $class->add('disabled_row'); }
-    echo "<tr class=\"".$class."\">";
-    #echo $data['date']."\t";
-    echo "<td>".$data['race_course_mst_short_name']??$data['race_course_name']."</td>";
-    echo "<td>".($data['race_number']?:"")."</td>";
-    echo "<td>{$data['course_type']}{$data['distance']}</td>";
-    echo "<td class=\"grade\">".(($data['grade_short_name']??'')?:$data['grade'])."</td>";
-    echo "<td>";
-    $a_tag=new MkTagA($data['race_name'],$page->getRaceResultUrl($data['race_id']));
-    $a_tag->title($data['race_name'].($data['caption']?'：'.$data['caption']:''));
-    echo $a_tag;
-    echo "</td>";
-    echo "<td>";
-    if(!empty($data['r1']['horse_id'])){
-        echo $func_get_horse_link($data['r1']['horse_id'],$data['r1']['name_ja'],$data['r1']['name_en']);
-    }
-    echo "</td>";
-    echo "<td>";
-    if(!empty($data['r2']['horse_id'])){
-        echo $func_get_horse_link($data['r2']['horse_id'],$data['r2']['name_ja'],$data['r2']['name_en']);
-    }
-    echo "</td>";
-    echo "<td>";
-    if(!empty($data['r3']['horse_id'])){
-        echo $func_get_horse_link($data['r3']['horse_id'],$data['r3']['name_ja'],$data['r3']['name_en']);
-    }
-    echo "</td>";
-    echo "</tr>\n";
-}
-echo "</table>\n";
-?><hr>[ <a href="./in_week.php?<?=(new UrlParams(['year'=>$year,'week'=>$year_week]))?>">週単位の一覧</a> ]
+$prev_row_course=''; ?>
+<?php foreach($table_rows as $row): ?>
+    <?php
+        $race=$row->raceRow;
+        $raceWeek=$row->weekRow;
+        $raceGrade=$row->gradeRow;
+        $raceCourse=$row->courseRow;
+    ?>
+    <?php if($prev_row_course && $prev_row_course!==$race->race_course_name): ?>
+        <?php $style="height:0.2em;background-color:#EEE;"; ?>
+        <tr><td colspan="8" style="<?=$style?>"></td></tr>
+    <?php endif; ?>
+    <?php
+        $prev_row_course=$race->race_course_name;
+        $class=new Imploader(' ');
+        $class->add("race_grade_".$raceGrade->css_class_suffix??'');
+        if($race->is_enabled===0){ $class->add('disabled_row'); }
+    ?>
+    <tr class="<?=$class?>">
+        <td><?=h($raceCourse->short_name??$race->race_course_name)?></td>
+        <td><?=h($race->race_number?:"")?></td>
+        <td><?=h($race->course_type.$race->distance)?></td>
+        <td class="grade"><?=h(($raceGrade->short_name??'')?:$race->grade)?></td>
+        <?php
+            $a_tag=new MkTagA($race->race_name,$page->getRaceResultUrl($race->race_id));
+            $a_tag->title($race->race_name.($race->caption?'：'.$race->caption:''));
+        ?>
+        <td><?=$a_tag?></td>
+        <?php
+            $race123horse=$race123horseGetter($race->race_id);
+            $h1=(object)($race123horse['r1']??null);
+            $h2=(object)($race123horse['r2']??null);
+            $h3=(object)($race123horse['r3']??null);
+        ?>
+        <td><?=empty($h1->horse_id)?'':(new MkTagA(($h1->name_ja?:$h1->name_en),$page->getHorsePageUrl($h1->horse_id)))?></td>
+        <td><?=empty($h2->horse_id)?'':(new MkTagA(($h2->name_ja?:$h2->name_en),$page->getHorsePageUrl($h2->horse_id)))?></td>
+        <td><?=empty($h3->horse_id)?'':(new MkTagA(($h3->name_ja?:$h3->name_en),$page->getHorsePageUrl($h3->horse_id)))?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+<hr>[ <a href="./in_week.php?<?=(new UrlParams(['year'=>$year,'week'=>$year_week]))?>">週単位の一覧</a> ]
 <hr class="no-css-fallback">
 </main>
 <footer>
