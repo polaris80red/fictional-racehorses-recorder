@@ -31,6 +31,9 @@ $login_disable_status=(function(){
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?php $page->printBaseStylesheetLinks(); ?>
+    <style>
+        th{ background-color: #EEE; }
+    </style>
 </head>
 <body>
 <header>
