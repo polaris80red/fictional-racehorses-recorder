@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
-defineAppRootRelPath(2);
+InAppUrl::init(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -68,7 +68,11 @@ $next_tag  =new MkTagA("[次へ]",($race_course_table->has_next_page?('?'.$url_p
     $url="./form.php?id={$row->id}";
 ?>
     <td class="col_id"><?php print $row->id; ?></td>
-    <td><?php print_h($row->unique_name); ?></td>
+    <td><?=(new MkTagA($row->unique_name,InAppUrl::to('race/list/',[
+        'race_course'=>$row->unique_name,
+        'min_year'=>'','max_year'=>'',
+        'show_empty'=>true,'session_is_not_update'=>1,
+        ])))?></td>
     <td><?php print $row->short_name; ?></td>
     <td><?php print $row->short_name_m; ?></td>
     <td class="col_sort_priority"><?php print $row->sort_priority; ?></td>

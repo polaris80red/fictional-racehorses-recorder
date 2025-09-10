@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
-defineAppRootRelPath(2);
+InAppUrl::init(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -31,7 +31,7 @@ $table_data=(function(int $current_page,int $per_page)use($pdo){
     }
     $stmt=$pdo->prepare(implode(' ',$parts));
     $stmt->execute();
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
 })($current_page,$per_page);
 if($table_data===false){ $table_data=[]; }
 
@@ -72,10 +72,14 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
 </tr>
 <?php foreach($table_data as $row): ?>
 <tr class="">
-<?php $url="./form.php?id={$row['race_course_name']}"; ?>
-    <td><?=h($row['race_course_name'])?></td>
-    <td><a href="./form.php?name=<?=h(urlencode($row['race_course_name']))?>">マスタ登録</a></td>
-    <td><a href="./update_unique_name/form.php?u_name=<?=h(urlencode($row['race_course_name']))?>">レース結果を変換</a></td>
+<?php $url="./form.php?id={$row}"; ?>
+    <td><?=(new MkTagA($row,InAppUrl::to('race/list/',[
+        'race_course'=>$row,
+        'min_year'=>'','max_year'=>'',
+        'show_empty'=>true,'session_is_not_update'=>1,
+        ])))?></td>
+    <td><a href="./form.php?name=<?=h(urlencode($row))?>">マスタ登録</a></td>
+    <td><a href="./update_unique_name/form.php?u_name=<?=h(urlencode($row))?>">レース結果を変換</a></td>
 </tr>
 <?php endforeach; ?>
 </table>
