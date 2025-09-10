@@ -94,7 +94,7 @@ $resultsGetter->addOrderParts([
     "`r_results`.`frame_number` ASC",
     "`r_results`.`horse_number` IS NULL",
     "`r_results`.`horse_number` ASC",
-    "`".Horse::TABLE."`.`name_en` ASC",
+    "`horse`.`name_en` ASC",
 ]);
 $table_data=$resultsGetter->getTableData();
 $mode_umm=false;
@@ -121,27 +121,29 @@ $i=0;
 $latest_horse_exists=false;
 foreach ($table_data as $data) {
     $i++;
-    if($data['horse_id']==($session->latest_horse['id']??'')){
+    $horse=$data->horseRow;
+    $raceResult=$data->resultRow;
+    if($horse->horse_id==($session->latest_horse['id']??'')){
         $latest_horse_exists=true;
     }
     // 特別登録のみのデータはスキップ
-    if($data['is_registration_only']){
+    if($data->specialResultRow->is_registration_only){
         continue;
     }
 ?><tr class="">
-<td class="waku_<?php echo $data['frame_number']; ?>"><?php echo $data['frame_number']; ?></td>
-<td><?=h($data['horse_number'])?></td>
+<td class="waku_<?=$raceResult->frame_number?>"><?=$raceResult->frame_number?></td>
+<td><?=$raceResult->horse_number?></td>
 <?php
     $is_affliationed_nar=0;
-    if($data['is_affliationed_nar']===null){
-        $is_affliationed_nar=$data['horse_is_affliationed_nar'];
+    if($raceResult->is_affliationed_nar===null){
+        $is_affliationed_nar=$horse->is_affliationed_nar;
     }else{
-        $is_affliationed_nar=$data['is_affliationed_nar'];
+        $is_affliationed_nar=$raceResult->is_affliationed_nar;
     }
     $marks=new Imploader('');
     if(($race->is_jra==1 || $race->is_nar==1)){
         // 中央競馬または地方競馬の場合、調教国・生産国でカク外・マル外マークをつける
-        if($data['training_country']!='' && $data['training_country']!='JPN'){
+        if($data->trainingCountry!='' && $data->trainingCountry!='JPN'){
             // 外国調教馬にカク外表記
             $marks->add("[外]");
         }else{
@@ -154,40 +156,40 @@ foreach ($table_data as $data) {
                 }
             }
             // 外国産馬のマル外表記
-            if($data['breeding_country']!='' && $data['breeding_country']!='JPN'){
+            if($horse->breeding_country!='' && $horse->breeding_country!='JPN'){
                 $marks->add("(外)");
             }
         }
     }
-    $a_tag=new MkTagA($data['name_ja']?:$data['name_en']);
-    $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$data['horse_id']);
-    $country=($race->is_jra==0 && $race->is_nar==0)?" <span>(".h($data['training_country']).")</span> ":'';
+    $a_tag=new MkTagA($horse->name_ja?:$horse->name_en);
+    $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$horse->horse_id);
+    $country=($race->is_jra==0 && $race->is_nar==0)?" <span>(".h($data->trainingCountry).")</span> ":'';
 ?>
 <td class="horse_name"><?=implode(' ',[$marks,$a_tag,$country])?></td>
 <?php
     $age_sex_str='';
     if($setting->age_view_mode===Setting::AGE_VIEW_MODE_DEFAULT){
         // 通常表記の場合
-        $age_sex_str.=$data['sex_str'];
+        $age_sex_str.=$data->sexStr;
     }
-    $age_sex_str.=$setting->getAgeSexSpecialFormat($data['age'],$data['sex']);
+    $age_sex_str.=$setting->getAgeSexSpecialFormat($data->age,$data->sex);
 ?>
-<td class="sex_<?=h($data['sex'])?>"><?=h($age_sex_str)?></td>
-<td><?=h($data['handicap'])?></td>
+<td class="sex_<?=h($data->sex)?>"><?=h($age_sex_str)?></td>
+<td><?=h($raceResult->handicap)?></td>
 <?php if(!$mode_umm): ?>
-    <td style="<?=$data['jockey_row']->is_anonymous?'color:#999;':''?>"><?=h($data['jockey_name']??'')?></td>
+    <td style="<?=$data->jockeyRow->is_anonymous?'color:#999;':''?>"><?=h($data->jockeyName??'')?></td>
 <?php endif; ?>
-<td><?=h($data['tc'])?></td>
+<td><?=h($data->tc)?></td>
 <?php if(!$mode_umm): ?>
-    <td style="<?=$data['trainer_row']->is_anonymous?'color:#999;':''?>">
-        <?=h($data['trainer_name']??'')?>
+    <td style="<?=$data->trainerRow->is_anonymous?'color:#999;':''?>">
+        <?=h($data->trainerName??'')?>
     </td>
 <?php endif; ?>
 <?php if(!$mode_umm): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>
-<td class="col_favourite favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
+<td class="col_favourite favourite_<?=h($raceResult->favourite)?>"><?=h($raceResult->favourite)?></td>
 <?php
-    if(!empty($data['horse_id'])){
-        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id,'horse_id'=>$data['horse_id'],'edit_mode'=>1]);
+    if(!empty($horse->horse_id)){
+        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id,'horse_id'=>$horse->horse_id,'edit_mode'=>1]);
     }
 ?>
 <?php if($page->is_editable): ?>

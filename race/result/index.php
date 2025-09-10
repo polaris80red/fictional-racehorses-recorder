@@ -149,14 +149,17 @@ $registration_only_horse_is_exists=false;
 $latest_horse_exists=false; ?>
 <?php foreach ($table_data as $data): ?>
     <?php
+        $horse=$data->horseRow;
+        $raceResult=$data->resultRow;
+        $spr=$data->specialResultRow;
         $i++;
         $tr_class=new Imploader(' ');
-        if($data['horse_id']==($session->latest_horse['id']??'')){
+        if($horse->horse_id==($session->latest_horse['id']??'')){
             $latest_horse_exists=true;
         }
         // 特別登録のみのデータは表示フラグがなければスキップ
         $horse_url_add_param='';
-        if($data['is_registration_only']){
+        if($spr->is_registration_only){
             $registration_only_horse_is_exists=true;
             if(!$show_registration_only){
                 continue;
@@ -166,15 +169,15 @@ $latest_horse_exists=false; ?>
             }
         }
     ?>
-    <?php if($data['result_number']>$i && $data['result_number']<=18): ?>
+    <?php if($raceResult->result_number>$i && $raceResult->result_number<=18): ?>
         <?php /* 18着以内かつ現在処理中の行より先の着順が出てきたときはその着順まで空行を挟む。*/ ?>
-        <?php for($j=$i;$j<$data['result_number'];$j++):?>
+        <?php for($j=$i;$j<$raceResult->result_number;$j++):?>
             <tr class="result_number_<?=$j?>">
                 <td><?=$j?></td>
                 <?=$empty_row_2?>
                 <?php if($page->is_editable):?>
                     <td>
-                    <?php if(!empty($data['horse_id'])):?>
+                    <?php if(!empty($horse->horse_id)):?>
                         <?php $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id,'result_number'=>$i]);?>
                         <a href="<?=h($url)?>" title="新規登録">新</a>
                     <?php endif;?>
@@ -184,32 +187,32 @@ $latest_horse_exists=false; ?>
             <?php $i++; ?>
         <?php endfor;?>
     <?php endif;?>
-    <tr class="<?=$tr_class->add('result_number_'.$data['result_number'])?>">
+    <tr class="<?=$tr_class->add('result_number_'.$raceResult->result_number)?>">
         <?php
             $h_result_str='';
-            if($data['result_text']!=''){
-                $h_result_str=h($data['special_result_short_name_2']?:$data['result_text']);
-            }else if($data['result_number']>0){
-                $h_result_str=h($data['result_number']);
-                if($data['result_before_demotion']>0){
-                    $h_result_str.="<span title=\"※".h($data['result_before_demotion'])."位入線降着\">(降)</span>";
+            if($raceResult->result_text!=''){
+                $h_result_str=h($spr->short_name_2?:$raceResult->result_text);
+            }else if($raceResult->result_number>0){
+                $h_result_str=h($raceResult->result_number);
+                if($raceResult->result_before_demotion>0){
+                    $h_result_str.="<span title=\"※".h($raceResult->result_before_demotion)."位入線降着\">(降)</span>";
                 }
             }
         ?>
         <td><?=$h_result_str?></td>
-        <td class="waku_<?=h($data['frame_number'])?>"><?=h($data['frame_number'])?></td>
-        <td><?=h($data['horse_number'])?></td>
+        <td class="waku_<?=h($raceResult->frame_number)?>"><?=h($raceResult->frame_number)?></td>
+        <td><?=h($raceResult->horse_number)?></td>
         <?php
             $is_affliationed_nar=0;
-            if($data['is_affliationed_nar']===null){
-                $is_affliationed_nar=$data['horse_is_affliationed_nar'];
+            if($raceResult->is_affliationed_nar===null){
+                $is_affliationed_nar=$horse->is_affliationed_nar;
             }else{
-                $is_affliationed_nar=$data['is_affliationed_nar'];
+                $is_affliationed_nar=$raceResult->is_affliationed_nar;
             }
             $marks=new Imploader('');
             if(($race->is_jra==1 || $race->is_nar==1)){
                 // 中央競馬または地方競馬の場合、調教国・生産国でカク外・マル外マークをつける
-                if($data['training_country']!='' && $data['training_country']!='JPN'){
+                if($data->trainingCountry!='' && $data->trainingCountry!='JPN'){
                     // 外国調教馬にカク外表記
                     $marks->add("[外]");
                 }else{
@@ -222,59 +225,59 @@ $latest_horse_exists=false; ?>
                         }
                     }
                     // 外国産馬のマル外表記
-                    if($data['breeding_country']!='' && $data['breeding_country']!='JPN'){
+                    if($horse->breeding_country!='' && $horse->breeding_country!='JPN'){
                         $marks->add("(外)");
                     }
                 }
             }
-            $a_tag=new MkTagA($data['name_ja']?:$data['name_en']);
-            $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$data['horse_id']);
-            $country=($race->is_jra==0 && $race->is_nar==0)?"<span>(".h($data['training_country']).")</span> ":'';
+            $a_tag=new MkTagA($horse->name_ja?:$horse->name_en);
+            $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$horse->horse_id);
+            $country=($race->is_jra==0 && $race->is_nar==0)?"<span>(".h($data->trainingCountry).")</span> ":'';
         ?>
         <td class="horse_name"><?=implode(' ',[$marks,$a_tag,$country])?></td>
         <?php
             $s_str='';
             if($setting->age_view_mode===Setting::AGE_VIEW_MODE_DEFAULT){
                 // 通常表記の場合
-                $s_str.=$data['sex_str'];
+                $s_str.=$data->sexStr;
             }
-            $s_str.=$setting->getAgeSexSpecialFormat($data['age'],$data['sex']);
+            $s_str.=$setting->getAgeSexSpecialFormat($data->age,$data->sex);
         ?>
-        <td class="sex_<?=h($data['sex'])?>"><?=h($s_str)?></td>
-        <td><?=h($data['handicap'])?></td>
+        <td class="sex_<?=h($data->sex)?>"><?=h($s_str)?></td>
+        <td><?=h($raceResult->handicap)?></td>
         <?php if($setting->age_view_mode!==1): ?>
-            <td style="<?=$data['jockey_row']->is_anonymous?'color:#999;':''?>">
-                <?=h($data['jockey_name']??'')?>
+            <td style="<?=$data->jockeyRow->is_anonymous?'color:#999;':''?>">
+                <?=h($data->jockeyName??'')?>
             </td>
         <?php endif; ?>
-        <td><?=h($data['time'])?></td>
-        <td><?=h($data['margin'])?></td>
+        <td><?=h($raceResult->time)?></td>
+        <td><?=h($raceResult->margin)?></td>
         <?php
             $corner_numbers=[];
-            if($data['corner_1']>0){ $corner_numbers[]=$data['corner_1']; }
-            if($data['corner_2']>0){ $corner_numbers[]=$data['corner_2']; }
-            if($data['corner_3']>0){ $corner_numbers[]=$data['corner_3']; }
-            if($data['corner_4']>0){ $corner_numbers[]=$data['corner_4']; }
+            if($raceResult->corner_1>0){ $corner_numbers[]=$raceResult->corner_1; }
+            if($raceResult->corner_2>0){ $corner_numbers[]=$raceResult->corner_2; }
+            if($raceResult->corner_3>0){ $corner_numbers[]=$raceResult->corner_3; }
+            if($raceResult->corner_4>0){ $corner_numbers[]=$raceResult->corner_4; }
         ?>
         <td class="col_corner_numbers"><?=h(implode('-',$corner_numbers))?></td>
-        <td><?=h($data['f_time'])?></td>
+        <td><?=h($raceResult->f_time)?></td>
         <?php if(!$mode_umm): ?>
-            <td><?=h($data['h_weight'])?></td>
+            <td><?=h($raceResult->h_weight)?></td>
         <?php endif; ?>
-        <td><?=h($data['tc'])?></td>
+        <td><?=h($data->tc)?></td>
         <?php if(!$mode_umm): ?>
-            <td style="<?=$data['trainer_row']->is_anonymous?'color:#999;':''?>">
-                <?=h($data['trainer_name']??'')?>
+            <td style="<?=$data->trainerRow->is_anonymous?'color:#999;':''?>">
+                <?=h($data->trainerName??'')?>
             </td>
         <?php endif; ?>
-        <td class="col_favourite favourite_<?=h($data['favourite'])?>">
-            <?=h($data['favourite'])?>
+        <td class="col_favourite favourite_<?=h($raceResult->favourite)?>">
+            <?=h($raceResult->favourite)?>
         </td>
         <?php
-            if(!empty($data['horse_id'])){
+            if(!empty($horse->horse_id)){
                 $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,[
                     'race_id'=>$race->race_id,
-                    'horse_id'=>$data['horse_id'],
+                    'horse_id'=>$horse->horse_id,
                     'edit_mode'=>1
                 ]);
             }
