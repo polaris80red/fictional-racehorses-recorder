@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once dirname(__DIR__,2).'/libs/init.php';
-defineAppRootRelPath(2);
-$page=new Page(2);
+require_once dirname(__DIR__,3).'/libs/init.php';
+defineAppRootRelPath(3);
+$page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果詳細・登録内容確認";
@@ -115,7 +115,7 @@ if($is_error!==0){
     echo "</div>";
 }
 ?>
-<form action="./registration_execute.php" method="post">
+<form action="./execute.php" method="post">
 <input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0?>">
 <table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>

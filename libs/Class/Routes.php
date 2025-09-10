@@ -3,7 +3,7 @@ class Routes {
     /**
      * レース個別結果編集ページへのURL
      */
-    public const HORSE_RACE_RESULT_EDIT = 'race/horse_result/form.php';
+    public const HORSE_RACE_RESULT_EDIT = 'horse/manage/result/form.php';
     private function __construct(){
     }
 }

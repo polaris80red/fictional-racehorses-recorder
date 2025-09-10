@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once dirname(__DIR__,3).'/libs/init.php';
-defineAppRootRelPath(3);
-$page=new Page(3);
+require_once dirname(__DIR__,4).'/libs/init.php';
+defineAppRootRelPath(4);
+$page=new Page(4);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果詳細・削除確認";
