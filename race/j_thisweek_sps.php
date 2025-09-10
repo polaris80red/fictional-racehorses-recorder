@@ -132,7 +132,7 @@ foreach ($table_data as $data) {
     if($data['is_jra']==0 && $data['is_nar']==0){
         echo "<span style=\"font-family:monospace;\">[".h($data['training_country'])."]</span> ";
     }
-    echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.h($data['horse_id']).'" style="text-decoration:none;">';
+    echo '<a href="'.InAppUrl::to('horse/',['horse_id'=>$data['horse_id']]).'" style="text-decoration:none;">';
     print_h($data['name_ja']?:$data['name_en']);
     echo "</a><br>";
     echo "調教師：□□□□";

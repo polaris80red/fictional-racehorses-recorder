@@ -127,7 +127,7 @@ while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
     if($data['is_jra']==0 && $data['is_nar']==0){
         echo "<span style=\"font-family:monospace;\">[".h($data['training_country'])."]</span> ";
     }
-    echo '<span style="font-weight:bold;"><a href="'.APP_ROOT_REL_PATH.'horse/?horse_id='.h($data['horse_id']).'">';
+    echo '<span style="font-weight:bold;"><a href="'.InAppUrl::to('horse/',['horse_id'=>$data['horse_id']]).'">';
     print_h($data['name_ja']?:$data['name_en']);
     echo "</a></span>";
     if($data['result_text']==='回避'){ echo " 【出走取消】"; }
