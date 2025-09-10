@@ -13,6 +13,7 @@ class RaceResultsRow extends TableRow {
         'corner_4',
         'h_weight',
         'favourite',
+        'earnings',
         'syuutoku',
         'sex',
         'is_affliationed_nar',
@@ -28,6 +29,7 @@ class RaceResultsRow extends TableRow {
         'time',
         'margin',
         'f_time',
+        'odds',
         'tc',
         'trainer_unique_name',
         'training_country',
@@ -54,8 +56,10 @@ class RaceResultsRow extends TableRow {
     public $corner_4 ='';
     public $f_time =null;
     public $h_weight ='';
+    public $odds =null;
     public $favourite =0;
-    public $syuutoku =0;
+    public $earnings =null;
+    public $syuutoku =null;
     public $sex =0;
     public $tc =null;
     public $trainer_unique_name =null;

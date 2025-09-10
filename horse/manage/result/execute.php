@@ -233,7 +233,16 @@ $ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_
     ?></td>
 </tr>
 <tr>
-    <th>単勝人気</th><td><?=h(ifZero2Empty($input->favourite))?></td>
+    <th>単勝人気</th><td><?=h(ifZero2Empty($input->favourite))?>番</td>
+</tr>
+<tr>
+    <th>単勝オッズ</th><td><?=h($input->odds)?></td>
+</tr>
+<tr>
+    <th>本賞金</th><td><?=h(ifZero2Empty($input->earnings))?>万円</td>
+</tr>
+<tr>
+    <th>収得賞金</th><td><?=h(ifZero2Empty($input->syuutoku))?>万円</td>
 </tr>
 </table>
 <table class="edit-form-table floatLeft">

@@ -208,10 +208,18 @@ if($is_error!==0){
     <th>単勝人気</th>
     <td><?php HTPrint::HiddenAndText('favourite',ifZero2Empty($race_results->favourite)); ?>番人気</td>
 </tr>
-<!--<tr>
+<tr>
+    <th>単勝オッズ</th>
+    <td><?php HTPrint::HiddenAndText('odds',$race_results->odds); ?></td>
+</tr>
+<tr>
+    <th>本賞金</th>
+    <td><?php HTPrint::HiddenAndText('earnings',$race_results->earnings?:''); ?>万円</td>
+</tr>
+<tr>
     <th>収得賞金</th>
-    <td><?php HTPrint::HiddenAndText('syuutoku',ifZero2Empty($race_results->syuutoku)); ?>万円</td>
-</tr>-->
+    <td><?php HTPrint::HiddenAndText('syuutoku',$race_results->syuutoku?:''); ?>万円</td>
+</tr>
 </table>
 <table class="edit-form-table floatLeft">
 <tr>

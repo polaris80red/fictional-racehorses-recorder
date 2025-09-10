@@ -250,11 +250,27 @@ if($page->error_exists){
     </td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=favourite]');clearElmVal('*[name=favourite_select]');"></td>
 </tr>
-<!--<tr>
+<tr>
+    <th>単勝オッズ</th>
+    <td class="in_input">
+        <input type="text" name="odds" style="width:4em;" value="<?=h($form_data->odds?:'')?>">
+    </td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=odds]');"></td>
+</tr>
+<tr>
+    <th>本賞金</th>
+    <td class="in_input">
+        <input type="number" name="earnings" style="width:6em;" value="<?=h($form_data->earnings?:'')?>">万円
+    </td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=earnings]');"></td>
+</tr>
+<tr>
     <th>収得賞金</th>
-    <td class="in_input"><input type="number" name="syuutoku" list="syuutoku_list" value="<?=h($form_data->syuutoku)?>">万円</td>
-    <td></td>
-</tr>-->
+    <td class="in_input">
+        <input type="number" name="syuutoku" style="width:6em;" list="syuutoku_list" value="<?=h($form_data->syuutoku?:'')?>">万円
+    </td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=syuutoku]');"></td>
+</tr>
 </table>
 <table class="edit-form-table floatLeft">
 <tr>

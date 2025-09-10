@@ -23,8 +23,10 @@ class RaceResults extends Table{
     public $corner_4 ='';
     public $f_time =null;
     public $h_weight ='';
+    public $odds =0;
     public $favourite =0;
-    public $syuutoku =0;
+    public $earnings =null;
+    public $syuutoku =null;
     public $sex =0;
     public $tc =null;
     public $trainer_unique_name =null;
@@ -43,6 +45,7 @@ class RaceResults extends Table{
         'corner_1','corner_2','corner_3','corner_4',
         'h_weight',
         'favourite',
+        'earnings',
         'syuutoku',
         'sex',
         'is_affliationed_nar',
@@ -57,6 +60,7 @@ class RaceResults extends Table{
         'time',
         'margin',
         'f_time',
+        'odds',
         'tc',
         'trainer_unique_name',
         'training_country',
@@ -111,6 +115,7 @@ class RaceResults extends Table{
         }
         $this->jockey_unique_name = filter_input($input_type,'jockey')?:null;
         $this->handicap = filter_input($input_type,'handicap');
+        $this->odds = filter_input($input_type,'odds')?:null;
         $this->favourite = (int)filter_input($input_type,'favourite');
         if($this->favourite==0){
             $this->favourite = (int)filter_input($input_type,'favourite_select');
@@ -123,7 +128,8 @@ class RaceResults extends Table{
         $this->corner_4 = filter_input($input_type,'corner_4');
         $this->f_time = filter_input($input_type,'f_time');
         $this->h_weight = filter_input($input_type,'h_weight');
-        $this->syuutoku = (int)filter_input($input_type,'syuutoku',FILTER_VALIDATE_INT);
+        $this->earnings = (int)filter_input($input_type,'earnings',FILTER_VALIDATE_INT)?:null;
+        $this->syuutoku = (int)filter_input($input_type,'syuutoku',FILTER_VALIDATE_INT)?:null;
         $this->sex = filter_input($input_type,'sex');
         $this->tc = filter_input($input_type,'tc');
         $this->trainer_unique_name = filter_input($input_type,'trainer_unique_name')?:null;
@@ -206,8 +212,10 @@ class RaceResults extends Table{
         $stmt->bindValue(':corner_4', intOrNullIfZero($this->corner_4), PDO::PARAM_INT);
         $stmt->bindValue(':f_time', $this->f_time?:null, PDO::PARAM_STR);
         $stmt->bindValue(':h_weight', $this->h_weight?:null, PDO::PARAM_INT);
+        $stmt->bindValue(':odds', $this->odds?:null, PDO::PARAM_STR);
         $stmt->bindValue(':favourite', intOrNullIfZero($this->favourite), PDO::PARAM_INT);
-        $stmt->bindValue(':syuutoku', $this->syuutoku, PDO::PARAM_INT);
+        $stmt->bindValue(':earnings', $this->earnings?:null, PDO::PARAM_INT);
+        $stmt->bindValue(':syuutoku', $this->syuutoku?:null, PDO::PARAM_INT);
         $stmt->bindValue(':sex', $this->sex, PDO::PARAM_INT);
         $stmt->bindValue(':tc', $this->tc, PDO::PARAM_STR);
         $stmt->bindValue(':trainer_unique_name', $this->trainer_unique_name?:null, PDO::PARAM_STR);
