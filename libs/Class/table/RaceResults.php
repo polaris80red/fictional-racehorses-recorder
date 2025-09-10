@@ -228,8 +228,8 @@ class RaceResults extends Table{
         WHERE `race_id` LIKE :race_id AND `horse_id` LIKE :horse_id;
         END;
         $stmt=$pdo->prepare($sql);
-        $stmt->bindValue(':race_id', $this->race_id, PDO::PARAM_STR);
-        $stmt->bindValue(':horse_id', $this->horse_id, PDO::PARAM_STR);
+        $stmt->bindValue(":race_id",SqlValueNormalizer::escapeLike($this->race_id),PDO::PARAM_STR);
+        $stmt->bindValue(":horse_id",SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
         return $stmt->execute();
     }
 }
