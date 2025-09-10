@@ -4,7 +4,7 @@
  */
 session_start();
 require_once dirname(__DIR__).'/libs/init.php';
-defineAppRootRelPath(1);
+InAppUrl::init(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);

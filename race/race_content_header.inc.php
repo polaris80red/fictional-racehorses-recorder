@@ -99,13 +99,12 @@ print_h(" {$race->course_type}{$race->distance}m");
 </div><!-- /race title block -->
 <hr class="clear">
 <a href="<?=h($page->getRaceResultUrl($race_id))?>" title="着順">[結果]</a>
-<a href="<?=APP_ROOT_REL_PATH?>race/syutsuba_simple.php?race_id=<?=h($race_id)?>" title="NK出馬表">[出馬表]</a>
-<!--<a href="<?=APP_ROOT_REL_PATH?>race/syutsuba.php?race_id=<?=h($race_id)?>" title="出馬表">■</a> -->
-<a href="<?=APP_ROOT_REL_PATH?>race/syutsuba_sp.php?race_id=<?=h($race_id)?>" title="Jスペシャル出馬表">■</a>
+<a href="<?=h(InAppUrl::to('race/syutsuba_simple.php',['race_id'=>$race_id]))?>" title="NK出馬表">[出馬表]</a>
+<a href="<?=h(InAppUrl::to('race/syutsuba_sp.php',['race_id'=>$race_id]))?>" title="Jスペシャル出馬表">■</a>
 <?php if(in_array($race->grade,['G1','G2','G3','Jpn1','Jpn2','Jpn3','重賞'])): ?>
-<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek.php?race_id=<?=h($race_id)?>" title="J今週の注目レース・出走馬情報">■</a>
+<a href="<?=h(InAppUrl::to('race/j_thisweek.php',['race_id'=>$race_id]))?>" title="J今週の注目レース・出走馬情報">■</a>
 <?php endif; ?>
 <?php if(in_array($race->grade,['G1','Jpn1'])): ?>
-<a href="<?=APP_ROOT_REL_PATH?>race/j_thisweek_sps.php?race_id=<?=h($race_id)?>" title="Jスペシャル出馬表紹介文">■</a>
+<a href="<?=h(InAppUrl::to('race/j_thisweek_sps.php',['race_id'=>$race_id]))?>" title="Jスペシャル出馬表紹介文">■</a>
 <?php endif; ?>
 </div>
