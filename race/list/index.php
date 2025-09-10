@@ -92,93 +92,96 @@ $search->current_page_results_count=count($table_rows);
 <th>場</th><th style="min-width:3.5em;">距離</th><th>格付</th><th>名称</th><th>1着馬</th><th>2着馬</th><th>3着馬</th>
 </tr>
 <?php foreach($table_rows as $key => $row): ?>
-<?php
-    $race=$row->raceRow;
-    $raceWeek=$row->weekRow;
-    $raceGrade=$row->gradeRow;
-    $raceCourse=$row->courseRow;
-    $class=(new Imploader(' '))->add("race_grade_".$raceGrade->css_class_suffix??'');
-    if($race->is_enabled===0){ $class->add('disabled_row'); }
-?>
-<tr class="<?=$class?>">
-<?php if($page->is_editable && $search->is_one_year_only): ?>
-    <td class="in_input">
-        <label style="width:100%;height:100%;"><?=(new MkTagInput('checkbox',"id_list[]",$race->race_id))?></label>
-    </td>
-<?php endif; ?>
-<?php
-    // 正規日付があり、仮日付でない場合　と　それ以外
-    $datetime=null;
-    if(!is_null($race->date) && $race->is_tmp_date==0){
-        $datetime=new DateTime($race->date);
-        $day=(int)$datetime->format('d');
-    }else{
-        $day=null;
-    }
-    // ウマ娘ターンモードでは週マスタの月指定を優先
-    $month=$race->month;
-    if($setting->horse_record_date==='umm'){
-        $month=$raceWeek->month??$race->month;
-    }
-    $umdb_date=$setting->getRaceListDate([
-        'year'=>$race->year,  // レースの年
-        'month'=>$month,        // レースの月
-        'day'=>$day,            // レースの日
-        'turn'=>$raceWeek->umm_month_turn, // レースのターン
-        'age'=>($search->is_generation_search&&$year!=null)?($race->year-$year+3):null // 計算基準年がある場合は年齢
-        ],
-        $search->is_one_year_only
-    );
-    $date_str=(string)$umdb_date;
-    $date_str_year_part="";
-    // ウマ娘ターンカラム
-    if($show_column_umm_turn){
-        $url='';
-        if($raceWeek->umm_month_turn>0){
-            $url = $page->getTurnRaceListUrl($race->year,$month,$raceWeek->umm_month_turn);
-        }
-        echo "<td class=\"turn\">";
-        (new MkTagA($date_str,$url))->print();
-        echo "</td>";
-    }
-    // 年月日カラム
-    if($show_column_date){
-        $date_url="";
-        if($datetime!==null){
-            $date_url=$page->getDateRaceListUrl($datetime);
-        }else{
-            $date_url=$page->getTurnRaceListUrl(
-                $race->year,$month,null,['week'=>$race->week_id]);
-        }
-        echo "<td>".(new MkTagA($date_str,$date_url))."</td>";
-    }
-    // 競馬場カラム
-    $race_course_show_name = $raceCourse->short_name??$race->race_course_name;
-    $a_tag=new MkTagA($race_course_show_name);
-    if($datetime!==null){
-        $a_tag->href($page->getDateRaceListUrl(
-            $datetime,
-            ['race_course_name'=>$race->race_course_name]
-        ));
-        $a_tag->title($race->race_course_name);
-    }
-?>
-    <td class="race_course_name"><?=$a_tag?></td>
-    <td><?=h($race->course_type.$race->distance)?></td>
-    <td class="grade"><?=h(($raceGrade->short_name??'')?:$race->grade)?></td>
-    <td>
-        <a href="<?=h($page->getRaceResultUrl($race->race_id))?>" title="<?=h($race->race_name.($race->caption?'：'.$race->caption:''))?>"><?=h($race->race_name)?></a>
-    </td>
-<?php
-    $race123horse=$race123horseGetter($race->race_id);
-    $h1=(object)($race123horse['r1']??null);
-    $h2=(object)($race123horse['r2']??null);
-    $h3=(object)($race123horse['r3']??null);
-?>
-<td><?=empty($h1->horse_id)?'':(new MkTagA(($h1->name_ja?:$h1->name_en),$page->getHorsePageUrl($h1->horse_id)))?></td>
-<td><?=empty($h2->horse_id)?'':(new MkTagA(($h2->name_ja?:$h2->name_en),$page->getHorsePageUrl($h2->horse_id)))?></td>
-<td><?=empty($h3->horse_id)?'':(new MkTagA(($h3->name_ja?:$h3->name_en),$page->getHorsePageUrl($h3->horse_id)))?></td>
-</tr>
+    <?php
+        $race=$row->raceRow;
+        $raceWeek=$row->weekRow;
+        $raceGrade=$row->gradeRow;
+        $raceCourse=$row->courseRow;
+        $class=(new Imploader(' '))->add("race_grade_".$raceGrade->css_class_suffix??'');
+        if($race->is_enabled===0){ $class->add('disabled_row'); }
+    ?>
+    <tr class="<?=$class?>">
+        <?php if($page->is_editable && $search->is_one_year_only): ?>
+            <td class="in_input">
+                <label style="width:100%;height:100%;"><?=(new MkTagInput('checkbox',"id_list[]",$race->race_id))?></label>
+            </td>
+        <?php endif; ?>
+        <?php
+            // 正規日付があり、仮日付でない場合　と　それ以外
+            $datetime=null;
+            if(!is_null($race->date) && $race->is_tmp_date==0){
+                $datetime=new DateTime($race->date);
+                $day=(int)$datetime->format('d');
+            }else{
+                $day=null;
+            }
+            // ウマ娘ターンモードでは週マスタの月指定を優先
+            $month=$race->month;
+            if($setting->horse_record_date==='umm'){
+                $month=$raceWeek->month??$race->month;
+            }
+            $umdb_date=$setting->getRaceListDate([
+                'year'=>$race->year,  // レースの年
+                'month'=>$month,        // レースの月
+                'day'=>$day,            // レースの日
+                'turn'=>$raceWeek->umm_month_turn, // レースのターン
+                'age'=>($search->is_generation_search&&$year!=null)?($race->year-$year+3):null // 計算基準年がある場合は年齢
+                ],
+                $search->is_one_year_only
+            );
+            $date_str=(string)$umdb_date;
+            $date_str_year_part="";
+        ?>
+        <?php if($show_column_umm_turn): ?>
+            <?php
+                // ウマ娘ターンカラム
+                $url='';
+                if($raceWeek->umm_month_turn>0){
+                    $url = $page->getTurnRaceListUrl($race->year,$month,$raceWeek->umm_month_turn);
+                }
+            ?>
+            <td><?=(new MkTagA($date_str,$url))?></td>
+        <?php endif; ?>
+        <?php if($show_column_date): ?>
+            <?php
+                // 年月日カラム
+                $date_url="";
+                if($datetime!==null){
+                    $date_url=$page->getDateRaceListUrl($datetime);
+                }else{
+                    $date_url=$page->getTurnRaceListUrl(
+                        $race->year,$month,null,['week'=>$race->week_id]);
+                }
+            ?>
+            <td><?=(new MkTagA($date_str,$date_url))?></td>
+        <?php endif; ?>
+        <?php
+            // 競馬場カラム
+            $a_tag=new MkTagA($raceCourse->short_name??$race->race_course_name);
+            if($datetime!==null){
+                $a_tag->href($page->getDateRaceListUrl(
+                    $datetime,
+                    ['race_course_name'=>$race->race_course_name]
+                ));
+                $a_tag->title($race->race_course_name);
+            }
+        ?>
+        <td class="race_course_name"><?=$a_tag?></td>
+        <td><?=h($race->course_type.$race->distance)?></td>
+        <td class="grade"><?=h(($raceGrade->short_name??'')?:$race->grade)?></td>
+        <td>
+            <a href="<?=h($page->getRaceResultUrl($race->race_id))?>" title="<?=h($race->race_name.($race->caption?'：'.$race->caption:''))?>"><?=h($race->race_name)?></a>
+        </td>
+        <?php
+            $race123horse=$race123horseGetter($race->race_id);
+            $h1=(object)($race123horse['r1']??null);
+            $h2=(object)($race123horse['r2']??null);
+            $h3=(object)($race123horse['r3']??null);
+        ?>
+        <td><?=empty($h1->horse_id)?'':(new MkTagA(($h1->name_ja?:$h1->name_en),$page->getHorsePageUrl($h1->horse_id)))?></td>
+        <td><?=empty($h2->horse_id)?'':(new MkTagA(($h2->name_ja?:$h2->name_en),$page->getHorsePageUrl($h2->horse_id)))?></td>
+        <td><?=empty($h3->horse_id)?'':(new MkTagA(($h3->name_ja?:$h3->name_en),$page->getHorsePageUrl($h3->horse_id)))?></td>
+    </tr>
 <?php endforeach; ?>
 </table>
 <?php if($search->limit>0): ?>
