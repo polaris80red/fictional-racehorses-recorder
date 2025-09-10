@@ -172,7 +172,7 @@ foreach ($table_data as $data) {
             if($page->is_editable){
                 echo "<td>";
                 if(!empty($data['horse_id'])){
-                    $url=InAppUrl::to('race/horse_result/form.php',['race_id'=>$race->race_id,'result_number'=>$i]);
+                    $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id,'result_number'=>$i]);
                     echo '<a href="'.$url.'" title="新規登録">新</a><br>';
                 }
                 echo "</td>";
@@ -261,7 +261,7 @@ if($data['result_text']!=''){
 <td class="col_favourite favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
 <?php
     if(!empty($data['horse_id'])){
-        $url=InAppUrl::to('race/horse_result/form.php',[
+        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,[
             'race_id'=>$race->race_id,
             'horse_id'=>$data['horse_id'],
             'edit_mode'=>1

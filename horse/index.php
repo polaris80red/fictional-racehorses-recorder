@@ -354,7 +354,7 @@ $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id=''
             if($next_race_id!==''){
                 $params['next_race_id']=$next_race_id;
             }
-            $url =InAppUrl::to("race/horse_result/form.php",$params);
+            $url =InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,$params);
             $ret_text.="<td><a href=\"".h($url)."\">新</td>";
         }
         $ret_text.="</tr>\n";
@@ -474,7 +474,7 @@ $latest_race_is_exists=false; ?>
         <td class="r_horse"><?=$data->result_number==1?"({$a_tag})":$a_tag?></td>
         <td><?=!$data->has_jra_thisweek?'':new MkTagA('記',InAppUrl::to('race/j_thisweek.php',['race_id'=>$race->race_id,'show_registration_only'=>($race_url_add_param?true:null)]))?></td>
         <?php if($page->is_editable): ?>
-        <td class="edit_link"><?=(new MkTagA('編',InAppUrl::to("race/horse_result/form.php",[
+        <td class="edit_link"><?=(new MkTagA('編',InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,[
                     'race_id'=>$race->race_id,
                     'horse_id'=>$horse->horse_id,
                     'edit_mode'=>1,
@@ -528,7 +528,7 @@ if($registration_only_race_is_exists||$show_registration_only){
         </td>
         <td>
 <?php
-    $url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$page->horse->horse_id]);
+    $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['horse_id'=>$page->horse->horse_id]);
     $a_tag=new MkTagA('この馬の戦績を追加');
         $a_tag->href($url);
     if($page->horse->birth_year==null){
@@ -552,7 +552,7 @@ if($registration_only_race_is_exists||$show_registration_only){
 <?php
     $a_tag=new MkTagA('最後に開いたレースにこの馬の戦績を追加');
     if(!empty($session->latest_race['id'])){
-        $url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$page->horse->horse_id,'race_id'=>$session->latest_race['id']]);
+        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['horse_id'=>$page->horse->horse_id,'race_id'=>$session->latest_race['id']]);
         $a_tag->href($url);
         if($latest_race_is_exists===true){
             $a_tag->href('')->setStyle('text-decoration','line-through');

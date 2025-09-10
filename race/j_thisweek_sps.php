@@ -110,7 +110,7 @@ foreach ($table_data as $data) {
 ?><section>
 <p>
 <?php if($page->is_editable): ?>
-<a href="<?=$page->to_app_root_path?>race/horse_result/form.php?race_id=<?=h($race_id)?>&horse_id=<?=h($data['horse_id'])?>&edit_mode=1">■</a>
+<a href="<?=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race_id,'horse_id'=>$data['horse_id'],'edit_mode'=>1])?>">■</a>
 <?php else: ?>■
 <?php endif; ?>
 <?php if(!empty($data['frame_number'])) { ?>

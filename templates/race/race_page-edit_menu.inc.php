@@ -9,7 +9,7 @@
     <tr>
         <?php $url=InAppUrl::to('race/manage/edit/',['race_id'=>$race->race_id,'edit_mode'=>1]);?>
         <td><a href="<?=h($url)?>">このレースの情報を編集</a></td>
-        <?php $url=InAppUrl::to('race/horse_result/form.php',['race_id'=>$race->race_id]);?>
+        <?php $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id]);?>
         <td><a href="<?=h($url)?>">このレースに戦績を追加</a></td>
         <?php $url=InAppUrl::to('race/manage/update_race_result_id/',['race_id'=>$race->race_id,'edit_mode'=>1]);?>
         <td><a href="<?=h($url)?>">レースID修正</a></td>
@@ -27,7 +27,7 @@ if($latest_horse->record_exists){
     }else if($latest_horse->birth_year==null){
         $a_tag->title("生年仮登録馬のため戦績追加不可")->setStyle('text-decoration','line-through');
     }else{
-        $url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$session->latest_horse['id'],'race_id'=>$race->race_id]);
+        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['horse_id'=>$session->latest_horse['id'],'race_id'=>$race->race_id]);
         $a_tag->href($url);
     }
 }

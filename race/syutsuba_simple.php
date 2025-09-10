@@ -187,7 +187,7 @@ foreach ($table_data as $data) {
 <td class="col_favourite favourite_<?=h($data['favourite'])?>"><?=h($data['favourite'])?></td>
 <?php
     if(!empty($data['horse_id'])){
-        $url=$page->to_app_root_path."race/horse_result/form.php?race_id={$race->race_id}&horse_id={$data['horse_id']}&edit_mode=1";
+        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id,'horse_id'=>$data['horse_id'],'edit_mode'=>1]);
     }
 ?>
 <?php if($page->is_editable): ?>

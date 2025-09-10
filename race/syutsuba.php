@@ -162,9 +162,10 @@ if(!empty($data['non_registered_prev_race_number']) && $data['non_registered_pre
         if($i>$rr_count){ break; }
         $i++;
         if($page->is_editable){
-            $url ="{$page->to_app_root_path}race/horse_result/form.php?";
-            $url.="horse_id={$data['horse_id']}";
-            $url.="&next_race_id={$data['race_id']}";
+            $url = InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,[
+                'horse_id'=>$data['horse_id'],
+                'next_race_id'=>$data['race_id'],
+            ]);
             print "<td class=\"race_result_column\"><a href=\"{$url}\">……</a></td>\n";
         }else{
             print "<td class=\"race_result_column\">……</td>\n";
@@ -246,9 +247,10 @@ foreach($data['horse_results'] as $prev_race){
             if($i>$rr_count){ break; }
             $i++;
             if($page->is_editable){
-                $url ="{$page->to_app_root_path}race/horse_result/form.php?";
-                $url.="horse_id={$data['horse_id']}";
-                $url.="&next_race_id={$r->race_id}";
+                $url = InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,[
+                    'horse_id'=>$data['horse_id'],
+                    'next_race_id'=>$r->race_id,
+                ]);
                 print "<td class=\"race_result_column\"><a href=\"{$url}\">……</a></td>\n";
             }else{
                 print "<td class=\"race_result_column\">……</td>\n";

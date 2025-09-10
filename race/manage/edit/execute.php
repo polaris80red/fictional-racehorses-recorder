@@ -49,7 +49,7 @@ try{
         $redirect_url=$page->getRaceResultUrl($race->race_id);
         if($horse_id!==''){
             // 新規登録かつ競走馬ID指定の場合は個別結果登録画面に転送
-            $redirect_url=InAppUrl::to('race/horse_result/form.php',['horse_id'=>$horse_id,'race_id'=>$race->race_id]);
+            $redirect_url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['horse_id'=>$horse_id,'race_id'=>$race->race_id]);
         }
     }
     $pdo->commit();
