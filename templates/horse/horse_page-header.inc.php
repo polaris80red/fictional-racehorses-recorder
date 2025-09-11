@@ -33,7 +33,7 @@
     <a href="#under_results_table" style="text-decoration: none;" title="下部へスクロール">▽</a>
     <?php endif; ?>
 </div>
-<hr style="clear: both;">
+<hr style="clear: both;margin-bottom: 2px;">
 <?php $param=http_build_query(['horse_id'=>$horse->horse_id,'show_registration_only'=>$show_registration_only??false]); ?>
 <div style="font-size:0.9em;"><a href="./?<?=h($param)?>">TOP</a>｜<a href="./results_detail.php?<?=h($param)?>">詳細戦績</a></div>
 <hr>
