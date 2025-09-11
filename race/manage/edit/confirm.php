@@ -108,7 +108,7 @@ if($race->setDataByPost()==false){
     <td><?=h(RaceCategorySex::getShortNameById($pdo,$race->sex_category_id))?><?php HTPrint::Hidden('sex_category_id',$race->sex_category_id) ?></td>
 </tr>
 <tr>
-    <th>性別条件</th>
+    <th>馬場状態</th>
     <td><?php HTPrint::HiddenAndText('track_condition',$race->track_condition) ?></td>
 </tr>
 <tr>
