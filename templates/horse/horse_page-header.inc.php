@@ -35,6 +35,9 @@
 </div>
 <hr style="clear: both;margin-bottom: 2px;">
 <?php $param=['horse_id'=>$horse->horse_id,'show_registration_only'=>$show_registration_only??false]; ?>
-<div style="font-size:0.9em;"><a href="<?=InAppUrl::to('horse/',$param)?>">TOP</a>
-｜<a href="<?=InAppUrl::to('horse/results_detail.php',$param)?>">詳細戦績</a></div>
+<div class="horse_page_header" style="font-size:0.9em;">
+    <a href="<?=InAppUrl::to('horse/',$param)?>">TOP</a>
+    ｜
+    <a href="<?=InAppUrl::to('horse/results_detail.php',$param)?>">詳細戦績</a>
+</div>
 <hr>

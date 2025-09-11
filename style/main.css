@@ -24,6 +24,8 @@ a:link:hover {
 .header_navigation a { text-decoration: none; }
 .footer_navigation a { text-decoration: none; }
 
+.horse_page_header a { text-decoration: none; }
+
 .nowrap { white-space: nowrap; }
 .floatLeft { float: left; }
 .floatRight { float: right; }
