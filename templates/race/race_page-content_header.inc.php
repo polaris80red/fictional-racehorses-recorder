@@ -23,8 +23,12 @@ if((
     $race->date == null || $race->is_tmp_date)&&
     ($week!==false && !empty($week->id) && !empty($week->umm_month_turn))){
     // ウマ娘モードか仮日付で、有効な週が設定されているとターンで表示
-    $urlparam="year={$race->year}&month={$week->month}&turn={$week->umm_month_turn}";
-    $a_tag->href(APP_ROOT_REL_PATH."race/list/in_week.php?$urlparam");
+    $url=InAppUrl::to('race/list/in_week.php',[
+        'year'=>$race->year,
+        'month'=>$race->month,
+        'turn'=>$week->umm_month_turn,
+    ]);
+    $a_tag->href($url);
     $a_tag->title("同ターンのレース");
 }else if($race->date != null && !$race->is_tmp_date){
     // それ以外は正規日付があれば表示
