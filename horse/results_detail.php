@@ -14,6 +14,7 @@ $is_preview=filter_input(INPUT_GET,'preview',FILTER_VALIDATE_BOOL);
 if($is_preview){
     $page->is_editable=false;
 }
+$page->has_edit_menu=true;
 
 $page->error_return_url=InAppUrl::to("horse/search");
 $page->error_return_link_text="競走馬検索に戻る";

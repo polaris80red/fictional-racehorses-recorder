@@ -27,13 +27,14 @@
     <?=h("{$horse->color} {$sex_str}")?>
 </div>
 <div style="float:right;">
-    <?php if($page->is_editable): ?>
+    <?php if($page->has_edit_menu && $page->is_editable): ?>
     <a href="#edit_menu" style="text-decoration: none;" title="下部編集メニューへスクロール">▽</a>
     <?php else: ?>
     <a href="#under_results_table" style="text-decoration: none;" title="下部へスクロール">▽</a>
     <?php endif; ?>
 </div>
 <hr style="clear: both;margin-bottom: 2px;">
-<?php $param=http_build_query(['horse_id'=>$horse->horse_id,'show_registration_only'=>$show_registration_only??false]); ?>
-<div style="font-size:0.9em;"><a href="./?<?=h($param)?>">TOP</a>｜<a href="./results_detail.php?<?=h($param)?>">詳細戦績</a></div>
+<?php $param=['horse_id'=>$horse->horse_id,'show_registration_only'=>$show_registration_only??false]; ?>
+<div style="font-size:0.9em;"><a href="<?=InAppUrl::to('horse/',$param)?>">TOP</a>
+｜<a href="<?=InAppUrl::to('horse/results_detail.php',$param)?>">詳細戦績</a></div>
 <hr>

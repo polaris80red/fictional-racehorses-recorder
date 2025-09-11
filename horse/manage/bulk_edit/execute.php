@@ -81,31 +81,7 @@ td.is_affliationed_nar{ text-align:center; }
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<div>
-<?php
-$name_line=[];
-if($horse->name_ja){
-    $name_line[]="<span style=\"font-size:1.2em;\">".h($horse->name_ja)."</span> ";
-}else if($horse->name_en===''){
-    $name_line[]="<span style=\"font-size:1.2em;\">".h(ANNONYMOUS_HORSE_NAME)."</span>";
-}
-if($horse->name_en){
-    $name_line[]="<span style=\"font-size:1.1em;\">{$horse->name_en}</span>";
-}
-echo implode(' ',$name_line);
-if($horse->birth_year>0){
-    if($setting->year_view_mode===Setting::YEAR_VIEW_MODE_DEFAULT){
-        print_h("（{$horse->birth_year}）");
-    }else{
-        print_h("（{$setting->getBirthYearFormat($horse->birth_year)}）");
-    }
-}else{
-    print "　";
-}
-print_h("{$horse->color} {$sex_str}");
-?>
-</div>
-<hr>
+<?php include (new TemplateImporter('horse/horse_page-header.inc.php'));?>
 <form>
 <table class="horse_history">
 <tr>

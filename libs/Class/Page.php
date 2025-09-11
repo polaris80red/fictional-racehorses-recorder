@@ -21,6 +21,7 @@ class Page{
 
     public $race; // レース1件に対するページの場合用
     public $horse; // 競走馬1頭に対するページの場合用
+    public $has_edit_menu = false; // ページ内リンクを付ける下部編集メニューの有無 
     private Theme $theme;
 
     protected $setting = null;
