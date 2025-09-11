@@ -61,7 +61,7 @@ if($horse===false){
 }
 $page->horse = $horse;
 if(ENABLE_ACCESS_COUNTER){
-    ArticleCounter::countup($pdo,ArticleCounter::TYPE_HORSE,$horse_id);
+    ArticleCounter::countup($pdo,ArticleCounter::TYPE_HORSE_RESULTS_DETAIL,$horse_id);
 }
 
 $session->latest_horse=[

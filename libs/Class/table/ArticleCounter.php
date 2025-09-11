@@ -4,6 +4,7 @@ class ArticleCounter {
     public const UNIQUE_KEY_COLUMN="id";
     private const DEFAULT_WHERE = " WHERE `article_type`=:article_type AND `article_id`=:article_id";
     const TYPE_HORSE="horse";
+    const TYPE_HORSE_RESULTS_DETAIL="horse_results_detail";
     const TYPE_RACE_RESULT="race_result";
     const TYPE_RACE_SYUTSUBA_SIMPLE="syutsuba_simple";
     const TYPE_RACE_SYUTSUBA_SP="syutsuba_sp";
