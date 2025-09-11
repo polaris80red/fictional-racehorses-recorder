@@ -1,6 +1,7 @@
-<?
+<?php
 /** 
  * 競走馬ページ上部の情報表テンプレート
+ * @var Page $page
 */
 ?><table class="horse_base_data">
     <tr>

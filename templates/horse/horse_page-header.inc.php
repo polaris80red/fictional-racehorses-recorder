@@ -1,4 +1,11 @@
-<div style="float:left">
+<?php
+/**
+ * 競走馬ページ上部の馬名など情報行
+ * @var Page $page
+ * @var Setting $setting
+ * @var Horse $horse
+ */
+?><div style="float:left">
     <?php $horse_main_name=($horse->name_ja?:($horse->name_en===''?ANNONYMOUS_HORSE_NAME:''));?>
     <?php if($horse_main_name): ?>
         <span style="font-size:1.2em;"><?=h($horse_main_name)?></span>

@@ -1,4 +1,11 @@
-<hr>
+<?php
+/**
+ * 競走馬ページの下部編集メニュー
+ * @var Page $page
+ * @var Session $session
+ * @var HorseRaceHistory $race_history
+ */
+?><hr>
 <input type="button" id="edit_tgl" value="編集" style="<?=EDIT_MENU_TOGGLE===false?'display:none;':'';?>">
 <input type="hidden" id="hiddden_horse_id" value="<?=h($page->horse->horse_id)?>">
 <input type="button" value="競走馬IDをクリップボードにコピー" onclick="copyToClipboard('#hiddden_horse_id');">
