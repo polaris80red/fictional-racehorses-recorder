@@ -31,6 +31,7 @@ class RaceResults extends Table{
     public $tc =null;
     public $trainer_unique_name =null;
     public $training_country ='';
+    public $owner_name ='';
     public $is_affliationed_nar =0;
     public $non_registered_prev_race_number =0;
     public $jra_thisweek_horse_1 ='';
@@ -64,6 +65,7 @@ class RaceResults extends Table{
         'tc',
         'trainer_unique_name',
         'training_country',
+        'owner_name',
         'jra_thisweek_horse_1',
         'jra_thisweek_horse_2',
         'jra_sps_comment',
@@ -134,6 +136,7 @@ class RaceResults extends Table{
         $this->tc = filter_input($input_type,'tc');
         $this->trainer_unique_name = filter_input($input_type,'trainer_unique_name')?:null;
         $this->training_country = filter_input($input_type,'training_country');
+        $this->owner_name = filter_input($input_type,'owner_name')?:null;
         $this->is_affliationed_nar = (int)filter_input($input_type,'is_affliationed_nar');
         $this->non_registered_prev_race_number = (int)filter_input($input_type,'non_registered_prev_race_number');
         $this->jra_thisweek_horse_1 = filter_input($input_type,'jra_thisweek_horse_1');
@@ -220,6 +223,7 @@ class RaceResults extends Table{
         $stmt->bindValue(':tc', $this->tc, PDO::PARAM_STR);
         $stmt->bindValue(':trainer_unique_name', $this->trainer_unique_name?:null, PDO::PARAM_STR);
         $stmt->bindValue(':training_country', $this->training_country, PDO::PARAM_STR);
+        $stmt->bindValue(':owner_name', $this->owner_name?:null, PDO::PARAM_STR);
         $stmt->bindValue(':is_affliationed_nar', $this->is_affliationed_nar, PDO::PARAM_STR);
         $stmt->bindValue(':non_registered_prev_race_number', $this->non_registered_prev_race_number, PDO::PARAM_INT);
         $stmt->bindValue(':jra_thisweek_horse_1', $this->jra_thisweek_horse_1, PDO::PARAM_STR);

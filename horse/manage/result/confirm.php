@@ -264,6 +264,10 @@ switch($race_results->is_affliationed_nar){
 ?><?php HTPrint::Hidden('is_affliationed_nar',$race_results->is_affliationed_nar); ?></td>
 </tr>
 <tr>
+    <th>馬主上書</th>
+    <td><?php HTPrint::HiddenAndText('owner_name',$race_results->owner_name); ?></td>
+</tr>
+<tr>
     <th>未登録の前走</th>
     <td><?php HTPrint::HiddenAndText('non_registered_prev_race_number',$race_results->non_registered_prev_race_number); ?></td>
 </tr>

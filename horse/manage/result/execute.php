@@ -285,6 +285,9 @@ switch($input->is_affliationed_nar){
 ?></td>
 </tr>
 <tr>
+    <th>馬主上書</th><td><?=h($input->owner_name)?></td>
+</tr>
+<tr>
     <th colspan="2"></th>
 </tr>
 <tr>

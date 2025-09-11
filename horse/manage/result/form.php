@@ -309,6 +309,11 @@ if($page->error_exists){
     </td>
 </tr>
 <tr>
+    <th>馬主上書</th>
+    <td class="in_input"><input type="text" name="owner_name" value="<?=h($form_data->owner_name)?>" placeholder="このレース時点の馬主"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=owner_name]');"></td>
+</tr>
+<tr>
     <th>未登録前走</th>
     <td class="in_input"><input type="number" name="non_registered_prev_race_number" style="width: 3em;" value="<?=h((int)$form_data->non_registered_prev_race_number)?>">走以上</td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=non_registered_prev_race_number]');"></td>

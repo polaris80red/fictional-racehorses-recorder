@@ -33,6 +33,7 @@ class RaceResultsRow extends TableRow {
         'tc',
         'trainer_unique_name',
         'training_country',
+        'owner_name',
         'jra_thisweek_horse_1',
         'jra_thisweek_horse_2',
         'jra_sps_comment',
@@ -64,6 +65,7 @@ class RaceResultsRow extends TableRow {
     public $tc =null;
     public $trainer_unique_name =null;
     public $training_country ='';
+    public $owner_name =null;
     public $is_affliationed_nar =0;
     public $non_registered_prev_race_number =0;
     public $jra_thisweek_horse_1 ='';
