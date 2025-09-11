@@ -1,4 +1,9 @@
-<hr>
+<?php
+/**
+ * レースページ下部の編集メニュー
+ * @var Race $race
+ */
+?><hr>
 <input type="button" id="edit_tgl" value="編集" style="<?=!EDIT_MENU_TOGGLE?'display:none;':''?>">
 <input type="hidden" id="hiddden_race_id" value="<?=h($race->race_id)?>">
 <input type="button" value="レースIDをクリップボードにコピー" onclick="copyToClipboard('#hiddden_race_id');">
