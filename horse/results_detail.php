@@ -98,6 +98,7 @@ $sex_str=sex2String($horse->sex);
 .horse_base_data td{ min-width:160px; }
 .disabled_row{ background-color: #dddddd; }
 
+td.weather{ text-align:center; }
 td.track_condition{ text-align:center; }
 td.race_course_name { text-align: center; }
 td.grade{ text-align:center; }
@@ -174,14 +175,15 @@ switch($setting->age_view_mode){
     ?></th>
     <th>開催</th>
     <th>距離</th>
+    <th>天<br>候</th>
     <th>馬場</th>
     <th>格付</th>
     <th>レース名</th>
-    <th><?=$mode_umm?'人数':'頭数'?></th>
+    <th><?=$mode_umm?'人<br>数':'頭<br>数'?></th>
     <th>枠</th>
     <th>馬<br>番</th>
     <th>オッズ</th>
-    <th>人気</th>
+    <th>人<br>気</th>
     <th>着順</th>
     <?php if(!$mode_umm): ?>
         <th>騎手</th>
@@ -195,7 +197,7 @@ switch($setting->age_view_mode){
     <th>通過</th>
     <th>上り</th>
     <th>1着馬<span class="nowrap">(2着馬)</span></th>
-    <th>本賞金</th>
+    <th>本賞金<br>(万円)</th>
     <th>収得<br>賞金</th>
     <th>　</th>
     <?php if($page->is_editable): ?><th></th><?php endif; ?>
@@ -204,8 +206,8 @@ $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id=''
     $ret_text='';
     if($non_registered_prev_race_number>0){
         $ret_text.="<tr><td style=\"color:#999999;\">（{$non_registered_prev_race_number}戦～）</td>";
-        $ret_text.=str_repeat("<td></td>",4)."<td>……</td>";
-        $ret_text.=str_repeat("<td></td>",14);
+        $ret_text.=str_repeat("<td></td>",5)."<td>……</td>";
+        $ret_text.=str_repeat("<td></td>",15);
         if(!$mode_umm) { $ret_text.=str_repeat("<td></td>",2); }
         if($page->is_editable){
             $params=['horse_id'=>$horse_id];
@@ -295,6 +297,7 @@ $latest_race_is_exists=false; ?>
         ?>
         <td class="race_course_name"><?=$a_tag?></td>
         <td class="distance"><?=h($race->course_type.$race->distance)?></td>
+        <td class="weather"><?=h($race->weather)?></td>
         <td class="track_condition"><?=h($race->track_condition)?></td>
         <td class="grade"><?=h(($grade->short_name??'')?:$race->grade)?></td>
         <td class="race_name">
