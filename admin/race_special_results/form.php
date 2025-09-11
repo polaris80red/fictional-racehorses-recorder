@@ -94,7 +94,7 @@ if($input_id==0){
     <th>カウント</th>
     <td>
         <label><?php
-        $radio=new MkTagInputRadio('c',0,$form_item->is_excluded_from_race_count);
+        $radio=new MkTagInputRadio('is_excluded_from_race_count',0,$form_item->is_excluded_from_race_count);
         $radio->print();
         ?>着外1回</label><br>
         <label><?php
