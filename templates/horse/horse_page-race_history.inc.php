@@ -16,26 +16,25 @@
     $a_tag->print();
     ?></th>
     <th>開催</th>
+    <th>レース名</th>
+    <th>格付</th>
     <th>距離</th>
     <th>馬場</th>
-    <th>格付</th>
-    <th>レース名</th>
     <th><?=$mode_umm?'人数':'頭数'?></th>
-    <th>枠</th>
     <th>人気</th>
     <th>着順</th>
     <?php if(!$mode_umm): ?><th>騎手</th><?php endif; ?>
     <th>斤量</th>
     <?php if(!$mode_umm): ?><th>馬体重</th><?php endif; ?>
     <th>タイム</th>
-    <th>1着馬<span class="nowrap">(2着馬)</span></th><th>　</th>
+    <th>1着馬<span class="nowrap">(2着馬)</span></th><th>記</th>
     <?php if($page->is_editable): ?><th></th><?php endif; ?>
 </tr><?php
 $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id='') use($page,$horse_id,$mode_umm){
     $ret_text='';
     if($non_registered_prev_race_number>0){
         $ret_text.="<tr><td style=\"color:#999999;\">（{$non_registered_prev_race_number}戦～）</td>";
-        $ret_text.=str_repeat("<td></td>",4)."<td>……</td>".str_repeat("<td></td>",8);
+        $ret_text.=str_repeat("<td></td>",2)."<td>……</td>".str_repeat("<td></td>",9);
         if(!$mode_umm) { $ret_text.=str_repeat("<td></td>",2); }
         if($page->is_editable){
             $params=['horse_id'=>$horse_id];
@@ -125,14 +124,13 @@ $latest_race_is_exists=false;
             }
         ?>
         <td class="race_course_name"><?=$a_tag?></td>
-        <td class="distance"><?=h($race->course_type.$race->distance)?></td>
-        <td class="track_condition"><?=h($race->track_condition)?></td>
-        <td class="grade"><?=h(($grade->short_name??'')?:$race->grade)?></td>
         <td class="race_name">
             <?=(new MkTagA($race->race_name,$page->getRaceResultUrl($race->race_id).$race_url_add_param))->title($race->race_name.($race->caption?'：'.$race->caption:''))?>
         </td>
+        <td class="grade"><?=h(($grade->short_name??'')?:$race->grade)?></td>
+        <td class="distance"><?=h($race->course_type.$race->distance)?></td>
+        <td class="track_condition"><?=h($race->track_condition)?></td>
         <td class="number_of_starters"><?=h($race->number_of_starters)?></td>
-        <td class="frame_number"><?=h($data->frame_number)?></td>
         <td class="favourite favourite_<?=h($data->favourite)?>"><?=h($data->favourite)?></td>
         <?php
             $add_class=getResultClass($data->result_number);

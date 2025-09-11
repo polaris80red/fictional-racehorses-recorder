@@ -103,7 +103,6 @@ td.track_condition{ text-align:center; }
 td.race_course_name { text-align: center; }
 td.grade{ text-align:center; }
 td.number_of_starters{ text-align:right; }
-td.frame_number{ text-align:center; }
 td.favourite{ text-align:right; }
 td.result_number{ text-align:right; }
 td.h_weight{ text-align:center; }
