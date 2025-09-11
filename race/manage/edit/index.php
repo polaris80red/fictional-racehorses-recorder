@@ -216,6 +216,25 @@ $grades=RaceGrade::getForSelectbox($pdo);
     <td></td>
 </tr>
 <tr>
+    <th>天候</th>
+    <td class="in_input">
+        <select name="weather_select" style="width:5em;height:2em;" onchange="clearElmVal('*[name=weather]');">
+<?php
+    $weather_list=['晴','曇','雨','雪'];
+    echo '<option value=""></option>'."\n";
+    $target_exists=false;
+    foreach($weather_list as $weather){
+        echo '<option value="'.h($weather).'"'.(($weather==$race->weather)?' selected ':'').'>';
+        if($weather==$race->weather){$target_exists=true;}
+        print_h($weather);
+        echo '</option>'."\n";
+    }
+?></select>／
+        <input type="text" name="weather" style="width:4em;" value="<?=h($target_exists?"":$race->weather)?>" placeholder="手入力" onchange="clearElmVal('*[name=weather_select]');">
+    </td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=weather]');clearElmVal('*[name=weather_select]');"></td>
+</tr>
+<tr>
     <th>馬場</th>
     <td class="in_input">
         <select name="track_condition_select" style="width:5em;height:2em;" onchange="clearElmVal('*[name=track_condition]');">
@@ -518,6 +537,8 @@ $(document).ready(function() {
         checkRequiredElm("[name='race_name']");
     });
     setWeekSelect();
+    // 複写時用に読み込み完了でID重複の表示は出す
+    checkRaceIdExists();
 });
 </script>
 </body>

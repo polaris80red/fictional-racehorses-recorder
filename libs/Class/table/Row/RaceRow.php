@@ -23,6 +23,7 @@ class RaceRow extends TableRow {
         'caption',
         'grade',
         'age',
+        'weather',
         'track_condition',
         'note',
         'date',
@@ -41,6 +42,7 @@ class RaceRow extends TableRow {
     public $age_category_id =0;
     public $age ='';
     public $sex_category_id =0;
+    public $weather =null;
     public $track_condition ='';
     public $note ='';
     public $number_of_starters =null;

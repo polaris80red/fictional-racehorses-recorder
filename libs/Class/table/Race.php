@@ -20,6 +20,7 @@ class Race extends Table{
     public $age_category_id =0;
     public $age ='';
     public $sex_category_id =0;
+    public $weather =null;
     public $track_condition ='';
     public $note ='';
     public $number_of_starters =null;
@@ -42,7 +43,7 @@ class Race extends Table{
     public const COLUMNS=[
         'world_id','race_course_name','race_number',
         'course_type','distance','race_name','race_short_name','caption',
-        'grade','age_category_id','age','sex_category_id','track_condition',
+        'grade','age_category_id','age','sex_category_id','weather','track_condition',
         'note',
         'number_of_starters','is_jra','is_nar',
         'date','is_tmp_date','year','month','week_id',
@@ -116,6 +117,7 @@ class Race extends Table{
         $this->age_category_id=filter_input(INPUT_POST,'age_category_id');
         $this->age=filter_input(INPUT_POST,'age');
         $this->sex_category_id=filter_input(INPUT_POST,'sex_category_id');
+        $this->weather=filter_input(INPUT_POST,'weather')?:filter_input(INPUT_POST,'weather_select');
         $this->track_condition=filter_input(INPUT_POST,'track_condition')?:filter_input(INPUT_POST,'track_condition_select');
         $this->note=filter_input(INPUT_POST,'note');
         $this->number_of_starters=filter_input(INPUT_POST,'number_of_starters');
@@ -211,9 +213,10 @@ class Race extends Table{
             'is_jra','is_nar','is_tmp_date',
             'year','month','week_id','is_enabled'
         ],PDO::PARAM_INT);
-        // gradeはもしnullなら空文字列にする
+        // NULLかどうかの個別調整
         $stmt->BindValue(':race_course_name',$this->race_course_name?:'',PDO::PARAM_STR);
         $stmt->BindValue(':grade',$this->grade?:'',PDO::PARAM_STR);
+        $stmt->BindValue(':weather',$this->weather?:null,PDO::PARAM_STR);
         $stmt->BindValue(':track_condition',$this->track_condition?:'',PDO::PARAM_STR);
         // 日付が空の場合はNULL
         if($this->date!=''){
