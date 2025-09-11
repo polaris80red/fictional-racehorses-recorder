@@ -86,13 +86,15 @@ td.is_affliationed_nar{ text-align:center; }
 <table class="horse_history">
 <tr>
     <th><?=$setting->horse_record_date==='umm'?'時期':'年月'?></th>
-    <th>開催</th><th>格付</th><th>レース名</th>
+    <th>開催</th>
+    <th>レース名</th>
+    <th>格付</th>
     <th>枠</th>
     <th>馬</th>
     <th>人気</th><th colspan="2">着順</th><th>補正</th><th>降</th><th>騎手</th>
     <th>斤量</th>
-    <th>馬体重</th>
     <th>タイム</th>
+    <th>馬体重</th>
     <th>所属</th>
     <th>厩舎</th>
     <th>調教国</th>
@@ -298,13 +300,13 @@ $sex_gelding_override=false;
     <?=h($race_result->handicap)?>
     <input type="hidden" name="race[<?=h($data->race_id)?>][handicap]" value="<?=h($race_result->handicap)?>">
 </td>
-<td class="h_weight <?=!$changed->h_weight?'':'changed'?>">
-    <?=h($race_result->h_weight)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][h_weight]" value="<?=h($race_result->h_weight)?>">
-</td>
 <td class="time <?=!$changed->time?'':'changed'?>">
     <?=h($race_result->time)?>
     <input type="hidden" name="race[<?=h($data->race_id)?>][time]" value="<?=h($race_result->time)?>">
+</td>
+<td class="h_weight <?=!$changed->h_weight?'':'changed'?>">
+    <?=h($race_result->h_weight)?>
+    <input type="hidden" name="race[<?=h($data->race_id)?>][h_weight]" value="<?=h($race_result->h_weight)?>">
 </td>
 <td class="tc <?=!$changed->tc?'':'changed'?>">
     <?=h($race_result->tc)?>

@@ -98,13 +98,15 @@ switch($setting->age_view_mode){
 <table class="horse_history">
 <tr>
     <th><?=$setting->horse_record_date==='umm'?'時期':'年月'?></th>
-    <th>開催</th><th>格付</th><th>レース名</th>
+    <th>開催</th>
+    <th>レース名</th>
+    <th>格付</th>
     <th>枠</th>
     <th>馬<br>番</th>
     <th>人<br>気</th><th colspan="2">着順</th><th colspan="2">着補正</th><th>騎手</th>
     <th>斤量</th>
-    <th>馬体重</th>
     <th>タイム</th>
+    <th>馬体重</th>
     <th>所属</th>
     <th>厩舎</th>
     <th>調教</th>
@@ -177,10 +179,10 @@ $latest_race_is_exists=false; ?>
     }
 ?>
 <td class="race_course_name"><?=$a_tag?></td>
-<td class="grade"><?=h(($grade->short_name??'')?:$race->grade)?></td>
 <td class="race_name">
     <a href="<?=h($page->getRaceResultUrl($data->race_id).$race_url_add_param)?>" title="<?=h($race->race_name.($race->caption?'：'.$race->caption:''))?>"><?=h($race->race_short_name?:$race->race_name)?></a>
 </td>
+<td class="grade"><?=h(($grade->short_name??'')?:$race->grade)?></td>
 <td class="in_input frame_number">
     <input type="text" name="race[<?=h($data->race_id)?>][frame_number]" style="width: 1.5em;" value="<?=h($data->frame_number)?>" placeholder="枠">
 </td>
@@ -226,11 +228,11 @@ $latest_race_is_exists=false; ?>
 <td class="in_input handicap">
     <input type="text" name="race[<?=h($data->race_id)?>][handicap]" style="width: 2.5em;" value="<?=h($data->handicap)?>" placeholder="斤量">
 </td>
-<td class="in_input">
-    <input type="text" name="race[<?=h($data->race_id)?>][h_weight]" style="width: 3em;" value="<?=h($data->h_weight)?>" placeholder="馬体重">
-</td>
 <td class="in_input time">
     <input type="text" name="race[<?=h($data->race_id)?>][time]" style="width: 3em;" value="<?=h($data->time)?>" placeholder="タイム">
+</td>
+<td class="in_input">
+    <input type="text" name="race[<?=h($data->race_id)?>][h_weight]" style="width: 3em;" value="<?=h($data->h_weight)?>" placeholder="馬体重">
 </td>
 <td class="in_input">
     <input type="text" name="race[<?=h($data->race_id)?>][tc]" style="width: 3em;" value="<?=h($data->tc)?>" placeholder="所属">
