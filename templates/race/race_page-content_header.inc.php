@@ -49,6 +49,9 @@ if($race->race_course_name){
     }
     echo "　".$a_tag;
 }
+if($race->weather){
+    print_h("　[天候：{$race->weather}]");
+}
 if($race->track_condition){
     if($race->course_type==="芝"||$race->course_type==="障"){
         print "　[芝：{$race->track_condition}]";
