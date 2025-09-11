@@ -18,6 +18,8 @@ class Horse extends Table{
     public $tc ='';
     public $trainer_unique_name =null;
     public $training_country ='JPN';
+    public $owner_name =null;
+    public $breeder_name =null;
     public $breeding_country ='';
     public $is_affliationed_nar =0;
     public $sire_id =null;
@@ -89,6 +91,8 @@ class Horse extends Table{
         $this->tc=(string)(filter_input(INPUT_POST,'tc')?:filter_input(INPUT_POST,'tc_select'));
         $this->trainer_unique_name=filter_input(INPUT_POST,'trainer_unique_name')?:null;
         $this->training_country=filter_input(INPUT_POST,'training_country');
+        $this->owner_name=filter_input(INPUT_POST,'owner_name')?:null;
+        $this->breeder_name=filter_input(INPUT_POST,'breeder_name')?:null;
         $this->breeding_country=filter_input(INPUT_POST,'breeding_country')?:null;
         $this->is_affliationed_nar=filter_input(INPUT_POST,'is_affliationed_nar');
         $this->sire_id=filter_input(INPUT_POST,'sire_id');

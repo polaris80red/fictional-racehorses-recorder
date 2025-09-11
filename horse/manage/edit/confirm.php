@@ -158,6 +158,14 @@ th{
     <td><?php HTPrint::HiddenAndText('training_country',$horse->training_country) ?></td>
 </tr>
 <tr>
+    <th>馬主</th>
+    <td><?php HTPrint::HiddenAndText('owner_name',$horse->owner_name) ?></td>
+</tr>
+<tr>
+    <th>生産者</th>
+    <td><?php HTPrint::HiddenAndText('breeder_name',$horse->breeder_name) ?></td>
+</tr>
+<tr>
     <th>生産国</th>
     <td><?php HTPrint::HiddenAndText('breeding_country',$horse->breeding_country) ?></td>
 </tr>
