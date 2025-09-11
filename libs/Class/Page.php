@@ -31,6 +31,8 @@ class Page{
         $this->setting=$setting;
         if($setting->theme_dir_name!=''){
             $this->theme=(new ThemeLoader(APP_ROOT_DIR.'/themes'))->loadTheme($setting->theme_dir_name);
+            // テーマディレクトリのテンプレートを読み込み元に指定
+            TemplateImporter::setThemeDir(APP_ROOT_DIR."/themes/{$setting->theme_dir_name}/templates");
         }
     }
     /**
