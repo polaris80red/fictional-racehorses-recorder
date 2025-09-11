@@ -1,4 +1,11 @@
-<div class="race_header">
+<?php
+/**
+ * レースページ上部の共通部分
+ * @var Page $page
+ * @var Setting $setting
+ * @var Race $race
+ */
+?><div class="race_header">
 <div>
 <div style="border-bottom:solid 1px #CCC;margin-bottom: 4px;float:left;"><?php
 $day=($race->date == null || $race->is_tmp_date)?null:(new DateTime($race->date))->format('d');
@@ -54,10 +61,10 @@ if($race->weather){
 }
 if($race->track_condition){
     if($race->course_type==="芝"||$race->course_type==="障"){
-        print "　[芝：{$race->track_condition}]";
+        print_h("　[芝：{$race->track_condition}]");
     }
     if($race->course_type==="ダ"||$race->course_type==="障"){
-        print "　[ダ：{$race->track_condition}]";
+        print_h("　[ダ：{$race->track_condition}]");
     }
 }
 ?></div>
