@@ -20,9 +20,9 @@
         $trainer_name='';
         $trainer_is_anonymous=false;
         do{
-            $trainer=Trainer::getByUniqueName($pdo,$page->horse->trainer_unique_name);
+            $trainer=Trainer::getByUniqueName($pdo,$page->horse->trainer_name);
             if($trainer===false || $trainer->is_enabled==0){
-                $trainer_name=$page->horse->trainer_unique_name;
+                $trainer_name=$page->horse->trainer_name;
                 break;
             }
             if($trainer->is_anonymous==1){
@@ -32,12 +32,12 @@
                     break;
                 }
             }
-            $trainer_name=$trainer->name?:($trainer->short_name_10?:$page->horse->trainer_unique_name);
+            $trainer_name=$trainer->name?:($trainer->short_name_10?:$page->horse->trainer_name);
         }while(false);
         $trainer_search_tag=new MkTagA($trainer_name??'');
         $trainer_search=new HorseSearch();
-        if($page->horse->trainer_unique_name!=''){
-            $trainer_search->trainer=$page->horse->trainer_unique_name;
+        if($page->horse->trainer_name!=''){
+            $trainer_search->trainer=$page->horse->trainer_name;
             $trainer_search_tag->href($page->to_horse_search_path.'?'.$trainer_search->getUrlParam());
         }
     ?>

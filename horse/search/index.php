@@ -115,11 +115,11 @@ if($search->limit>0){
 <?php foreach($search_results as $row): ?>
 <?php
     $trainer=(new TrainerRow())->setFromArray($row,Trainer::TABLE.'__');
-    $trainer_name=$row['trainer_unique_name'];
+    $trainer_name=$row['trainer_name'];
     if($trainer->is_enabled && $trainer->is_anonymous && !$page->is_editable){
         $trainer_name='□□□□';
     }else{
-        $trainer_name=$trainer->short_name_10?:($trainer->name?:$row['trainer_unique_name']);
+        $trainer_name=$trainer->short_name_10?:($trainer->name?:$row['trainer_name']);
     }
 ?>
 <tr>
@@ -144,11 +144,11 @@ if($search->limit>0){
     <td><a><?=h(sex2String($row['sex']))?></a></td>
     <td><a><?=h($row['tc'])?></a></td>
     <td><?php
-        if($row['trainer_unique_name']!=''){
+        if($row['trainer_name']!=''){
             $url='';
-            if($row['trainer_unique_name']!==$search->trainer){
+            if($row['trainer_name']!==$search->trainer){
                 $url ="./?".$search->getUrlParam($search_reset_array);
-                $url.="&".(new UrlParams(['trainer'=>$row['trainer_unique_name'],'order'=>'']));
+                $url.="&".(new UrlParams(['trainer'=>$row['trainer_name'],'order'=>'']));
             }
             $a_tag=new MkTagA(($trainer_name)?:'□□□□',$url);
             $a_tag->print();

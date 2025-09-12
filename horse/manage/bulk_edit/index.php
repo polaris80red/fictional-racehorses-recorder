@@ -238,7 +238,7 @@ $latest_race_is_exists=false; ?>
     <input type="text" name="race[<?=h($data->race_id)?>][tc]" style="width: 3em;" value="<?=h($data->tc)?>" placeholder="所属">
 </td>
 <td class="in_input">
-    <input type="text" name="race[<?=h($data->race_id)?>][trainer_unique_name]" style="width: 6em;" value="<?=h($data->trainer_unique_name)?>" placeholder="厩舎">
+    <input type="text" name="race[<?=h($data->race_id)?>][trainer_name]" style="width: 6em;" value="<?=h($data->trainer_name)?>" placeholder="厩舎">
 </td>
 <td class="in_input">
     <input type="text" name="race[<?=h($data->race_id)?>][training_country]" style="width: 2.5em;" value="<?=h($data->training_country)?>" placeholder="国">

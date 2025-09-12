@@ -59,9 +59,9 @@ class RaceResultsGetter{
         LEFT JOIN `{$jockey_tbl}` as `jk`
             ON `r_results`.`jockey_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
         LEFT JOIN `{$trainer_tbl}` as `h_trainer`
-            ON `horse`.`trainer_unique_name`=`h_trainer`.`unique_name` AND `h_trainer`.`is_enabled`=1
+            ON `horse`.`trainer_name`=`h_trainer`.`unique_name` AND `h_trainer`.`is_enabled`=1
         LEFT JOIN `{$trainer_tbl}` as `r_trainer`
-            ON `r_results`.`trainer_unique_name`=`r_trainer`.`unique_name` AND `r_trainer`.`is_enabled`=1
+            ON `r_results`.`trainer_name`=`r_trainer`.`unique_name` AND `r_trainer`.`is_enabled`=1
         WHERE `r_results`.`race_id` LIKE :race_id
         END;
         //print_r($sql);exit;
@@ -110,19 +110,19 @@ class RaceResultsGetter{
             $horse_trainer=(new TrainerRow())->setFromArray($data,'h_trainer__');
             $row->trainerName='';
             $row->trainerRow=new TrainerRow();
-            if($raceResult->trainer_unique_name){
+            if($raceResult->trainer_name){
                 if($race_trainer->is_anonymous==1){
-                    $row->trainerName=(!$this->pageIsEditable)?'□□□□':($race_trainer->short_name_10?:$raceResult->trainer_unique_name);
+                    $row->trainerName=(!$this->pageIsEditable)?'□□□□':($race_trainer->short_name_10?:$raceResult->trainer_name);
                 }else{
-                    $row->trainerName=$race_trainer->short_name_10?:$raceResult->trainer_unique_name;
+                    $row->trainerName=$race_trainer->short_name_10?:$raceResult->trainer_name;
                 }
                 $row->trainerRow=$race_trainer;
-            }else if($horse->trainer_unique_name){
+            }else if($horse->trainer_name){
                 // レース側の調教師が空の場合は馬側の値を採用
                 if($horse_trainer->is_anonymous==1){
-                    $row->trainerName=(!$this->pageIsEditable)?'□□□□':($horse_trainer->short_name_10?:$horse->trainer_unique_name);
+                    $row->trainerName=(!$this->pageIsEditable)?'□□□□':($horse_trainer->short_name_10?:$horse->trainer_name);
                 }else{
-                    $row->trainerName=$horse_trainer->short_name_10?:$horse->trainer_unique_name;
+                    $row->trainerName=$horse_trainer->short_name_10?:$horse->trainer_name;
                 }
                 $row->trainerRow=$horse_trainer;
             }

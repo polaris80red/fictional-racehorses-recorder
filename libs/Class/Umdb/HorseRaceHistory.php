@@ -116,7 +116,7 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`jra_thisweek_horse_1`
             ,`race_results`.`jra_thisweek_horse_2`
             ,`race_results`.`tc`
-            ,`race_results`.`trainer_unique_name`
+            ,`race_results`.`trainer_name`
             ,`race_results`.`training_country`
             ,`race_results`.`sex`
             ,`race_results`.`is_affliationed_nar`

@@ -132,7 +132,7 @@ $nar_override=0;
         'time',
         'jockey',
         'tc',
-        'trainer_unique_name',
+        'trainer_name',
         'training_country',
         'sex',
         'is_affliationed_nar',
@@ -205,10 +205,10 @@ $nar_override=0;
         $has_change=true;
         $changed->tc=true;
     }
-    if((string)$race_result->trainer_unique_name!==(string)$posted_race->trainer_unique_name){
-        $race_result->trainer_unique_name=$posted_race->trainer_unique_name?:null;
+    if((string)$race_result->trainer_name!==(string)$posted_race->trainer_name){
+        $race_result->trainer_name=$posted_race->trainer_name?:null;
         $has_change=true;
-        $changed->trainer_unique_name=true;
+        $changed->trainer_name=true;
     }
     if((string)$race_result->training_country!==(string)$posted_race->training_country){
         $race_result->training_country=$posted_race->training_country?:null;
@@ -330,9 +330,9 @@ $nar_override=0;
     <?=h($race_result->tc)?>
     <input type="hidden" name="race[<?=h($data->race_id)?>][tc]" value="<?=h($race_result->tc)?>">
 </td>
-<td class="trainer_unique_name <?=!$changed->trainer_unique_name?'':'changed'?>">
-    <?=h($race_result->trainer_unique_name)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][trainer_unique_name]" value="<?=h($race_result->trainer_unique_name)?>">
+<td class="trainer_name <?=!$changed->trainer_name?'':'changed'?>">
+    <?=h($race_result->trainer_name)?>
+    <input type="hidden" name="race[<?=h($data->race_id)?>][trainer_name]" value="<?=h($race_result->trainer_name)?>">
 </td>
 <td class="training_country <?=!$changed->training_country?'':'changed'?>">
     <?=h($race_result->training_country)?>

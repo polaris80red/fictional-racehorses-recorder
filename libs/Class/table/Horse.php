@@ -16,7 +16,7 @@ class Horse extends Table{
     public $sex =0;
     public $color ='';
     public $tc ='';
-    public $trainer_unique_name =null;
+    public $trainer_name =null;
     public $training_country ='JPN';
     public $owner_name =null;
     public $breeder_name =null;
@@ -90,7 +90,7 @@ class Horse extends Table{
         }
         $this->color=(string)(filter_input(INPUT_POST,'color')?:filter_input(INPUT_POST,'color_select'));
         $this->tc=(string)(filter_input(INPUT_POST,'tc')?:filter_input(INPUT_POST,'tc_select'));
-        $this->trainer_unique_name=filter_input(INPUT_POST,'trainer_unique_name')?:null;
+        $this->trainer_name=filter_input(INPUT_POST,'trainer_name')?:null;
         $this->training_country=filter_input(INPUT_POST,'training_country');
         $this->owner_name=filter_input(INPUT_POST,'owner_name')?:null;
         $this->breeder_name=filter_input(INPUT_POST,'breeder_name')?:null;

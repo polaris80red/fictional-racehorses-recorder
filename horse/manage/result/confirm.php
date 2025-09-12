@@ -244,7 +244,7 @@ switch($race_results->sex){
 </tr>
 <tr>
     <th>調教師上書</th>
-    <td><?php HTPrint::HiddenAndText('trainer_unique_name',$race_results->trainer_unique_name); ?></td>
+    <td><?php HTPrint::HiddenAndText('trainer_name',$race_results->trainer_name); ?></td>
 </tr>
 <tr>
     <th>調教国上書</th>

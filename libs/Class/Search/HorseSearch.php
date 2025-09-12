@@ -282,7 +282,7 @@ class HorseSearch extends Search{
             $sql_parts[]='LEFT JOIN `'.Horse::TABLE.'` AS bms';
             $sql_parts[]='ON mare.sire_id LIKE bms.horse_id';
             $sql_parts[]='LEFT JOIN `'.Trainer::TABLE.'` AS trainer';
-            $sql_parts[]='ON trainer.unique_name = `h`.`trainer_unique_name`';
+            $sql_parts[]='ON trainer.unique_name = `h`.`trainer_name`';
         if($this->search_text!=''){
             $sql_parts[]='LEFT JOIN `'.HorseTag::TABLE.'` AS t';
             $sql_parts[]='ON h.horse_id LIKE t.horse_id';
@@ -335,7 +335,7 @@ class HorseSearch extends Search{
             $pre_bind->add(':bms_name', "%{$this->bms_name}%", PDO::PARAM_STR);
         }
         if($this->trainer!=''){
-            $where_parts[]='h.`trainer_unique_name` LIKE :trainer';
+            $where_parts[]='h.`trainer_name` LIKE :trainer';
             $pre_bind->add(':trainer', "%{$this->trainer}%", PDO::PARAM_STR);
         }
         if(count($where_parts)>0){

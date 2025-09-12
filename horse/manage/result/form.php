@@ -292,8 +292,8 @@ if($page->error_exists){
 </tr>
 <tr>
     <th>調教師上書</th>
-    <td class="in_input"><input type="text" name="trainer_unique_name" value="<?=h($form_data->trainer_unique_name)?>" placeholder="このレース時点の所属"></td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=trainer_unique_name]');"></td>
+    <td class="in_input"><input type="text" name="trainer_name" value="<?=h($form_data->trainer_name)?>" placeholder="このレース時点の所属"></td>
+    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=trainer_name]');"></td>
 </tr>
 <tr>
     <th>調教国上書</th>

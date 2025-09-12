@@ -14,7 +14,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`Horse`.`name_ja`
         ,`Horse`.`name_en`
         ,`Horse`.`tc` AS 'horse_tc'
-        ,`Horse`.`trainer_unique_name` AS 'horse_trainer_unique_name'
+        ,`Horse`.`trainer_name` AS 'horse_trainer_name'
         ,`Horse`.`training_country` AS 'horse_training_country'
         ,`Horse`.`is_affliationed_nar` AS 'horse_is_affliationed_nar'
         ,`Horse`.`sex` AS 'horse_sex'
@@ -51,8 +51,8 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         LEFT JOIN `{$horse_tbl}` AS `bms` ON `mare`.`sire_id`=`bms`.`horse_id`
         LEFT JOIN `{$race_special_results_tbl}` as spr ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
         LEFT JOIN `{$jockey_tbl}` as `jk` ON `r_results`.`jockey_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
-        LEFT JOIN `{$trainer_tbl}` as `trainer` ON `Horse`.`trainer_unique_name`=`trainer`.`unique_name` AND `trainer`.`is_enabled`=1
-        LEFT JOIN `{$trainer_tbl}` as `race_trainer` ON `r_results`.`trainer_unique_name`=`race_trainer`.`unique_name` AND `race_trainer`.`is_enabled`=1
+        LEFT JOIN `{$trainer_tbl}` as `trainer` ON `Horse`.`trainer_name`=`trainer`.`unique_name` AND `trainer`.`is_enabled`=1
+        LEFT JOIN `{$trainer_tbl}` as `race_trainer` ON `r_results`.`trainer_name`=`race_trainer`.`unique_name` AND `race_trainer`.`is_enabled`=1
         WHERE `race`.`race_id`=:race_id
         ORDER BY
         IFNULL(`r_results`.`frame_number`,32) ASC,

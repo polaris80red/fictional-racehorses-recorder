@@ -151,7 +151,7 @@ th{
 </tr>
 <tr>
     <th>調教師</th>
-    <td><?php HTPrint::HiddenAndText('trainer_unique_name',$horse->trainer_unique_name) ?></td>
+    <td><?php HTPrint::HiddenAndText('trainer_name',$horse->trainer_name) ?></td>
 </tr>
 <tr>
     <th>調教国</th>
