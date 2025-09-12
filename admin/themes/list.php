@@ -25,13 +25,6 @@ $themes=Themes::getAll($pdo,true);
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>
-<style>
-    th { background-color: #EEE;}
-    select{
-        height: 2em;
-    }
-    tr.disabled { background-color: #EEE; }
-</style>
 </head>
 <body>
 <header>
@@ -40,7 +33,7 @@ $themes=Themes::getAll($pdo,true);
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<table>
+<table class="admin-master-list">
 <tr>
     <th>ID</th>
     <th>名称</th>

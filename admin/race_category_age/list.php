@@ -28,15 +28,9 @@ $race_category_age = $race_category_age_table->getPage($pdo,$search_page,$show_d
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>
 <style>
-    th { background-color: #EEE;}
-
-    tr.disabled { background-color: #EEE; }
     td.select_box_disabled { background-color: #EEE; }
-
     td.col_id, td.col_sort_number { text-align: right; }
     td.col_id { min-width: 3em; }
-    td a { text-decoration: none; }
-    #content th a { text-decoration: none;}
 </style>
 </head>
 <body>
@@ -53,7 +47,7 @@ $prev_tag  =new MkTagA("[前へ]",($race_category_age_table->current_page>1?('?'
 $next_tag  =new MkTagA("[次へ]",($race_category_age_table->has_next_page?('?'.$url_param->toString(['page'=>$race_category_age_table->current_page+1])):''));
 ?>
 <?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
-<table>
+<table class="admin-master-list">
 <tr>
     <th>ID</th>
     <th>検索ID</th>

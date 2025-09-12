@@ -79,6 +79,16 @@ table.edit-form-table {margin-bottom: 4px;}
 	padding-right:0.3em;
 	font-size: 0.9em;
 }
+.edit-form-table th span.small { font-size: 0.9em; }
+
+table.admin-master-list {
+	font-size: 0.9em;
+}
+.admin-master-list th { background-color: #EEE;}
+.admin-master-list tr.disabled { background-color: #EEE; }
+.admin-master-list a { text-decoration: none; }
+
+
 table.horse_base_data
 ,table.race_list_date
 {

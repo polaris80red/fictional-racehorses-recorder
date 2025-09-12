@@ -28,13 +28,8 @@ $race_grade = $race_grade_table->getPage($pdo,$search_page,$show_disabled);
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>
 <style>
-    th { background-color: #EEE;}
-    tr.disabled { background-color: #EEE; }
     td.select_box_disabled { background-color: #EEE; }
-
     td.col_sort_number { text-align: right; }
-    td a { text-decoration: none; }
-    #content th a { text-decoration: none;}
 </style>
 </head>
 <body>
@@ -51,7 +46,7 @@ $prev_tag  =new MkTagA("[前へ]",($race_grade_table->current_page>1?('?'.$url_p
 $next_tag  =new MkTagA("[次へ]",($race_grade_table->has_next_page?('?'.$url_param->toString(['page'=>$race_grade_table->current_page+1])):''));
 ?>
 <?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
-<table>
+<table class="admin-master-list">
 <tr>
     <th>ID</th>
     <th>キー名</th>

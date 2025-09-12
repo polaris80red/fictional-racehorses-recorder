@@ -26,11 +26,6 @@ $story_list=WorldStory::getAll($pdo);
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>
 <style>
-    th { background-color: #EEE;}
-    select{
-        height: 2em;
-    }
-    tr.disabled { background-color: #EEE; }
     td.select_box_disabled { background-color: #EEE; }
 </style>
 </head>
@@ -41,7 +36,7 @@ $story_list=WorldStory::getAll($pdo);
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<table>
+<table class="admin-master-list">
 <tr>
     <th>ID</th>
     <th>名称</th>

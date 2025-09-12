@@ -50,10 +50,6 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
     <?php $page->printBaseStylesheetLinks(); ?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>
-<style>
-    th { background-color: #EEE;}
-    td a { text-decoration: none; }
-</style>
 </head>
 <body>
 <header>
@@ -65,7 +61,7 @@ $next_tag   =new MkTagA("[次へ]",(($record_num>=$per_page)?('?page='.($current
 <a href="./list.php">一覧に戻る</a><br>
 <p>レース個別結果だけに存在し、調教師マスタにない名前の一覧です。</p>
 <?=$first_tag;?>｜<?=$prev_tag;?>｜<?=$next_tag;?>
-<table>
+<table class="admin-master-list">
 <tr>
     <th>調教師名</th>
     <th colspan="2">リンク</th>
