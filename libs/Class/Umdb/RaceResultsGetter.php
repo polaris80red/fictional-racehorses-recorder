@@ -57,7 +57,7 @@ class RaceResultsGetter{
         LEFT JOIN `{$race_special_results_tbl}` as spr
             ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
         LEFT JOIN `{$jockey_tbl}` as `jk`
-            ON `r_results`.`jockey_unique_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
+            ON `r_results`.`jockey_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
         LEFT JOIN `{$trainer_tbl}` as `h_trainer`
             ON `horse`.`trainer_unique_name`=`h_trainer`.`unique_name` AND `h_trainer`.`is_enabled`=1
         LEFT JOIN `{$trainer_tbl}` as `r_trainer`
@@ -94,12 +94,12 @@ class RaceResultsGetter{
 
             // 騎手名のセット
             $jockey=(new JockeyRow())->setFromArray($data, Jockey::TABLE.'__');
-            $row->jockeyName=$raceResult->jockey_unique_name;
+            $row->jockeyName=$raceResult->jockey_name;
             if($jockey->is_enabled==1){
                 if($jockey->is_anonymous==1){
-                    $row->jockeyName=(!$this->pageIsEditable)?'□□□□':($jockey->short_name_10?:$data['jockey_unique_name']);
+                    $row->jockeyName=(!$this->pageIsEditable)?'□□□□':($jockey->short_name_10?:$data['jockey_name']);
                 }else{
-                    $row->jockeyName=$jockey->short_name_10?:$raceResult->jockey_unique_name;
+                    $row->jockeyName=$jockey->short_name_10?:$raceResult->jockey_name;
                 }
             }
             $row->jockeyRow=$jockey;

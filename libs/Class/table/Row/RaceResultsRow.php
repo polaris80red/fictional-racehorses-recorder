@@ -24,7 +24,7 @@ class RaceResultsRow extends TableRow {
         'race_id',
         'horse_id',
         'result_text',
-        'jockey_unique_name',
+        'jockey_name',
         'handicap',
         'time',
         'margin',
@@ -47,7 +47,7 @@ class RaceResultsRow extends TableRow {
     public $result_text =null;
     public $frame_number =0;
     public $horse_number =0;
-    public $jockey_unique_name =null;
+    public $jockey_name =null;
     public $handicap =null;
     public $time ='';
     public $margin ='';

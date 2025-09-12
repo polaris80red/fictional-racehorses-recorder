@@ -39,7 +39,7 @@ if(!$new_id_exists){
     // UNIQUE制約があるため、存在しない場合のみunique_nameを変更
     $updater->addUpdateTarget(Jockey::TABLE,'unique_name');
 }
-$updater->addUpdateTarget(RaceResults::TABLE,'jockey_unique_name');
+$updater->addUpdateTarget(RaceResults::TABLE,'jockey_name');
 $updater->execute();
 ?><!DOCTYPE html>
 <html>

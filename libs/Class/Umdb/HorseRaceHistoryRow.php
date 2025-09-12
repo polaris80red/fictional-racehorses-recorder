@@ -13,7 +13,7 @@ class HorseRaceHistoryRow{
         'result_text',
         'frame_number',
         'horse_number',
-        'jockey_unique_name',
+        'jockey_name',
         'handicap',
         'time',
         'margin',
@@ -47,7 +47,7 @@ class HorseRaceHistoryRow{
     public $result_text;    // 特殊着順
     public $frame_number;
     public $horse_number;
-    public $jockey_unique_name; // 騎手
+    public $jockey_name; // 騎手
     public $handicap;       // 斤量
     public $time;       // タイム
     public $margin;
@@ -102,13 +102,13 @@ class HorseRaceHistoryRow{
      */
     public function getJockeyName(bool $show_anonymous = false){
         $jockey=$this->jockey_row;
-        $jockey_name=$this->jockey_unique_name;
+        $jockey_name=$this->jockey_name;
         if($jockey->is_enabled===1){
             if($jockey->is_anonymous==1 && $show_anonymous===false){
                 // 匿名フラグがオンで、匿名レコードを表示しない場合は伏せる
                 $jockey_name='□□□□';
             }else{
-                $jockey_name = $jockey->short_name_10?:$this->jockey_unique_name;
+                $jockey_name = $jockey->short_name_10?:$this->jockey_name;
             }
         }
         return (string)$jockey_name;

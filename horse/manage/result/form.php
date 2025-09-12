@@ -199,7 +199,7 @@ if($page->error_exists){
 </tr>
 <tr>
     <th>騎手</th>
-    <td class="in_input"><input type="text" name="jockey" style="width:10em;" value="<?=h($form_data->jockey_unique_name)?>" placeholder="騎手"></td>
+    <td class="in_input"><input type="text" name="jockey" style="width:10em;" value="<?=h($form_data->jockey_name)?>" placeholder="騎手"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=jockey]');"></td>
 </tr>
 <tr>

@@ -95,7 +95,7 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`result_text`
             ,`race_results`.`result_order`
             ,`race_results`.`result_before_demotion`
-            ,`race_results`.`jockey_unique_name`
+            ,`race_results`.`jockey_name`
             ,`race_results`.`handicap`
             ,`race_results`.`time`
             ,`race_results`.`margin`
@@ -135,7 +135,7 @@ class HorseRaceHistory implements Iterator{
             LEFT JOIN `{$grade_tbl}` as g ON `race`.grade LIKE g.unique_name
             LEFT JOIN `{$course_mst_tbl}` as c ON `race`.race_course_name LIKE c.unique_name AND c.is_enabled=1
             LEFT JOIN `{$race_special_results_tbl}` as spr ON `race_results`.result_text LIKE `spr`.unique_name AND `spr`.is_enabled=1
-            LEFT JOIN `{$jockey_tbl}` as `jk` ON `race_results`.`jockey_unique_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
+            LEFT JOIN `{$jockey_tbl}` as `jk` ON `race_results`.`jockey_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
             WHERE `race_results`.`horse_id`=:horse_id
             ORDER BY
             `race`.`year` {$date_order},
@@ -163,13 +163,13 @@ class HorseRaceHistory implements Iterator{
         $row->setByArray($data);
 
         // 騎手行をセット
-        if($row->jockey_unique_name==''){
+        if($row->jockey_name==''){
             $row->jockey_row=$this->empty_jockey;
-        }else if(isset($this->jockey_list[$row->jockey_unique_name])){
-            $row->jockey_row = $this->jockey_list[$row->jockey_unique_name];
+        }else if(isset($this->jockey_list[$row->jockey_name])){
+            $row->jockey_row = $this->jockey_list[$row->jockey_name];
         }else{
-            $this->jockey_list[$row->jockey_unique_name]=(new JockeyRow())->setFromArray($data,Jockey::TABLE."__");
-            $row->jockey_row = $this->jockey_list[$row->jockey_unique_name];
+            $this->jockey_list[$row->jockey_name]=(new JockeyRow())->setFromArray($data,Jockey::TABLE."__");
+            $row->jockey_row = $this->jockey_list[$row->jockey_name];
         }
         // レース行をセット
         $row->race_row = (new RaceRow())->setFromArray($data,Race::TABLE."__");

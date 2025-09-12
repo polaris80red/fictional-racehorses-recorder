@@ -162,10 +162,10 @@ if($is_error!==0){
 </tr>
 <tr>
     <th>騎手</th>
-    <td><?php HTPrint::HiddenAndText('jockey',$race_results->jockey_unique_name?:''); ?></td>
+    <td><?php HTPrint::HiddenAndText('jockey',$race_results->jockey_name?:''); ?></td>
 </tr>
-<?php if($race_results->jockey_unique_name): ?>
-<?php $mst_jockey=Jockey::getByUniqueName($pdo,$race_results->jockey_unique_name);?>
+<?php if($race_results->jockey_name): ?>
+<?php $mst_jockey=Jockey::getByUniqueName($pdo,$race_results->jockey_name);?>
 <tr>
     <th>騎手マスタ</th>
     <td><?=$mst_jockey!==false?($mst_jockey->short_name_10):'登録外'?></td>
