@@ -239,7 +239,7 @@ foreach($data['horse_results'] as $prev_race){
     }
     if($i>$rr_count){ break; }
     $i++;
-?><td class="race_result_column <?php printResultClass($result_number); ?> <?=h("race_grade_".($r->grade_css_class_suffix??''))?>"><?php
+?><td class="race_result_column <?php printResultClass($result_number); ?> <?=h($r->grade_css_class??'')?>"><?php
     if($r!=null){
         echo "<div>";
         $date_line='';

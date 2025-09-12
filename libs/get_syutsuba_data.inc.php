@@ -90,7 +90,7 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
         ,`race`.`month`
         ,`race`.`is_tmp_date`
         ,g.short_name as grade_short_name
-        ,g.css_class_suffix as grade_css_class_suffix
+        ,g.css_class as grade_css_class
         ,c.short_name AS race_course_short_name
         ,c.short_name_m AS race_course_short_name_m
         ,`spr`.`short_name_2` as `special_result_short_name_2`

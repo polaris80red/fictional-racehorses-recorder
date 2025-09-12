@@ -42,7 +42,7 @@ if($page->is_editable && $search!==null && $search->is_one_year_only){
         $raceWeek=$row->weekRow;
         $raceGrade=$row->gradeRow;
         $raceCourse=$row->courseRow;
-        $class=(new Imploader(' '))->add("race_grade_".$raceGrade->css_class_suffix??'');
+        $class=(new Imploader(' '))->add($raceGrade->css_class??'');
         if($race->is_enabled===0){ $class->add('disabled_row'); }
     ?>
     <tr class="<?=$class?>">

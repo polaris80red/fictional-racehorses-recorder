@@ -23,7 +23,7 @@ $race_grade->unique_name=filter_input(INPUT_POST,'unique_name');
 $race_grade->short_name=filter_input(INPUT_POST,'short_name');
 $race_grade->search_grade=filter_input(INPUT_POST,'search_grade');
 $race_grade->category=filter_input(INPUT_POST,'category');
-$race_grade->css_class_suffix=filter_input(INPUT_POST,'css_class_suffix');
+$race_grade->css_class=filter_input(INPUT_POST,'css_class');
 $race_grade->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
 $race_grade->sort_number=filter_input(INPUT_POST,'sort_number');
 if($race_grade->sort_number===''){
@@ -100,8 +100,8 @@ if($id>0){
     <td><?php HTPrint::HiddenAndText('category',$race_grade->category); ?></td>
 </tr>
 <tr>
-    <th>CSSクラス接尾語</th>
-    <td><?php HTPrint::HiddenAndText('css_class_suffix',$race_grade->css_class_suffix); ?></td>
+    <th>CSSクラス名</th>
+    <td><?php HTPrint::HiddenAndText('css_class',$race_grade->css_class); ?></td>
 </tr>
 <tr>
     <th>表示順補正</th>

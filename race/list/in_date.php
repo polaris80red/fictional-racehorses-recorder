@@ -195,7 +195,7 @@ $prev_row_course=''; ?>
     <?php
         $prev_row_course=$race->race_course_name;
         $class=new Imploader(' ');
-        $class->add("race_grade_".$raceGrade->css_class_suffix??'');
+        $class->add($raceGrade->css_class??'');
         if($race->is_enabled===0){ $class->add('disabled_row'); }
     ?>
     <tr class="<?=$class?>">

@@ -269,7 +269,7 @@ $prev_week_id=0;
         $prev_week_id=$race->week_id;
         $prev_turn=$raceWeek->umm_month_turn;
         $class=new Imploader(' ');
-        $class->add("race_grade_".$raceGrade->css_class_suffix??'');
+        $class->add($raceGrade->css_class??'');
         if($race->is_enabled===0){ $class->add('disabled_row'); }
     ?>
     <tr class="<?=$class?>">

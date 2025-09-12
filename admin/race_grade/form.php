@@ -99,8 +99,8 @@ if($input_id==0){
     <td class="in_input"><input type="text" name="category" value="<?=h($race_grade->category)?>"></td>
 </tr>
 <tr>
-    <th>CSSクラス接尾語</th>
-    <td class="in_input"><input type="text" name="css_class_suffix" value="<?=h($race_grade->css_class_suffix)?>"></td>
+    <th>CSSクラス名</th>
+    <td class="in_input"><input type="text" name="css_class" value="<?=h($race_grade->css_class)?>"></td>
 </tr>
 <tr>
     <th>表示順補正</th>

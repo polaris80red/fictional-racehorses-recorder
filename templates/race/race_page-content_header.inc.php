@@ -77,7 +77,7 @@ if($race->track_condition){
 <div class="race_grade_and_name">
     <span class="nowrap" style="display: inline-block; min-width:16em;border-bottom:solid 1px #CCC;"><?=h($race->race_name)?></span>
     <?php if($race->grade): ?>
-    <span style="" class="ib grade race_grade_<?=h($grade_obj->css_class_suffix??'')?>"><?=h(($grade_obj->short_name??'')?:$race->grade)?></span>
+    <span style="" class="ib grade <?=h($grade_obj->css_class??'')?>"><?=h(($grade_obj->short_name??'')?:$race->grade)?></span>
     <?php endif; ?>
 </div>
 <div class="" style="font-size: 0.9em;"><?php

@@ -233,7 +233,7 @@ $sex_gelding_override=false;
     if($data->is_registration_only==1){
         $tr_class->add('disabled_row');
     }
-    $tr_class->add('race_grade_'.$grade->css_class_suffix);
+    $tr_class->add($grade->css_class);
     if($race->is_enabled===0){ $tr_class->add('disabled_row'); }
 ?>
 <tr class="<?=h($tr_class)?>">
