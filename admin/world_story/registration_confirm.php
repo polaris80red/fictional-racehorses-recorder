@@ -141,7 +141,8 @@ if($input_id>0){
 セッションへの反映：<?=$save_to_session?"する":"しない"?><br>
 <input type="hidden" name="save_to_defaults" value="<?=$save_to_defaults?"true":"false"?>">
 デフォルト設定の上書き：<?=$save_to_defaults?"する":"しない"?><br>
-<textarea name="config_json" style="min-width: 25em;min-height: 20em;" readonly><?=h(json_encode($config_json_data,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE)); ?></textarea>
+<pre style="border:solid 1px #333333"><?=h(json_encode($config_json_data,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE))?></pre>
+<?php HTPrint::Hidden('config_json',json_encode($config_json_data)); ?>
 <?php (new FormCsrfToken())->printHiddenInputTag(); ?>
 </form>
 <hr class="no-css-fallback">
