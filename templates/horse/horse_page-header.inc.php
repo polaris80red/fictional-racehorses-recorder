@@ -39,5 +39,9 @@
     <a href="<?=InAppUrl::to('horse/',$param)?>">TOP</a>
     ｜
     <a href="<?=InAppUrl::to('horse/results_detail.php',$param)?>">詳細戦績</a>
+    <?php if($horse->profile): ?>
+        ｜
+        <a href="<?=InAppUrl::to('horse/profile.php',$param)?>">プロフィール</a>
+    <?php endif; ?>
 </div>
 <hr>

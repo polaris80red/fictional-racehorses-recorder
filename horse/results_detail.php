@@ -114,11 +114,6 @@ td.h_weight{ text-align:center; }
 td.earnings{ text-align:right; }
 td.syuutoku{ text-align:right; }
 table.horse_base_data a {text-decoration: none;}
-
-.edit_menu table { margin-top: 8px;}
-.edit_menu table a:link {text-decoration: none;}
-.edit_menu table {font-size: 0.9em;}
-
 </style>
 </head>
 <body>
