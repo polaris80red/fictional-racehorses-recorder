@@ -96,7 +96,7 @@ th{
 <hr class="no-css-fallback">
 <form action="./execute.php" method="post">
 <input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0?>">
-<table class="edit-form-table">
+<table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>競走馬ID</th>
     <td><?php HTPrint::HiddenAndText('horse_id',$horse_id) ?></td>
@@ -197,7 +197,7 @@ th{
     <td><?php HTPrint::HiddenAndText('bms_name',$horse->bms_name) ?></td>
 </tr>
 <tr>
-    <th>種牡馬または繁殖牝馬</th>
+    <th>種牡馬<br>または<br>繫殖馬</th>
     <td><?php
         print $horse->is_sire_or_dam?'はい':'いいえ';
         HTPrint::Hidden('is_sire_or_dam',$horse->is_sire_or_dam);  
@@ -209,7 +209,10 @@ th{
 </tr>
 <tr>
     <th>備考</th>
-    <td class="in_input"><textarea name='note' readonly><?=h($horse->note)?></textarea></td>
+    <td class="in_input">
+        <?=nl2br(h($horse->note))?>&nbsp;
+        <?php HTPrint::Hidden('note',$horse->note); ?>
+    </td>
 </tr>
 <!--<tr>
     <th>論理削除</th>
@@ -218,16 +221,32 @@ th{
         HTPrint::Hidden('is_enabled',$horse->is_enabled);
     ?></td>
 </tr>-->
+</table>
+<table class="edit-form-table floatLeft">
+<tr>
+    <th>プロフィール</th>
+<tr>
+</tr>
+    <td class="in_input">
+        <?=nl2br(h($horse->profile))?>&nbsp;
+        <?php HTPrint::Hidden('profile',$horse->profile); ?>
+    </td>
+</tr>
 <?php
 $horse_tags=HorseTag::TagsStrToArray(filter_input(INPUT_POST,'horse_tags'));
 ?>
 <tr>
     <th>検索タグ</th>
-    <td><?=nl2br(h(implode("\n",$horse_tags)));?><?php HTPrint::Hidden('horse_tags',h(implode(' ',$horse_tags))); ?></td>
+<tr>
+</tr>
+    <td>
+        <?=nl2br(h(implode("\n",$horse_tags)));?>&nbsp;
+        <?php HTPrint::Hidden('horse_tags',implode(' ',$horse_tags)); ?>
+    </td>
 </tr>
 </table>
 <?php HTPrint::Hidden("is_enabled",$horse->is_enabled); ?>
-<hr>
+<hr style="clear: both;">
 <input type="submit" value="競走馬データ登録実行">
 <?php $csrf_token->printHiddenInputTag(); ?>
 </form>

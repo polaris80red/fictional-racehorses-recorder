@@ -46,7 +46,7 @@ $world_list=World::getAll($pdo);
 <hr class="no-css-fallback">
 <form action="./confirm.php" method="post">
 <input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0;?>">
-<table class="edit-form-table">
+<table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>競走馬ID</th>
     <?php if($is_edit_mode): ?>
@@ -210,9 +210,9 @@ if(count($affiliation_list)>0){
     <td class="in_input"><input type="text" name="bms_name" placeholder="母ID該当時は上書き" value="<?=h($horse->bms_name)?>"></td>
 </tr>
 <tr>
-    <th>種牡馬または繫殖馬</th>
+    <th>種牡馬<br>または<br>繫殖馬</th>
     <td>
-    <label><?php HTPrint::Radio("is_sire_or_dam",1,$horse->is_sire_or_dam);?>はい</label>
+    <label><?php HTPrint::Radio("is_sire_or_dam",1,$horse->is_sire_or_dam);?>はい</label><br>
     <label><?php HTPrint::Radio("is_sire_or_dam",0,$horse->is_sire_or_dam);?>いいえ</label>
     </td>
 </tr>
@@ -230,16 +230,26 @@ if(count($affiliation_list)>0){
     <label><?php HTPrint::Radio("is_enabled",1,$horse->is_enabled);?>有効</label>
     <label><?php HTPrint::Radio("is_enabled",0,$horse->is_enabled);?>削除</label>
 </tr>-->
+</table>
+<table class="edit-form-table floatLeft">
+<tr>
+    <th>プロフィール</th>
+<tr>
+</tr>
+    <td class="in_input"><textarea name="profile" style="width: 20em; height: 10em;"><?=h($horse->profile)?></textarea></td>
+</tr>
 <?php $horse_tags=(new HorseTag($pdo))->getTagNames($horse->horse_id); ?>
 <tr>
-    <th>検索タグ<br>(改行や空白区切り)</th>
+    <th >検索タグ<br><span class="small">(改行や空白区切り)</span></th>
+<tr>
+</tr>
     <td class="in_input">
-        <textarea name="horse_tags" style="width: 95%; height: 8em;"><?=h(implode("\n",$horse_tags))?></textarea>
+        <textarea name="horse_tags" style="width: 20em; height: 8em;"><?=h(implode("\n",$horse_tags))?></textarea>
     </td>
 </tr>
 </table>
 <?php HTPrint::Hidden("is_enabled",$horse->is_enabled); ?>
-<hr>
+<hr style="clear: both;">
 <input type="submit" value="競走馬データ登録内容確認">
 </form>
 <?php if($is_edit_mode){ ?>

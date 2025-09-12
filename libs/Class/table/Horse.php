@@ -30,6 +30,7 @@ class Horse extends Table{
     public $is_sire_or_dam =0;
     public $meaning ='';
     public $note ='';
+    public $profile ='';
     public $is_enabled =1;
 
     public function __construct(){
@@ -106,7 +107,8 @@ class Horse extends Table{
             $this->error_exists=true;
         }
         $this->meaning=filter_input(INPUT_POST,'meaning');
-        $this->note=filter_input(INPUT_POST,'note');
+        $this->profile=filter_input(INPUT_POST,'profile');
+        $this->note=filter_input(INPUT_POST,'note')?:null;
         
         $this->is_enabled=filter_input(INPUT_POST,'is_enabled');
         return $this->error_exists?false:true;

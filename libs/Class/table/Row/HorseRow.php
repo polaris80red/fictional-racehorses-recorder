@@ -26,6 +26,7 @@ class HorseRow extends TableRow {
         'bms_name',
         'meaning',
         'note',
+        'profile',
     ];
     public $horse_id;
     public $world_id;
@@ -49,5 +50,6 @@ class HorseRow extends TableRow {
     public $is_sire_or_dam =0;
     public $meaning ='';
     public $note ='';
+    public $profile =null;
     public $is_enabled=1;
 }
