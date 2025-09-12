@@ -71,10 +71,6 @@ $turn=$week_data->umm_month_turn;
 .race_results td:nth-child(2){ text-align:center; }
 .race_results td:nth-child(4){ text-align:center; }
 .race_results td.col_favourite{ text-align:center; }
-
-.edit_menu table { margin-top: 8px;}
-.edit_menu table a:link {text-decoration: none;}
-.edit_menu table {font-size: 0.9em;}
 </style>
 </head>
 <body>

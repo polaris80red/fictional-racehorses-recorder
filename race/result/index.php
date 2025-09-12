@@ -77,10 +77,6 @@ $turn=$week_data->umm_month_turn??null;
 .race_results td.col_favourite { text-align:center; }
 .race_info th{ background-color: #EEEEEE; }
 .disabled_row{ background-color: #dddddd; }
-
-.edit_menu table { margin-top: 8px;}
-.edit_menu table a:link {text-decoration: none;}
-.edit_menu table {font-size: 0.9em;}
 </style>
 </head>
 <body>
