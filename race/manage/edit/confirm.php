@@ -158,7 +158,10 @@ if($race->setDataByPost()==false){
 </tr>
 <tr>
     <th>備考</th>
-    <td class="in_input"><textarea name="note" readonly><?=h($race->note)?></textarea></td>
+    <td>
+        <?=nl2br(h($race->note))?>
+        <?php HTPrint::Hidden('note',$race->note); ?>
+    </td>
 </tr>
 <tr>
     <th>論理削除状態</th>
