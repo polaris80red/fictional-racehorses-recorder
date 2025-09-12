@@ -289,11 +289,17 @@ switch($race_results->is_affliationed_nar){
 </tr>
 <tr>
     <th>(火)</th>
-    <td class="in_input"><textarea name="jra_thisweek_horse_1" readonly><?=h(rtrim($race_results->jra_thisweek_horse_1))?></textarea></td>
+    <td class="in_input">
+        <?=nl2br(h($race_results->jra_thisweek_horse_1))?>&nbsp;
+        <?php HTPrint::Hidden('jra_thisweek_horse_1',$race_results->jra_thisweek_horse_1); ?>
+    </td>
 </tr>
 <tr>
     <th>(木)</th>
-    <td class="in_input"><textarea name="jra_thisweek_horse_2" readonly><?=h(rtrim($race_results->jra_thisweek_horse_2))?></textarea></td>
+    <td class="in_input">
+        <?=nl2br(h($race_results->jra_thisweek_horse_2))?>&nbsp;
+        <?php HTPrint::Hidden('jra_thisweek_horse_2',$race_results->jra_thisweek_horse_2); ?>
+    </td>
 </tr>
 <tr>
     <th>並び順</th>
@@ -301,7 +307,10 @@ switch($race_results->is_affliationed_nar){
 </tr>
 <tr><th colspan="2">スペシャル出馬表紹介</th></tr>
 <tr>
-    <td class="in_input" colspan="2"><textarea name="jra_sps_comment" readonly><?=h(rtrim($race_results->jra_sps_comment))?></textarea></td>
+    <td class="in_input" colspan="2">
+        <?=nl2br(h($race_results->jra_sps_comment))?>&nbsp;
+        <?php HTPrint::Hidden('jra_sps_comment',$race_results->jra_sps_comment); ?>
+    </td>
 </tr>
 </table>
 <div style="clear: both;">

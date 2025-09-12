@@ -295,11 +295,11 @@ switch($input->is_affliationed_nar){
 </tr>
 <tr>
     <th>(火)</th>
-    <td><textarea readonly><?=h($input->jra_thisweek_horse_1)?></textarea></td>
+    <td><?=nl2br(h($input->jra_thisweek_horse_1))?></td>
 </tr>
 <tr>
     <th>(木)</th>
-    <td><textarea readonly><?=h($input->jra_thisweek_horse_2)?></textarea></td>
+    <td><?=nl2br(h($input->jra_thisweek_horse_2))?></td>
 </tr>
 <tr>
     <th>並び順</th>
@@ -307,7 +307,7 @@ switch($input->is_affliationed_nar){
 </tr>
 <tr><th colspan="2">スペシャル出馬表紹介</th></tr>
 <tr>
-    <td colspan="2"><textarea readonly><?=h($input->jra_sps_comment)?></textarea></td>
+    <td colspan="2"><?=nl2br(h($input->jra_sps_comment))?></td>
 </tr>
 </table>
 </form>
