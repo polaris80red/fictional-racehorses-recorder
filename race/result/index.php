@@ -164,6 +164,22 @@ $latest_horse_exists=false;
         <th>備考</th>
         <td><?=nl2br(h($race->note))?></td>
     </tr>
+    <tr>
+        <th>note</th>
+        <?php
+            $prev_tag=new MkTagA('前メモ');
+            if($resultsGetter->hasPreviousNote){
+                $prev_tag->href(InAppUrl::to('race/race_previous_note.php',['race_id'=>$race_id]));
+                $prev_tag->title("レース前メモ");
+            }
+            $after_tag=new MkTagA('後メモ');
+            if($resultsGetter->hasAfterNote){
+                $after_tag->href(InAppUrl::to('race/race_after_note.php',['race_id'=>$race_id]));
+                $after_tag->title("レース後メモ");
+            }
+        ?>
+        <td><?=$prev_tag?>｜<?=$after_tag?></td>
+    </tr>
 </table>
 <?php if($page->is_editable): ?>
     <?php include (new TemplateImporter('race/race_page-edit_menu.inc.php'));?>

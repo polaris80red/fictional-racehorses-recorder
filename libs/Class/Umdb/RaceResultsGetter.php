@@ -10,6 +10,9 @@ class RaceResultsGetter{
     public $order_parts=[];
 
     public bool $pageIsEditable=false;
+    public bool $hasPreviousNote=false;
+    public bool $hasAfterNote=false;
+    
     private int $raceYear;
 
     public function __construct(PDO $pdo, string $raceId, int $raceYear) {
@@ -88,6 +91,12 @@ class RaceResultsGetter{
             $row->resultRow=$raceResult;
             $row->specialResultRow=$spr;
 
+            if($raceResult->race_previous_note){
+                $this->hasPreviousNote=true;
+            }
+            if($raceResult->race_after_note){
+                $this->hasAfterNote=true;
+            }
             $row->sex = $raceResult->sex?:$horse->sex;
             $row->sexStr=sex2String((int)$row->sex);
             $row->age=empty($horse->birth_year)?'':$this->raceYear-$horse->birth_year;
