@@ -12,6 +12,8 @@ class RaceResultsGetter{
     public bool $pageIsEditable=false;
     public bool $hasPreviousNote=false;
     public bool $hasAfterNote=false;
+    public bool $hasThisweek=false;
+    public bool $hasSps=false;
     
     private int $raceYear;
 
@@ -96,6 +98,12 @@ class RaceResultsGetter{
             }
             if($raceResult->race_after_note){
                 $this->hasAfterNote=true;
+            }
+            if($raceResult->jra_thisweek_horse_1||$raceResult->jra_thisweek_horse_2){
+                $this->hasThisweek=true;
+            }
+            if($raceResult->jra_sps_comment){
+                $this->hasSps=true;
             }
             $row->sex = $raceResult->sex?:$horse->sex;
             $row->sexStr=sex2String((int)$row->sex);

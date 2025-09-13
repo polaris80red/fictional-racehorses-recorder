@@ -5,6 +5,9 @@
  * @var Setting $setting
  * @var Race $race
  */
+// 未定義なら定義する
+$hasThisweek=$hasThisweek??false;
+$hasSps=$hasSps??false;
 ?><div class="race_header">
 <div>
 <div style="border-bottom:solid 1px #CCC;margin-bottom: 4px;float:left;"><?php
@@ -112,13 +115,15 @@ print_h(" {$race->course_type}{$race->distance}m");
 ?></div>
 </div><!-- /race title block -->
 <hr class="clear">
-<a href="<?=h($page->getRaceResultUrl($race_id))?>" title="着順">[結果]</a>
-<a href="<?=h(InAppUrl::to('race/syutsuba_simple.php',['race_id'=>$race_id]))?>" title="NK出馬表">[出馬表]</a>
-<a href="<?=h(InAppUrl::to('race/syutsuba_sp.php',['race_id'=>$race_id]))?>" title="Jスペシャル出馬表">■</a>
-<?php if(in_array($race->grade,['G1','G2','G3','Jpn1','Jpn2','Jpn3','重賞'])): ?>
-<a href="<?=h(InAppUrl::to('race/j_thisweek.php',['race_id'=>$race_id]))?>" title="J今週の注目レース・出走馬情報">■</a>
+<div class="race_header_navigation">
+<a href="<?=h($page->getRaceResultUrl($race_id))?>" title="着順">結果</a>
+| <a href="<?=h(InAppUrl::to('race/syutsuba_simple.php',['race_id'=>$race_id]))?>" title="NK出馬表">出馬表</a>
+| <a href="<?=h(InAppUrl::to('race/syutsuba_sp.php',['race_id'=>$race_id]))?>" title="Jスペシャル出馬表">出馬表(4走)</a>
+<?php if(in_array($race->grade,['G1','G2','G3','Jpn1','Jpn2','Jpn3','重賞']) && $hasThisweek): ?>
+| <a href="<?=h(InAppUrl::to('race/j_thisweek.php',['race_id'=>$race_id]))?>" title="J今週の注目レース・出走馬情報">出走馬情報</a>
 <?php endif; ?>
-<?php if(in_array($race->grade,['G1','Jpn1'])): ?>
-<a href="<?=h(InAppUrl::to('race/j_thisweek_sps.php',['race_id'=>$race_id]))?>" title="Jスペシャル出馬表紹介文">■</a>
+<?php if(in_array($race->grade,['G1','Jpn1']) && $hasSps): ?>
+| <a href="<?=h(InAppUrl::to('race/j_thisweek_sps.php',['race_id'=>$race_id]))?>" title="Jスペシャル出馬表紹介文">出馬表コメント</a>
 <?php endif; ?>
+</div>
 </div>

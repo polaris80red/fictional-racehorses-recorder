@@ -56,6 +56,24 @@ $week_data=RaceWeek::getById($pdo,$race->week_id);
 $week_month=$week_data->month;
 $turn=$week_data->umm_month_turn;
 
+$resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
+$resultsGetter->pageIsEditable=$page->is_editable;
+$resultsGetter->addOrderParts([
+    "`r_results`.`frame_number` IS NULL",
+    "`r_results`.`frame_number` ASC",
+    "`r_results`.`horse_number` IS NULL",
+    "`r_results`.`horse_number` ASC",
+    "`horse`.`name_en` ASC",
+]);
+$table_data=$resultsGetter->getTableData();
+$hasThisweek=$resultsGetter->hasThisweek;
+$hasSps=$resultsGetter->hasSps;
+$mode_umm=false;
+switch($setting->age_view_mode){
+    case Setting::AGE_VIEW_MODE_UMAMUSUME:
+    case Setting::AGE_VIEW_MODE_UMAMUSUME_S:
+        $mode_umm=true;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -83,22 +101,6 @@ $turn=$week_data->umm_month_turn;
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <hr>
 <?php
-$resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
-$resultsGetter->pageIsEditable=$page->is_editable;
-$resultsGetter->addOrderParts([
-    "`r_results`.`frame_number` IS NULL",
-    "`r_results`.`frame_number` ASC",
-    "`r_results`.`horse_number` IS NULL",
-    "`r_results`.`horse_number` ASC",
-    "`horse`.`name_en` ASC",
-]);
-$table_data=$resultsGetter->getTableData();
-$mode_umm=false;
-switch($setting->age_view_mode){
-    case Setting::AGE_VIEW_MODE_UMAMUSUME:
-    case Setting::AGE_VIEW_MODE_UMAMUSUME_S:
-        $mode_umm=true;
-}
 $empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td><td></td><td></td><td></td><td></td>";
 ?><table class="race_results">
 <tr>

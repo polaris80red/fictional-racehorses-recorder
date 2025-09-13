@@ -58,6 +58,29 @@ $week_data=RaceWeek::getById($pdo,$race->week_id);
 $week_month=$week_data->month??null;
 $turn=$week_data->umm_month_turn??null;
 
+$resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
+$resultsGetter->pageIsEditable=$page->is_editable;
+$resultsGetter->addOrderParts([
+    "`r_results`.`result_number` IS NULL",
+    "`r_results`.`result_number` ASC",
+    "`r_results`.`result_order` IS NULL",
+    "`r_results`.`result_order` ASC",
+    "`spr`.`sort_number` IS NULL",
+    "`spr`.`sort_number` ASC",
+    "`r_results`.`result_text` ASC",
+]);
+$table_data=$resultsGetter->getTableData();
+$hasThisweek=$resultsGetter->hasThisweek;
+$hasSps=$resultsGetter->hasSps;
+
+$mode_umm=false;
+switch($setting->age_view_mode){
+    case Setting::AGE_VIEW_MODE_UMAMUSUME:
+    case Setting::AGE_VIEW_MODE_UMAMUSUME_S:
+        $mode_umm=true;
+}
+$registration_only_horse_is_exists=false;
+$latest_horse_exists=false;
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -88,28 +111,6 @@ $turn=$week_data->umm_month_turn??null;
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <hr>
-<?php
-$resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
-$resultsGetter->pageIsEditable=$page->is_editable;
-$resultsGetter->addOrderParts([
-    "`r_results`.`result_number` IS NULL",
-    "`r_results`.`result_number` ASC",
-    "`r_results`.`result_order` IS NULL",
-    "`r_results`.`result_order` ASC",
-    "`spr`.`sort_number` IS NULL",
-    "`spr`.`sort_number` ASC",
-    "`r_results`.`result_text` ASC",
-]);
-$table_data=$resultsGetter->getTableData();
-$mode_umm=false;
-switch($setting->age_view_mode){
-    case Setting::AGE_VIEW_MODE_UMAMUSUME:
-    case Setting::AGE_VIEW_MODE_UMAMUSUME_S:
-        $mode_umm=true;
-}
-$registration_only_horse_is_exists=false;
-$latest_horse_exists=false;
-?>
 <?php include (new TemplateImporter('race/race-results_table.inc.php'));?>
 <hr>
 <a href="<?=h($page->getRaceNameSearchUrl($race->race_name))?>" style="">他年度の<?=h($race->race_name)?>を検索</a>

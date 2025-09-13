@@ -29,6 +29,7 @@ a:link:hover {
 .footer_navigation a { text-decoration: none; }
 
 .horse_page_header a { text-decoration: none; }
+.race_header_navigation a { text-decoration: none; }
 
 .nowrap { white-space: nowrap; }
 .floatLeft { float: left; }
