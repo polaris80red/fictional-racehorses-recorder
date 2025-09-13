@@ -113,6 +113,8 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`syuutoku`
             ,`spr`.`is_registration_only`
             ,`race_results`.`non_registered_prev_race_number`
+            ,`race_results`.`race_previous_note`
+            ,`race_results`.`race_after_note`
             ,`race_results`.`jra_thisweek_horse_1`
             ,`race_results`.`jra_thisweek_horse_2`
             ,`race_results`.`tc`

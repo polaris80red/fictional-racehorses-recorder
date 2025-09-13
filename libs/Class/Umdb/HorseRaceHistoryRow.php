@@ -30,6 +30,9 @@ class HorseRaceHistoryRow{
         'sex',
         'is_affliationed_nar',
 
+        'race_previous_note',
+        'race_after_note',
+
         'w_month',
         'umm_month_turn',
         'is_registration_only',
@@ -69,6 +72,9 @@ class HorseRaceHistoryRow{
     public $training_country;
     public $sex;
     public $is_affliationed_nar;
+
+    public $race_previous_note;
+    public $race_after_note;
 
     // 週マスタから使用するデータ
     public $w_month;

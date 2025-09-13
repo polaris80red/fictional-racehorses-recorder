@@ -157,7 +157,16 @@ $latest_race_is_exists=false;
             $a_tag=new MkTagA($data->r_name_ja?:$data->r_name_en,InAppUrl::to('horse/',['horse_id'=>$data->r_horse_id]));
         ?>
         <td class="r_horse"><?=$data->result_number==1?"({$a_tag})":$a_tag?></td>
-        <td><?=!$data->has_jra_thisweek?'':new MkTagA('記',InAppUrl::to('race/j_thisweek.php',['race_id'=>$race->race_id,'show_registration_only'=>($race_url_add_param?true:null)]))?></td>
+        <td>
+            <?php
+                $list=[
+                    !$data->race_previous_note?'':(new MkTagA('前',InAppUrl::to('race/race_previous_note.php',['race_id'=>$race->race_id])))->title("レース前メモ"),
+                    !$data->race_after_note?'':(new MkTagA('後',InAppUrl::to('race/race_after_note.php',['race_id'=>$race->race_id])))->title("レース後メモ"),
+                    !$data->has_jra_thisweek?'':(new MkTagA('記',InAppUrl::to('race/j_thisweek.php',['race_id'=>$race->race_id,'show_registration_only'=>($race_url_add_param?true:null)])))->title("今週の注目レース"),
+                ]
+            ?>
+            <?=implode('｜',array_diff($list,['']))?>
+        </td>
         <?php if($page->is_editable): ?>
         <td class="edit_link"><?=(new MkTagA('編',InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,[
                     'race_id'=>$race->race_id,
