@@ -37,6 +37,19 @@ if(!$race->record_exists){
 $week_data=RaceWeek::getById($pdo,$race->week_id);
 $week_month=$week_data->month;
 $turn=$week_data->umm_month_turn;
+
+$resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
+$resultsGetter->addOrderParts([
+    "`frame_number` IS NULL",
+    "`frame_number` ASC",
+    "`horse_number` IS NULL",
+    "`horse_number` ASC",
+    "`horse`.`name_ja` ASC",
+    "`horse`.`name_en` ASC",
+]);
+$table_data=$resultsGetter->getTableData();
+$hasThisweek=$resultsGetter->hasThisweek;
+$hasSps=$resultsGetter->hasSps;
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -58,101 +71,49 @@ p {font-size:90%;}
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <hr>
-<?php
-
-# レース着順取得
-$horse_tbl=Horse::TABLE;
-$race_tbl=Race::TABLE;
-$race_results_tbl=RaceResults::TABLE;
-$sql=<<<END
-SELECT
-`r_retults`.*
-,`master_horse`.`name_ja`
-,`master_horse`.`name_en`
-,`master_horse`.`tc` AS 'horse_tc'
-,`master_horse`.`training_country` AS 'horse_training_country'
-,`master_horse`.`is_affliationed_nar` AS 'horse_is_affliationed_nar'
-,`master_horse`.`sex`
-,`master_horse`.`birth_year`
-,`master_horse`.`sire_name`
-,`master_horse`.`mare_name`
-,`master_horse`.`bms_name`
-,`master_horse`.`color`
-,`race`.*
-FROM `{$race_tbl}` AS `race`
-LEFT JOIN `{$race_results_tbl}` AS `r_retults` ON `race`.`race_id`=`r_retults`.`race_id`
-LEFT JOIN {$horse_tbl} AS `master_horse` ON `r_retults`.`horse_id`=`master_horse`.`horse_id`
-WHERE `race`.`race_id`=:race_id
-ORDER BY
-`r_retults`.`frame_number` IS NULL,
-`r_retults`.`frame_number` ASC,
-`r_retults`.`horse_number` ASC,
-`master_horse`.`name_ja` ASC, `master_horse`.`name_en` ASC;
-END;
-
-$stmt = $pdo->prepare($sql);
-$stmt->bindValue(':race_id', $race_id, PDO::PARAM_STR);
-$flag = $stmt->execute();
-$table_data=[];
-while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $data['sex_str']=sexTo1Char($data['sex']);
-    $data['age']=empty($data['birth_year'])?'':($race->year-$data['birth_year']);
-    $table_data[]=$data;
-}
-
-?>
-<?php
-foreach ($table_data as $data) {
-    // 1件目からない場合
-    if(empty($data['horse_id'])){
-        continue;
-    }
-?><section>
+<?php foreach ($table_data as $data):?><?php
+    $horse=$data->horseRow;
+    $result=$data->resultRow;
+    $sex_str=sex2String($result->sex?:$horse->sex);
+    $age=$horse->birth_year==null?'':$race->year-$horse->birth_year;
+    ?>
+<section>
 <p>
 <?php if($page->is_editable): ?>
-<a href="<?=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race_id,'horse_id'=>$data['horse_id'],'edit_mode'=>1])?>">■</a>
+<a href="<?=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race_id,'horse_id'=>$horse->horse_id,'edit_mode'=>1])?>">■</a>
 <?php else: ?>■
 <?php endif; ?>
-<?php if(!empty($data['frame_number'])) { ?>
-<span style="border:solid 1px #333; padding-left:0.3em; padding-right:0.3em; margin-right:0.3em;" class="<?=h("waku_".$data['frame_number'])?>"> <?=h($data['frame_number']."枠")?></span><?=h( empty($data['horse_number'])?"":(str_pad($data['horse_number'],2,"0",STR_PAD_LEFT)."番 "))?>
-<?php } ?>
+<?php if(!empty($result->frame_number)): ?>
+<span style="border:solid 1px #333; padding-left:0.3em; padding-right:0.3em; margin-right:0.3em;" class="<?=h("waku_".$result->frame_number)?>"> <?=h($result->frame_number."枠")?></span><?=h( empty($result->horse_number)?"":(str_pad($result->horse_number,2,"0",STR_PAD_LEFT)."番 "))?>
+<?php endif; ?>
 <?php
-    $training_country='';
-    if(!empty($data['training_country'])){
-        $training_country=$data['training_country'];
-    }else{
-        $training_country=$data['horse_training_country'];
-    }
-    if(($data['is_jra']==1 || $data['is_nar']==1)&& $training_country!='JPN'){
+    $training_country=$training_country=$result->training_country?:$horse->training_country;
+    if(($race->is_jra==1 || $race->is_nar==1) && $training_country!='' && $training_country!='JPN'){
         echo "[外] ";
     }
-    if($data['is_jra']==1&& $data['is_affliationed_nar']==1){
+    if($race->is_jra==1 && $result->is_affliationed_nar==1){
         echo "[地] ";
     }
-    if($data['is_jra']==0 && $data['is_nar']==0){
-        echo "<span style=\"font-family:monospace;\">[".h($data['training_country'])."]</span> ";
+    if($race->is_jra==0 && $race->is_nar==0){
+        echo "<span style=\"font-family:monospace;\">[".h($training_country)."]</span> ";
     }
-    echo '<a href="'.InAppUrl::to('horse/',['horse_id'=>$data['horse_id']]).'" style="text-decoration:none;">';
-    print_h($data['name_ja']?:$data['name_en']);
+    echo '<a href="'.InAppUrl::to('horse/',['horse_id'=>$horse->horse_id]).'" style="text-decoration:none;">';
+    print_h($horse->name_ja?:$horse->name_en);
     echo "</a><br>";
     echo "調教師：□□□□";
-    if(!empty($data['tc'])){
-        print_h("（{$data['tc']}）");
-    }else{
-        print_h("（{$data['horse_tc']}）");
-    }
+    print_h("（".($result->tc?:$horse->tc)."）");
 ?><br>
-父：<?=h($data['sire_name']?:"□□□□□□")?><br>
-母：<?=h($data['mare_name']?:"□□□□□□")?><br>
-母の父：<?=h($data['bms_name']?:"□□□□□□")?><br>
-<?=h($data['sex_str'].$data['age']."歳")?>
-<?=h($data['color']?("/".$data['color']):'')?>
-<?=h($data['handicap']?(" ".$data['handicap']."kg"):'')?>
+父：<?=h($horse->sire_name?:"□□□□□□")?><br>
+母：<?=h($horse->mare_name?:"□□□□□□")?><br>
+母の父：<?=h($horse->bms_name?:"□□□□□□")?><br>
+<?=h($sex_str.$age."歳")?>
+<?=h($horse->color?("/".$horse->color):'')?>
+<?=h($result->handicap?(" ".$result->handicap."kg"):'')?>
 </p>
-<p>［紹介］<br><?=nl2br(h($data['jra_sps_comment']?:"……"))?></p>
-</section><hr><?php
-}
-?>
+<p>［紹介］<br><?=nl2br(h($result->jra_sps_comment?:"……"))?></p>
+</section>
+<hr>
+<?php endforeach;?>
 <hr class="no-css-fallback">
 </main>
 <footer>
