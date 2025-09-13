@@ -117,84 +117,87 @@ $empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td><td></td><td
 </tr><?php
 $i=0;
 $latest_horse_exists=false;
-foreach ($table_data as $data) {
-    $i++;
-    $horse=$data->horseRow;
-    $raceResult=$data->resultRow;
-    if($horse->horse_id==($session->latest_horse['id']??'')){
-        $latest_horse_exists=true;
-    }
-    // 特別登録のみのデータはスキップ
-    if($data->specialResultRow->is_registration_only){
-        continue;
-    }
-?><tr class="">
-<td class="waku_<?=$raceResult->frame_number?>"><?=$raceResult->frame_number?></td>
-<td><?=$raceResult->horse_number?></td>
-<?php
-    $is_affliationed_nar=0;
-    if($raceResult->is_affliationed_nar===null){
-        $is_affliationed_nar=$horse->is_affliationed_nar;
-    }else{
-        $is_affliationed_nar=$raceResult->is_affliationed_nar;
-    }
-    $marks=new Imploader('');
-    if(($race->is_jra==1 || $race->is_nar==1)){
-        // 中央競馬または地方競馬の場合、調教国・生産国でカク外・マル外マークをつける
-        if($data->trainingCountry!='' && $data->trainingCountry!='JPN'){
-            // 外国調教馬にカク外表記
-            $marks->add("[外]");
+?>
+<?php foreach ($table_data as $data):?>
+    <?php
+        $i++;
+        $horse=$data->horseRow;
+        $raceResult=$data->resultRow;
+        if($horse->horse_id==($session->latest_horse['id']??'')){
+            $latest_horse_exists=true;
+        }
+        // 特別登録のみのデータはスキップ
+        if($data->specialResultRow->is_registration_only){
+            continue;
+        }
+    ?><tr class="">
+    <td class="waku_<?=h($raceResult->frame_number)?>"><?=h($raceResult->frame_number)?></td>
+    <td><?=h($raceResult->horse_number)?></td>
+    <?php
+        $is_affliationed_nar=0;
+        if($raceResult->is_affliationed_nar===null){
+            $is_affliationed_nar=$horse->is_affliationed_nar;
         }else{
-            // 中央競馬の場合のみ地方所属馬と元地方所属馬のカク地・マル地マーク
-            if($race->is_jra){
-                if($is_affliationed_nar==1){
-                    $marks->add("[地]");
-                }else if($is_affliationed_nar==2){
-                    $marks->add("(地)");
+            $is_affliationed_nar=$raceResult->is_affliationed_nar;
+        }
+        $marks=new Imploader('');
+        if(($race->is_jra==1 || $race->is_nar==1)){
+            // 中央競馬または地方競馬の場合、調教国・生産国でカク外・マル外マークをつける
+            if($data->trainingCountry!='' && $data->trainingCountry!='JPN'){
+                // 外国調教馬にカク外表記
+                $marks->add("[外]");
+            }else{
+                // 中央競馬の場合のみ地方所属馬と元地方所属馬のカク地・マル地マーク
+                if($race->is_jra){
+                    if($is_affliationed_nar==1){
+                        $marks->add("[地]");
+                    }else if($is_affliationed_nar==2){
+                        $marks->add("(地)");
+                    }
+                }
+                // 外国産馬のマル外表記
+                if($horse->breeding_country!='' && $horse->breeding_country!='JPN'){
+                    $marks->add("(外)");
                 }
             }
-            // 外国産馬のマル外表記
-            if($horse->breeding_country!='' && $horse->breeding_country!='JPN'){
-                $marks->add("(外)");
-            }
         }
-    }
-    $a_tag=new MkTagA($horse->name_ja?:$horse->name_en);
-    $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$horse->horse_id);
-    $country=($race->is_jra==0 && $race->is_nar==0)?" <span>(".h($data->trainingCountry).")</span> ":'';
-?>
-<td class="horse_name"><?=implode(' ',[$marks,$a_tag,$country])?></td>
-<?php
-    $age_sex_str='';
-    if($setting->age_view_mode===Setting::AGE_VIEW_MODE_DEFAULT){
-        // 通常表記の場合
-        $age_sex_str.=$data->sexStr;
-    }
-    $age_sex_str.=$setting->getAgeSexSpecialFormat($data->age,$data->sex);
-?>
-<td class="sex_<?=h($data->sex)?>"><?=h($age_sex_str)?></td>
-<td><?=h($raceResult->handicap)?></td>
-<?php if(!$mode_umm): ?>
-    <td style="<?=$data->jockeyRow->is_anonymous?'color:#999;':''?>"><?=h($data->jockeyName??'')?></td>
-<?php endif; ?>
-<td><?=h($data->tc)?></td>
-<?php if(!$mode_umm): ?>
-    <td style="<?=$data->trainerRow->is_anonymous?'color:#999;':''?>">
-        <?=h($data->trainerName??'')?>
-    </td>
-<?php endif; ?>
-<?php if(!$mode_umm): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>
-<td class="col_favourite favourite_<?=h($raceResult->favourite)?>"><?=h($raceResult->favourite)?></td>
-<?php
-    if(!empty($horse->horse_id)){
-        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id,'horse_id'=>$horse->horse_id,'edit_mode'=>1]);
-    }
-?>
-<?php if($page->is_editable): ?>
-<td><a href="<?=h($url)?>" title="編集">編</a></td>
-<?php endif; ?>
-</tr>
-<?php } ?></table>
+        $a_tag=new MkTagA($horse->name_ja?:$horse->name_en);
+        $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$horse->horse_id);
+        $country=($race->is_jra==0 && $race->is_nar==0)?" <span>(".h($data->trainingCountry).")</span> ":'';
+    ?>
+    <td class="horse_name"><?=implode(' ',[$marks,$a_tag,$country])?></td>
+    <?php
+        $age_sex_str='';
+        if($setting->age_view_mode===Setting::AGE_VIEW_MODE_DEFAULT){
+            // 通常表記の場合
+            $age_sex_str.=$data->sexStr;
+        }
+        $age_sex_str.=$setting->getAgeSexSpecialFormat($data->age,$data->sex);
+    ?>
+    <td class="sex_<?=h($data->sex)?>"><?=h($age_sex_str)?></td>
+    <td><?=h($raceResult->handicap)?></td>
+    <?php if(!$mode_umm): ?>
+        <td style="<?=$data->jockeyRow->is_anonymous?'color:#999;':''?>"><?=h($data->jockeyName??'')?></td>
+    <?php endif; ?>
+    <td><?=h($data->tc)?></td>
+    <?php if(!$mode_umm): ?>
+        <td style="<?=$data->trainerRow->is_anonymous?'color:#999;':''?>">
+            <?=h($data->trainerName??'')?>
+        </td>
+    <?php endif; ?>
+    <?php if(!$mode_umm): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>
+    <td class="col_favourite favourite_<?=h($raceResult->favourite)?>"><?=h($raceResult->favourite)?></td>
+    <?php
+        if(!empty($horse->horse_id)){
+            $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race->race_id,'horse_id'=>$horse->horse_id,'edit_mode'=>1]);
+        }
+    ?>
+    <?php if($page->is_editable): ?>
+    <td><a href="<?=h($url)?>" title="編集">編</a></td>
+    <?php endif; ?>
+    </tr>
+<?php endforeach;?>
+</table>
 <hr>
 <a href="<?=h($page->getRaceNameSearchUrl($race->race_name))?>" style="">他年度の<?=h($race->race_name)?>を検索</a>
 <?php if($page->is_editable): ?>
