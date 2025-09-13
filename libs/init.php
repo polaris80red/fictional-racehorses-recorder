@@ -114,8 +114,6 @@ require_once APP_ROOT_DIR.'/vendor/VendorConfigInitializer.php';
     return;
 })();
 
-require_once __DIR__.'/get_syutsuba_data.inc.php';
-
 TemplateImporter::setDefalutDir(APP_ROOT_DIR."/templates");
 TemplateImporter::setUserDir(APP_ROOT_DIR.'/user/templates');
 

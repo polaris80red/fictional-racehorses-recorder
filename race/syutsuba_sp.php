@@ -52,6 +52,12 @@ $week_data=RaceWeek::getById($pdo,$race->week_id);
 $week_month=$week_data->month;
 $turn=$week_data->umm_month_turn;
 
+$rr_count=4;
+$syutsuba_getter=new SyutsubaTableGetter($pdo);
+$table_data=$syutsuba_getter->getSyutsubaData($race, $rr_count);
+$hasThisweek=$syutsuba_getter->hasThisweek;
+$hasSps=$syutsuba_getter->hasSps;
+
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -102,11 +108,6 @@ table.syutsuba.sps .result_number {
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <hr>
-<?php
-# このレース情報取得
-$rr_count=4;
-$table_data=get_syutsuba_data($pdo, $race, $rr_count);
-?>
 <table class="syutsuba sps">
     <tr>
         <th>枠<br>番</th>
