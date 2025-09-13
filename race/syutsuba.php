@@ -185,7 +185,7 @@ $latest_horse_exists=false;
             <?=h($data->trainerName??'')?>
         </td>
     <?php endif; ?>
-    <?php if(!$mode_umm): ?><td><?php /* 馬体重 */ ?></td><?php endif; ?>
+    <?php if(!$mode_umm): ?><td><?=h($raceResult->h_weight)?></td><?php endif; ?>
     <td class="col_favourite favourite_<?=h($raceResult->favourite)?>"><?=h($raceResult->favourite)?></td>
     <?php
         if(!empty($horse->horse_id)){
