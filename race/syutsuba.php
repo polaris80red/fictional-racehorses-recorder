@@ -49,7 +49,7 @@ $session->latest_race=[
     'year'=>$race->year,
     'name'=>$race->race_short_name?:$race->race_name
 ];
-$session->login_return_url='race/syutsuba_simple.php?race_id='.$race_id;
+$session->login_return_url='race/syutsuba.php?race_id='.$race_id;
 $race_access_history=(new RaceAccessHistory())->set($race_id)->saveToSession();
 
 $week_data=RaceWeek::getById($pdo,$race->week_id);
