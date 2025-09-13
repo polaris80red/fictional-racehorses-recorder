@@ -106,14 +106,13 @@ function get_syutsuba_data(PDO $pdo, object $race, int $rr_count=4){
                 OR
                 `race`.`date`<:race_date
             )
-            AND
-            `r_results`.`is_registration_only`= 0
         LEFT JOIN `{$grade_tbl}` as g ON `race`.grade=g.unique_name
         LEFT JOIN `{$race_course_tbl}` as c ON `race`.race_course_name=c.unique_name AND c.is_enabled=1
         LEFT JOIN `{$race_special_results_tbl}` as spr ON `r_results`.result_text LIKE spr.unique_name AND spr.is_enabled=1
         LEFT JOIN `{$jockey_tbl}` as `jk` ON `r_results`.`jockey_name`=`jk`.`unique_name` AND `jk`.`is_enabled`=1
         WHERE
             `r_results`.`horse_id`=:horse_id
+            AND (`is_registration_only` IS NULL OR `is_registration_only`=0)
         ORDER BY
             `race`.`year` DESC
             ,`race`.`week_id` DESC
