@@ -285,18 +285,32 @@ switch($race_results->is_affliationed_nar){
 <?php endif; ?>
 <tr><td colspan="2"></td></tr>
 <tr>
+    <th>前メモ</th>
+    <td style="max-width: 250px;">
+        <?=nl2br(h($race_results->race_previous_note))?>&nbsp;
+        <?php HTPrint::Hidden('race_previous_note',$race_results->race_previous_note); ?>
+    </td>
+</tr>
+<tr>
+    <th>後メモ</th>
+    <td style="max-width: 250px;">
+        <?=nl2br(h($race_results->race_after_note))?>&nbsp;
+        <?php HTPrint::Hidden('race_after_note',$race_results->race_after_note); ?>
+    </td>
+</tr>
+<tr>
     <th colspan="2">今週の注目レース</th>
 </tr>
 <tr>
     <th>(火)</th>
-    <td class="in_input">
+    <td style="max-width: 250px;">
         <?=nl2br(h($race_results->jra_thisweek_horse_1))?>&nbsp;
         <?php HTPrint::Hidden('jra_thisweek_horse_1',$race_results->jra_thisweek_horse_1); ?>
     </td>
 </tr>
 <tr>
     <th>(木)</th>
-    <td class="in_input">
+    <td style="max-width: 250px;">
         <?=nl2br(h($race_results->jra_thisweek_horse_2))?>&nbsp;
         <?php HTPrint::Hidden('jra_thisweek_horse_2',$race_results->jra_thisweek_horse_2); ?>
     </td>

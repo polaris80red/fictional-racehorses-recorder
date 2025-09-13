@@ -335,18 +335,45 @@ if($page->error_exists){
 <?php endif; ?>
 <tr><td colspan="3" style="height: 4px;"></td></tr>
 <tr>
-    <th colspan="3">今週の注目レース</th>
+    <th colspan="3">レース前メモ <input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=race_previous_note]','レース前メモ');"></th>
 </tr>
 <tr>
-    <th>(火)<br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_1]','今週の注目レース（火曜日）');"></th>
-    <td class="in_input" colspan="2">
-        <textarea name="jra_thisweek_horse_1" style="width: 20em; min-height:5.5em;"><?=h($form_data->jra_thisweek_horse_1)?></textarea>
+    <td class="in_input" colspan="3">
+        <textarea name="race_previous_note" style="width: 25em; min-height:3em;"><?=h($form_data->race_previous_note)?></textarea>
     </td>
 </tr>
 <tr>
-    <th>(木)<br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_2]','今週の注目レース（木曜日）');"></th>
+    <th colspan="3">レース後メモ <input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=race_after_note]','レース後メモ');"></th>
+</tr>
+<tr>
+    <td class="in_input" colspan="3">
+        <textarea name="race_after_note" style="width: 25em; min-height:3em;"><?=h($form_data->race_after_note)?></textarea>
+    </td>
+</tr>
+<?php $is_grade_race = in_array($race->grade,['G1','G2','G3','Jpn1','Jpn2','Jpn3']) ?>
+<tr>
+    <th colspan="3">今週の注目レース</th>
+</tr>
+<tr>
+    <th>(火)<?php if($is_grade_race):?><br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_1]','今週の注目レース（火曜日）');"><?php endif; ?></th>
     <td class="in_input" colspan="2">
-        <textarea name="jra_thisweek_horse_2" style="width: 20em; min-height:5.5em;"><?=h($form_data->jra_thisweek_horse_2)?></textarea><br>
+        <?php if($is_grade_race):?>
+            <textarea name="jra_thisweek_horse_1" style="width: 20em; min-height:5.5em;"><?=h($form_data->jra_thisweek_horse_1)?></textarea>
+        <?php else:?>
+            <textarea name="jra_thisweek_horse_1" style="width: 20em; min-height:1em;" disabled><?=h($form_data->jra_thisweek_horse_1)?></textarea>
+            <?php HTPrint::Hidden('jra_thisweek_horse_1',$form_data->jra_thisweek_horse_1) ?>
+        <?php endif;?>
+    </td>
+</tr>
+<tr>
+    <th>(木)<?php if($is_grade_race):?><br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_2]','今週の注目レース（木曜日）');"><?php endif; ?></th>
+    <td class="in_input" colspan="2">
+        <?php if($is_grade_race):?>
+            <textarea name="jra_thisweek_horse_2" style="width: 20em; min-height:5.5em;"><?=h($form_data->jra_thisweek_horse_2)?></textarea>
+        <?php else:?>
+            <textarea name="jra_thisweek_horse_2" style="width: 20em; min-height:1em;" disabled><?=h($form_data->jra_thisweek_horse_2)?></textarea>
+            <?php HTPrint::Hidden('jra_thisweek_horse_2',$form_data->jra_thisweek_horse_2) ?>
+        <?php endif;?>
     </td>
 </tr>
 <tr>
@@ -357,20 +384,18 @@ if($page->error_exists){
     </td>
 </tr>
 <tr>
-    <th colspan="3">スペシャル出馬表 紹介</th>
+    <th colspan="3">スペシャル出馬表 紹介 <input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_sps_comment]','スペシャル出馬表紹介');"></th>
 </tr>
 <?php if(in_array($race->grade,['G1','Jpn1'])): ?>
 <tr>
     <td class="in_input" colspan="3">
         <textarea name="jra_sps_comment" style="width: 95%;min-height:6em;"><?=h($form_data->jra_sps_comment)?></textarea><br>
-        <input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_sps_comment]','スペシャル出馬表紹介');">
     </td>
 </tr>
 <?php else: ?>
 <tr>
     <td class="in_input" colspan="3">
-        <textarea name="jra_sps_comment" style="width: 95%;min-height:6em;" disabled></textarea><br>
-        <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_sps_comment]');" disabled>
+        <textarea name="jra_sps_comment" style="width: 95%;min-height:1em;" disabled></textarea><br>
         <?php HTPrint::Hidden('jra_sps_comment',$form_data->jra_sps_comment) ?>
     </td>
 </tr>

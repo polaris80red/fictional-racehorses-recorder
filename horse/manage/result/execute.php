@@ -291,15 +291,23 @@ switch($input->is_affliationed_nar){
     <th colspan="2"></th>
 </tr>
 <tr>
+    <th>前メモ</th>
+    <td style="max-width: 250px;"><?=nl2br(h($input->race_previous_note))?></td>
+</tr>
+<tr>
+    <th>後メモ</th>
+    <td style="max-width: 250px;"><?=nl2br(h($input->race_after_note))?></td>
+</tr>
+<tr>
     <th colspan="2">今週の注目レース</th>
 </tr>
 <tr>
     <th>(火)</th>
-    <td><?=nl2br(h($input->jra_thisweek_horse_1))?></td>
+    <td style="max-width: 250px;"><?=nl2br(h($input->jra_thisweek_horse_1))?></td>
 </tr>
 <tr>
     <th>(木)</th>
-    <td><?=nl2br(h($input->jra_thisweek_horse_2))?></td>
+    <td style="max-width: 250px;"><?=nl2br(h($input->jra_thisweek_horse_2))?></td>
 </tr>
 <tr>
     <th>並び順</th>

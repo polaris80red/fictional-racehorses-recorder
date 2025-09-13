@@ -34,6 +34,8 @@ class RaceResults extends Table{
     public $owner_name ='';
     public $is_affliationed_nar =0;
     public $non_registered_prev_race_number =0;
+    public $race_previous_note ='';
+    public $race_after_note ='';
     public $jra_thisweek_horse_1 ='';
     public $jra_thisweek_horse_2 ='';
     public $jra_thisweek_horse_sort_number =null;
@@ -66,6 +68,8 @@ class RaceResults extends Table{
         'trainer_name',
         'training_country',
         'owner_name',
+        'race_previous_note',
+        'race_after_note',
         'jra_thisweek_horse_1',
         'jra_thisweek_horse_2',
         'jra_sps_comment',
@@ -139,6 +143,8 @@ class RaceResults extends Table{
         $this->owner_name = filter_input($input_type,'owner_name')?:null;
         $this->is_affliationed_nar = (int)filter_input($input_type,'is_affliationed_nar');
         $this->non_registered_prev_race_number = (int)filter_input($input_type,'non_registered_prev_race_number');
+        $this->race_previous_note = filter_input($input_type,'race_previous_note');
+        $this->race_after_note = filter_input($input_type,'race_after_note');
         $this->jra_thisweek_horse_1 = filter_input($input_type,'jra_thisweek_horse_1');
         $this->jra_thisweek_horse_2 = filter_input($input_type,'jra_thisweek_horse_2');
         $this->jra_thisweek_horse_sort_number = filter_input($input_type,'jra_thisweek_horse_sort_number');
@@ -226,6 +232,8 @@ class RaceResults extends Table{
         $stmt->bindValue(':owner_name', $this->owner_name?:null, PDO::PARAM_STR);
         $stmt->bindValue(':is_affliationed_nar', $this->is_affliationed_nar, PDO::PARAM_STR);
         $stmt->bindValue(':non_registered_prev_race_number', $this->non_registered_prev_race_number, PDO::PARAM_INT);
+        $stmt->bindValue(':race_previous_note', $this->race_previous_note, PDO::PARAM_STR);
+        $stmt->bindValue(':race_after_note', $this->race_after_note, PDO::PARAM_STR);
         $stmt->bindValue(':jra_thisweek_horse_1', $this->jra_thisweek_horse_1, PDO::PARAM_STR);
         $stmt->bindValue(':jra_thisweek_horse_2', $this->jra_thisweek_horse_2, PDO::PARAM_STR);
         $stmt->bindValue(':jra_thisweek_horse_sort_number', intOrNullIfZero($this->jra_thisweek_horse_sort_number), PDO::PARAM_INT);
