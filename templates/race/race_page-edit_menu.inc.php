@@ -20,6 +20,11 @@
         <td><a href="<?=h($url)?>">レースID修正</a></td>
     </tr>
     <tr>
+        <?php $url=InAppUrl::to('race/manage/bulk_edit/',['race_id'=>$race->race_id,'edit_mode'=>1]);?>
+        <td><a href="<?=h($url)?>">レース個別結果一括編集</a></td>
+        <td colspan="2"></td>
+    </tr>
+    <tr>
 <?php
 $a_tag=new MkTagA('最後に開いた馬をこのレースに追加');
 $latest_horse=new Horse();
