@@ -39,6 +39,7 @@ $week_month=$week_data->month;
 $turn=$week_data->umm_month_turn;
 
 $resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
+$resultsGetter->pageIsEditable=$page->is_editable;
 $resultsGetter->addOrderParts([
     "`frame_number` IS NULL",
     "`frame_number` ASC",
@@ -87,7 +88,7 @@ p {font-size:90%;}
 <span style="border:solid 1px #333; padding-left:0.3em; padding-right:0.3em; margin-right:0.3em;" class="<?=h("waku_".$result->frame_number)?>"> <?=h($result->frame_number."枠")?></span><?=h( empty($result->horse_number)?"":(str_pad($result->horse_number,2,"0",STR_PAD_LEFT)."番 "))?>
 <?php endif; ?>
 <?php
-    $training_country=$training_country=$result->training_country?:$horse->training_country;
+    $training_country=$data->trainingCountry;
     if(($race->is_jra==1 || $race->is_nar==1) && $training_country!='' && $training_country!='JPN'){
         echo "[外] ";
     }
@@ -100,7 +101,7 @@ p {font-size:90%;}
     echo '<a href="'.InAppUrl::to('horse/',['horse_id'=>$horse->horse_id]).'" style="text-decoration:none;">';
     print_h($horse->name_ja?:$horse->name_en);
     echo "</a><br>";
-    echo "調教師：□□□□";
+    echo "調教師：".h($data->trainerName?:"□□□□");
     print_h("（".($result->tc?:$horse->tc)."）");
 ?><br>
 父：<?=h($horse->sire_name?:"□□□□□□")?><br>

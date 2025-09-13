@@ -40,6 +40,7 @@ $week_month=$week_data->month;
 $turn=$week_data->umm_month_turn;
 
 $resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
+$resultsGetter->pageIsEditable=$page->is_editable;
 $resultsGetter->addOrderParts([
     "`jra_thisweek_horse_sort_number` IS NULL",
     "`jra_thisweek_horse_sort_number` ASC",
@@ -97,6 +98,7 @@ p {font-size:90%;}
     echo "</a></span>";
     if($result->result_text==='回避'){ echo " 【出走取消】"; }
     print_h("　".$sex_str.$age."歳");
+    print $data->trainerName?"　調教師：".$data->trainerName:'';
     print_h("（".($result->tc?:$horse->tc)."）");
 ?><hr>
 <p style="font-size: 0.9em;">父：<?=h($horse->sire_name?:"□□□□□□")?><br>
