@@ -22,7 +22,7 @@
     <tr>
         <?php $url=InAppUrl::to('race/manage/bulk_edit/',['race_id'=>$race->race_id,'edit_mode'=>1]);?>
         <td><a href="<?=h($url)?>">レース個別結果一括編集</a></td>
-        <?php $url=InAppUrl::to('race/manage/horse_note_edit/',['race_id'=>$race->race_id,'edit_mode'=>1]);?>
+        <?php $url=InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id,'edit_mode'=>1]);?>
         <td><a href="<?=h($url)?>">レース前後メモ一括編集</a></td>
         <td colspan="1"></td>
     </tr>

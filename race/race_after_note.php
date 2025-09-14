@@ -106,7 +106,7 @@ p {font-size:90%;}
 <?php endforeach; ?>
 <?php if($page->is_editable): ?>
 <hr>
-[ <a href="<?=InAppUrl::to('race/manage/horse_note_edit',['race_id'=>$race_id])?>">一括編集</a> ]
+[ <a href="<?=InAppUrl::to('race/manage/note_edit',['race_id'=>$race_id])?>">一括編集</a> ]
 <?php endif;?>
 <hr class="no-css-fallback">
 </main>
