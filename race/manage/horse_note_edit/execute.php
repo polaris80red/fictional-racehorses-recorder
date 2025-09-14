@@ -90,6 +90,39 @@ $has_change=false;
 <hr>
 <form action="confirm.php" method="post">
 <table>
+<?php
+$prev_is_changed = $after_is_changed = false;
+$input_previous_note=(string)filter_input(INPUT_POST,'previous_note');
+if((string)$race->previous_note!==$input_previous_note){
+    $race->previous_note=$input_previous_note;
+    $prev_is_changed = $has_change = true;
+}
+$input_after_note=(string)filter_input(INPUT_POST,'after_note');
+if((string)$race->after_note!==$input_after_note){
+    $race->after_note=$input_after_note;
+    $after_is_changed = $has_change = true;
+}
+if($prev_is_changed||$after_is_changed){
+    $race->UpdateExec($pdo);
+}
+?>
+<tr>
+    <th colspan="2">レース</th>
+</tr>
+<tr>
+    <th>前</th>
+    <td style="min-width:200px;max-width:400px;" class="<?=$prev_is_changed?'changed':''?>">
+        <?=nl2br(h($race->previous_note))?>
+        <input type="hidden" name="previous_note" value="<?=h($race->previous_note)?>">
+    </td>
+</tr>
+<tr>
+    <th>後</th>
+    <td style="min-width:200px;max-width:400px;" class="<?=$after_is_changed?'changed':''?>">
+        <?=nl2br(h($race->after_note))?>
+        <input type="hidden" name="after_note" value="<?=h($race->after_note)?>">
+    </td>
+</tr>
 <?php foreach ($table_data as $data):?>
     <?php
         $horse=$data->horseRow;

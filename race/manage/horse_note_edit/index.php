@@ -85,6 +85,17 @@ switch($setting->age_view_mode){
 <hr>
 <form action="confirm.php" method="post">
 <table>
+<tr>
+    <th colspan="2">レース</th>
+</tr>
+<tr>
+    <th>前</th>
+    <td class="in_input"><textarea name="previous_note" style="min-width:400px;min-height: 2.5em;"><?=$race->previous_note?></textarea></td>
+</tr>
+<tr>
+    <th>後</th>
+    <td class="in_input"><textarea name="after_note" style="min-width:400px;min-height: 2.5em;"><?=$race->after_note?></textarea></td>
+</tr>
 <?php foreach ($table_data as $data):?>
     <?php
         $horse=$data->horseRow;
