@@ -114,7 +114,7 @@ if($race_sex_name!==''){
 print_h(" {$race->course_type}{$race->distance}m");
 ?></div>
 </div><!-- /race title block -->
-<hr class="clear">
+<hr class="clear no-css-fallback">
 <div class="race_header_navigation">
 <a href="<?=h($page->getRaceResultUrl($race_id))?>" title="着順">結果</a>
 | <a href="<?=h(InAppUrl::to('race/syutsuba.php',['race_id'=>$race_id]))?>" title="NK出馬表">出馬表</a>
@@ -127,3 +127,4 @@ print_h(" {$race->course_type}{$race->distance}m");
 <?php endif; ?>
 </div>
 </div>
+<hr class="clear no-css-fallback">

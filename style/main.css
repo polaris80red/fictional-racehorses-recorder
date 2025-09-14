@@ -29,6 +29,13 @@ a:link:hover {
 .footer_navigation a { text-decoration: none; }
 
 .horse_page_header a { text-decoration: none; }
+.race_header_navigation {
+	margin-top: 4px;
+	border-top: solid 1px #999999;
+	padding-bottom: 4px;
+	border-bottom: solid 1px #999999;
+	margin-bottom: 4px;
+}
 .race_header_navigation a { text-decoration: none; }
 
 .nowrap { white-space: nowrap; }

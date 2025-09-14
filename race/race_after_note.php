@@ -85,7 +85,6 @@ p {font-size:90%;}
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <?php if($race->after_note): ?>
-<hr>
 ■ レース後メモ<br>
 <?=nl2br(h($race->after_note))?>
 <?php endif;?>

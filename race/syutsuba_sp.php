@@ -107,7 +107,6 @@ table.syutsuba.sps .result_number {
 <main id="content">
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
-<hr>
 <table class="syutsuba sps">
     <tr>
         <th>枠<br>番</th>

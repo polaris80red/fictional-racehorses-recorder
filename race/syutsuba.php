@@ -99,7 +99,6 @@ switch($setting->age_view_mode){
 <main id="content">
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
-<hr>
 <?php
 $empty_row_2="<td>&nbsp;</td><td></td><td class=\"horse_name\"></td><td></td><td></td><td></td><td></td>";
 ?><table class="race_results">

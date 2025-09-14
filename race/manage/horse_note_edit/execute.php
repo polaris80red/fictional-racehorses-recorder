@@ -87,7 +87,6 @@ $has_change=false;
 <main id="content">
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
-<hr>
 <form action="confirm.php" method="post">
 <table>
 <?php
