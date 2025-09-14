@@ -172,14 +172,14 @@ if($prev_is_changed||$after_is_changed){
     <tr>
         <th>前</th>
         <td class="<?=($changed['race_previous_note']??false)?'changed':''?>" style="min-width:200px;max-width:400px;">
-            <?=h($newResult->race_previous_note)?>
+            <?=nl2br(h($newResult->race_previous_note))?>
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][race_previous_note]" value="<?=h($newResult->race_previous_note)?>">
         </td>
     </tr>
     <tr>
         <th>後</th>
         <td class="<?=($changed['race_after_note']??false)?'changed':''?>">
-            <?=h($newResult->race_after_note)?>
+            <?=nl2br(h($newResult->race_after_note))?>
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][race_after_note]" value="<?=h($newResult->race_after_note)?>">
         </td>
     </tr>
