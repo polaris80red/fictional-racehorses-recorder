@@ -227,7 +227,7 @@ th{
     <th>プロフィール</th>
 <tr>
 </tr>
-    <td class="in_input">
+    <td class="in_input" style="max-width: 300px;">
         <?=nl2br(h($horse->profile))?>&nbsp;
         <?php HTPrint::Hidden('profile',$horse->profile); ?>
     </td>
