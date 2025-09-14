@@ -108,7 +108,7 @@ class Horse extends Table{
         }
         $this->meaning=filter_input(INPUT_POST,'meaning');
         $this->profile=filter_input(INPUT_POST,'profile');
-        $this->note=filter_input(INPUT_POST,'note')?:null;
+        $this->note=filter_input(INPUT_POST,'note')?:'';
         
         $this->is_enabled=filter_input(INPUT_POST,'is_enabled');
         return $this->error_exists?false:true;
