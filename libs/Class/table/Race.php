@@ -23,6 +23,8 @@ class Race extends Table{
     public $weather =null;
     public $track_condition ='';
     public $note ='';
+    public $previous_note ='';
+    public $after_note ='';
     public $number_of_starters =null;
     public $is_jra =1;
     public $is_nar =0;
@@ -45,6 +47,8 @@ class Race extends Table{
         'course_type','distance','race_name','race_short_name','caption',
         'grade','age_category_id','age','sex_category_id','weather','track_condition',
         'note',
+        'previous_note',
+        'after_note',
         'number_of_starters','is_jra','is_nar',
         'date','is_tmp_date','year','month','week_id',
         'is_enabled'
@@ -120,6 +124,8 @@ class Race extends Table{
         $this->weather=filter_input(INPUT_POST,'weather')?:filter_input(INPUT_POST,'weather_select');
         $this->track_condition=filter_input(INPUT_POST,'track_condition')?:filter_input(INPUT_POST,'track_condition_select');
         $this->note=filter_input(INPUT_POST,'note');
+        $this->previous_note=filter_input(INPUT_POST,'previous_note');
+        $this->after_note=filter_input(INPUT_POST,'after_note');
         $this->number_of_starters=filter_input(INPUT_POST,'number_of_starters');
         $this->is_jra=filter_input(INPUT_POST,'is_jra');
         $this->is_nar=filter_input(INPUT_POST,'is_nar');
@@ -202,17 +208,12 @@ class Race extends Table{
         return;
     }
     private function BindValues($stmt){
-        $stmt=$this->BindValuesFromThis($stmt, [
-            'course_type',
-            'race_name','race_short_name','caption','age','track_condition','note'
-        ],PDO::PARAM_STR);
-        $stmt=$this->BindValuesFromThis($stmt, [
-            'world_id','race_number','distance',
-            'age_category_id',
-            'sex_category_id',
-            'is_jra','is_nar','is_tmp_date',
-            'year','month','week_id','is_enabled'
-        ],PDO::PARAM_INT);
+        $stmt=$this->BindValuesFromThis($stmt, (self::ROW_CLASS)::getStrColmunNames([
+            'race_course_name','grade','weather','track_condition','date',
+        ]),PDO::PARAM_STR);
+        $stmt=$this->BindValuesFromThis($stmt, (self::ROW_CLASS)::getIntColmunNames([
+            'number_of_starters'
+        ]),PDO::PARAM_INT);
         // NULLかどうかの個別調整
         $stmt->BindValue(':race_course_name',$this->race_course_name?:'',PDO::PARAM_STR);
         $stmt->BindValue(':grade',$this->grade?:'',PDO::PARAM_STR);

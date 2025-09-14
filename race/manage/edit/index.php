@@ -78,9 +78,11 @@ if(count($race_course_list_results)>0){
 <main id="content">
 <hr class="no-css-fallback">
 <form action="./confirm.php" method="post">
-<input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0; ?>">
-
-<table class="edit-form-table">
+<div style="margin-bottom: 2px;">
+    <input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0; ?>">
+    <input type="submit" value="レース結果データ登録内容確認">
+</div>
+<table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>レースID</th>
     <?php if($is_edit_mode):?>
@@ -317,7 +319,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
 </tr>
 <tr><?php $weeks=RaceWeek::getAll($pdo); ?>
     <th>週</th>
-    <td>
+    <td colspan="2">
     <?php
     foreach($weeks as $row){
         $class="race_week race_week_m{$row['month']} race_week_id{$row['id']}";
@@ -337,14 +339,35 @@ $grades=RaceGrade::getForSelectbox($pdo);
         echo "<br>\n</label>";
     }
     ?></td>
-    <td></td>
+</tr>
+</table>
+<table class="edit-form-table floatLeft">
+<tr>
+    <th>
+        備考<br>
+        <input type="button" value="クリア" onclick="clearElmVal('*[name=note]');">
+    </th>
+    <td class="in_input">
+        <textarea name="note" style="width:20em;height:4em;"><?=h($race->note)?></textarea>
+    </td>
 </tr>
 <tr>
-    <th>備考</th>
+    <th>
+        前メモ<br>
+        <input type="button" value="クリア" onclick="clearElmVal('*[name=previous_note]');">
+    </th>
     <td class="in_input">
-        <textarea name="note" style="width:10rm;height:4em;"><?=h($race->note)?></textarea>
+        <textarea name="previous_note" style="width:20em;height:4em;"><?=h($race->previous_note)?></textarea>
     </td>
-    <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=note]');"></td>
+</tr>
+<tr>
+    <th>
+        後メモ<br>
+        <input type="button" value="クリア" onclick="clearElmVal('*[name=after_note]');">
+    </th>
+    <td class="in_input">
+        <textarea name="after_note" style="width:20em;height:4em;"><?=h($race->after_note)?></textarea>
+    </td>
 </tr>
 <tr style="<?=($is_edit_mode || $race->is_enabled==0)?'':'display:none;'?>">
     <th>表示<br>（論理削除）</th>
@@ -352,7 +375,6 @@ $grades=RaceGrade::getForSelectbox($pdo);
     <label><?php HTPrint::Radio("is_enabled",1,$race->is_enabled); ?>表示する</label><br>
     <label><?php HTPrint::Radio("is_enabled",0,$race->is_enabled); ?>非表示</label>
     </td>
-    <td></td>
 </tr>
 <?php if($horse_id && !$is_edit_mode): ?>
 <tr>
@@ -362,7 +384,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
 <?php endif; ?>
 </table>
 <?php if(!$is_edit_mode && $race->is_enabled==1){HTPrint::Hidden('is_enabled',$race->is_enabled);} ?>
-<hr>
+<hr style="clear: both;">
 <input type="submit" value="レース結果データ登録内容確認">
 </form>
 <?php

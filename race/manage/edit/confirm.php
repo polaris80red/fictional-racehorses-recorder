@@ -54,7 +54,7 @@ if($race->setDataByPost()==false){
 <hr class="no-css-fallback">
 <form action="./execute.php" method="post">
 <input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0?>">
-<table class="edit-form-table">
+<table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>レースID</th>
     <td><?php HTPrint::Hidden('race_id',$race_id);print($race_id?:'登録実行時に生成'); ?></td>
@@ -156,11 +156,27 @@ if($race->setDataByPost()==false){
         <?=h($week_str)?><?php HTPrint::Hidden('week_id',$race->week_id) ?>
     </td>
 </tr>
+</table>
+<table class="edit-form-table floatLeft">
 <tr>
     <th>備考</th>
-    <td>
+    <td style="max-width: 200px;">
         <?=nl2br(h($race->note))?>
         <?php HTPrint::Hidden('note',$race->note); ?>
+    </td>
+</tr>
+<tr>
+    <th>前メモ</th>
+    <td style="max-width: 200px;">
+        <?=nl2br(h($race->previous_note))?>
+        <?php HTPrint::Hidden('previous_note',$race->previous_note); ?>
+    </td>
+</tr>
+<tr>
+    <th>後メモ</th>
+    <td style="max-width: 200px;">
+        <?=nl2br(h($race->after_note))?>
+        <?php HTPrint::Hidden('after_note',$race->after_note); ?>
     </td>
 </tr>
 <tr>
@@ -177,7 +193,7 @@ if($race->setDataByPost()==false){
 </tr>
 <?php endif; ?>
 </table>
-<hr>
+<hr style="clear: both;">
 <input type="submit" value="レース結果データ登録実行">
 <?php $csrf_token->printHiddenInputTag(); ?>
 </form>

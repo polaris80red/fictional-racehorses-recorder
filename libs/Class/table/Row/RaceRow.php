@@ -26,6 +26,8 @@ class RaceRow extends TableRow {
         'weather',
         'track_condition',
         'note',
+        'previous_note',
+        'after_note',
         'date',
         'course_type',
     ];
@@ -45,6 +47,8 @@ class RaceRow extends TableRow {
     public $weather =null;
     public $track_condition ='';
     public $note ='';
+    public $previous_note ='';
+    public $after_note ='';
     public $number_of_starters =null;
     public $is_jra =1;
     public $is_nar =0;
