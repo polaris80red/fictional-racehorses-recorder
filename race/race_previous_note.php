@@ -86,6 +86,7 @@ p {font-size:90%;}
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <?php if($race->after_note): ?>
 <hr>
+■ レース前メモ<br>
 <?=nl2br(h($race->after_note))?>
 <?php endif;?>
 <?php foreach ($table_data as $data): ?>
@@ -104,6 +105,10 @@ p {font-size:90%;}
         <?=nl2br(h($result->race_previous_note?:"……"))?>
     </section>
 <?php endforeach; ?>
+<?php if($page->is_editable): ?>
+<hr>
+[ <a href="<?=InAppUrl::to('race/manage/horse_note_edit',['race_id'=>$race_id])?>">一括編集</a> ]
+<?php endif;?>
 <hr class="no-css-fallback">
 </main>
 <footer>
