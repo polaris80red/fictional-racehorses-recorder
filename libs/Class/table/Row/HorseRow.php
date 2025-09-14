@@ -27,6 +27,8 @@ class HorseRow extends TableRow {
         'meaning',
         'note',
         'profile',
+        'created_at',
+        'updated_at',
     ];
     public $horse_id;
     public $world_id;
@@ -52,4 +54,6 @@ class HorseRow extends TableRow {
     public $note ='';
     public $profile =null;
     public $is_enabled=1;
+    public $created_at =null;
+    public $updated_at =null;
 }

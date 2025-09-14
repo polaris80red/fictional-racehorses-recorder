@@ -44,11 +44,13 @@ if($horse->setDataByPost()==false){
 if(!$is_edit_mode){
     (new SurrogateKeyGenerator($pdo))->autoReset();
 }
+$horse->updated_at=PROCESS_STARTED_AT;
 $pdo->beginTransaction();
 try{
     if($is_edit_mode){
         $horse->UpdateExec($pdo);
     }else{
+        $horse->created_at=PROCESS_STARTED_AT;
         $horse->InsertExec($pdo);
     }
 

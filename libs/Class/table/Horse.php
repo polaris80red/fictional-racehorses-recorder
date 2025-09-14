@@ -32,6 +32,8 @@ class Horse extends Table{
     public $note ='';
     public $profile ='';
     public $is_enabled =1;
+    public $created_at =null;
+    public $updated_at =null;
 
     public function __construct(){
     }
@@ -155,13 +157,16 @@ class Horse extends Table{
         return true;
     }
     public function UpdateExec(PDO $pdo){
-        $update_where_column='horse_id';
-        $update_set_columns=(self::ROW_CLASS)::getColumnNames($update_where_column);
+        $update_set_exclude_columns=[
+            'horse_id',
+            'created_at',
+        ];
+        $update_set_columns=(self::ROW_CLASS)::getColumnNames($update_set_exclude_columns);
 
         $sql=SqlMake::UpdateSqlWhereRaw(self::TABLE,$update_set_columns, "`horse_id` LIKE :horse_id");
 
         $stmt = $pdo->prepare($sql);
-        $stmt=$this->BindValuesFromThis($stmt,(self::ROW_CLASS)::getStrColmunNames($update_where_column),PDO::PARAM_STR);
+        $stmt=$this->BindValuesFromThis($stmt,(self::ROW_CLASS)::getStrColmunNames($update_set_exclude_columns),PDO::PARAM_STR);
         $stmt->bindValue(':horse_id',SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
         $stmt=$this->BindValuesFromThis($stmt,(self::ROW_CLASS)::getIntColmunNames(),PDO::PARAM_INT);
         $result = $stmt->execute();
