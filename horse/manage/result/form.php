@@ -100,7 +100,10 @@ if($page->error_exists){
 <main id="content">
 <hr class="no-css-fallback">
 <form action="./confirm.php" method="post">
-<input type="hidden" name="edit_mode" value="<?php echo ($is_edit_mode)?1:0; ?>">
+<div style="margin-bottom: 2px;">
+    <input type="submit" value="登録・編集　内容確認">
+    <input type="hidden" name="edit_mode" value="<?php echo ($is_edit_mode)?1:0; ?>">
+</div>
 <table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <?php if(empty($race_result_id)): ?>
