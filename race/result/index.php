@@ -111,7 +111,8 @@ $latest_horse_exists=false;
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <?php include (new TemplateImporter('race/race-results_table.inc.php'));?>
-<hr>
+<hr class="no-css-fallback">
+<div style="margin-top: 4px;">
 <?php
     $prev_tag=new MkTagA('前メモ');
     if($resultsGetter->hasPreviousNote||$race->previous_note){
@@ -134,6 +135,7 @@ $latest_horse_exists=false;
     }
 ?>
 <?=implode('｜',$line)?>
+</div>
 <hr>
 <table class="race_info">
     <tr><th>名称</th><td><?=h($race->race_name)?></td></tr>

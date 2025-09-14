@@ -197,7 +197,8 @@ $latest_horse_exists=false;
     </tr>
 <?php endforeach;?>
 </table>
-<hr>
+<hr class="no-css-fallback">
+<div style="margin-top: 4px;">
 <?php
     $prev_tag=new MkTagA('前メモ');
     if($resultsGetter->hasPreviousNote||$race->previous_note){
@@ -215,6 +216,7 @@ $latest_horse_exists=false;
     $line[]=$name_search_tag;
 ?>
 <?=implode('｜',$line)?>
+</div>
 <?php if($page->is_editable): ?>
     <?php include (new TemplateImporter('race/race_page-edit_menu.inc.php'));?>
 <?php endif; ?>
