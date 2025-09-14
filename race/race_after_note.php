@@ -87,14 +87,16 @@ p {font-size:90%;}
 <?php if($race->after_note): ?>
 ■ レース後メモ<br>
 <?=nl2br(h($race->after_note))?>
+<hr>
 <?php endif;?>
+<?php $i=0; ?>
 <?php foreach ($table_data as $data): ?>
     <?php
         $result = $data->resultRow;
         $horse = $data->horseRow;
     ?>
     <?php if($result->race_after_note==''){ continue; }?>
-    <hr>
+    <?php if($i!==0): ?><hr><?php endif;?>
     <section>
         <?php if($page->is_editable): ?>
         <a href="<?=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race_id,'horse_id'=>$horse->horse_id,'edit_mode'=>1])?>">■</a>
@@ -103,6 +105,7 @@ p {font-size:90%;}
         <br>
         <?=nl2br(h($result->race_after_note?:"……"))?>
     </section>
+    <?php $i++; ?>
 <?php endforeach; ?>
 <?php if($page->is_editable): ?>
 <hr>
