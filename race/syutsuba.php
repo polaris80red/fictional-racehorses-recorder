@@ -199,7 +199,23 @@ $latest_horse_exists=false;
 <?php endforeach;?>
 </table>
 <hr>
-<a href="<?=h($page->getRaceNameSearchUrl($race->race_name))?>" style="">他年度の<?=h($race->race_name)?>を検索</a>
+<?php
+    $prev_tag=new MkTagA('前メモ');
+    if($resultsGetter->hasPreviousNote||$race->previous_note){
+        $prev_tag->href(InAppUrl::to('race/race_previous_note.php',['race_id'=>$race_id]));
+        $prev_tag->title("レース前メモ");
+    }
+    $line[]=$prev_tag;
+    $after_tag=new MkTagA('後メモ');
+    if($resultsGetter->hasAfterNote||$race->after_note){
+        $after_tag->href(InAppUrl::to('race/race_after_note.php',['race_id'=>$race_id]));
+        $after_tag->title("レース後メモ");
+    }
+    $line[]=$after_tag;
+    $name_search_tag=new MkTagA("他年度の{$race->race_name}を検索",$page->getRaceNameSearchUrl($race->race_name));
+    $line[]=$name_search_tag;
+?>
+<?=implode('｜',$line)?>
 <?php if($page->is_editable): ?>
     <?php include (new TemplateImporter('race/race_page-edit_menu.inc.php'));?>
 <?php endif; ?>
