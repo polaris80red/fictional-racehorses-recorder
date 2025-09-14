@@ -9,6 +9,9 @@ $page->title="レース一覧";
 $pdo= getPDO();
 
 if(empty($_GET['date'])){
+    $page->error_msgs[]="日付未指定";
+    header("HTTP/1.1 404 Not Found");
+    $page->printCommonErrorPage();
     exit;
 }
 $date=filter_input(INPUT_GET,'date');
