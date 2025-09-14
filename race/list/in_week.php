@@ -9,7 +9,12 @@ $page->title="レース一覧";
 $pdo= getPDO();
 
 $year=(string)filter_input(INPUT_GET,'year');
-if($year===''){exit;}
+if($year===''){
+    $page->error_msgs[]="年度未指定";
+    header("HTTP/1.1 404 Not Found");
+    $page->printCommonErrorPage();
+    exit;
+}
 $year=(int)$year;
 
 $month=(int)filter_input(INPUT_GET,'month',FILTER_VALIDATE_INT);
