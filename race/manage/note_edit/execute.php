@@ -12,12 +12,6 @@ $page->error_return_url=$page->to_race_list_path;
 $page->error_return_link_text="レース検索に戻る";
 
 $pdo= getPDO();
-if(!(new FormCsrfToken())->isValid()){
-    ELog::error($page->title.": CSRFトークンエラー");
-    $page->addErrorMsg("入力フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
-    $page->printCommonErrorPage();
-    exit;
-}
 if(empty($_POST['race_id'])){
     $page->error_msgs[]="レースID未指定";
     header("HTTP/1.1 404 Not Found");
@@ -34,7 +28,14 @@ if(!$race->record_exists){
     $page->printCommonErrorPage();
     exit;
 }
-
+$page->error_return_url=InAppUrl::to('race/syutsuba.php',['race_id'=>$race_id]);
+$page->error_return_link_text="出馬表に戻る";
+if(!(new FormCsrfToken())->isValid()){
+    ELog::error($page->title.": CSRFトークンエラー");
+    $page->addErrorMsg("入力フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
+    $page->printCommonErrorPage();
+    exit;
+}
 $week_data=RaceWeek::getById($pdo,$race->week_id);
 $week_month=$week_data->month;
 $turn=$week_data->umm_month_turn;
