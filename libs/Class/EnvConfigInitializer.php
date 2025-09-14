@@ -48,6 +48,14 @@ class EnvConfigInitializer {
         define('ADMINISTRATOR_USER',$cfg['ADMINISTRATOR_USER']);
         define('ADMINISTRATOR_PASS',$cfg['ADMINISTRATOR_PASS']);
 
+        $display_config_source=$cfg['DISPLAY_CONFIG_SOURCE'];
+        if(!in_array($display_config_source,['db','json'])){
+            // 対応していない値の場合はdbにする
+           $display_config_source= 'db';
+        }
+        define('DISPLAY_CONFIG_SOURCE',$display_config_source);
+        define('DISPLAY_CONFIG_JSON_PATH',$cfg['DISPLAY_CONFIG_JSON_PATH']);
+
         define('ANNONYMOUS_HORSE_NAME',$cfg['ANNONYMOUS_HORSE_NAME']);
 
         define('EDIT_MENU_TOGGLE',filter_var($cfg['EDIT_MENU_TOGGLE'],FILTER_VALIDATE_BOOL));

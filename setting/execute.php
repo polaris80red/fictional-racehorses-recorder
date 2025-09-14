@@ -56,7 +56,11 @@ $setting->saveToSessionAll();
 // ログイン中かつ保存する選択でなければデフォルト値には反映しない
 //（ログアウトやセッションが切れるまでのみ有効）
 if(Session::is_logined() && $save_to_file){
-    (new ConfigTable($pdo))->setTimestamp(PROCESS_STARTED_AT)->saveAllParams($setting->getSettingArray());
+    if(DISPLAY_CONFIG_SOURCE==='json'){
+        file_put_contents(DISPLAY_CONFIG_JSON_PATH,json_encode($setting->getSettingArray(),JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+    }else{
+        (new ConfigTable($pdo))->setTimestamp(PROCESS_STARTED_AT)->saveAllParams($setting->getSettingArray());
+    }
 }
 
 // 年上限・下限が絶対値で設定によっては範囲外になりやすいので設定変更後の初期値に強制変換（暫定）

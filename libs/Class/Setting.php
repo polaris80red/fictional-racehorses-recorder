@@ -88,11 +88,20 @@ class Setting{
         if(!$activateToSession){ return false; }
         $this->setDefault();
         if(!isset($_SESSION['setting'])){
-            //  セッション側に設定がない場合、DBからの設定を試みる
-            // TODO: $pdoを外から渡すように全箇所変更
-            $setting=(new ConfigTable(getPDO()))->getAllParams();
-            if($setting!==false){
-                $this->setByStdClass($setting);
+            //  セッション側に設定がない場合は保存してある値の設定を試みる
+            if(DISPLAY_CONFIG_SOURCE==='json'){
+                // JSONファイルから取得する
+                if(file_exists(DISPLAY_CONFIG_JSON_PATH)){
+                    $setting=json_decode(file_get_contents(DISPLAY_CONFIG_JSON_PATH));
+                    $this->setByStdClass($setting);
+                }
+            }else{
+                // データベースから取得する
+                // TODO: $pdoを外から渡すように全箇所変更
+                $setting=(new ConfigTable(getPDO()))->getAllParams();
+                if($setting!==false){
+                    $this->setByStdClass($setting);
+                }
             }
             $this->saveToSessionAll();
         }else{

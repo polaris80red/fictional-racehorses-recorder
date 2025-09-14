@@ -89,6 +89,19 @@ $cfg['ADMINISTRATOR_PASS'] ='';
  */
 //$cfg['ADMINISTRATOR_PASS'] =password_hash('admin',PASSWORD_DEFAULT);
 
+
+// デフォルトの表示設定の保存・読み込み先
+$cfg['DISPLAY_CONFIG_SOURCE'] = 'db';
+/**   SITE_CONFIG_MODE
+ *  db  :データベースに保存・取得します
+ *  json:jsonファイルに保存・取得します
+ *      同じWEBサイト領域に、特定のワールド用のサブサイトを作成する場合などに
+ *      データベースの共通設定と別の設定を使うために使用します。
+ */
+
+// デフォルトの表示設定のソースがファイルの場合のパス
+$cfg['DISPLAY_CONFIG_JSON_PATH'] = $cfg['STORAGE_DIR'].'/display_settings.json';
+
 $cfg['ANNONYMOUS_HORSE_NAME'] ='□□□□□□';
 
 $cfg['EDIT_MENU_TOGGLE']=false;
