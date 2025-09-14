@@ -83,6 +83,9 @@ switch($setting->age_view_mode){
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <form action="confirm.php" method="post">
+<div style="margin-bottom: 2px;">
+    <input type="submit" value="登録内容確認">
+</div>
 <table>
 <tr>
     <th colspan="2">レース</th>
@@ -133,7 +136,9 @@ switch($setting->age_view_mode){
             $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$horse->horse_id);
             $country=($race->is_jra==0 && $race->is_nar==0)?" <span>(".h($data->trainingCountry).")</span> ":'';
         ?>
-        <th class="horse_name" style="text-align: left;padding-left:1em;" colspan="2"><?=implode(' ',[$marks,$a_tag,$country])?></th>
+        <th class="horse_name" style="text-align: left;padding-left:1em;" colspan="2">
+            <a id="horse_<?=h(urlencode($horse->horse_id))?>"><?=implode(' ',[$marks,$a_tag,$country])?></a>
+        </th>
     </tr>
     <tr>
         <th>前</th>

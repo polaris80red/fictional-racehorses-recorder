@@ -84,6 +84,9 @@ $has_change=false;
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <form action="execute.php" method="post">
+<div style="margin-bottom: 2px;">
+    <input type="submit" value="登録処理実行">
+</div>
 <table>
 <?php
 $input_previous_note=(string)filter_input(INPUT_POST,'previous_note');
