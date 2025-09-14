@@ -143,7 +143,11 @@ $i=0;
         <td><?=h($raceResult->handicap)?></td>
         <?php if($setting->age_view_mode!==1): ?>
             <td style="<?=$data->jockeyRow->is_anonymous?'color:#999;':''?>">
-                <?=h($data->jockeyName??'')?>
+                <?=!$data->jockeyName?'':(new MkTagA($data->jockeyName,InAppUrl::to('race/list/in_week_jockey.php',[
+                    'year'=>$race->year,
+                    'week'=>$race->week_id,
+                    'jockey'=>$raceResult->jockey_name
+                    ])))?>
             </td>
         <?php endif; ?>
         <td><?=h($raceResult->time)?></td>
