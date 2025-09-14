@@ -21,6 +21,7 @@ if(filter_input(INPUT_GET,'mode')==='edit'){
 }
 $is_edit_mode=true;
 if(empty($_GET['race_id'])){
+    header("HTTP/1.1 404 Not Found");
     $page->error_msgs[]="レースID未指定";
     $page->printCommonErrorPage();
     exit;
@@ -29,6 +30,7 @@ $race_id=filter_input(INPUT_GET,'race_id');
 # レース情報取得
 $race = new Race($pdo, $race_id);
 if(!$race->record_exists){
+    header("HTTP/1.1 404 Not Found");
     $page->error_msgs[]="レース情報取得失敗";
     $page->error_msgs[]="入力ID：{$race_id}";
     $page->printCommonErrorPage();
@@ -53,6 +55,15 @@ $resultsGetter->addOrderParts([
 $table_data=$resultsGetter->getTableData();
 $hasThisweek=$resultsGetter->hasThisweek;
 $hasSps=$resultsGetter->hasSps;
+if(!$resultsGetter->hasAfterNote){
+    $page->error_return_url=InAppUrl::to('race/syutsuba.php',['race_id'=>$race_id]);
+    $page->error_return_link_text="出馬表に戻る";
+    $page->error_msgs[]="レース後メモが未登録のレースです";
+    $page->error_msgs[]="入力ID：{$race_id}";
+    header("HTTP/1.1 404 Not Found");
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
