@@ -59,6 +59,71 @@ switch($setting->age_view_mode){
         $mode_umm=true;
 }
 $has_change=false;
+
+// レース前後メモの更新処理
+$prev_is_changed = $after_is_changed = false;
+$input_previous_note=(string)filter_input(INPUT_POST,'previous_note');
+if((string)$race->previous_note!==$input_previous_note){
+    $race->previous_note=$input_previous_note;
+    $prev_is_changed = $has_change = true;
+}
+$input_after_note=(string)filter_input(INPUT_POST,'after_note');
+if((string)$race->after_note!==$input_after_note){
+    $race->after_note=$input_after_note;
+    $after_is_changed = $has_change = true;
+}
+if($prev_is_changed||$after_is_changed){
+    $race->UpdateExec($pdo);
+}
+
+// レース個別結果の前後メモの更新処理
+$additionalData=[];
+foreach($table_data as $key => $data){
+    $horse=$data->horseRow;
+    $raceResult=$data->resultRow;
+    $newResult= new RaceResults();
+    $addData=new stdClass;
+    $result = $newResult->setDataById($pdo,$race_id,$horse->horse_id);
+    if(!$result){
+        continue;
+    }
+    if(!isset($_POST['race'][$horse->horse_id])){
+        // 送信データにその行の馬のデータが存在しない場合はスキップ
+        continue;
+    }
+    $inputHorseResultRow=$_POST['race'][$horse->horse_id];
+    $input='';
+    $changed=[];
+    if(isset($inputHorseResultRow['race_previous_note'])){
+        $input = mb_convert_kana(trim($inputHorseResultRow['race_previous_note']),'n');
+        if((string)$newResult->race_previous_note != $input){
+            $newResult->race_previous_note = $input;
+            $changed['race_previous_note'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['race_after_note'])){
+        $input = mb_convert_kana(trim($inputHorseResultRow['race_after_note']),'n');
+        if((string)$newResult->race_after_note != $input){
+            $newResult->race_after_note = $input;
+            $changed['race_after_note'] = $has_change = true;
+        }
+    }
+    if($has_change===true){
+        $pdo->beginTransaction();
+        try{
+            $newResult->UpdateExec($pdo);
+            $pdo->commit();
+        }catch(Exception $e){
+            $pdo->rollBack();
+            $page->addErrorMsg("PDO_ERROR:".print_r($e,true));
+            exit;
+        }
+        ELog::debug("race_note_edit| race:{$newResult->race_id},horse:{$newResult->horse_id}");        
+    }
+    $addData->newResult=$newResult;
+    $addData->changed=$changed;
+    $additionalData[$key]=$addData;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -88,24 +153,23 @@ $has_change=false;
 <main id="content">
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
+<?php
+    $prev_tag=new MkTagA('前メモ');
+    if($resultsGetter->hasPreviousNote||$race->previous_note){
+        $prev_tag->href(InAppUrl::to('race/race_previous_note.php',['race_id'=>$race_id]));
+        $prev_tag->title("レース前メモ");
+    }
+    $line[]=$prev_tag;
+    $after_tag=new MkTagA('後メモ');
+    if($resultsGetter->hasAfterNote||$race->after_note){
+        $after_tag->href(InAppUrl::to('race/race_after_note.php',['race_id'=>$race_id]));
+        $after_tag->title("レース後メモ");
+    }
+    $line[]=$after_tag;
+?>
+<?=implode('｜',$line)?>
 <form action="confirm.php" method="post">
 <table>
-<?php
-$prev_is_changed = $after_is_changed = false;
-$input_previous_note=(string)filter_input(INPUT_POST,'previous_note');
-if((string)$race->previous_note!==$input_previous_note){
-    $race->previous_note=$input_previous_note;
-    $prev_is_changed = $has_change = true;
-}
-$input_after_note=(string)filter_input(INPUT_POST,'after_note');
-if((string)$race->after_note!==$input_after_note){
-    $race->after_note=$input_after_note;
-    $after_is_changed = $has_change = true;
-}
-if($prev_is_changed||$after_is_changed){
-    $race->UpdateExec($pdo);
-}
-?>
 <tr>
     <th colspan="2">レース</th>
 </tr>
@@ -123,49 +187,16 @@ if($prev_is_changed||$after_is_changed){
         <input type="hidden" name="after_note" value="<?=h($race->after_note)?>">
     </td>
 </tr>
-<?php foreach ($table_data as $data):?>
+<?php foreach ($table_data as $key => $data):?>
     <?php
+        if(!isset($_POST['race'][$horse->horse_id])){
+            // 送信データにその行の馬のデータが存在しない場合はスキップ
+            continue;
+        }
         $horse=$data->horseRow;
         $raceResult=$data->resultRow;
-        $newResult= new RaceResults();
-        $result = $newResult->setDataById($pdo,$race_id,$horse->horse_id);
-        if(!$result){
-            continue;
-        }
-        if(!isset($_POST['race'][$horse->horse_id])){
-            // その馬のデータがなければスキップ
-            continue;
-        }else{
-            $inputHorseResultRow=$_POST['race'][$horse->horse_id];
-        }
-        $input='';
-        $changed=[];
-        if(isset($inputHorseResultRow['race_previous_note'])){
-            $input = mb_convert_kana(trim($inputHorseResultRow['race_previous_note']),'n');
-            if((string)$newResult->race_previous_note != $input){
-                $newResult->race_previous_note = $input;
-                $changed['race_previous_note'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['race_after_note'])){
-            $input = mb_convert_kana(trim($inputHorseResultRow['race_after_note']),'n');
-            if((string)$newResult->race_after_note != $input){
-                $newResult->race_after_note = $input;
-                $changed['race_after_note'] = $has_change = true;
-            }
-        }
-        if($has_change===true){
-            $pdo->beginTransaction();
-            try{
-                $newResult->UpdateExec($pdo);
-                $pdo->commit();
-            }catch(Exception $e){
-                $pdo->rollBack();
-                $page->addErrorMsg("PDO_ERROR:".print_r($e,true));
-                exit;
-            }
-            ELog::debug("race_note_edit| race:{$newResult->race_id},horse:{$newResult->horse_id}");        
-        }
+        $changed=$additionalData[$key]->changed;
+        $newResult=$additionalData[$key]->newResult;
     ?>
     <tr class="">
         <th class="horse_name" style="text-align: left;padding-left:1em;" colspan="2"><?=$horse->name_ja?:$horse->name_en?></th>
@@ -187,6 +218,7 @@ if($prev_is_changed||$after_is_changed){
 <?php endforeach;?>
 </table>
 </form>
+<?=implode('｜',$line)?>
 <hr class="no-css-fallback">
 </main>
 <footer>
