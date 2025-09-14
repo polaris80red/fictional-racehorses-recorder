@@ -160,8 +160,8 @@ $latest_race_is_exists=false;
         <td>
             <?php
                 $list=[
-                    !$data->race_previous_note?'':(new MkTagA('前',InAppUrl::to('race/race_previous_note.php',['race_id'=>$race->race_id])))->title("レース前メモ"),
-                    !$data->race_after_note?'':(new MkTagA('後',InAppUrl::to('race/race_after_note.php',['race_id'=>$race->race_id])))->title("レース後メモ"),
+                    (!$data->race_previous_note && !$race->previous_note)?'':(new MkTagA('前',InAppUrl::to('race/race_previous_note.php',['race_id'=>$race->race_id])))->title("レース前メモ"),
+                    (!$data->race_after_note && !$race->after_note)?'':(new MkTagA('後',InAppUrl::to('race/race_after_note.php',['race_id'=>$race->race_id])))->title("レース後メモ"),
                     !$data->has_jra_thisweek?'':(new MkTagA('記',InAppUrl::to('race/j_thisweek.php',['race_id'=>$race->race_id,'show_registration_only'=>($race_url_add_param?true:null)])))->title("今週の注目レース"),
                 ]
             ?>
