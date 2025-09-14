@@ -44,6 +44,11 @@ if($is_edit_mode==0 && $race_id==''){
 
     $race->race_course_name=(string)filter_input(INPUT_GET,'race_course_name');
 }
+if($is_edit_mode==0 && $race_id!=''){
+    // 新規登録かつID指定複写の場合の一部項目初期化
+    $race->previous_note='';
+    $race->after_note='';
+}
 #echo '<pre>'.print_r($race,true).'</pre>'; exit;
 
 $world_list=World::getAll($pdo);

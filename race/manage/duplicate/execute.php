@@ -29,6 +29,8 @@ foreach($posted_race_list as $key => $posted_race){
     $race_obj->date = null;
     $race_obj->is_tmp_date = 1;
     $race_obj->year = $year;
+    $race_obj->previous_note='';
+    $race_obj->after_note='';
     $insert_objs[]=$race_obj;
 }
 $insert_id_list=[];
