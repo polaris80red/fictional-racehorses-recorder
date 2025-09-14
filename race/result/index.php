@@ -169,12 +169,12 @@ $latest_horse_exists=false;
         <th>note</th>
         <?php
             $prev_tag=new MkTagA('前メモ');
-            if($resultsGetter->hasPreviousNote){
+            if($resultsGetter->hasPreviousNote||$race->previous_note){
                 $prev_tag->href(InAppUrl::to('race/race_previous_note.php',['race_id'=>$race_id]));
                 $prev_tag->title("レース前メモ");
             }
             $after_tag=new MkTagA('後メモ');
-            if($resultsGetter->hasAfterNote){
+            if($resultsGetter->hasAfterNote||$race->after_note){
                 $after_tag->href(InAppUrl::to('race/race_after_note.php',['race_id'=>$race_id]));
                 $after_tag->title("レース後メモ");
             }

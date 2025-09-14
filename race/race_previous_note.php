@@ -55,7 +55,7 @@ $resultsGetter->addOrderParts([
 $table_data=$resultsGetter->getTableData();
 $hasThisweek=$resultsGetter->hasThisweek;
 $hasSps=$resultsGetter->hasSps;
-if(!$resultsGetter->hasPreviousNote){
+if(!$resultsGetter->hasPreviousNote && !$race->previous_note){
     $page->error_return_url=InAppUrl::to('race/syutsuba.php',['race_id'=>$race_id]);
     $page->error_return_link_text="出馬表に戻る";
     $page->error_msgs[]="レース前メモが未登録のレースです";
@@ -84,13 +84,17 @@ p {font-size:90%;}
 <main id="content">
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
+<?php if($race->after_note): ?>
 <hr>
+<?=nl2br(h($race->after_note))?>
+<?php endif;?>
 <?php foreach ($table_data as $data): ?>
     <?php
         $result = $data->resultRow;
         $horse = $data->horseRow;
     ?>
     <?php if($result->race_previous_note==''){ continue; }?>
+    <hr>
     <section>
         <?php if($page->is_editable): ?>
         <a href="<?=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['race_id'=>$race_id,'horse_id'=>$horse->horse_id,'edit_mode'=>1])?>">■</a>
@@ -99,7 +103,6 @@ p {font-size:90%;}
         <br>
         <?=nl2br(h($result->race_previous_note?:"……"))?>
     </section>
-    <hr>
 <?php endforeach; ?>
 <hr class="no-css-fallback">
 </main>
