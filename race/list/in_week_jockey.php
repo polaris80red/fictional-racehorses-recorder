@@ -138,21 +138,7 @@ $flag = $stmt->execute();
 <style>
 td:nth-child(3){ text-align:center;}
 td:nth-child(5){ text-align:center;}
-table.weekdaybtn td{
-    padding:0;
-    text-align:center;
-    vertical-align:middle;
-    width:2.5em;
-    height:2em;
-}
-table.weekdaybtn td a{
-    display:block;
-    width:100%;
-    height:100%;
-}
-table.weekdaybtn td a:hover{
-    background-color:#CCF;
-}
+td.col_result_number{ text-align: right; }
 .disabled_row{ background-color: #ccc; }
 </style>
 </head>
@@ -229,10 +215,9 @@ $race123horseGetter=new Race123HorseGetter($pdo);
 $search_results=new RaceSearchResults($stmt);
 $table_rows=$search_results->getAll();
 ?><hr>
-[ <?php echo (new MkTagA('全て','?'.$url_params->toString([],['is_jra_only','is_grade_only']))); ?>
+<div><span style="font-weight: bold;"><?=$jockey_name?></span> 騎乗<?=$show_result?'結果':'予定'?></div>
+[ <?php echo (new MkTagA('全て',!$is_jra_only&&!$is_grade_only?'':('?'.$url_params->toString([],['is_jra_only','is_grade_only'])))); ?>
 ｜<?php echo (new MkTagA('中央のみ',$is_jra_only&&!$is_grade_only?'':('?'.$url_params->toString(['is_jra_only'=>true],['is_grade_only'])))); ?>
-｜<?php echo (new MkTagA('中央重賞のみ',$is_jra_only&&$is_grade_only?'':('?'.$url_params->toString(['is_jra_only'=>true,'is_grade_only'=>true])))); ?>
-｜<?php echo (new MkTagA('重賞のみ',$is_grade_only&&!$is_jra_only?'':('?'.$url_params->toString(['is_grade_only'=>true],['is_jra_only'])))); ?>
  ]
 <table class="race_list_date">
 <tr>
@@ -338,7 +323,7 @@ $prev_date='';
         ?>
         <td><?=$horse_tag?></td>
         <?php if($show_result):?>
-            <td><?=h($raceResult->result_text?:($raceResult->result_number?$raceResult->result_number.'着':''))?></td>
+            <td class="col_result_number"><?=h($raceResult->result_text?:($raceResult->result_number?$raceResult->result_number.'着':''))?></td>
         <?php endif;?>
     </tr>
 <?php endforeach; ?>
