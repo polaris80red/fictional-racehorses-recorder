@@ -66,8 +66,15 @@ if($input_id==0){
     ?></td>
 </tr>
 <tr>
-    <th rowspan="1">キー名称</th>
-    <td class="in_input"><input type="text" name="unique_name" class="required" value="<?=h($race_grade->unique_name)?>"<?=(($race_grade->id||$input_name)?' readonly':'')?> required></td>
+    <?php if($race_grade->id||$input_name): ?>
+        <th>キー名称</th>
+        <td><?=(MkTagInput::Hidden('unique_name',$race_grade->unique_name)).h($race_grade->unique_name)?></td>
+    <?php else: ?>
+        <th>キー名称</th>
+        <td class="in_input">
+            <input type="text" name="unique_name" class="required" required value="<?=h($race_grade->unique_name)?>">
+        </td>
+    <?php endif; ?>
 </tr>
 <tr>
     <th>短縮名</th>
