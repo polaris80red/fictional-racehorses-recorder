@@ -338,7 +338,7 @@ $prev_date='';
         ?>
         <td><?=$horse_tag?></td>
         <?php if($show_result):?>
-            <td><?=h($raceResult->result_number)?>着</td>
+            <td><?=h($raceResult->result_text?:($raceResult->result_number?$raceResult->result_number.'着':''))?></td>
         <?php endif;?>
     </tr>
 <?php endforeach; ?>
