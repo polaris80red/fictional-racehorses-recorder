@@ -87,7 +87,7 @@ if($input_id==0){
 </tr>
 <tr>
     <th>所属</th>
-    <td class="in_input"><input type="text" name="affiliation_name" value="<?=h($form_item->affiliation_name)?>" placeholder="空ならキー名を使用"></td>
+    <td class="in_input"><input type="text" name="affiliation_name" value="<?=h($form_item->affiliation_name)?>"></td>
 </tr>
 <tr>
     <th>匿名</th>
