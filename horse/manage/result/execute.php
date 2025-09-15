@@ -72,6 +72,7 @@ do{
         $error_msgs[]="競走馬とレース情報のワールドが一致していません";
         break;
     }
+    $input->updated_at=PROCESS_STARTED_AT;
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
             $is_error=1;
@@ -85,6 +86,7 @@ do{
             $error_msgs[]="結果が既に存在します";
             break;
         }
+        $input->created_at=PROCESS_STARTED_AT;
         $pdo->beginTransaction();
         try{
             $result = $input->InsertExec($pdo);
@@ -92,6 +94,7 @@ do{
             if($next_race_id!=''){
                 $next_race=new RaceResults();
                 $next_race->setDataById($pdo,$next_race_id,$input->horse_id);
+                $next_race->updated_at=PROCESS_STARTED_AT;
                 if($next_race->record_exists){
                     $next_race->SubtractionNonRegisteredPrevRaceNumber($pdo);
                 }

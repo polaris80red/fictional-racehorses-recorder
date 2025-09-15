@@ -228,6 +228,7 @@ $sex_gelding_override=false;
         // 変更箇所がない場合はスキップする
         continue;
     }
+    $race_result->updated_at=PROCESS_STARTED_AT;
     $race_result->UpdateExec($pdo);
     ELog::debug("bulk_edit| horse:{$horse_id}, race:{$race_result->race_id}");
     if($data->is_registration_only==1){

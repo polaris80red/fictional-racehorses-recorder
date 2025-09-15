@@ -113,6 +113,7 @@ foreach($table_data as $key => $data){
     if($has_change===true){
         $pdo->beginTransaction();
         try{
+            $newResult->updated_at=PROCESS_STARTED_AT;
             $newResult->UpdateExec($pdo);
             $pdo->commit();
         }catch(Exception $e){

@@ -39,6 +39,8 @@ class RaceResultsRow extends TableRow {
         'jra_thisweek_horse_1',
         'jra_thisweek_horse_2',
         'jra_sps_comment',
+        'created_at',
+        'updated_at',
     ];
     public $number =0;
     public $race_id ='';
@@ -76,4 +78,6 @@ class RaceResultsRow extends TableRow {
     public $jra_thisweek_horse_2 ='';
     public $jra_thisweek_horse_sort_number =null;
     public $jra_sps_comment ='';
+    public $created_at =null;
+    public $updated_at =null;
 }

@@ -40,6 +40,8 @@ class RaceResults extends Table{
     public $jra_thisweek_horse_2 ='';
     public $jra_thisweek_horse_sort_number =null;
     public $jra_sps_comment ='';
+    public $created_at =null;
+    public $updated_at =null;
 
     const INT_COLUMNS=[
         'number',
@@ -73,6 +75,8 @@ class RaceResults extends Table{
         'jra_thisweek_horse_1',
         'jra_thisweek_horse_2',
         'jra_sps_comment',
+        'created_at',
+        'updated_at',
     ];
 
     public function __construct(){
@@ -152,8 +156,7 @@ class RaceResults extends Table{
         return true;
     }
     public function InsertExec(PDO $pdo){
-        $target_columns=array_diff(
-            array_merge(self::INT_COLUMNS,self::STR_COLUMNS),['number']);
+        $target_columns=(self::ROW_CLASS)::getColumnNames(['number']);
         $columns=new SqlMakeColumnNames($target_columns);
         $insert_columns=$columns->quotedString();
         $insert_placeholders=$columns->placeholdersString();
@@ -167,13 +170,11 @@ class RaceResults extends Table{
         $stmt = $this->BindValues($stmt);
         $stmt->bindValue(":race_id",$this->race_id,PDO::PARAM_STR);
         $stmt->bindValue(":horse_id",$this->horse_id,PDO::PARAM_STR);
+        $stmt->bindValue(":created_at",$this->created_at,PDO::PARAM_STR);
         $flag = $stmt->execute();
     }
     public function UpdateExec(PDO $pdo){
-        $target_columns=array_diff(
-            array_merge(
-                self::INT_COLUMNS,self::STR_COLUMNS),
-                ['number','race_id','horse_id']);
+        $target_columns=(self::ROW_CLASS)::getColumnNames(['number','race_id','horse_id','created_at']);
         $sql_update_set_part=(new SqlMakeColumnNames($target_columns))->updateSetString();
         $tbl=self::TABLE;
         $sql=<<<END
@@ -238,6 +239,7 @@ class RaceResults extends Table{
         $stmt->bindValue(':jra_thisweek_horse_2', $this->jra_thisweek_horse_2, PDO::PARAM_STR);
         $stmt->bindValue(':jra_thisweek_horse_sort_number', intOrNullIfZero($this->jra_thisweek_horse_sort_number), PDO::PARAM_INT);
         $stmt->bindValue(':jra_sps_comment', $this->jra_sps_comment, PDO::PARAM_STR);
+        $stmt->bindValue(':updated_at', $this->updated_at, PDO::PARAM_STR);
         return $stmt;
     }
     public function SubtractionNonRegisteredPrevRaceNumber(PDO $pdo){
@@ -245,10 +247,12 @@ class RaceResults extends Table{
         $sql=<<<END
         UPDATE `{$tbl}`
         SET
-            `non_registered_prev_race_number` = `non_registered_prev_race_number`-1
+            `non_registered_prev_race_number` = `non_registered_prev_race_number`-1,
+            `updated_at`=:updated_at
         WHERE `race_id` LIKE :race_id AND `horse_id` LIKE :horse_id;
         END;
         $stmt=$pdo->prepare($sql);
+        $stmt->bindValue(":updated_at",$this->updated_at,PDO::PARAM_STR);
         $stmt->bindValue(":race_id",SqlValueNormalizer::escapeLike($this->race_id),PDO::PARAM_STR);
         $stmt->bindValue(":horse_id",SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
         return $stmt->execute();
