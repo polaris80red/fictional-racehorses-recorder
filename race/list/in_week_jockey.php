@@ -328,6 +328,21 @@ $prev_date='';
     </tr>
 <?php endforeach; ?>
 </table>
+<?php
+$params=['year'=>$year,'is_jra_only'=>$is_jra_only];
+if($week_id>0){
+    $params['week']=$week_id;
+    $text='今週のレース結果一覧';
+}else if($month>0){
+    $params['month']=$month;
+    $text='今月のレース結果一覧';
+    if($umm_month_turn>0){
+        $params['turn']=$umm_month_turn;
+        $text='このターンのレース結果一覧';
+    }
+}
+?>
+[ <?=new MkTagA($text,InAppUrl::to('race/list/in_week.php',$params))?> ]
 <hr class="no-css-fallback">
 </main>
 <footer>
