@@ -246,6 +246,8 @@ $table_rows=$search_results->getAll();
     <?php if($show_result):?><th>着順</th><?php endif;?>
 </tr>
 <?php
+$full_row_span=$show_result?8:7;
+$empty_row='<tr>'.'<td colspan="'.$full_row_span.'">'.'</tr>';
 $func_get_horse_link=function($id,$name_ja,$name_en)use($page){
     $a_tag=new MkTagA($name_ja?:$name_en);
     $a_tag->href($page->getHorsePageUrl($id));
@@ -271,6 +273,7 @@ $resultGetter=new class($pdo,$jockey_name){
         return $this->stmt->fetch(PDO::FETCH_OBJ);
     }
 };
+$prev_date='';
 ?>
 <?php foreach($table_rows as $row): ?>
     <?php
@@ -284,17 +287,18 @@ $resultGetter=new class($pdo,$jockey_name){
     ?>
     <?php if($week_id===0 && $umm_month_turn==0 && $month>0 && $prev_turn!==$raceWeek->umm_month_turn): ?>
         <?php
-        $style="height:0.2em;background-color:#EEE;";
-        switch($raceWeek->umm_month_turn){
-            case 1:
-                $text='前半';
-                break;
-            case 2:
-                $text='後半';
-                break;
-        }
+            $style="height:0.2em;background-color:#EEE;";
+            switch($raceWeek->umm_month_turn){
+                case 1:
+                    $text='前半';
+                    break;
+                case 2:
+                    $text='後半';
+                    break;
+            }
+            $prev_date='';
         ?>
-        <tr style="<?=$style?>"><td colspan="9"><?=$text?></td></tr>
+        <tr style="<?=$style?>"><td colspan="<?=$full_row_span?>"><?=$text?></td></tr>
     <?php endif; ?>
     <?php if($prev_week_id != $race->week_id): ?>
         <?php
@@ -302,8 +306,12 @@ $resultGetter=new class($pdo,$jockey_name){
             $new_race_url_param->set('year',$year)->set('week_id',$race->week_id);
             $week_str="第{$race->week_id}週（{$raceWeek->name}）";
             $style="background-color:#EEE;text-align:left;";
+            $prev_date='';
         ?>
-        <tr><td colspan="9" style="<?=$style?>"><?=h($week_str)?></td></tr>
+        <tr><td colspan="<?=$full_row_span?>" style="<?=$style?>"><?=h($week_str)?></td></tr>
+    <?php endif; ?>
+    <?php if($prev_date!='' && strval($race->date?:null)!==$prev_date):?>
+        <?=$empty_row?>
     <?php endif; ?>
     <?php
         $prev_date=$race->date;
