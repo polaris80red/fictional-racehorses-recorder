@@ -85,9 +85,31 @@ if($input_id==0){
     <th>10字以内略</th>
     <td class="in_input"><input type="text" name="short_name_10" value="<?=h($form_item->short_name_10)?>" placeholder="空ならキー名を使用"></td>
 </tr>
+<?php
+    $affiliation_list=Affiliation::getForSelectbox($pdo);
+    $affiliation_name_list=[];
+    if(count($affiliation_list)>0){
+        foreach($affiliation_list as $row){
+            $affiliation_name_list[]=$row['unique_name'];
+        }
+    }
+?>
 <tr>
     <th>所属</th>
-    <td class="in_input"><input type="text" name="affiliation_name" value="<?=h($form_item->affiliation_name)?>"></td>
+    <td class="in_input">
+        <select name="affiliation_name_select" style="width:5em;" onchange="clearElmVal('*[name=affiliation_name]');">
+        <?php
+            echo '<option value=""></option>'."\n";
+            $target_exists=false;
+            foreach($affiliation_name_list as $val){
+                echo '<option value="'.$val,'"'.(($val==$form_item->affiliation_name)?' selected ':'').'>';
+                if($val==$form_item->affiliation_name){$target_exists=true;}
+                echo $val;
+                echo '</option>'."\n";
+            }
+        ?></select>／
+        <input type="text" name="affiliation_name" style="width: 5.5em;" value="<?=h($target_exists?'':$form_item->affiliation_name)?>" placeholder="所属手入力" onchange="clearElmVal('*[name=affiliation_name_select]');">
+    </td>
 </tr>
 <tr>
     <th>匿名</th>
