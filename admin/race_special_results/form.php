@@ -66,8 +66,15 @@ if($input_id==0){
     ?></td>
 </tr>
 <tr>
-    <th>キー名称</th>
-    <td class="in_input"><input type="text" name="unique_name" class="required" required value="<?=h($form_item->unique_name)?>" readonly></td>
+    <?php if($form_item->unique_name): ?>
+        <th>キー名称</th>
+        <td><?=(MkTagInput::Hidden('unique_name',$form_item->unique_name)).h($form_item->unique_name)?></td>
+    <?php else: ?>
+        <th>キー名称</th>
+        <td class="in_input">
+            <input type="text" name="unique_name" class="required" required value="<?=h($form_item->unique_name)?>">
+        </td>
+    <?php endif; ?>
 </tr>
 <tr>
     <th>名称</th>
