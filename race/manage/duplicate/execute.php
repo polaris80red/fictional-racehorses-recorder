@@ -31,6 +31,8 @@ foreach($posted_race_list as $key => $posted_race){
     $race_obj->year = $year;
     $race_obj->previous_note='';
     $race_obj->after_note='';
+    $race_obj->created_at=PROCESS_STARTED_AT;
+    $race_obj->updated_at=PROCESS_STARTED_AT;
     $insert_objs[]=$race_obj;
 }
 $insert_id_list=[];

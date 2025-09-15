@@ -34,6 +34,8 @@ class Race extends Table{
     public $month =null;
     public $week_id =0;
     public $is_enabled =1;
+    public $created_at =null;
+    public $updated_at =null;
 
     public const UMM_MONTH_TURN_NAME = [
         0=>'',
@@ -192,13 +194,14 @@ class Race extends Table{
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
         $stmt->bindValue(':race_id',$this->race_id,PDO::PARAM_STR);
+        $stmt->bindValue(':created_at',$this->created_at?:null,PDO::PARAM_STR);
         $result = $stmt->execute();
         return;
     }
     public function UpdateExec(PDO $pdo){
         $sql=SqlMake::UpdateSqlWhereRaw(
             self::TABLE,
-            (self::ROW_CLASS)::getColumnNames([self::UNIQUE_KEY_COLUMN]),
+            (self::ROW_CLASS)::getColumnNames([self::UNIQUE_KEY_COLUMN,'created_at']),
             "`".self::UNIQUE_KEY_COLUMN."` LIKE :".self::UNIQUE_KEY_COLUMN);
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
@@ -206,9 +209,13 @@ class Race extends Table{
         $result = $stmt->execute();
         return;
     }
+    /**
+     * 処理によって調整が必要な箇所以外をバインドする
+     */
     private function BindValues($stmt){
         $stmt=$this->BindValuesFromThis($stmt, (self::ROW_CLASS)::getStrColmunNames([
-            'race_course_name','grade','weather','track_condition','date',
+            'race_course_name','grade','weather','track_condition','date','updated_at',
+            'created_at', // 処理によってバインドしないため除外するカラム
         ]),PDO::PARAM_STR);
         $stmt=$this->BindValuesFromThis($stmt, (self::ROW_CLASS)::getIntColmunNames([
             'number_of_starters'
@@ -226,6 +233,7 @@ class Race extends Table{
         }
         // 頭数0の場合はNULL
         $stmt->BindValue(':number_of_starters',intOrNullIfZero($this->number_of_starters),PDO::PARAM_INT);
+        $stmt->BindValue(':updated_at',$this->updated_at?:null,PDO::PARAM_STR);
         return $stmt;
     }
 }

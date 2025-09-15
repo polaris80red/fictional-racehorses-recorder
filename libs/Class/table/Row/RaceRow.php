@@ -30,6 +30,8 @@ class RaceRow extends TableRow {
         'after_note',
         'date',
         'course_type',
+        'created_at',
+        'updated_at',
     ];
     public $race_id ='';
     public $world_id =null;
@@ -58,4 +60,6 @@ class RaceRow extends TableRow {
     public $month =null;
     public $week_id =0;
     public $is_enabled =1;
+    public $created_at =null;
+    public $updated_at =null;
 }
