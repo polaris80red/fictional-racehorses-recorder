@@ -229,9 +229,10 @@ $table_rows=$search_results->getAll();
     <th>名称</th>
     <th>騎乗馬</th>
     <?php if($show_result):?><th>着順</th><?php endif;?>
+    <th>厩舎</th>
 </tr>
 <?php
-$full_row_span=$show_result?8:7;
+$full_row_span=$show_result?9:8;
 $empty_row='<tr>'.'<td colspan="'.$full_row_span.'">'.'</tr>';
 $func_get_horse_link=function($id,$name_ja,$name_en)use($page){
     $a_tag=new MkTagA($name_ja?:$name_en);
@@ -325,6 +326,7 @@ $prev_date='';
         <?php if($show_result):?>
             <td class="col_result_number"><?=h($raceResult->result_text?:($raceResult->result_number?$raceResult->result_number.'着':''))?></td>
         <?php endif;?>
+        <td><?=$raceResult->trainer_name?:$horse->trainer_name?></td>
     </tr>
 <?php endforeach; ?>
 </table>
