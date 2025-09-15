@@ -166,8 +166,7 @@ class Race extends Table{
      * Insert
      */
     public function InsertExec(PDO $pdo){
-        $insert_columns=self::COLUMNS;
-        $insert_columns[]=self::UNIQUE_KEY_COLUMN;
+        $insert_columns=(self::ROW_CLASS)::getColumnNames();
         $sql=SqlMake::InsertSql(self::TABLE,$insert_columns);
         if($this->race_id==''){
             // IDがない場合生成処理
@@ -199,7 +198,7 @@ class Race extends Table{
     public function UpdateExec(PDO $pdo){
         $sql=SqlMake::UpdateSqlWhereRaw(
             self::TABLE,
-            self::COLUMNS,
+            (self::ROW_CLASS)::getColumnNames([self::UNIQUE_KEY_COLUMN]),
             "`".self::UNIQUE_KEY_COLUMN."` LIKE :".self::UNIQUE_KEY_COLUMN);
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
