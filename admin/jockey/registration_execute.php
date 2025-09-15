@@ -26,6 +26,8 @@ if($id>0){
 $form_item->unique_name=(string)filter_input(INPUT_POST,'unique_name');
 $form_item->name=filter_input(INPUT_POST,'name');
 $form_item->short_name_10=filter_input(INPUT_POST,'short_name_10');
+$form_item->affiliation_name=filter_input(INPUT_POST,'affiliation_name');
+$form_item->trainer_name=filter_input(INPUT_POST,'trainer_name');
 $form_item->is_anonymous=filter_input(INPUT_POST,'is_anonymous',FILTER_VALIDATE_BOOL)?1:0;
 $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 

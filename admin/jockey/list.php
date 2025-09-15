@@ -56,6 +56,8 @@ $next_tag  =new MkTagA("[次へ]",($master_table->has_next_page?('?'.$url_param-
     <th>氏名</th> 
 -->
     <th>10字略</th>
+    <th>所属</th>
+    <th>厩舎</th>
     <th>匿名フラグ</th>
     <th>論理削除<br><?=(new MkTagA('表示切替',"?show_disabled=".($show_disabled?'0':'1')));?></th>
     <th></th>
@@ -69,6 +71,8 @@ $next_tag  =new MkTagA("[次へ]",($master_table->has_next_page?('?'.$url_param-
     <td class=""><?=h($row->name);?></td>
 -->
     <td class=""><?=h($row->short_name_10);?></td>
+    <td class=""><?=h($row->affiliation_name);?></td>
+    <td class=""><?=h($row->trainer_name);?></td>
     <td class="<?=!$row->is_anonymous?'':'disabled'?>"><?=h($row->is_anonymous?'管理用':'通常');?></td>
     <td><?=$row->is_enabled?'有効':'無効化中'?></td>
     <td><?=(new MkTagA('編集',$url))?></td>
