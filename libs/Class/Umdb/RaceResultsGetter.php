@@ -14,6 +14,7 @@ class RaceResultsGetter{
     public bool $hasAfterNote=false;
     public bool $hasThisweek=false;
     public bool $hasSps=false;
+    public int $rowNumber=0;
     
     private int $raceYear;
 
@@ -148,6 +149,7 @@ class RaceResultsGetter{
             //$table_data[]=$data;
             $table_data[]=$row;
         }
+        $this->rowNumber=count($table_data);
         return $table_data;
     }
 }

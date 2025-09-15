@@ -68,6 +68,7 @@ $resultsGetter->addOrderParts([
 $table_data=$resultsGetter->getTableData();
 $hasThisweek=$resultsGetter->hasThisweek;
 $hasSps=$resultsGetter->hasSps;
+$rowNumber=$resultsGetter->rowNumber;
 $mode_umm=false;
 switch($setting->age_view_mode){
     case Setting::AGE_VIEW_MODE_UMAMUSUME:
