@@ -101,6 +101,10 @@ foreach($table_data as $key => $data){
         if((string)$newResult->race_previous_note != $input){
             $newResult->race_previous_note = $input;
             $changed['race_previous_note'] = $has_change = true;
+            if($input!==''){
+                // 前メモの追加がある場合は元が前メモ0件でも有無フラグをオンにする
+                $resultsGetter->hasPreviousNote=true;
+            }
         }
     }
     if(isset($inputHorseResultRow['race_after_note'])){
@@ -108,6 +112,10 @@ foreach($table_data as $key => $data){
         if((string)$newResult->race_after_note != $input){
             $newResult->race_after_note = $input;
             $changed['race_after_note'] = $has_change = true;
+            if($input!==''){
+                // 後メモの追加がある場合は元が後メモ0件でも有無フラグをオンにする
+                $resultsGetter->hasAfterNote=true;
+            }
         }
     }
     if($has_change===true){
