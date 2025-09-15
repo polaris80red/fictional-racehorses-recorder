@@ -176,7 +176,14 @@ $latest_horse_exists=false;
     <td class="sex_<?=h($data->sex)?>"><?=h($age_sex_str)?></td>
     <td><?=h($raceResult->handicap)?></td>
     <?php if(!$mode_umm): ?>
-        <td style="<?=$data->jockeyRow->is_anonymous?'color:#999;':''?>"><?=h($data->jockeyName??'')?></td>
+        <td style="<?=$data->jockeyRow->is_anonymous?'color:#999;':''?>">
+            <?=!$data->jockeyName?'':(new MkTagA($data->jockeyName,InAppUrl::to('race/list/in_week_jockey.php',[
+                'year'=>$race->year,
+                'week'=>$race->week_id,
+                'jockey'=>$raceResult->jockey_name,
+                'show_result'=>false,
+                ])))?>
+        </td>
     <?php endif; ?>
     <td><?=h($data->tc)?></td>
     <?php if(!$mode_umm): ?>

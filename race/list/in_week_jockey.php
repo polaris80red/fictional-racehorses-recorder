@@ -6,6 +6,7 @@ $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース一覧";
+$page->ForceNoindex();
 $pdo= getPDO();
 
 $year=(string)filter_input(INPUT_GET,'year');
@@ -38,6 +39,14 @@ $show_disabled=filter_input(INPUT_GET,'show_disabled',FILTER_VALIDATE_BOOL);
 $is_jra_only=filter_input(INPUT_GET,'is_jra_only',FILTER_VALIDATE_BOOL);
 $is_grade_only=filter_input(INPUT_GET,'is_grade_only',FILTER_VALIDATE_BOOL);
 
+$show_result=(function(){
+    $input=(string)filter_input(INPUT_GET,'show_result');
+    if($input!==''){
+        return filter_var($input,FILTER_VALIDATE_BOOL);
+    }
+    return true;
+})();
+
 $url_params=new UrlParams();
 $url_params->set('year',$year);
 if($month){ $url_params->set('month',$month);}
@@ -51,6 +60,7 @@ if($umm_month_turn){ $url_params->set('turn',$umm_month_turn);}
 if($show_disabled){ $url_params->set('show_disabled',true);}
 if($is_jra_only){ $url_params->set('is_jra_only',true);}
 if($is_grade_only){ $url_params->set('is_grade_only',true);}
+if($show_result===false){ $url_params->set('show_result',false);}
 
 $page_title_text1="";
 $page_title_text1.=  $setting->getYearSpecialFormat($year);
@@ -67,7 +77,7 @@ if($week_id>0){
         $page_title_text2.= (($umm_month_turn===2)?'後半':'前半');
     }
 }
-$page_title_text2.= "の '{$jockey_name}' 騎乗レース一覧";
+$page_title_text2.= "の '{$jockey_name}' 騎乗".($show_result?'結果':'予定')."一覧";
 $page->title=$page_title_text1.$page_title_text2;
 
 # レース情報取得
@@ -233,7 +243,7 @@ $table_rows=$search_results->getAll();
     <th>格付</th>
     <th>名称</th>
     <th>騎乗馬</th>
-    <th>着順</th>
+    <?php if($show_result):?><th>着順</th><?php endif;?>
 </tr>
 <?php
 $func_get_horse_link=function($id,$name_ja,$name_en)use($page){
@@ -310,7 +320,8 @@ $resultGetter=new class($pdo,$jockey_name){
         <td><?=h($race->course_type.$race->distance)?></td>
         <td class="grade"><?=h(($raceGrade->short_name??'')?:$race->grade)?></td>
         <?php
-            $a_tag=new MkTagA($race->race_name,$page->getRaceResultUrl($race->race_id));
+            $url=$show_result?$page->getRaceResultUrl($race->race_id):InAppUrl::to('race/syutsuba.php',['race_id'=>$race->race_id]);
+            $a_tag=new MkTagA($race->race_name,$url);
             $a_tag->title($race->race_name.($race->caption?'：'.$race->caption:''));
         ?>
         <td><?=$a_tag?></td>
@@ -318,7 +329,9 @@ $resultGetter=new class($pdo,$jockey_name){
             $horse_tag=new MkTagA($horse->name_ja?:$horse->name_en,InAppUrl::to('horse/',['horse_id'=>$horse->horse_id]));
         ?>
         <td><?=$horse_tag?></td>
-        <td><?=h($raceResult->result_number)?>着</td>
+        <?php if($show_result):?>
+            <td><?=h($raceResult->result_number)?>着</td>
+        <?php endif;?>
     </tr>
 <?php endforeach; ?>
 </table>
