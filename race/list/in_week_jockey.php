@@ -34,6 +34,16 @@ if(!$jockey_name){
     $page->printCommonErrorPage();
     exit;
 }
+$jockey=Jockey::getByUniqueName($pdo,$jockey_name);
+$jockey_view_name=$jockey_name;
+if($jockey!==false){
+    // レコードがある場合
+    if($jockey->is_anonymous==1 && !Session::is_logined()){
+        $jockey_view_name="□□□□";
+    }else{
+        $jockey_view_name=$jockey->short_name_10?:$jockey_name;
+    }
+}
 
 $show_disabled=filter_input(INPUT_GET,'show_disabled',FILTER_VALIDATE_BOOL);
 $is_jra_only=filter_input(INPUT_GET,'is_jra_only',FILTER_VALIDATE_BOOL);
@@ -77,7 +87,7 @@ if($week_id>0){
         $page_title_text2.= (($umm_month_turn===2)?'後半':'前半');
     }
 }
-$page_title_text2.= "の '{$jockey_name}' 騎乗".($show_result?'結果':'予定')."一覧";
+$page_title_text2.= "の '{$jockey_view_name}' 騎乗".($show_result?'結果':'予定')."一覧";
 $page->title=$page_title_text1.$page_title_text2;
 
 # レース情報取得
@@ -215,7 +225,7 @@ $race123horseGetter=new Race123HorseGetter($pdo);
 $search_results=new RaceSearchResults($stmt);
 $table_rows=$search_results->getAll();
 ?><hr>
-<div><span style="font-weight: bold;"><?=$jockey_name?></span> 騎乗<?=$show_result?'結果':'予定'?></div>
+<div><span style="font-weight: bold;"><?=$jockey_view_name?></span> 騎乗<?=$show_result?'結果':'予定'?></div>
 [ <?php echo (new MkTagA('全て',!$is_jra_only&&!$is_grade_only?'':('?'.$url_params->toString([],['is_jra_only','is_grade_only'])))); ?>
 ｜<?php echo (new MkTagA('中央のみ',$is_jra_only&&!$is_grade_only?'':('?'.$url_params->toString(['is_jra_only'=>true],['is_grade_only'])))); ?>
  ]
