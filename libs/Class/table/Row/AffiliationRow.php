@@ -7,10 +7,10 @@ class AffiliationRow extends TableRow {
         'is_enabled',
     ];
     public const STR_COLUMNS=[
-        'name',
+        'unique_name',
     ];
     public $id;
-    public $name;
+    public $unique_name;
     public $sort_number;
     public $show_in_select_box=1;
     public $is_enabled=1;

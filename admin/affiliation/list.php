@@ -63,7 +63,7 @@ $next_tag  =new MkTagA("[次へ]",($race_grade_table->has_next_page?('?'.$url_pa
     $url="./form.php?id={$row->id}";
 ?>
     <td class="col_id"><?=h($row->id);?></td>
-    <td class="col_name"><?=h($row->name);?></td>
+    <td class="col_name"><?=h($row->unique_name);?></td>
     <td class="col_sort_number"><?=h($row->sort_number);?></td>
     <td class="<?=$row->show_in_select_box?'':'select_box_disabled'?>"><?=h($row->show_in_select_box?'表示':'非表示');?></td>
     <td><?=h($row->is_enabled?'有効':'無効化中');?></td>

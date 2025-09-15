@@ -23,7 +23,7 @@ if($id>0){
     $check_form_item=($TableClass)::getById($pdo,$id);
     $form_item->id=$id;
 }
-$form_item->name=filter_input(INPUT_POST,'name');
+$form_item->unique_name=filter_input(INPUT_POST,'unique_name');
 $form_item->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
 $form_item->sort_number=filter_input(INPUT_POST,'sort_number');
 if($form_item->sort_number===''){
@@ -46,7 +46,7 @@ do{
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
     }
-    if($form_item->name===''){
+    if($form_item->unique_name===''){
         $error_exists=true;
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定名称未設定");

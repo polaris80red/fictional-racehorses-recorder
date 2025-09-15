@@ -28,7 +28,7 @@ if($input_id>0){
 if($input_id==0){
     $affiliation=new AffiliationRow();
     if($input_name){
-        $affiliation->name=$input_name;
+        $affiliation->unique_name=$input_name;
     }
 }
 
@@ -66,8 +66,15 @@ if($input_id==0){
     ?></td>
 </tr>
 <tr>
-    <th rowspan="1">名称</th>
-    <td class="in_input"><input type="text" name="name" class="required" value="<?=h($affiliation->name)?>"<?=h(($affiliation->id||$input_name)?' readonly':'')?> required></td>
+    <?php if($affiliation->id): ?>
+        <th>キー名称</th>
+        <td><?=(MkTagInput::Hidden('unique_name',$affiliation->unique_name)).h($affiliation->unique_name)?></td>
+    <?php else: ?>
+        <th>キー名称</th>
+        <td class="in_input">
+            <input type="text" name="unique_name" class="required" required value="<?=h($affiliation->unique_name)?>">
+        </td>
+    <?php endif; ?>
 </tr>
 <tr>
     <th>表示順補正</th>

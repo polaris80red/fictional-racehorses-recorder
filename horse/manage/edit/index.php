@@ -141,7 +141,7 @@ $affiliation_list=Affiliation::getForSelectbox($pdo);
 $affiliation_name_list=[];
 if(count($affiliation_list)>0){
     foreach($affiliation_list as $row){
-        $affiliation_name_list[]=$row['name'];
+        $affiliation_name_list[]=$row['unique_name'];
     }
 }
 ?>
