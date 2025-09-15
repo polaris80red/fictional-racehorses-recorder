@@ -336,7 +336,19 @@ $prev_date='';
         <?php if($show_result):?>
             <td class="col_result_number"><?=h($raceResult->result_text?:($raceResult->result_number?$raceResult->result_number.'着':''))?></td>
         <?php endif;?>
-        <td><?=$raceResult->trainer_name?:$horse->trainer_name?></td>
+        <?php
+            $trainer_un=$raceResult->trainer_name?:$horse->trainer_name;
+            $trainer_view_name=$trainer_un;
+            $trainer=Trainer::getByUniqueName($pdo,$trainer_un);
+            if($trainer){
+                if($trainer->is_anonymous && !Session::is_logined()){
+                    $trainer_view_name='□□□□';
+                }else{
+                    $trainer_view_name=$trainer->short_name_10?:$trainer_un;
+                }
+            }
+        ?>
+        <td><?=h($trainer_view_name)?></td>
     </tr>
 <?php endforeach; ?>
 </table>
