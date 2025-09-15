@@ -104,6 +104,7 @@ $has_change=false;
 </tr>
 <?php foreach ($table_data as $data):?>
     <?php
+        $has_change=false;
         $horse=$data->horseRow;
         $raceResult=$data->resultRow;
         $newResult= new RaceResults();

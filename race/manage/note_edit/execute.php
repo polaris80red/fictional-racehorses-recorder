@@ -80,6 +80,7 @@ if($prev_is_changed||$after_is_changed){
 // レース個別結果の前後メモの更新処理
 $additionalData=[];
 foreach($table_data as $key => $data){
+    $has_change=false;
     $horse=$data->horseRow;
     $raceResult=$data->resultRow;
     $newResult= new RaceResults();
