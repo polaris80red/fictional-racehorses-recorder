@@ -284,6 +284,7 @@ CREATE TABLE `mst_world` (
   `guest_visible` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'ログインしていないユーザーにも表示する',
   `auto_id_prefix` text NOT NULL DEFAULT '' COMMENT '自動IDの接頭語',
   `sort_priority` int(11) NOT NULL DEFAULT 0 COMMENT '表示順優先度',
+  `sort_number` int(11) DEFAULT NULL COMMENT '表示順補正',
   `is_enabled` tinyint(4) NOT NULL DEFAULT 1 COMMENT '論理削除用',
   `created_by` int(11) DEFAULT NULL COMMENT '作成者',
   `updated_by` int(11) DEFAULT NULL COMMENT '最終更新者',
