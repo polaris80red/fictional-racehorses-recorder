@@ -10,9 +10,10 @@ class World extends Table{
         'id',
         'guest_visible',
         'sort_priority',
+        'sort_number',
         'is_enabled',
     ];
-    protected const DEFAULT_ORDER_BY='`sort_priority` DESC, `id` ASC';
+    protected const DEFAULT_ORDER_BY='`sort_priority` DESC, `sort_number` IS NULL, `sort_number` ASC, `id` ASC';
 
     public $record_exists = false;
 
@@ -23,6 +24,7 @@ class World extends Table{
     public $auto_id_prefix='';
 
     public $sort_priority=0;
+    public $sort_number=null;
     public $is_enabled=1;
     
     public function __construct(PDO|null $pdo=null, int $key=0){

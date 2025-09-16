@@ -27,6 +27,7 @@ $story_list=WorldStory::getAll($pdo);
     <?php $page->printScriptLink('js/functions.js'); ?>
 <style>
     td.select_box_disabled { background-color: #EEE; }
+    td.number { text-align: right;}
 </style>
 </head>
 <body>
@@ -41,7 +42,8 @@ $story_list=WorldStory::getAll($pdo);
     <th>ID</th>
     <th>名称</th>
     <th>非ログイン時</th>
-    <th>表示順優先度</th>
+    <th>表示順<br>優先度</th>
+    <th>表示順<br>補正</th>
     <th>選択肢</th>
     <th colspan="2"></th>
 </tr>
@@ -50,10 +52,11 @@ $story_list=WorldStory::getAll($pdo);
 <?php
     $urlParams=new UrlParams(['id'=>$world['id']]);
 ?>
-    <td><?=h($world['id'])?></td>
+    <td class="number"><?=h($world['id'])?></td>
     <td><?=h($world['name'])?></td>
     <td class="<?=$world['guest_visible']?'':'select_box_disabled'?>"><?=$world['guest_visible']?'表示':'非表示'?></td>
-    <td><?=h($world['sort_priority'])?></td>
+    <td class="number"><?=h($world['sort_priority'])?></td>
+    <td class="number"><?=h($world['sort_number'])?></td>
     <td><?=$world['is_enabled']?'表示':'非表示'?></td>
     <td><?=(new MkTagA('編','./form.php?'.$urlParams))?></td>
     <td><?=(new MkTagA('ID置換','update_id/form.php?'.$urlParams))?></td>

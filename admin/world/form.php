@@ -76,6 +76,10 @@ if($input_id>0){
     <td class="in_input"><input type="number" name="sort_priority" value="<?=h($world->sort_priority)?>"></td>
 </tr>
 <tr>
+    <th>表示順補正</th>
+    <td class="in_input"><input type="number" name="sort_number" value="<?=h($world->sort_number)?>" placeholder="同優先度内昇順"></td>
+</tr>
+<tr>
     <th>選択肢</th>
     <td>
         <label><?php HTPrint::Radio('is_enabled',1,$world->is_enabled); ?>表示</label><br>

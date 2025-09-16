@@ -21,6 +21,8 @@ $world->name=filter_input(INPUT_POST,'name');
 $world->guest_visible=filter_input(INPUT_POST,'guest_visible',FILTER_VALIDATE_BOOL)?1:0;
 $world->auto_id_prefix=filter_input(INPUT_POST,'auto_id_prefix');
 $world->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
+$sort_number=(string)filter_input(INPUT_POST,'sort_number');
+$world->sort_number = $sort_number===''?null:(int)$sort_number;
 $world->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
 $error_exists=false;
@@ -93,6 +95,10 @@ if($input_world_id>0){
 <tr>
     <th>表示順優先度</th>
     <td><?php HTPrint::HiddenAndText('sort_priority',$world->sort_priority); ?></td>
+</tr>
+<tr>
+    <th>表示順補正</th>
+    <td><?php HTPrint::HiddenAndText('sort_number',$world->sort_number); ?></td>
 </tr>
 <?php if($world->id!==0): ?>
 <tr>
