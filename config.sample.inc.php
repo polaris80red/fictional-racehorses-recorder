@@ -102,6 +102,14 @@ $cfg['DISPLAY_CONFIG_SOURCE'] = 'db';
 // デフォルトの表示設定のソースがファイルの場合のパス
 $cfg['DISPLAY_CONFIG_JSON_PATH'] = $cfg['STORAGE_DIR'].'/display_settings.json';
 
+// 同ドメインに複数設置する際のセッションの識別キー
+$cfg['APP_INSTANCE_KEY'] = '';
+/**   APP_INSTANCE_KEY
+ *      空の場合は自動的にアプリルートのディレクトリ名を使用します
+ *      同じドメインに複数設置し、
+ *      なおかつ /xxx/yyy と /zzz/yyy のようにアプリルート名が被る場合に別の名前を設定してください
+ */
+
 $cfg['ANNONYMOUS_HORSE_NAME'] ='□□□□□□';
 
 $cfg['EDIT_MENU_TOGGLE']=false;
