@@ -194,10 +194,10 @@ class Page{
 </span>
 <?php
 $race_history_count=(new RaceAccessHistory())->count();
-if( !empty($_SESSION[Session::PUBLIC_PARAM_KEY]['latest_horse']['id'])||$race_history_count>0): ?>
+if( !empty($_SESSION[APP_INSTANCE_KEY][Session::PUBLIC_PARAM_KEY]['latest_horse']['id'])||$race_history_count>0): ?>
 <span class="nowrap">（ 最新：
-<?php if(!empty($_SESSION[Session::PUBLIC_PARAM_KEY]['latest_horse']['id'])):
-$url=$pref.'horse/?horse_id='.$_SESSION[Session::PUBLIC_PARAM_KEY]['latest_horse']['id']; ?>
+<?php if(!empty($_SESSION[APP_INSTANCE_KEY][Session::PUBLIC_PARAM_KEY]['latest_horse']['id'])):
+$url=$pref.'horse/?horse_id='.$_SESSION[APP_INSTANCE_KEY][Session::PUBLIC_PARAM_KEY]['latest_horse']['id']; ?>
 <a href="<?=$url?>">[馬]</a>
 <?php endif; ?>
 <?php if($race_history_count>0):

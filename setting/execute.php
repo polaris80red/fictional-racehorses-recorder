@@ -64,33 +64,38 @@ if(Session::is_logined() && $save_to_file){
 }
 
 // 年上限・下限が絶対値で設定によっては範囲外になりやすいので設定変更後の初期値に強制変換（暫定）
-//unset($_SESSION['race_list']);
-if(isset($_SESSION['race_list'])){
-    if(isset($_SESSION['race_list']['max_year'])
-        && isset($_SESSION['setting']['year_select_max_diff'])
-        && isset($_SESSION['setting']['select_zero_year'])
+//unset($_SESSION[APP_INSTANCE_KEY]['race_list']);
+if(isset($_SESSION[APP_INSTANCE_KEY]['race_list'])){
+    $setting_array=$app_session=$_SESSION[APP_INSTANCE_KEY]['setting'];
+    $race_list=$_SESSION[APP_INSTANCE_KEY]['race_list'];
+    if(isset($race_list['max_year'])
+        && isset($setting_array['year_select_max_diff'])
+        && isset($setting_array['select_zero_year'])
     ){
-        $_SESSION['race_list']['max_year']
-        =$_SESSION['setting']['select_zero_year']+$_SESSION['setting']['year_select_max_diff'];
+        $race_list['max_year']
+        =$setting_array['select_zero_year']+$setting_array['year_select_max_diff'];
     }
-    if(isset($_SESSION['race_list']['min_year'])
-        && isset($_SESSION['setting']['year_select_min_diff'])
-        && isset($_SESSION['setting']['select_zero_year'])
+    if(isset($race_list['min_year'])
+        && isset($setting_array['year_select_min_diff'])
+        && isset($setting_array['select_zero_year'])
     ){
-        $_SESSION['race_list']['min_year']
-        =$_SESSION['setting']['select_zero_year']-$_SESSION['setting']['year_select_min_diff'];
+        $race_list['min_year']
+        =$setting_array['select_zero_year']-$setting_array['year_select_min_diff'];
     }
-    if(isset($_SESSION['race_list']['year']) &&
-        strval($_SESSION['race_list']['year'])!=='' &&
-        isset($_SESSION['setting']['select_zero_year'])){
-            // 新しい範囲から外れている場合はリセット（大きく外れる日程対策）
-            if($_SESSION['race_list']['year']>$_SESSION['race_list']['max_year']){
-                $_SESSION['race_list']['year']=$_SESSION['setting']['select_zero_year'];
-            }
-            if($_SESSION['race_list']['year']<$_SESSION['race_list']['min_year']){
-                $_SESSION['race_list']['year']=$_SESSION['setting']['select_zero_year'];
-            }
+    if(isset($race_list['year']) &&
+        strval($race_list['year'])!=='' &&
+        isset($setting_array['select_zero_year']))
+    {
+        // 新しい範囲から外れている場合はリセット（大きく外れる日程対策）
+        if($race_list['year']>$race_list['max_year']){
+            $race_list['year']=$setting_array['select_zero_year'];
+        }
+        if($race_list['year']<$race_list['min_year']){
+            $race_list['year']=$setting_array['select_zero_year'];
+        }
     }
+    $_SESSION[APP_INSTANCE_KEY]['setting']=$setting_array;
+    $_SESSION[APP_INSTANCE_KEY]['race_list']=$race_list;
 }
 header('Location: ./');
 exit;

@@ -9,7 +9,7 @@ $page->title="ログアウト - ".SITE_NAME;
 $page->ForceNoindex();
 $session=new Session();
 $session->Logout();
-$_SESSION=[];
+$_SESSION[APP_INSTANCE_KEY]=[];
 session_destroy();
 ?><!DOCTYPE html>
 <html lang="ja">

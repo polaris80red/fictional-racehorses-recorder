@@ -13,8 +13,8 @@ class FormCsrfToken {
 
     public function __construct()
     {
-        $this->sessionToken=$_SESSION[self::TOKEN_KEY]??'';
-        unset($_SESSION[self::TOKEN_KEY]);
+        $this->sessionToken=$_SESSION[APP_INSTANCE_KEY][self::TOKEN_KEY]??'';
+        unset($_SESSION[APP_INSTANCE_KEY][self::TOKEN_KEY]);
         $this->generateToken();
     }
 
@@ -24,7 +24,7 @@ class FormCsrfToken {
     protected function generateToken(): void
     {
         $this->new_token=bin2hex(random_bytes(32));
-        $_SESSION[self::TOKEN_KEY]=$this->new_token;
+        $_SESSION[APP_INSTANCE_KEY][self::TOKEN_KEY]=$this->new_token;
     }
 
     /**

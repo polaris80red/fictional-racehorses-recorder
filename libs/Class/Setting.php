@@ -87,7 +87,7 @@ class Setting{
     public function __construct(bool $activateToSession = true ){
         if(!$activateToSession){ return false; }
         $this->setDefault();
-        if(!isset($_SESSION['setting'])){
+        if(!isset($_SESSION[APP_INSTANCE_KEY]['setting'])){
             //  セッション側に設定がない場合は保存してある値の設定を試みる
             if(DISPLAY_CONFIG_SOURCE==='json'){
                 // JSONファイルから取得する
@@ -136,8 +136,8 @@ class Setting{
      * セッションから設定を取得
      */
     public function getBySession($param_name,$if_not_set_return=false){
-        if(isset($_SESSION['setting'][$param_name])){
-            return $_SESSION['setting'][$param_name];
+        if(isset($_SESSION[APP_INSTANCE_KEY]['setting'][$param_name])){
+            return $_SESSION[APP_INSTANCE_KEY]['setting'][$param_name];
         }
         return $if_not_set_return;
     }
@@ -145,7 +145,7 @@ class Setting{
      * セッションからこのオブジェクトに取得
      */
     public function setSettingBySession(){
-        $this->setByStdClass($_SESSION['setting']);
+        $this->setByStdClass($_SESSION[APP_INSTANCE_KEY]['setting']);
         return;
     }
     /**
@@ -248,14 +248,14 @@ class Setting{
     public function saveToSession($param_name,$value){
         if(!isset($this->$param_name)){return false;}
         $this->$param_name=$value;
-        $_SESSION['setting'][$param_name]=$value;
+        $_SESSION[APP_INSTANCE_KEY]['setting'][$param_name]=$value;
         return true;        
     }
     /**
      * 一通りの設定をセッションに保存する
      */
     public function saveToSessionAll(){
-        $_SESSION['setting']=$this->getSettingArray();
+        $_SESSION[APP_INSTANCE_KEY]['setting']=$this->getSettingArray();
         $this->setConstLikeParam();
     }
     public $year_month_separator='';

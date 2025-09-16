@@ -9,8 +9,8 @@ class Search{
     }
     protected function getSessionOrGet($param_name){
         $param='';
-        if(isset($_SESSION[static::SESSION_PARENT_KEY][$param_name])){
-            $param=$_SESSION[static::SESSION_PARENT_KEY][$param_name];
+        if(isset($_SESSION[APP_INSTANCE_KEY][static::SESSION_PARENT_KEY][$param_name])){
+            $param=$_SESSION[APP_INSTANCE_KEY][static::SESSION_PARENT_KEY][$param_name];
         }
         if(isset($_GET[$param_name])){
             $param=filter_input(INPUT_GET,$param_name);
@@ -20,8 +20,8 @@ class Search{
     protected function getBySession($param_name, $default=''){
         $param=$default;
         
-        if(isset($_SESSION[static::SESSION_PARENT_KEY][$param_name])){
-            $param=$_SESSION[static::SESSION_PARENT_KEY][$param_name];
+        if(isset($_SESSION[APP_INSTANCE_KEY][static::SESSION_PARENT_KEY][$param_name])){
+            $param=$_SESSION[APP_INSTANCE_KEY][static::SESSION_PARENT_KEY][$param_name];
         }
         return $param;
     }
@@ -33,7 +33,7 @@ class Search{
         $this->{$param_name}=$value;
     }
     protected function setToSession(string $param_name,$value){
-        $_SESSION[static::SESSION_PARENT_KEY][$param_name]=$value;
+        $_SESSION[APP_INSTANCE_KEY][static::SESSION_PARENT_KEY][$param_name]=$value;
     }
     protected function setToSessionByParamName(string $param_name){
         $this->setToSession($param_name,$this->{$param_name});
@@ -44,10 +44,10 @@ class Search{
         }
     }
     protected function setBySessionByParamNameArray(array $params){
-        if(!isset($_SESSION[static::SESSION_PARENT_KEY])){
+        if(!isset($_SESSION[APP_INSTANCE_KEY][static::SESSION_PARENT_KEY])){
             return false;
         }
-        $session=$_SESSION[static::SESSION_PARENT_KEY];
+        $session=$_SESSION[APP_INSTANCE_KEY][static::SESSION_PARENT_KEY];
         foreach($params as $param_name){
             if(isset($session[$param_name])){
                 $this->{$param_name}=$session[$param_name];

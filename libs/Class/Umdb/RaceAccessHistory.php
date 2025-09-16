@@ -26,13 +26,13 @@ class RaceAccessHistory{
         return $this;
     }
     public function loadFromSession(){
-        if(isset($_SESSION[self::Session_Key])){
-            $this->access_list=$_SESSION[self::Session_Key];
+        if(isset($_SESSION[APP_INSTANCE_KEY][self::Session_Key])){
+            $this->access_list=$_SESSION[APP_INSTANCE_KEY][self::Session_Key];
         }
         return $this;
     }
     public function saveToSession(){
-        $_SESSION[self::Session_Key]=$this->access_list;
+        $_SESSION[APP_INSTANCE_KEY][self::Session_Key]=$this->access_list;
         return $this;
     }
     public function toArray(){
