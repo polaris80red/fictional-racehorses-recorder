@@ -1,0 +1,20 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+
+INSERT INTO `mst_themes` (`id`, `name`, `dir_name`, `sort_priority`, `sort_number`, `is_enabled`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+(1, 'デフォルト', '', 1000, NULL, 1, NULL, NULL, NULL, NULL),
+(2, 'JRA風', 'jra-like', 100, NULL, 1, NULL, NULL, NULL, NULL),
+(3, 'netkeiba風', 'netkeiba-like', 100, NULL, 1, NULL, NULL, NULL, NULL),
+(4, 'スマホnetkeiba風', 'netkeiba-sp-like', 100, NULL, 1, NULL, NULL, NULL, NULL);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
