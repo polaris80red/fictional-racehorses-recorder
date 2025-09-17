@@ -72,6 +72,7 @@ do{
         $error_msgs[]="競走馬とレース情報のワールドが一致していません";
         break;
     }
+    $input->varidate();
     if($input->error_exists){
         $page->addErrorMsgArray($input->error_msgs);
         $page->printCommonErrorPage();
