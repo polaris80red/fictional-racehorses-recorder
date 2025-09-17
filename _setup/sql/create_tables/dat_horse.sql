@@ -9,7 +9,7 @@ SET time_zone = "+00:00";
 
 
 CREATE TABLE `dat_horse` (
-  `horse_id` varchar(32) NOT NULL COMMENT 'ID',
+  `horse_id` varchar(100) NOT NULL COMMENT 'ID',
   `world_id` int(11) NOT NULL DEFAULT 0 COMMENT 'ワールドID',
   `name_ja` varchar(18) NOT NULL COMMENT '日本語名',
   `name_en` varchar(18) NOT NULL DEFAULT '' COMMENT '英字名',
@@ -23,9 +23,9 @@ CREATE TABLE `dat_horse` (
   `breeder_name` varchar(50) DEFAULT NULL COMMENT '生産者',
   `breeding_country` varchar(3) DEFAULT NULL COMMENT '生産国',
   `is_affliationed_nar` tinyint(4) NOT NULL DEFAULT 0 COMMENT '[地]地方所属',
-  `sire_id` varchar(32) NOT NULL DEFAULT '' COMMENT '父ID',
+  `sire_id` varchar(100) NOT NULL COMMENT '父ID',
   `sire_name` varchar(18) NOT NULL DEFAULT '' COMMENT '父名',
-  `mare_id` varchar(32) NOT NULL DEFAULT '' COMMENT '母ID',
+  `mare_id` varchar(100) NOT NULL COMMENT '母ID',
   `mare_name` varchar(18) NOT NULL DEFAULT '' COMMENT '母名',
   `bms_name` varchar(18) NOT NULL DEFAULT '' COMMENT '母父名',
   `is_sire_or_dam` tinyint(4) NOT NULL DEFAULT 0 COMMENT '種牡馬または繁殖牝馬',

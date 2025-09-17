@@ -10,8 +10,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `dat_race_results` (
   `number` int(11) NOT NULL COMMENT 'サロゲートキー',
-  `race_id` varchar(32) NOT NULL,
-  `horse_id` varchar(32) NOT NULL,
+  `race_id` varchar(100) NOT NULL,
+  `horse_id` varchar(100) NOT NULL,
   `result_number` int(11) DEFAULT NULL,
   `result_order` int(11) DEFAULT NULL COMMENT '着順表示順',
   `result_before_demotion` tinyint(4) NOT NULL DEFAULT 0 COMMENT '降着馬の場合のみ入線順',

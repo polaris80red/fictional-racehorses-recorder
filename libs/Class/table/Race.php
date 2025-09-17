@@ -79,7 +79,7 @@ class Race extends Table{
             $this->error_msgs[]="IDに使用できない文字（その他）を含んでいます";
             $this->error_exists=true;
         }
-        $this->validateLength($race_id,'レースID',32);
+        $this->validateLength($race_id,'レースID',100);
         $this->race_id=$race_id;
         return $this->error_exists?false:true;
     }

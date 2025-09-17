@@ -59,7 +59,7 @@ class Horse extends Table{
             $this->error_msgs[]="IDに使用できない文字（その他）を含んでいます";
             $this->error_exists=true;
         }
-        $this->validateLength($horse_id,'競走馬ID',32);
+        $this->validateLength($horse_id,'競走馬ID',100);
         $this->horse_id=$horse_id;
         return $this->error_exists?false:true;
     }
@@ -112,13 +112,13 @@ class Horse extends Table{
 
         $this->is_affliationed_nar=filter_input(INPUT_POST,'is_affliationed_nar');
         $this->sire_id=filter_input(INPUT_POST,'sire_id');
-        $this->validateLength($this->sire_id,'父ID',32);
+        $this->validateLength($this->sire_id,'父ID',100);
 
         $this->sire_name=filter_input(INPUT_POST,'sire_name');
         $this->validateLength($this->sire_name,'父名',18);
 
         $this->mare_id=filter_input(INPUT_POST,'mare_id');
-        $this->validateLength($this->mare_id,'母ID',32);
+        $this->validateLength($this->mare_id,'母ID',100);
 
         $this->mare_name=filter_input(INPUT_POST,'mare_name');
         $this->validateLength($this->mare_name,'母名',18);
