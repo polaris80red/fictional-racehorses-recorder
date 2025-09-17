@@ -66,7 +66,8 @@ fictional-racehorses-recorder 架空競走馬戦績管理ツール
 **テーブルの構築**：
 最初に **_setup/sql/create_tables/** ディレクトリ内の19個の.sqlファイルをインポートしてください。必須のテーブルを空で作成します。
 
-**基本的なマスタ**
+**基本的なマスタデータの導入**：
+続いて **_setup/sql/data/** ディレクトリ内の.sqlファイルをインポートしてください。基本的なマスタデータを登録します。
 - **mst_affiliation.sql**：所属マスタ
 - **mst_affiliation__optional_nar.sql**：(オプション)所属マスタの各地方競馬
     - [地方競馬 データ情報](https://www.keiba.go.jp/KeibaWeb/DataRoom/DataRoomTop) の所属場プルダウン順）
