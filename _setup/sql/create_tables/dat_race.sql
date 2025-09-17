@@ -20,7 +20,7 @@ CREATE TABLE `dat_race` (
   `caption` text NOT NULL DEFAULT '' COMMENT '補足情報',
   `grade` varchar(5) NOT NULL COMMENT 'グレード',
   `age_category_id` int(11) NOT NULL DEFAULT 0 COMMENT '年齢条件ID',
-  `age` varchar(2) DEFAULT NULL COMMENT '年齢条件',
+  `age` varchar(50) DEFAULT NULL COMMENT '年齢条件',
   `sex_category_id` int(11) NOT NULL DEFAULT 0 COMMENT '性別条件ID',
   `weather` varchar(10) DEFAULT NULL COMMENT '天候',
   `track_condition` text NOT NULL DEFAULT '' COMMENT '馬場状態',
