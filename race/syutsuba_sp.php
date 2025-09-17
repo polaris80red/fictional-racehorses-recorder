@@ -301,8 +301,14 @@ foreach($data['horse_results'] as $prev_race){
         echo "</span>";
         echo "</div>\n";
         echo "<div style=\"clear:both;\">\n";
-        echo h($r->course_type.$r->distance)."<br>\n";
-
+        echo "<div>";
+        echo "<span style=\"display:inline-block;float:left;\">".h($r->course_type.$r->distance)."</span>";
+        echo "<span style=\"display:inline-block;float:right;\">";
+        echo h($r->track_condition);
+        echo h($r->time?'　'.$r->time:'');
+        echo "</span>";
+        echo "</div>\n";
+        echo "<div style=\"clear:both;\">\n";
         if(!empty($r->winner_or_runner_up['horse_id'])){
             echo '<a href="'.$page->to_app_root_path.'horse/?horse_id='.h($r->winner_or_runner_up['horse_id']).'">';
             echo h($r->winner_or_runner_up['name_ja']?:$r->winner_or_runner_up['name_en']);
@@ -310,6 +316,7 @@ foreach($data['horse_results'] as $prev_race){
         }else{
             echo '&nbsp;';
         }
+        echo "</div>\n";
         echo "</div>\n";
     }
     ?></td><?php

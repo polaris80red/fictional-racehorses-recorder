@@ -92,6 +92,7 @@ class SyutsubaTableGetter {
             ,`race`.`race_course_name`
             ,`race`.`course_type`
             ,`race`.`distance`
+            ,`race`.`track_condition`
             ,`race`.`grade`
             ,`race`.`date`
             ,`race`.`year`
