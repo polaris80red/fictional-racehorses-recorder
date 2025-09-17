@@ -55,6 +55,7 @@ switch($setting->age_view_mode){
 }
 $has_change=false;
 
+$has_error=false;
 $input_previous_note=(string)filter_input(INPUT_POST,'previous_note');
 if((string)$race->previous_note!==$input_previous_note){
     $race->previous_note=$input_previous_note;
@@ -64,6 +65,9 @@ $input_after_note=(string)filter_input(INPUT_POST,'after_note');
 if((string)$race->after_note!==$input_after_note){
     $race->after_note=$input_after_note;
     $after_is_changed = $has_change = true;
+}
+if(!$race->varidate()){
+    $has_error=true;
 }
 $additionalData=[];
 foreach($table_data as $key=>$data){
@@ -95,6 +99,9 @@ foreach($table_data as $key=>$data){
             $newResult->race_after_note = $input;
             $changed['race_after_note'] = $has_change = true;
         }
+    }
+    if(!$newResult->varidate()){
+        $has_error=true;
     }
     $addData->newResult=$newResult;
     $addData->changed=$changed;
@@ -151,6 +158,9 @@ foreach($table_data as $key=>$data){
         <input type="hidden" name="after_note" value="<?=h($race->after_note)?>">
     </td>
 </tr>
+<?php if($race->error_exists):?>
+    <tr><td colspan="2" style="color:red;"><?=nl2br(h(implode("\n",$race->error_msgs)))?></td></tr>
+<?php endif;?>
 <?php foreach ($table_data as $key => $data):?>
     <?php
         if(!isset($_POST['race'][$horse->horse_id])){
@@ -180,11 +190,14 @@ foreach($table_data as $key=>$data){
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][race_after_note]" value="<?=h($newResult->race_after_note)?>">
         </td>
     </tr>
+    <?php if($newResult->error_exists):?>
+        <tr><td colspan="2" style="color:red;"><?=nl2br(h(implode("\n",$newResult->error_msgs)))?></td></tr>
+    <?php endif;?>
 <?php endforeach;?>
 </table>
 <input type="hidden" name="race_id" value="<?=$race_id?>">
 <?php $csrf_token->printHiddenInputTag(); ?>
-<input type="submit" value="登録処理実行"<?=!$has_change?' disabled':''?>>
+<input type="submit" value="登録処理実行"<?=!$has_change||$has_error?' disabled':''?>>
 </form>
 <hr class="no-css-fallback">
 </main>
