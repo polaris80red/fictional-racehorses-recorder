@@ -171,7 +171,7 @@ class RaceResults extends Table{
         $this->validateLength($this->margin,'着差',5);
         $this->validateLength($this->f_time,'上り3f(平地)／平均1f(障害)',4);
         $this->validateLength($this->tc,'所属',10);
-        $this->validateLength($this->tc,'調教師名',32);
+        $this->validateLength($this->trainer_name,'調教師名',32);
         $this->validateLength($this->training_country,'調教国コード',3);
         $this->validateLength($this->owner_name,'馬主名',50);
         $this->validateLength($this->race_previous_note,'レース前メモ',10000);
