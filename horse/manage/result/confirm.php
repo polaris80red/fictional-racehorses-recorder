@@ -88,6 +88,7 @@ do{
         }
     }
 }while(false);
+$race_results->varidate();
 if($race_results->error_exists){
     $page->addErrorMsgArray($race_results->error_msgs);
     $page->printCommonErrorPage();

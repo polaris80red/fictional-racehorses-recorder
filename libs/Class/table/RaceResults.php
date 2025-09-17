@@ -118,7 +118,6 @@ class RaceResults extends Table{
 
         $this->result_before_demotion = (int)filter_input($input_type,'result_before_demotion');
         $this->result_text = filter_input($input_type,'result_text');
-        $this->validateLength($this->result_text,'特殊結果',8);
 
         $this->frame_number = filter_input($input_type,'frame_number');
         $this->horse_number = (int)filter_input($input_type,'horse_number');
@@ -126,23 +125,14 @@ class RaceResults extends Table{
             $this->horse_number = (int)filter_input($input_type,'horse_number_select');
         }
         $this->jockey_name = filter_input($input_type,'jockey')?:null;
-        $this->validateLength($this->jockey_name,'騎手名',32);
-
         $this->handicap = filter_input($input_type,'handicap');
-        $this->validateLength($this->handicap,'斤量',4);
-
         $this->odds = filter_input($input_type,'odds')?:null;
-        $this->validateLength($this->odds,'単勝オッズ',6);
-
         $this->favourite = (int)filter_input($input_type,'favourite');
         if($this->favourite==0){
             $this->favourite = (int)filter_input($input_type,'favourite_select');
         }
         $this->time = filter_input($input_type,'time');
-        $this->validateLength($this->time,'タイム',7);
-
         $this->margin = filter_input($input_type,'margin');
-        $this->validateLength($this->margin,'着差',5);
 
         $this->corner_1 = filter_input($input_type,'corner_1');
         $this->corner_2 = filter_input($input_type,'corner_2');
@@ -150,42 +140,46 @@ class RaceResults extends Table{
         $this->corner_4 = filter_input($input_type,'corner_4');
 
         $this->f_time = filter_input($input_type,'f_time');
-        $this->validateLength($this->f_time,'上り3f(平地)／平均1f(障害)',4);
 
         $this->h_weight = filter_input($input_type,'h_weight');
         $this->earnings = (int)filter_input($input_type,'earnings',FILTER_VALIDATE_INT)?:null;
         $this->syuutoku = (int)filter_input($input_type,'syuutoku',FILTER_VALIDATE_INT)?:null;
         $this->sex = filter_input($input_type,'sex');
         $this->tc = filter_input($input_type,'tc');
-        $this->validateLength($this->tc,'所属',10);
 
         $this->trainer_name = filter_input($input_type,'trainer_name')?:null;
-        $this->validateLength($this->tc,'調教師名',32);
-
         $this->training_country = filter_input($input_type,'training_country');
-        $this->validateLength($this->training_country,'調教国コード',3);
-
         $this->owner_name = filter_input($input_type,'owner_name')?:null;
-        $this->validateLength($this->owner_name,'馬主名',50);
-
         $this->is_affliationed_nar = (int)filter_input($input_type,'is_affliationed_nar');
         $this->non_registered_prev_race_number = (int)filter_input($input_type,'non_registered_prev_race_number');
-        $this->race_previous_note = filter_input($input_type,'race_previous_note');
-        $this->validateLength($this->race_previous_note,'レース前メモ',10000);
 
+        $this->race_previous_note = filter_input($input_type,'race_previous_note');
         $this->race_after_note = filter_input($input_type,'race_after_note');
-        $this->validateLength($this->race_after_note,'レース後メモ',10000);
 
         $this->jra_thisweek_horse_1 = filter_input($input_type,'jra_thisweek_horse_1');
-        $this->validateLength($this->jra_thisweek_horse_1,'出走馬情報(火曜)',500);
-
         $this->jra_thisweek_horse_2 = filter_input($input_type,'jra_thisweek_horse_2');
-        $this->validateLength($this->jra_thisweek_horse_2,'出走馬情報(木曜)',500);
-
         $this->jra_thisweek_horse_sort_number = filter_input($input_type,'jra_thisweek_horse_sort_number');
         $this->jra_sps_comment = filter_input($input_type,'jra_sps_comment');
-        $this->validateLength($this->jra_sps_comment,'スペシャル出馬表紹介',200);
         return true;
+    }
+    public function varidate(){
+        $this->validateLength($this->result_text,'特殊結果',8);
+        $this->validateLength($this->jockey_name,'騎手名',32);
+        $this->validateLength($this->handicap,'斤量',4);
+        $this->validateLength($this->odds,'単勝オッズ',6);
+        $this->validateLength($this->time,'タイム',7);
+        $this->validateLength($this->margin,'着差',5);
+        $this->validateLength($this->f_time,'上り3f(平地)／平均1f(障害)',4);
+        $this->validateLength($this->tc,'所属',10);
+        $this->validateLength($this->tc,'調教師名',32);
+        $this->validateLength($this->training_country,'調教国コード',3);
+        $this->validateLength($this->owner_name,'馬主名',50);
+        $this->validateLength($this->race_previous_note,'レース前メモ',10000);
+        $this->validateLength($this->race_after_note,'レース後メモ',10000);
+        $this->validateLength($this->jra_thisweek_horse_1,'出走馬情報(火曜)',500);
+        $this->validateLength($this->jra_thisweek_horse_2,'出走馬情報(木曜)',500);
+        $this->validateLength($this->jra_sps_comment,'スペシャル出馬表紹介',200);
+        return !$this->error_exists;
     }
     public function InsertExec(PDO $pdo){
         $target_columns=(self::ROW_CLASS)::getColumnNames(['number']);
