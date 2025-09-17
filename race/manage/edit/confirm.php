@@ -31,7 +31,6 @@ if($race_id!=''){
     }
 }
 if($race->setDataByPost()==false){
-    $page->debug_dump_var[]=$race;
     $page->addErrorMsgArray($race->error_msgs);
     $page->printCommonErrorPage();
     exit;
