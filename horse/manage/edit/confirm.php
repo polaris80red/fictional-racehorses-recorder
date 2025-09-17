@@ -24,7 +24,6 @@ if(!$horse->record_exists){
     $is_edit_mode=1;
 }
 if($horse->setDataByPost()==false){
-    $page->debug_dump_var[]=$horse;
     $page->addErrorMsgArray($horse->error_msgs);
     $page->printCommonErrorPage();
     exit;
