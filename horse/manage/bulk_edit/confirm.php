@@ -41,6 +41,141 @@ $race_history->setDateOrder('ASC');
 $race_history->getData();
 
 $sex_str=sex2String($horse->sex);
+
+$posted_race_list=isset($_POST['race'])?$_POST['race']:false;
+$sex_gelding_override=false;
+$nar_override=0;
+
+$has_change=false;
+$additionalData=[];
+foreach ($race_history as $key => $data){
+    if(empty($data->race_id)){ continue; }
+    $addData=new stdClass;
+
+    $posted_race=isset($posted_race_list[$data->race_id])?(object)$posted_race_list[$data->race_id]:false;
+    if($posted_race===false){ continue; }
+
+    $race_result= new RaceResults();
+    $result = $race_result->setDataById($pdo,$data->race_id,$horse_id);
+    if(!$result){
+        continue;
+    }
+    $row_has_change=false;
+    $changed=(object)array_fill_keys([
+        'frame_number',
+        'horse_number',
+        'result_number',
+        'result_text',
+        'favourite',
+        'handicap',
+        'h_weight',
+        'time',
+        'jockey',
+        'tc',
+        'trainer_name',
+        'training_country',
+        'sex',
+        'is_affliationed_nar',
+    ],false);
+    if((int)$race_result->frame_number!==(int)$posted_race->frame_number){
+        $race_result->frame_number=$posted_race->frame_number?:null;
+        $changed->frame_number = $row_has_change = $has_change = true;
+    }
+    if((int)$race_result->horse_number!==(int)$posted_race->horse_number){
+        $race_result->horse_number=$posted_race->horse_number?:null;
+        $changed->horse_number = $row_has_change = $has_change = true;
+    }
+    // 着順欄は1枠で共通処理
+    if(is_numeric($posted_race->result)||(string)$posted_race->result===''){
+        $posted_race->result_number=$posted_race->result;
+        $posted_race->result_text='';
+    }else{
+        $posted_race->result_number='';
+        $posted_race->result_text=$posted_race->result;
+    }
+    if((int)$race_result->result_number!==(int)$posted_race->result_number){
+        $race_result->result_number=$posted_race->result_number?:null;
+        $changed->result_number = $row_has_change = $has_change = true;
+    }
+    if($race_result->result_text!==$posted_race->result_text){
+        $race_result->result_text=$posted_race->result_text?:null;
+        $changed->result_text = $row_has_change = $has_change = true;
+    }
+    if((int)$race_result->result_order!==(int)$posted_race->result_order){
+        $race_result->result_order=$posted_race->result_order?:null;
+        $changed->result_order = $row_has_change = $has_change = true;
+    }
+    if((int)$race_result->result_before_demotion!==(int)$posted_race->result_before_demotion){
+        $race_result->result_before_demotion=(int)$posted_race->result_before_demotion;
+        $changed->result_before_demotion = $row_has_change = $has_change = true;
+    }
+    if((int)$race_result->favourite!==(int)$posted_race->favourite){
+        $race_result->favourite=$posted_race->favourite?:null;
+        $changed->favourite = $row_has_change = $has_change = true;
+    }
+    if((string)$race_result->handicap!==(string)$posted_race->handicap){
+        $race_result->handicap=$posted_race->handicap?:null;
+        $changed->handicap = $row_has_change = $has_change = true;
+    }
+    if((string)$race_result->h_weight!==(string)$posted_race->h_weight){
+        $race_result->h_weight=$posted_race->h_weight?:null;
+        $changed->h_weight = $row_has_change = $has_change = true;
+    }
+    if((string)$race_result->time!==(string)$posted_race->time){
+        $race_result->time=$posted_race->time?:null;
+        $changed->time = $row_has_change = $has_change = true;
+    }
+    if((string)$race_result->jockey_name!==(string)$posted_race->jockey){
+        $race_result->jockey_name=$posted_race->jockey?:null;
+        $changed->jockey = $row_has_change = $has_change = true;
+    }
+    if((string)$race_result->tc!==(string)$posted_race->tc){
+        $race_result->tc=$posted_race->tc?:null;
+        $changed->tc = $row_has_change = $has_change = true;
+    }
+    if((string)$race_result->trainer_name!==(string)$posted_race->trainer_name){
+        $race_result->trainer_name=$posted_race->trainer_name?:null;
+        $changed->trainer_name = $row_has_change = $has_change = true;
+    }
+    if((string)$race_result->training_country!==(string)$posted_race->training_country){
+        $race_result->training_country=$posted_race->training_country?:null;
+        $changed->training_country = $row_has_change = $has_change = true;
+    }
+    if((int)$race_result->sex!==(int)$posted_race->sex||$sex_gelding_override){
+        $race_result->sex=$posted_race->sex;
+        if($race_result->sex==3){
+            $sex_gelding_override=true;
+        }
+        if($sex_gelding_override){
+            $race_result->sex=3;
+        }
+        $changed->sex = $row_has_change = $has_change = true;
+    }
+    if((int)$race_result->is_affliationed_nar!==(int)$posted_race->is_affliationed_nar){
+        // 地方区分が変更されている場合の反映処理
+        $race_result->is_affliationed_nar=$posted_race->is_affliationed_nar;
+        $changed->is_affliationed_nar = $row_has_change = $has_change = true;
+
+        // 継続反映用
+        if((int)$posted_race->is_affliationed_nar>0){
+            $nar_override=(int)$posted_race->is_affliationed_nar;
+        }
+    }
+    if($nar_override>0 && (int)$race_result->is_affliationed_nar>0){
+        // カク[地]・マル(地)が違うレコードが出てきたら、そのあとの区分なしはそれに変更
+        $nar_override=(int)$race_result->is_affliationed_nar;
+    }
+    if((int)$race_result->is_affliationed_nar===0 && $nar_override>0){
+        // 最後の変更がカク[地]またはマル(地)への変更の場合、地方区分なしの行にも反映
+        $race_result->is_affliationed_nar=$nar_override;
+        $changed->is_affliationed_nar = $row_has_change = $has_change = true;
+    }
+    $addData->race_result=$race_result;
+    $addData->row_has_change=$row_has_change;
+    $addData->changed=$changed;
+
+    $additionalData[$key]=$addData;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -79,7 +214,7 @@ td.is_affliationed_nar{ text-align:center; }
 <?php include (new TemplateImporter('horse/horse_page-header.inc.php'));?>
 <form method="post" action="./execute.php">
 <?php $csrf_token->printHiddenInputTag(); ?>
-<input type="submit" value="一括変更を実行">
+<input type="submit" value="一括変更を実行"<?=$has_change?'':' disabled'?>>
 <input type="hidden" name="horse_id" value="<?=h($horse_id)?>">
 <table class="horse_history">
 <tr>
@@ -99,158 +234,21 @@ td.is_affliationed_nar{ text-align:center; }
     <th>性別</th>
     <th>地方区分</th>
 </tr>
+<?php foreach ($race_history as $key => $data):?>
 <?php
-$posted_race_list=isset($_POST['race'])?$_POST['race']:false;
-$sex_gelding_override=false;
-$nar_override=0;
-?>
-<?php foreach ($race_history as $data):?>
-<?php
-    $tr_class=new Imploader(' ');
-    if(empty($data->race_id)){ continue; }
     $race = $data->race_row;
     $grade = $data->grade_row;
     $jockey=$data->jockey_row;
 
-    $posted_race=isset($posted_race_list[$data->race_id])?(object)$posted_race_list[$data->race_id]:false;
-    if($posted_race===false){ continue; }
+    $race_result=$additionalData[$key]->race_result??null;
+    $changed=$additionalData[$key]->changed??false;
+    $row_has_change=$additionalData[$key]->row_has_change??false;
 
-    $race_result= new RaceResults();
-    $result = $race_result->setDataById($pdo,$data->race_id,$horse_id);
-    if(!$result){
-        continue;
-    }
-    $has_change=false;
-    $changed=(object)array_fill_keys([
-        'frame_number',
-        'horse_number',
-        'result_number',
-        'result_text',
-        'favourite',
-        'handicap',
-        'h_weight',
-        'time',
-        'jockey',
-        'tc',
-        'trainer_name',
-        'training_country',
-        'sex',
-        'is_affliationed_nar',
-    ],false);
-    if((int)$race_result->frame_number!==(int)$posted_race->frame_number){
-        $race_result->frame_number=$posted_race->frame_number?:null;
-        $has_change=true;
-        $changed->frame_number=true;
-    }
-    if((int)$race_result->horse_number!==(int)$posted_race->horse_number){
-        $race_result->horse_number=$posted_race->horse_number?:null;
-        $has_change=true;
-        $changed->horse_number=true;
-    }
-    // 着順欄は1枠で共通処理
-    if(is_numeric($posted_race->result)||(string)$posted_race->result===''){
-        $posted_race->result_number=$posted_race->result;
-        $posted_race->result_text='';
-    }else{
-        $posted_race->result_number='';
-        $posted_race->result_text=$posted_race->result;
-    }
-    if((int)$race_result->result_number!==(int)$posted_race->result_number){
-        $race_result->result_number=$posted_race->result_number?:null;
-        $has_change=true;
-        $changed->result_number=true;
-    }
-    if($race_result->result_text!==$posted_race->result_text){
-        $race_result->result_text=$posted_race->result_text?:null;
-        $has_change=true;
-        $changed->result_text=true;
-    }
-    if((int)$race_result->result_order!==(int)$posted_race->result_order){
-        $race_result->result_order=$posted_race->result_order?:null;
-        $has_change=true;
-        $changed->result_order=true;
-    }
-    if((int)$race_result->result_before_demotion!==(int)$posted_race->result_before_demotion){
-        $race_result->result_before_demotion=(int)$posted_race->result_before_demotion;
-        $has_change=true;
-        $changed->result_before_demotion=true;
-    }
-    if((int)$race_result->favourite!==(int)$posted_race->favourite){
-        $race_result->favourite=$posted_race->favourite?:null;
-        $has_change=true;
-        $changed->favourite=true;
-    }
-    if((string)$race_result->handicap!==(string)$posted_race->handicap){
-        $race_result->handicap=$posted_race->handicap?:null;
-        $has_change=true;
-        $changed->handicap=true;
-    }
-    if((string)$race_result->h_weight!==(string)$posted_race->h_weight){
-        $race_result->h_weight=$posted_race->h_weight?:null;
-        $has_change=true;
-        $changed->h_weight=true;
-    }
-    if((string)$race_result->time!==(string)$posted_race->time){
-        $race_result->time=$posted_race->time?:null;
-        $has_change=true;
-        $changed->time=true;
-    }
-    if((string)$race_result->jockey_name!==(string)$posted_race->jockey){
-        $race_result->jockey_name=$posted_race->jockey?:null;
-        $has_change=true;
-        $changed->jockey=true;
-    }
-    if((string)$race_result->tc!==(string)$posted_race->tc){
-        $race_result->tc=$posted_race->tc?:null;
-        $has_change=true;
-        $changed->tc=true;
-    }
-    if((string)$race_result->trainer_name!==(string)$posted_race->trainer_name){
-        $race_result->trainer_name=$posted_race->trainer_name?:null;
-        $has_change=true;
-        $changed->trainer_name=true;
-    }
-    if((string)$race_result->training_country!==(string)$posted_race->training_country){
-        $race_result->training_country=$posted_race->training_country?:null;
-        $has_change=true;
-        $changed->training_country=true;
-    }
-    if((int)$race_result->sex!==(int)$posted_race->sex||$sex_gelding_override){
-        $race_result->sex=$posted_race->sex;
-        if($race_result->sex==3){
-            $sex_gelding_override=true;
-        }
-        if($sex_gelding_override){
-            $race_result->sex=3;
-        }
-        $has_change=true;
-        $changed->sex=true;
-    }
-    if((int)$race_result->is_affliationed_nar!==(int)$posted_race->is_affliationed_nar){
-        // 地方区分が変更されている場合の反映処理
-        $race_result->is_affliationed_nar=$posted_race->is_affliationed_nar;
-        $has_change=true;
-        $changed->is_affliationed_nar=true;
-
-        // 継続反映用
-        if((int)$posted_race->is_affliationed_nar>0){
-            $nar_override=(int)$posted_race->is_affliationed_nar;
-        }
-    }
-    if($nar_override>0 && (int)$race_result->is_affliationed_nar>0){
-        // カク[地]・マル(地)が違うレコードが出てきたら、そのあとの区分なしはそれに変更
-        $nar_override=(int)$race_result->is_affliationed_nar;
-    }
-    if((int)$race_result->is_affliationed_nar===0 && $nar_override>0){
-        // 最後の変更がカク[地]またはマル(地)への変更の場合、地方区分なしの行にも反映
-        $race_result->is_affliationed_nar=$nar_override;
-        $has_change=true;
-        $changed->is_affliationed_nar=true;
-    }
-    if($has_change===false){
+    if($row_has_change===false){
         // 変更箇所がない場合はスキップする
         continue;
     }
+    $tr_class=new Imploader(' ');
     if($data->is_registration_only==1){
         $tr_class->add('disabled_row');
     }
