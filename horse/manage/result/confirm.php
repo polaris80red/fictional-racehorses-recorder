@@ -88,6 +88,11 @@ do{
         }
     }
 }while(false);
+if($race_results->error_exists){
+    $page->addErrorMsgArray($race_results->error_msgs);
+    $page->printCommonErrorPage();
+    exit;
+}
 if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
