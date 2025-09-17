@@ -1,0 +1,31 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+
+CREATE TABLE `mst_race_category_sex` (
+  `id` int(11) NOT NULL COMMENT 'キー',
+  `name` varchar(100) NOT NULL COMMENT '名称',
+  `short_name_3` varchar(3) NOT NULL DEFAULT '' COMMENT '3文字略称',
+  `umm_category` varchar(16) DEFAULT NULL COMMENT '擬人化用',
+  `sort_number` int(11) DEFAULT NULL COMMENT '表示順補正',
+  `is_enabled` tinyint(4) NOT NULL DEFAULT 1 COMMENT '論理削除用',
+  `created_by` int(11) DEFAULT NULL COMMENT '作成者',
+  `updated_by` int(11) DEFAULT NULL COMMENT '最終更新者',
+  `created_at` datetime DEFAULT NULL COMMENT '作成日時',
+  `updated_at` datetime DEFAULT NULL COMMENT '最終更新日時'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='レース性別条件マスタ';
+
+
+ALTER TABLE `mst_race_category_sex`
+  ADD PRIMARY KEY (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

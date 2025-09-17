@@ -1,0 +1,32 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+
+CREATE TABLE `mst_race_week` (
+  `id` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `month` tinyint(4) NOT NULL,
+  `month_grouping` int(11) NOT NULL,
+  `umm_month_turn` tinyint(4) NOT NULL DEFAULT 0 COMMENT 'ウマ娘での所属月内の前後（0予備、1前半、2後半、3後半予備）',
+  `sort_number` int(11) DEFAULT NULL,
+  `is_enabled` tinyint(4) NOT NULL DEFAULT 1,
+  `created_by` int(11) DEFAULT NULL COMMENT '作成者',
+  `updated_by` int(11) DEFAULT NULL COMMENT '最終更新者',
+  `created_at` datetime DEFAULT NULL COMMENT '作成日時',
+  `updated_at` datetime DEFAULT NULL COMMENT '最終更新日時'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='レース開催週マスタ';
+
+
+ALTER TABLE `mst_race_week`
+  ADD PRIMARY KEY (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

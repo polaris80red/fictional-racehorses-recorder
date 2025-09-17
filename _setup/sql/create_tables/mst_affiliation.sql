@@ -1,0 +1,35 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+
+CREATE TABLE `mst_affiliation` (
+  `id` int(11) NOT NULL COMMENT 'ID',
+  `unique_name` varchar(10) NOT NULL COMMENT 'キー名称',
+  `sort_number` int(11) DEFAULT NULL COMMENT '表示順補正値',
+  `show_in_select_box` tinyint(4) NOT NULL DEFAULT 1 COMMENT '1:セレクトボックスに表示する',
+  `is_enabled` tinyint(4) NOT NULL DEFAULT 1 COMMENT '論理削除用',
+  `created_by` int(11) DEFAULT NULL COMMENT '作成者',
+  `updated_by` int(11) DEFAULT NULL COMMENT '最終更新者',
+  `created_at` datetime DEFAULT NULL COMMENT '作成日時',
+  `updated_at` datetime DEFAULT NULL COMMENT '最終更新日時'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='所属マスタ';
+
+
+ALTER TABLE `mst_affiliation`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_name` (`unique_name`);
+
+
+ALTER TABLE `mst_affiliation`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID';
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
