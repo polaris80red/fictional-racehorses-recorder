@@ -79,6 +79,7 @@ class Race extends Table{
             $this->error_msgs[]="IDに使用できない文字（その他）を含んでいます";
             $this->error_exists=true;
         }
+        $this->validateLength($race_id,'レースID',32);
         $this->race_id=$race_id;
         return $this->error_exists?false:true;
     }
@@ -109,25 +110,48 @@ class Race extends Table{
             $this->error_exists=true;
         }
         $this->race_course_name=filter_input(INPUT_POST,'race_course_name')?:filter_input(INPUT_POST,'race_course_name_select');
-        $this->race_number=filter_input(INPUT_POST,'race_number');
+        $this->race_number=filter_input(INPUT_POST,'race_number')?:null;
+
         $this->course_type=filter_input(INPUT_POST,'course_type');
+        $this->validateLength($this->course_type,'コース区分',2);
+
         $this->distance=filter_input(INPUT_POST,'distance');
         $this->race_name=filter_input(INPUT_POST,'race_name');
         if(empty($this->race_name)){
             $this->error_msgs[]='レース名未設定';
             $this->error_exists=true;
         }
+        $this->validateLength($this->race_name,'レース名',100);
+
         $this->race_short_name=filter_input(INPUT_POST,'race_short_name');
+        $this->validateLength($this->race_short_name,'レース略名',20);
+
         $this->caption=filter_input(INPUT_POST,'caption');
+        $this->validateLength($this->caption,'補足',100);
+
         $this->grade=filter_input(INPUT_POST,'grade')?:filter_input(INPUT_POST,'grade_select');
+        $this->validateLength($this->grade,'格付',5);
+
         $this->age_category_id=filter_input(INPUT_POST,'age_category_id');
         $this->age=filter_input(INPUT_POST,'age');
+        $this->validateLength($this->age,'馬齢条件',50);
+
         $this->sex_category_id=filter_input(INPUT_POST,'sex_category_id');
         $this->weather=filter_input(INPUT_POST,'weather')?:filter_input(INPUT_POST,'weather_select');
+        $this->validateLength($this->weather,'天候',10);
+
         $this->track_condition=filter_input(INPUT_POST,'track_condition')?:filter_input(INPUT_POST,'track_condition_select');
+        $this->validateLength($this->track_condition,'馬場状態',100);
+
         $this->note=filter_input(INPUT_POST,'note');
+        $this->validateLength($this->note,'備考',100);
+
         $this->previous_note=filter_input(INPUT_POST,'previous_note');
+        $this->validateLength($this->previous_note,'レース前メモ',10000);
+
         $this->after_note=filter_input(INPUT_POST,'after_note');
+        $this->validateLength($this->after_note,'レース後メモ',10000);
+
         $this->number_of_starters=filter_input(INPUT_POST,'number_of_starters');
         $this->is_jra=filter_input(INPUT_POST,'is_jra');
         $this->is_nar=filter_input(INPUT_POST,'is_nar');
