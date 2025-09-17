@@ -10,7 +10,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `dat_horse_tag` (
   `number` int(11) NOT NULL COMMENT 'サロゲートキー',
-  `horse_id` varchar(32) NOT NULL COMMENT '競走馬ID',
+  `horse_id` varchar(100) NOT NULL COMMENT '競走馬ID',
   `tag_text` varchar(100) NOT NULL COMMENT 'タグ文字列',
   `is_enabled` tinyint(4) NOT NULL DEFAULT 1 COMMENT '論理削除フラグ',
   `created_by` int(11) DEFAULT NULL COMMENT '作成者',

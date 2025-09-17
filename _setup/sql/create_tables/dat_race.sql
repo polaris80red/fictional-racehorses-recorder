@@ -9,7 +9,7 @@ SET time_zone = "+00:00";
 
 
 CREATE TABLE `dat_race` (
-  `race_id` varchar(32) NOT NULL,
+  `race_id` varchar(100) NOT NULL,
   `world_id` int(11) DEFAULT NULL COMMENT 'ワールドID',
   `race_course_name` varchar(32) NOT NULL,
   `race_number` int(11) DEFAULT NULL,
