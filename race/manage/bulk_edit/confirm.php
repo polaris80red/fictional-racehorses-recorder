@@ -54,6 +54,166 @@ switch($setting->age_view_mode){
         $mode_umm=true;
 }
 $has_change=false;
+$additionalData=[];
+foreach($table_data as $key => $data){
+    $addData=new stdClass;
+
+    $horse=$data->horseRow;
+    $raceResult=$data->resultRow;
+    $newResult= new RaceResults();
+    $result = $newResult->setDataById($pdo,$race_id,$horse->horse_id);
+    if(!$result){
+        continue;
+    }
+    if(!isset($_POST['race'][$horse->horse_id])){
+        // その馬のデータがなければスキップ
+        continue;
+    }else{
+        $inputHorseResultRow=$_POST['race'][$horse->horse_id];
+    }
+    $input='';
+    $changed=[];
+    if(isset($inputHorseResultRow['frame_number'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['frame_number']),'n'),0);
+        if((int)$newResult->frame_number != $input){
+            $newResult->frame_number = $input?:null;
+            $changed['frame_number'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['horse_number'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['horse_number']),'n'),0);
+        if((int)$newResult->horse_number != $input){
+            $newResult->horse_number = $input?:null;
+            $changed['horse_number'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['result'])){
+        $resultValue = mb_convert_kana(trim($inputHorseResultRow['result']),'n');
+        if(is_numeric($resultValue)||(string)$resultValue===''){
+            $inputResultNumber=max($resultValue,0)?:null;
+            $inputResultText=null;
+        }else{
+            $inputResultNumber=null;
+            $inputResultText=$resultValue;
+        }
+        if((int)$newResult->result_number !== (int)$inputResultNumber){
+            $newResult->result_number=$inputResultNumber;
+            $changed['result'] = $has_change = true;
+        }
+        if((string)$newResult->result_text != $inputResultText){
+            $newResult->result_number=null;
+            $newResult->result_text=$inputResultText;
+            $changed['result'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['handicap'])){
+        $input = mb_convert_kana(trim($inputHorseResultRow['handicap']),'n');
+        if((string)$newResult->handicap != $input){
+            $newResult->handicap = $input;
+            $changed['handicap'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['jockey_name'])
+        && (string)$newResult->jockey_name != (string)$inputHorseResultRow['jockey_name']){
+        $newResult->jockey_name = $inputHorseResultRow['jockey_name'];
+        $changed['jockey_name'] = $has_change = true;
+    }
+    if(isset($inputHorseResultRow['time'])){
+        $input = mb_convert_kana(trim($inputHorseResultRow['time']),'n');
+        if((string)$newResult->time != $input){
+            $newResult->time = $input;
+            $changed['time'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['margin'])
+        && (string)$newResult->margin != (string)$inputHorseResultRow['margin']){
+        $newResult->margin = $inputHorseResultRow['margin'];
+        $changed['margin'] = $has_change = true;
+    }
+    if(isset($inputHorseResultRow['corner_1'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['corner_1']),'n'),0);
+        if((int)$newResult->corner_1 != $input){
+            $newResult->corner_1 = $input?:null;
+            $changed['corner_1'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['corner_2'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['corner_2']),'n'),0);
+        if((int)$newResult->corner_2 != $input){
+            $newResult->corner_2 = $input?:null;
+            $changed['corner_2'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['corner_3'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['corner_3']),'n'),0);
+        if((int)$newResult->corner_3 != $input){
+            $newResult->corner_3 = $input?:null;
+            $changed['corner_3'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['corner_4'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['corner_4']),'n'),0);
+        if((int)$newResult->corner_4 != $input){
+            $newResult->corner_4 = $input?:null;
+            $changed['corner_4'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['f_time'])){
+        $input = mb_convert_kana(trim($inputHorseResultRow['f_time']),'n');
+        if((string)$newResult->f_time != $input){
+            $newResult->f_time = $input;
+            $changed['f_time'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['tc'])
+        && (string)$newResult->tc != (string)$inputHorseResultRow['tc']){
+        $newResult->tc = $inputHorseResultRow['tc'];
+        $changed['tc'] = $has_change = true;
+    }
+    if(isset($inputHorseResultRow['trainer_name'])
+        && (string)$newResult->trainer_name != (string)$inputHorseResultRow['trainer_name']){
+        $newResult->trainer_name = $inputHorseResultRow['trainer_name'];
+        $changed['trainer_name'] = $has_change = true;
+    }
+    if(isset($inputHorseResultRow['h_weight'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['h_weight']),'n'),0);
+        if((int)$newResult->h_weight != $input){
+            $newResult->h_weight = $input?:null;
+            $changed['h_weight'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['odds'])){
+        $input = mb_convert_kana(trim($inputHorseResultRow['odds']),'n');
+        if((string)$newResult->odds != $input){
+            $newResult->odds = $input;
+            $changed['odds'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['favourite'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['favourite']),'n'),0);
+        if((int)$newResult->favourite != $input){
+            $newResult->favourite = $input?:null;
+            $changed['favourite'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['earnings'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['earnings']),'n'),0);
+        if((int)$newResult->earnings != (int)$input){
+            $newResult->earnings = $input;
+            $changed['earnings'] = $has_change = true;
+        }
+    }
+    if(isset($inputHorseResultRow['syuutoku'])){
+        $input = max((int)mb_convert_kana(trim($inputHorseResultRow['syuutoku']),'n'),0);
+        if((int)$newResult->syuutoku != (int)$input){
+            $newResult->syuutoku = $input;
+            $changed['syuutoku'] = $has_change = true;
+        }
+    }
+    $addData->newResult=$newResult;
+    $addData->changed=$changed;
+    $additionalData[$key]=$addData;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -98,160 +258,17 @@ $has_change=false;
     <th>賞金</th>
     <th>収得</th>
 </tr>
-<?php foreach ($table_data as $data):?>
+<?php foreach ($table_data as $key => $data):?>
     <?php
         $horse=$data->horseRow;
         $raceResult=$data->resultRow;
-        $newResult= new RaceResults();
-        $result = $newResult->setDataById($pdo,$race_id,$horse->horse_id);
-        if(!$result){
-            continue;
-        }
         if(!isset($_POST['race'][$horse->horse_id])){
-            // その馬のデータがなければスキップ
+            // 送信データにその行の馬のデータが存在しない場合はスキップ
             continue;
-        }else{
-            $inputHorseResultRow=$_POST['race'][$horse->horse_id];
         }
-        $input='';
-        $changed=[];
-        if(isset($inputHorseResultRow['frame_number'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['frame_number']),'n'),0);
-            if((int)$newResult->frame_number != $input){
-                $newResult->frame_number = $input?:null;
-                $changed['frame_number'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['horse_number'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['horse_number']),'n'),0);
-            if((int)$newResult->horse_number != $input){
-                $newResult->horse_number = $input?:null;
-                $changed['horse_number'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['result'])){
-            $resultValue = mb_convert_kana(trim($inputHorseResultRow['result']),'n');
-            if(is_numeric($resultValue)||(string)$resultValue===''){
-                $inputResultNumber=max($resultValue,0)?:null;
-                $inputResultText=null;
-            }else{
-                $inputResultNumber=null;
-                $inputResultText=$resultValue;
-            }
-            if((int)$newResult->result_number !== (int)$inputResultNumber){
-                $newResult->result_number=$inputResultNumber;
-                $changed['result'] = $has_change = true;
-            }
-            if((string)$newResult->result_text != $inputResultText){
-                $newResult->result_number=null;
-                $newResult->result_text=$inputResultText;
-                $changed['result'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['handicap'])){
-            $input = mb_convert_kana(trim($inputHorseResultRow['handicap']),'n');
-            if((string)$newResult->handicap != $input){
-                $newResult->handicap = $input;
-                $changed['handicap'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['jockey_name'])
-            && (string)$newResult->jockey_name != (string)$inputHorseResultRow['jockey_name']){
-            $newResult->jockey_name = $inputHorseResultRow['jockey_name'];
-            $changed['jockey_name'] = $has_change = true;
-        }
-        if(isset($inputHorseResultRow['time'])){
-            $input = mb_convert_kana(trim($inputHorseResultRow['time']),'n');
-            if((string)$newResult->time != $input){
-                $newResult->time = $input;
-                $changed['time'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['margin'])
-            && (string)$newResult->margin != (string)$inputHorseResultRow['margin']){
-            $newResult->margin = $inputHorseResultRow['margin'];
-            $changed['margin'] = $has_change = true;
-        }
-        if(isset($inputHorseResultRow['corner_1'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['corner_1']),'n'),0);
-            if((int)$newResult->corner_1 != $input){
-                $newResult->corner_1 = $input?:null;
-                $changed['corner_1'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['corner_2'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['corner_2']),'n'),0);
-            if((int)$newResult->corner_2 != $input){
-                $newResult->corner_2 = $input?:null;
-                $changed['corner_2'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['corner_3'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['corner_3']),'n'),0);
-            if((int)$newResult->corner_3 != $input){
-                $newResult->corner_3 = $input?:null;
-                $changed['corner_3'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['corner_4'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['corner_4']),'n'),0);
-            if((int)$newResult->corner_4 != $input){
-                $newResult->corner_4 = $input?:null;
-                $changed['corner_4'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['f_time'])){
-            $input = mb_convert_kana(trim($inputHorseResultRow['f_time']),'n');
-            if((string)$newResult->f_time != $input){
-                $newResult->f_time = $input;
-                $changed['f_time'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['tc'])
-            && (string)$newResult->tc != (string)$inputHorseResultRow['tc']){
-            $newResult->tc = $inputHorseResultRow['tc'];
-            $changed['tc'] = $has_change = true;
-        }
-        if(isset($inputHorseResultRow['trainer_name'])
-            && (string)$newResult->trainer_name != (string)$inputHorseResultRow['trainer_name']){
-            $newResult->trainer_name = $inputHorseResultRow['trainer_name'];
-            $changed['trainer_name'] = $has_change = true;
-        }
-        if(isset($inputHorseResultRow['h_weight'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['h_weight']),'n'),0);
-            if((int)$newResult->h_weight != $input){
-                $newResult->h_weight = $input?:null;
-                $changed['h_weight'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['odds'])){
-            $input = mb_convert_kana(trim($inputHorseResultRow['odds']),'n');
-            if((string)$newResult->odds != $input){
-                $newResult->odds = $input;
-                $changed['odds'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['favourite'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['favourite']),'n'),0);
-            if((int)$newResult->favourite != $input){
-                $newResult->favourite = $input?:null;
-                $changed['favourite'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['earnings'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['earnings']),'n'),0);
-            if((int)$newResult->earnings != (int)$input){
-                $newResult->earnings = $input;
-                $changed['earnings'] = $has_change = true;
-            }
-        }
-        if(isset($inputHorseResultRow['syuutoku'])){
-            $input = max((int)mb_convert_kana(trim($inputHorseResultRow['syuutoku']),'n'),0);
-            if((int)$newResult->syuutoku != (int)$input){
-                $newResult->syuutoku = $input;
-                $changed['syuutoku'] = $has_change = true;
-            }
-        }
+        $addData=$additionalData[$key];
+        $changed=$addData->changed;
+        $newResult=$addData->newResult;
     ?>
     <tr class="">
         <td class="<?=($changed['frame_number']??false)?'changed':''?>">
