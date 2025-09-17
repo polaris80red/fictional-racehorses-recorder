@@ -72,6 +72,11 @@ do{
         $error_msgs[]="競走馬とレース情報のワールドが一致していません";
         break;
     }
+    if($input->error_exists){
+        $page->addErrorMsgArray($input->error_msgs);
+        $page->printCommonErrorPage();
+        exit;
+    }
     $input->updated_at=PROCESS_STARTED_AT;
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
