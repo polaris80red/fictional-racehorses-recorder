@@ -147,6 +147,22 @@ abstract class Table{
         }
         return true;
     }
+    // 競走馬・レースなど改修までの暫定
+    public $error_msgs=[];
+    public $error_exists=false;
+    /**
+     * 文字数チェック（エラー有無判定をテーブルクラスに持つクラス用の暫定）
+     */
+    protected function validateLength(string|null $target_value,string $name,int $max_length){
+        if($target_value===null){
+            return;
+        }
+        if(mb_strlen($target_value)>$max_length){
+            $this->error_msgs[]="{$name}は{$max_length}文字以内で設定してください。";
+            $this->error_exists=true;
+        }
+        return;
+    }
     // 行クラスを使用する新形式対応
     public const ROW_CLASS = TableRow::class;
     public static function InsertFromRowObj(PDO $pdo, TableRow $row_obj){
