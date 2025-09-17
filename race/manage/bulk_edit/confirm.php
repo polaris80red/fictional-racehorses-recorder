@@ -53,6 +53,7 @@ switch($setting->age_view_mode){
     case Setting::AGE_VIEW_MODE_UMAMUSUME_S:
         $mode_umm=true;
 }
+$has_error=false;
 $has_change=false;
 $additionalData=[];
 foreach($table_data as $key => $data){
@@ -210,6 +211,9 @@ foreach($table_data as $key => $data){
             $changed['syuutoku'] = $has_change = true;
         }
     }
+    if(!$newResult->varidate()){
+        $has_error=true;
+    }
     $addData->newResult=$newResult;
     $addData->changed=$changed;
     $additionalData[$key]=$addData;
@@ -237,6 +241,7 @@ foreach($table_data as $key => $data){
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <form action="execute.php" method="post">
+<?php $colSpan=20; ?>
 <table class="race_results">
 <tr>
     <th>枠</th>
@@ -334,7 +339,7 @@ foreach($table_data as $key => $data){
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][tc]" value="<?=h($newResult->tc)?>">
         </td>
         <td class="<?=($changed['trainer_name']??false)?'changed':''?>">
-            <?=h($newResult->tc)?>
+            <?=h($newResult->trainer_name)?>
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][trainer_name]" value="<?=h($newResult->trainer_name)?>">
         </td>
         <td class="<?=($changed['h_weight']??false)?'changed':''?>">
@@ -358,11 +363,14 @@ foreach($table_data as $key => $data){
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][syuutoku]" value="<?=h($newResult->syuutoku)?>">
         </td>
     </tr>
+    <?php if($newResult->error_exists):?>
+        <tr><td colspan="<?=$colSpan?>" style="color:red;"><?=nl2br(h(implode("\n",$newResult->error_msgs)))?></td></tr>
+    <?php endif;?>
 <?php endforeach;?>
 </table>
 <input type="hidden" name="race_id" value="<?=$race_id?>">
 <?php $csrf_token->printHiddenInputTag(); ?>
-<input type="submit" value="登録処理実行"<?=!$has_change?' disabled':''?>>
+<input type="submit" value="登録処理実行"<?=!$has_change||$has_error?' disabled':''?>>
 </form>
 <hr class="no-css-fallback">
 </main>
