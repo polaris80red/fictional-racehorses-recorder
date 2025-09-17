@@ -47,6 +47,7 @@ $sex_gelding_override=false;
 $nar_override=0;
 
 $has_change=false;
+$has_error=false;
 $additionalData=[];
 foreach ($race_history as $key => $data){
     if(empty($data->race_id)){ continue; }
@@ -170,6 +171,10 @@ foreach ($race_history as $key => $data){
         $race_result->is_affliationed_nar=$nar_override;
         $changed->is_affliationed_nar = $row_has_change = $has_change = true;
     }
+    if($row_has_change && !$race_result->varidate()){
+        // 変更点がある場合、エラーチェック
+        $has_error=true;
+    }
     $addData->race_result=$race_result;
     $addData->row_has_change=$row_has_change;
     $addData->changed=$changed;
@@ -197,7 +202,7 @@ td.grade{ text-align:center; }
 td.frame_number{ text-align:center; }
 td.horse_number{ text-align:center; }
 td.favourite{ text-align:right; }
-td.result_number{ text-align:right; }
+td.result_number{ text-align:right;}
 td.result_order{ text-align:right; }
 td.result_before_demotion{ text-align:right; }
 td.sex{ text-align:center; }
@@ -214,9 +219,10 @@ td.is_affliationed_nar{ text-align:center; }
 <?php include (new TemplateImporter('horse/horse_page-header.inc.php'));?>
 <form method="post" action="./execute.php">
 <?php $csrf_token->printHiddenInputTag(); ?>
-<input type="submit" value="一括変更を実行"<?=$has_change?'':' disabled'?>>
+<input type="submit" value="一括変更を実行"<?=($has_change && !$has_error)?'':' disabled'?>>
 <input type="hidden" name="horse_id" value="<?=h($horse_id)?>">
 <table class="horse_history">
+<?php $colSpan=19; ?>
 <tr>
     <th><?=$setting->horse_record_date==='umm'?'時期':'年月'?></th>
     <th>開催</th>
@@ -224,7 +230,11 @@ td.is_affliationed_nar{ text-align:center; }
     <th>格付</th>
     <th>枠</th>
     <th>馬</th>
-    <th>人気</th><th>着順</th><th>補正</th><th>降</th><th>騎手</th>
+    <th>人気</th>
+    <th>着順</th>
+    <th>補正</th>
+    <th>降</th>
+    <th>騎手</th>
     <th>斤量</th>
     <th>タイム</th>
     <th>馬体重</th>
@@ -346,6 +356,9 @@ td.is_affliationed_nar{ text-align:center; }
     <input type="hidden" name="race[<?=h($data->race_id)?>][is_affliationed_nar]" value="<?=h($race_result->is_affliationed_nar)?>">
 </td>
 </tr>
+<?php if($race_result->error_exists):?>
+    <tr><td colspan="<?=$colSpan?>" style="color:red;"><?=nl2br(h(implode("\n",$race_result->error_msgs)))?></td></tr>
+<?php endif;?>
 <?php endforeach; ?>
 </table>
 </form>
