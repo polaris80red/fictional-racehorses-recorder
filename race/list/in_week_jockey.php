@@ -366,7 +366,7 @@ if($week_id>0){
     }
 }
 ?>
-[ <?=new MkTagA($text,InAppUrl::to('race/list/in_week.php',$params))?> ]
+[ <?=new MkTagA($text??'',InAppUrl::to('race/list/in_week.php',$params))?> ]
 <hr class="no-css-fallback">
 </main>
 <footer>
