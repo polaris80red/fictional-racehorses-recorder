@@ -127,7 +127,7 @@ $i=0;
                 }
             }
             $a_tag=new MkTagA($horse->name_ja?:$horse->name_en);
-            $a_tag->href($page->to_app_root_path.'horse/?horse_id='.$horse->horse_id);
+            $a_tag->href(InAppUrl::to('horse/',['horse_id'=>$horse->horse_id]));
             $country=($race->is_jra==0 && $race->is_nar==0)?"<span>(".h($data->trainingCountry).")</span> ":'';
         ?>
         <td class="horse_name"><?=implode(' ',[$marks,$a_tag,$country])?></td>
