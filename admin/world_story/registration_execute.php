@@ -12,10 +12,20 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_POST,'story_id',FILTER_VALIDATE_INT);
-$story=new WorldStory();
-if($input_id>0){
-    $story->getDataById($pdo,$input_id);
+$inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
+$editMode=($inputId>0);
+$TableClass=WorldStory::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+$story=($TableClass)::getById($pdo,$inputId);
+if($editMode){
+    $page->title.="（編集）";
+}
+if($editMode && $story===false){
+    $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当する設定がありません");
+}
+if($story===false){
+    $story=new ($TableRowClass)();
 }
 $story->name=filter_input(INPUT_POST,'name');
 $story->guest_visible=filter_input(INPUT_POST,'guest_visible',FILTER_VALIDATE_BOOL)?1:0;
@@ -26,33 +36,24 @@ $story->sort_number=intOrNull(filter_input(INPUT_POST,'sort_number'));
 $story->is_read_only=filter_input(INPUT_POST,'is_read_only',FILTER_VALIDATE_BOOL)?1:0;
 $story->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
-$story->config_json=json_decode(filter_input(INPUT_POST,'config_json'));
+$story->setConfig(json_decode(filter_input(INPUT_POST,'config_json')));
 
 $save_to_session=filter_input(INPUT_POST,'save_to_session',FILTER_VALIDATE_BOOL);
 $save_to_defaults=filter_input(INPUT_POST,'save_to_defaults',FILTER_VALIDATE_BOOL);
 
-
-$error_exists=false;
 do{
     if(!(new FormCsrfToken())->isValid()){
-        $error_exists=true;
         ELog::error($page->title.": CSRFトークンエラー|".__FILE__);
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
-    if($input_id>0 && !$story->record_exists){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定ID '{$input_id}' が指定されていますが該当する{$base_title}がありません");
-    }
     if($story->name===''){
-        $error_exists=true;
         $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定名称未設定");
         break;
     }
 }while(false);
-if($error_exists){
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
@@ -65,15 +66,15 @@ if($save_to_session){
 if($save_to_defaults){
     (new ConfigTable($pdo))->setTimestamp(PROCESS_STARTED_AT)->saveAllParams($setting->getSettingArray());
 }
-if($story->record_exists){
+if($editMode){
     // 編集モード
-    $result = $story->UpdateExec($pdo);
+    $result = ($TableClass)::UpdateFromRowObj($pdo,$story);
     if($result){
         redirect_exit("./list.php");
     }
 }else{
     // 新規登録モード
-    $result = $story->InsertExec($pdo);
+    $result = ($TableClass)::InsertFromRowObj($pdo,$story);
     if($result){
         redirect_exit("./list.php");
     }
