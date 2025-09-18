@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,3).'/libs/init.php';
-defineAppRootRelPath(3);
+InAppUrl::init(3);
 $page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -63,13 +63,13 @@ function checkRaceIdExists() {
   const raceId = $('input[name="new_race_id"]').val().trim();
   if (raceId !== '') {
     $.ajax({
-      url: '<?php echo $page->to_app_root_path; ?>api/checkRaceIdExists.php',
+      url: '<?=InAppUrl::to('api/checkRaceIdExists.php')?>',
       method: 'GET',
       data: { race_id: raceId },
       dataType: 'text',
       success: function(response) {
         if (response.trim() === 'true') {
-          const href_pref ='<?php echo $page->to_app_root_path; ?>race/result.php?race_id=';
+          const href_pref ='<?=InAppUrl::to('race/result.php?race_id=')?>';
           $('#duplicate_id_link').attr('href', href_pref+raceId);
           $('#duplicate_id_link').text('ID: '+raceId+' は存在します');
         }else{
