@@ -93,55 +93,49 @@ class Horse extends Table{
 
         $this->color=(string)(filter_input(INPUT_POST,'color')?:filter_input(INPUT_POST,'color_select'));
         $this->tc=(string)(filter_input(INPUT_POST,'tc')?:filter_input(INPUT_POST,'tc_select'));
-        $this->validateLength($this->trainer_name,'所属',10);
 
         $this->trainer_name=filter_input(INPUT_POST,'trainer_name')?:null;
-        $this->validateLength($this->trainer_name,'調教師名',32);
-
         $this->training_country=filter_input(INPUT_POST,'training_country');
-        $this->validateLength($this->training_country,'調教国コード',3);
-
         $this->owner_name=filter_input(INPUT_POST,'owner_name')?:null;
-        $this->validateLength($this->owner_name,'馬主名',50);
-
         $this->breeder_name=filter_input(INPUT_POST,'breeder_name')?:null;
-        $this->validateLength($this->owner_name,'生産者名',50);
-
         $this->breeding_country=filter_input(INPUT_POST,'breeding_country')?:null;
-        $this->validateLength($this->breeding_country,'生産国コード',3);
-
         $this->is_affliationed_nar=filter_input(INPUT_POST,'is_affliationed_nar');
+
         $this->sire_id=filter_input(INPUT_POST,'sire_id');
-        $this->validateLength($this->sire_id,'父ID',100);
-
         $this->sire_name=filter_input(INPUT_POST,'sire_name');
-        $this->validateLength($this->sire_name,'父名',18);
-
         $this->mare_id=filter_input(INPUT_POST,'mare_id');
-        $this->validateLength($this->mare_id,'母ID',100);
-
         $this->mare_name=filter_input(INPUT_POST,'mare_name');
-        $this->validateLength($this->mare_name,'母名',18);
-
         $this->bms_name=filter_input(INPUT_POST,'bms_name');
-        $this->validateLength($this->bms_name,'母父名',18);
 
         $this->is_sire_or_dam=filter_input(INPUT_POST,'is_sire_or_dam',FILTER_VALIDATE_INT);
-        if(($this->sex===0||$this->sex===3)&&$this->is_sire_or_dam===1){
-            $this->error_msgs[]="牡馬・牝馬以外は繁殖馬に設定できません。";
-            $this->error_exists=true;
-        }
         $this->meaning=filter_input(INPUT_POST,'meaning');
-        $this->validateLength($this->meaning,'馬名意味',100);
-
         $this->profile=filter_input(INPUT_POST,'profile');
-        $this->validateLength($this->profile,'プロフィール',10000);
-
         $this->note=filter_input(INPUT_POST,'note')?:'';
-        $this->validateLength($this->note,'備考',100);
         
         $this->is_enabled=filter_input(INPUT_POST,'is_enabled');
+        $this->varidate();
         return $this->error_exists?false:true;
+    }
+    public function varidate(){
+        $this->validateLength($this->color,'毛色',3);
+        $this->validateLength($this->tc,'所属',10);
+        $this->validateLength($this->trainer_name,'調教師名',32);
+        $this->validateLength($this->training_country,'調教国コード',3);
+        $this->validateLength($this->owner_name,'馬主名',50);
+        $this->validateLength($this->breeder_name,'生産者名',50);
+        $this->validateLength($this->breeding_country,'生産国コード',3);
+        $this->validateLength($this->sire_id,'父ID',100);
+        $this->validateLength($this->sire_name,'父名',18);
+        $this->validateLength($this->mare_id,'母ID',100);
+        $this->validateLength($this->mare_name,'母名',18);
+        $this->validateLength($this->bms_name,'母父名',18);
+        if(($this->sex===0||$this->sex===3)&&$this->is_sire_or_dam===1){
+            $this->addErrorMessages("牡馬・牝馬以外は繁殖馬に設定できません。");
+        }
+        $this->validateLength($this->meaning,'馬名意味',100);
+        $this->validateLength($this->profile,'プロフィール',10000);
+        $this->validateLength($this->note,'備考',100);
+        return !$this->error_exists;
     }
     /**
      * Insert
