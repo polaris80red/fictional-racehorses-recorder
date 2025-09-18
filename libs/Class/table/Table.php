@@ -144,8 +144,8 @@ abstract class Table{
     public const ROW_CLASS = TableRow::class;
     public static function InsertFromRowObj(PDO $pdo, TableRow $row_obj){
         $exclude_columns=[static::UNIQUE_KEY_COLUMN];
-        $int_columns=array_diff((static::ROW_CLASS)::INT_COLUMNS,$exclude_columns);
-        $str_columns=array_diff((static::ROW_CLASS)::STR_COLUMNS,$exclude_columns);
+        $int_columns=(static::ROW_CLASS)::getIntColmunNames($exclude_columns);
+        $str_columns=(static::ROW_CLASS)::getStrColmunNames($exclude_columns);
 
         $sql=SqlMake::InsertSql(static::TABLE,array_merge($str_columns,$int_columns));
         $stmt = $pdo->prepare($sql);
@@ -165,15 +165,17 @@ abstract class Table{
         }
     }
     public static function UpdateFromRowObj(PDO $pdo, TableRow $row_obj){
-        $colmuns=array_merge((static::ROW_CLASS)::INT_COLUMNS,(static::ROW_CLASS)::STR_COLUMNS);
+        $colmuns=(static::ROW_CLASS)::getColumnNames();
         $id =static::UNIQUE_KEY_COLUMN;
         $update_set_columns=array_diff($colmuns,[$id]);
         $sql=SqlMake::UpdateSqlWhereRaw(static::TABLE,$update_set_columns,"`{$id}`=:{$id}");
         $stmt = $pdo->prepare($sql);
-        foreach((static::ROW_CLASS)::INT_COLUMNS as $i_col){
+        $int_columns=(static::ROW_CLASS)::getIntColmunNames();
+        foreach($int_columns as $i_col){
             $stmt->bindValue(":{$i_col}",$row_obj->{$i_col},PDO::PARAM_INT);
         }
-        foreach((static::ROW_CLASS)::STR_COLUMNS as $s_col){
+        $str_columns=(static::ROW_CLASS)::getStrColmunNames();
+        foreach($str_columns as $s_col){
             $stmt->bindValue(":{$s_col}",$row_obj->{$s_col},PDO::PARAM_STR);
         }
         try{
