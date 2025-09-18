@@ -178,7 +178,9 @@ class Race extends Table{
         return $this->error_exists?false:true;
     }
     public function varidate(){
+        $this->varidateInt($this->race_number,'レース番号',0,99);
         $this->validateLength($this->course_type,'コース区分',2);
+        $this->varidateInt($this->distance,'距離',0,10000);
         $this->validateLength($this->race_name,'レース名',100);
         $this->validateLength($this->race_short_name,'レース略名',20);
         $this->validateLength($this->caption,'補足',100);
@@ -186,6 +188,8 @@ class Race extends Table{
         $this->validateLength($this->age,'馬齢条件',50);
         $this->validateLength($this->weather,'天候',10);
         $this->validateLength($this->track_condition,'馬場状態',100);
+        $this->varidateInt($this->number_of_starters,'頭数',0,99);
+        $this->varidateInt($this->month,'月',1,12);
         $this->validateLength($this->note,'備考',100);
         $this->validateLength($this->previous_note,'レース前メモ',10000);
         $this->validateLength($this->after_note,'レース後メモ',10000);
