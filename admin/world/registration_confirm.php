@@ -12,10 +12,20 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_world_id=filter_input(INPUT_POST,'world_id',FILTER_VALIDATE_INT);
-$world=new World();
-if($input_world_id>0){
-    $world->getDataById($pdo,$input_world_id);
+$inputId=filter_input(INPUT_POST,'world_id',FILTER_VALIDATE_INT);
+$editMode=($inputId>0);
+$TableClass=World::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+$world=($TableClass)::getById($pdo,$inputId);
+if($editMode){
+    $page->title.="（編集）";
+}
+if($editMode && $world===false){
+    $page->addErrorMsg("ワールドID '{$inputId}' が指定されていますが該当するワールドがありません");
+}
+if($world===false){
+    $world=new ($TableRowClass)();
 }
 $world->name=filter_input(INPUT_POST,'name');
 $world->guest_visible=filter_input(INPUT_POST,'guest_visible',FILTER_VALIDATE_BOOL)?1:0;
@@ -25,27 +35,15 @@ $sort_number=(string)filter_input(INPUT_POST,'sort_number');
 $world->sort_number = $sort_number===''?null:(int)$sort_number;
 $world->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
-$error_exists=false;
 do{
-    if($input_world_id>0 && !$world->record_exists){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("ワールドID '{$input_world_id}' が指定されていますが該当するワールドがありません");
-    }
     if($world->name===''){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg('ワールド名未設定');
     }
 }while(false);
-if($error_exists){
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($input_world_id>0){
-    $page->title.="（編集）";
-}
-
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>

@@ -61,7 +61,7 @@ if($race->setDataByPost()==false){
 <tr>
     <th>ワールド</th>
     <?php $world=World::getById($pdo,$race->world_id) ?>
-    <td><?=(MkTagInput::Hidden('world_id',$race->world_id))."{$race->world_id}:{$world['name']}"?></td>
+    <td><?=(MkTagInput::Hidden('world_id',$race->world_id))."{$race->world_id}:{$world->name}"?></td>
 </tr>
 <tr>
     <th>競馬場</th>

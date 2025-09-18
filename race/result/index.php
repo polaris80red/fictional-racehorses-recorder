@@ -174,7 +174,7 @@ $latest_horse_exists=false;
     <?php if(!empty($page->is_editable)): ?>
         <tr>
             <th>ワールド</th>
-            <td><?=h((new World($pdo,$race->world_id))->name??'')?></td>
+            <td><?=h((World::getById($pdo,$race->world_id))->name??'')?></td>
         </tr>
     <?php endif; ?>
     <tr>

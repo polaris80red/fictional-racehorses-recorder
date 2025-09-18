@@ -199,7 +199,12 @@ class Race extends Table{
         $sql=SqlMake::InsertSql(self::TABLE,$insert_columns);
         if($this->race_id==''){
             // IDがない場合生成処理
-            $world=new World($pdo,$this->world_id);
+            $world=World::getById($pdo,$this->world_id);
+            if($world===false){
+                $msgs[]="id'{$this->world_id}'のワールドが見つかりません。";
+                throw new ErrorException(implode("\n",$msgs));
+                return false;
+            }
             $skey_gen=new SurrogateKeyGenerator($pdo,$world->auto_id_prefix);
             $id=$skey_gen->generateId();
             if(false===(new self())->setRaceId($id)){
