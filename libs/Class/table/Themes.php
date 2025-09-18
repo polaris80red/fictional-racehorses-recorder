@@ -2,47 +2,15 @@
 class Themes extends Table{
     public const TABLE = 'mst_themes';
     public const UNIQUE_KEY_COLUMN="id";
-    protected const INT_COLUMNS=[
-        'id',
-        'sort_priority',
-        'sort_number',
-        'is_enabled',
-    ];
-    protected const STR_COLUMNS=[
-        'name',
-        'dir_name',
-    ];
     protected const DEFAULT_ORDER_BY
     ='`sort_priority` DESC, `sort_number` IS NULL, `sort_number` ASC, `id` ASC';
+    public const ROW_CLASS = ThemesRow::class;
 
-    public $id              =0;
-    public $name            ='';
-    public $dir_name        ='';
-    public $sort_priority   =0;
-    public $sort_number      =null;
-    public $is_enabled      =1;
-
-    public function __construct(PDO|null $pdo=null, int $key=0){
-        if(!is_null($pdo)&& $key>0){
-            $this->getDataById($pdo,$key);
+    public static function getById(PDO $pdo, $id, $pdo_param_mode=PDO::PARAM_INT){
+        $result = self::getByUniqueKey($pdo,'id',$id,$pdo_param_mode);
+        if($result==false){
+            return false;
         }
-    }
-    public function getDataById(PDO $pdo, int $id){
-        $this->id = $id;
-        $result=$this->getById($pdo,$id,PDO::PARAM_INT);
-        if(!$result){ return false; }
-
-        $this->record_exists=true;
-        $column_names=array_merge(self::INT_COLUMNS,self::STR_COLUMNS);
-        foreach($column_names as $name){
-            $this->{$name}=$result[$name];
-        }
-        return $result;
-    }
-    public function InsertExec(PDO $pdo){
-        return $this->SimpleInsertExec($pdo);
-    }
-    public function UpdateExec(PDO $pdo){
-        return $this->SimpleUpdateExec($pdo);
+        return (new (static::ROW_CLASS))->setFromArray($result);
     }
 }
