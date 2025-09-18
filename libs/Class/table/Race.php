@@ -94,7 +94,8 @@ class Race extends Table{
             return false;
         }
         $result = (object)$result;
-        foreach(self::COLUMNS as $column){
+        $columns=(self::ROW_CLASS)::getColumnNames();
+        foreach($columns as $column){
             $this->{$column}=$result->{$column};
         }
         $this->record_exists=true;
