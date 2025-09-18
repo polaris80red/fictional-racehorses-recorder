@@ -475,10 +475,16 @@ $latest_race_is_exists=false; ?>
     <?php endif; ?>
 <?php endforeach; ?>
 </table>
-<form method="get" action="" style="margin-top: 4px;">
-    レース前後メモ切替：<label><input type="checkbox" name="show_horse_note" value="1"<?=!$show_horse_note?'':' checked'?>>競走馬</label>
-    ｜<label><input type="checkbox" name="show_race_note" value="1"<?=!$show_race_note?'':' checked'?>>レース</label>
-    　<input type="submit" value="切替">
+<form id="show_note_switch" method="get" action="" style="margin-top: 4px;padding-left:0.5em;max-width:600px; border:solid 1px #999;" oncontextmenu="return false;">
+    レース前後メモ切替：
+    <label oncontextmenu="resetAndCheck('input[name=show_horse_note]');">
+        <input type="checkbox" name="show_horse_note" value="1"<?=!$show_horse_note?'':' checked'?>>競走馬
+    </label>
+    ｜<label oncontextmenu="resetAndCheck('input[name=show_race_note]');">
+        <input type="checkbox" name="show_race_note" value="1"<?=!$show_race_note?'':' checked'?>>レース
+    </label>
+    　<input type="button" class="toggle" value="全選択・全解除" onclick="toggleCheckboxes();">
+    　<input type="submit" value="切替実行">
     <?php
         $params= array_diff(array_diff_key($page_urlparam->toArray(),[
             'show_horse_note'=>false,
@@ -489,6 +495,18 @@ $latest_race_is_exists=false; ?>
         }
     ?>
 </form>
+<script>
+function toggleCheckboxes() {
+    const $checkboxes = $('#show_note_switch input[type="checkbox"]');
+    const allChecked = $checkboxes.length > 0 && $checkboxes.filter(':checked').length === $checkboxes.length;
+    $checkboxes.prop('checked', !allChecked);
+}
+function resetAndCheck(elm) {
+    const $checkboxes = $('#show_note_switch input[type="checkbox"]');
+    $checkboxes.prop('checked', false);
+    $(elm).prop('checked', true);
+}
+</script>
 <a id="under_results_table"></a>
 <?php
     $tpl=new TemplateImporter('horse/horse_page-profile_2.inc.php');
