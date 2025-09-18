@@ -2,7 +2,6 @@
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
 InAppUrl::init(2);
-defineAppRootRelPath(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -159,14 +158,12 @@ $latest_horse_exists=false;
             <th>ターン</th>
             <td><?php
                 print_h($setting->getYearSpecialFormat($race->year)."｜");
-                $week_url_param=new UrlParams(['year'=>$race->year,'week'=>$race->week_id]);
                 $a_tag=new MkTagA("第{$race->week_id}週");
-                $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$week_url_param);
+                $a_tag->href(InAppUrl::to('race/list/in_week.php',['year'=>$race->year,'week'=>$race->week_id]));
                 $a_tag->print();
                 print "｜";
-                $turn_url_param=new UrlParams(['year'=>$race->year,'month'=>$week_month,'turn'=>$turn]);
                 $a_tag=new MkTagA("{$week_month}月".($turn===2?"後半":"前半"));
-                $a_tag->href($page->to_app_root_path."race/list/in_week.php?".$turn_url_param);
+                $a_tag->href(InAppUrl::to('race/list/in_week.php',['year'=>$race->year,'month'=>$week_month,'turn'=>$turn]));
                 $a_tag->print();
             ?></td>
         </tr>
