@@ -124,7 +124,6 @@ if($is_jra_only){
 if(!$show_disabled){ $sql_where_and_parts[]="r.`is_enabled`=1"; }
 $race_list_getter->addWhereParts($sql_where_and_parts);
 $race_list_getter->addOrderParts([
-    "w.`umm_month_turn` ASC",
     "w.`sort_number` ASC",
     "r.`date` ASC",
     "r.`is_jra` DESC",
