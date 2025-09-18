@@ -28,13 +28,11 @@ if($input_id>0){
 $story_setting=$story->config_json;
 // 現在値の設定インスタンスにストーリー設定の保存値を反映する
 $setting->setByStdClass($story_setting);
-$world=new World();
-$world->getDataById($pdo,$setting->world_id);
+$world=World::getById($pdo,$setting->world_id);
 
 // 新規登録かつワールド設定がある（ワールド設定からの遷移）の場合、ワールドを再設定してnameにも反映する。
 if($input_id==0 && $input_world_id>0){
-    $world=new World();
-    $world->getDataById($pdo,$input_world_id);
+    $world=World::getById($pdo,$setting->world_id);
     $setting->world_id=$input_world_id;
     $story->name=$world->name;
 }

@@ -104,11 +104,9 @@ $story_list=WorldStory::getAll($pdo);
     <th>ワールド</th>
     <td><?php
         if($setting->world_id>0){
-            $world=new World();
-            $world->getDataById($pdo,$setting->world_id);
-            echo $world->name;
+            $world=World::getById($pdo,$setting->world_id);
         }
-    ?></td>
+    ?><?=h($world->name??'')?></td>
     <td class="in_input"><select name="world_id">
 <?php if($session->is_logined()): ?>
     <option value="">未選択</option>

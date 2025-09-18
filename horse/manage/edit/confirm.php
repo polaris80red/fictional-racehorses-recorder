@@ -103,10 +103,9 @@ th{
 <tr>
     <th>ワールド</th>
     <td><?php
-    $world=new World($pdo,$horse->world_id);
-    print_h($world->name);
+    $world=World::getById($pdo,$horse->world_id);
     HTPrint::Hidden('world_id',$horse->world_id);
-    ?></td>
+    ?><?=h($world->name??'')?></td>
 </tr>
 <tr>
     <th>馬名</th>

@@ -12,17 +12,25 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
-$world=new World();
-if($input_id>0){
-    $world->getDataById($pdo,$input_id);
-    if($world->record_exists){
-        $page->title.="（編集）";
-    }else{
-        $world->id=0;
-    }
-}
+$inputId=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+$editMode=($inputId>0);
+$TableClass=World::class;
+$TableRowClass=$TableClass::ROW_CLASS;
 
+$world=($TableClass)::getById($pdo,$inputId);
+if($editMode){
+    $page->title.="（編集）";
+}
+if($editMode && $world===false){
+    $page->addErrorMsg("ワールドID '{$inputId}' が指定されていますが該当するワールドがありません");
+}
+if($world===false){
+    $world=new ($TableRowClass)();
+}
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
