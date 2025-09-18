@@ -118,11 +118,12 @@ class RaceResults extends Table{
         $this->result_before_demotion = (int)filter_input($input_type,'result_before_demotion');
         $this->result_text = filter_input($input_type,'result_text');
 
-        $this->frame_number = filter_input($input_type,'frame_number');
+        $this->frame_number = filter_input($input_type,'frame_number',FILTER_VALIDATE_INT)?:null;
         $this->horse_number = (int)filter_input($input_type,'horse_number');
         if($this->horse_number==0){
             $this->horse_number = (int)filter_input($input_type,'horse_number_select');
         }
+        if($this->horse_number==0){ $this->horse_number==null; }
         $this->jockey_name = filter_input($input_type,'jockey')?:null;
         $this->handicap = filter_input($input_type,'handicap');
         $this->odds = filter_input($input_type,'odds')?:null;
@@ -130,13 +131,14 @@ class RaceResults extends Table{
         if($this->favourite==0){
             $this->favourite = (int)filter_input($input_type,'favourite_select');
         }
+        if($this->favourite==0){ $this->favourite==null; }
         $this->time = filter_input($input_type,'time');
         $this->margin = filter_input($input_type,'margin');
 
-        $this->corner_1 = filter_input($input_type,'corner_1');
-        $this->corner_2 = filter_input($input_type,'corner_2');
-        $this->corner_3 = filter_input($input_type,'corner_3');
-        $this->corner_4 = filter_input($input_type,'corner_4');
+        $this->corner_1 = filter_input($input_type,'corner_1',FILTER_VALIDATE_INT)?:null;
+        $this->corner_2 = filter_input($input_type,'corner_2',FILTER_VALIDATE_INT)?:null;
+        $this->corner_3 = filter_input($input_type,'corner_3',FILTER_VALIDATE_INT)?:null;
+        $this->corner_4 = filter_input($input_type,'corner_4',FILTER_VALIDATE_INT)?:null;
 
         $this->f_time = filter_input($input_type,'f_time');
 
@@ -162,17 +164,34 @@ class RaceResults extends Table{
         return true;
     }
     public function varidate(){
+        $this->varidateInt($this->result_number,'着順',0,99);
+        $this->varidateInt($this->result_order,'表示順補正',0,99);
         $this->validateLength($this->result_text,'特殊結果',8);
+        $this->varidateInt($this->result_before_demotion,'降着前入線順',0,99);
+        $this->varidateInt($this->frame_number,'枠番',0,99);
+        $this->varidateInt($this->horse_number,'馬番',0,99);
         $this->validateLength($this->jockey_name,'騎手名',32);
         $this->validateLength($this->handicap,'斤量',4);
         $this->validateLength($this->odds,'単勝オッズ',6);
         $this->validateLength($this->time,'タイム',7);
         $this->validateLength($this->margin,'着差',5);
+        
+        $this->varidateInt($this->corner_1,'コーナー通過順位1',0,99);
+        $this->varidateInt($this->corner_2,'コーナー通過順位2',0,99);
+        $this->varidateInt($this->corner_3,'コーナー通過順位3',0,99);
+        $this->varidateInt($this->corner_4,'コーナー通過順位4',0,99);
+        $this->varidateInt($this->favourite,'人気',0,99);
+
         $this->validateLength($this->f_time,'上り3f(平地)／平均1f(障害)',4);
         $this->validateLength($this->tc,'所属',10);
         $this->validateLength($this->trainer_name,'調教師名',32);
         $this->validateLength($this->training_country,'調教国コード',3);
         $this->validateLength($this->owner_name,'馬主名',50);
+        
+        $this->varidateInt($this->earnings,'賞金',0,null);
+        $this->varidateInt($this->syuutoku,'収得賞金',0,null);
+        $this->varidateInt($this->non_registered_prev_race_number,'未登録前走',0,30);
+
         $this->validateLength($this->race_previous_note,'レース前メモ',10000);
         $this->validateLength($this->race_after_note,'レース後メモ',10000);
         $this->validateLength($this->jra_thisweek_horse_1,'出走馬情報(火曜)',500);

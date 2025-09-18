@@ -93,8 +93,16 @@ abstract class Table{
         return $stmt;
     }
     // 競走馬・レースなど改修までの暫定
+    /**
+     * エラーメッセージを追加してエラー有りフラグをオンにする
+     */
     public $error_msgs=[];
     public $error_exists=false;
+    protected function addErrorMessages(string $message){
+        $this->error_msgs[]=$message;
+        $this->error_exists=true;
+        return;
+    }
     /**
      * 文字数チェック（エラー有無判定をテーブルクラスに持つクラス用の暫定）
      */
@@ -103,8 +111,32 @@ abstract class Table{
             return;
         }
         if(mb_strlen($target_value)>$max_length){
-            $this->error_msgs[]="{$name}は{$max_length}文字以内で設定してください。";
-            $this->error_exists=true;
+            $this->addErrorMessages("{$name}は{$max_length}文字以内で設定してください。");
+        }
+        return;
+    }
+    /**
+     * 整数の範囲チェック
+     */
+    protected function varidateInt($target_value, string $name, int|null $min = null, int|null $max=null){
+        $value=(int)$target_value;
+        if($min!==null){
+            if($value<$min){
+                $this->addErrorMessages("{$name}は{$min}以上を指定してください。");
+                return;
+            }
+        }else if($value<-2147483647){
+            $this->addErrorMessages("{$name}は-2147483647以上を指定してください。");
+            return;
+        }
+        if($max!==null){
+            if($value>$max){
+                $this->addErrorMessages("{$name}は{$max}以下を指定してください。");
+                return;
+            }
+        }else if($value>2147483647){
+            $this->addErrorMessages("{$name}は2147483647以下を指定してください。");
+            return;
         }
         return;
     }
