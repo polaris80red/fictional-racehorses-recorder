@@ -13,18 +13,25 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
-$theme=new Themes();
-$s_setting=new Setting(false);
-if($input_id>0){
-    $theme->getDataById($pdo,$input_id);
-    if($theme->record_exists){
-        $page->title.="（編集）";
-    }else{
-        $theme->id=0;
-    }
-}
+$inputId=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+$editMode=($inputId>0);
+$TableClass=Themes::class;
+$TableRowClass=$TableClass::ROW_CLASS;
 
+$theme=($TableClass)::getById($pdo,$inputId);
+if($editMode){
+    $page->title.="（編集）";
+}
+if($editMode && $theme===false){
+    $page->addErrorMsg("テーマID '{$inputId}' が指定されていますが該当するテーマがありません");
+}
+if($theme===false){
+    $theme=new ($TableRowClass)();
+}
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -55,7 +62,7 @@ if($input_id>0){
     <th>ID</th>
     <td><?php
         print_h($theme->id?:"新規登録");
-        HTPrint::Hidden('theme_id',$theme->id);
+        HTPrint::Hidden('id',$theme->id);
     ?></td>
 </tr>
 <tr>
