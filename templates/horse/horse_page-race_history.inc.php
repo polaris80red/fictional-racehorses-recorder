@@ -6,6 +6,7 @@
  * @var HorseRaceHistory $race_history
  */
 ?><table class="horse_history">
+<thead>
 <tr>
     <th><?php
     echo $setting->horse_record_date==='umm'?'時期 ':'年月 ';
@@ -29,7 +30,9 @@
     <th>タイム</th>
     <th>1着馬<span class="nowrap">(2着馬)</span></th><th>記</th>
     <?php if($page->is_editable): ?><th></th><?php endif; ?>
-</tr><?php
+</tr>
+</thead>
+<?php
 $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id='') use($page,$horse_id,$mode_umm){
     $ret_text='';
     if($non_registered_prev_race_number>0){
@@ -51,6 +54,7 @@ $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id=''
 $registration_only_race_is_exists=false;
 $latest_race_is_exists=false;
 ?>
+<tbody>
 <?php foreach ($race_history as $data):?>
     <?php
         if(empty($data->race_id)){ continue; }
@@ -179,4 +183,5 @@ $latest_race_is_exists=false;
         <?=$FUNC_print_empty_row($data->non_registered_prev_race_number,$race->race_id)?>
     <?php endif; ?>
 <?php endforeach; ?>
+</tbody>
 </table>
