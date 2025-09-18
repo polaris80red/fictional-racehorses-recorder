@@ -13,10 +13,20 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_POST,'story_id',FILTER_VALIDATE_INT);
-$story=new WorldStory();
-if($input_id>0){
-    $story->getDataById($pdo,$input_id);
+$inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
+$editMode=($inputId>0);
+$TableClass=WorldStory::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+$story=($TableClass)::getById($pdo,$inputId);
+if($editMode){
+    $page->title.="（編集）";
+}
+if($editMode && $story===false){
+    $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当する設定がありません");
+}
+if($story===false){
+    $story=new ($TableRowClass)();
 }
 $story->name=filter_input(INPUT_POST,'name');
 $story->guest_visible=filter_input(INPUT_POST,'guest_visible',FILTER_VALIDATE_BOOL)?1:0;
@@ -48,28 +58,16 @@ if(isset($_POST['save_target']) && is_array($_POST['save_target'])){
     $config_json_data=array_intersect_key($config_json_data,$diff_array);
 }
 
-$error_exists=false;
 do{
-    if($input_id>0 && !$story->record_exists){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定ID '{$input_id}' が指定されていますが該当する{$base_title}がありません");
-    }
     if($story->name===''){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
         $page->addErrorMsg("{$base_title}設定名称未設定");
         break;
     }
 }while(false);
-if($error_exists){
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($input_id>0){
-    $page->title.="（編集）";
-}
-
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -99,7 +97,7 @@ if($input_id>0){
     <th>ID</th>
     <td><?php
         print_h($story->id?:"新規登録");
-        HTPrint::Hidden('story_id',$story->id);
+        HTPrint::Hidden('id',$story->id);
     ?></td>
 </tr>
 <tr>

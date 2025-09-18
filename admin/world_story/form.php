@@ -12,27 +12,36 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+$inputId=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 $input_world_id=filter_input(INPUT_GET,'world_id',FILTER_VALIDATE_INT);
-$story=new WorldStory();
 $s_setting=new Setting(false);
-if($input_id>0){
-    $story->getDataById($pdo,$input_id);
-    if($story->record_exists){
-        $page->title.="（編集）";
-        $s_setting->setByStdClass($story->config_json);
-    }else{
-        $story->id=0;
-    }
+
+$editMode=($inputId>0);
+$TableClass=WorldStory::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+$story=($TableClass)::getById($pdo,$inputId);
+if($editMode){
+    $page->title.="（編集）";
 }
-$story_setting=$story->config_json;
+if($editMode && $story===false){
+    $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当する設定がありません");
+}
+if($story===false){
+    $story=new ($TableRowClass)();
+}
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
+$story_setting=$story->getDecodedConfig();
 // 現在値の設定インスタンスにストーリー設定の保存値を反映する
 $setting->setByStdClass($story_setting);
 $world=World::getById($pdo,$setting->world_id);
 
 // 新規登録かつワールド設定がある（ワールド設定からの遷移）の場合、ワールドを再設定してnameにも反映する。
-if($input_id==0 && $input_world_id>0){
-    $world=World::getById($pdo,$setting->world_id);
+if(!$editMode && $input_world_id>0){
+    $world=World::getById($pdo,$input_world_id);
     $setting->world_id=$input_world_id;
     $story->name=$world->name;
 }
@@ -66,7 +75,7 @@ if($input_id==0 && $input_world_id>0){
     <th>ID</th>
     <td><?php
         print_h($story->id?:"新規登録");
-        HTPrint::Hidden('story_id',$story->id);
+        HTPrint::Hidden('id',$story->id);
     ?></td>
 </tr>
 <tr>

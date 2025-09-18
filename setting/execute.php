@@ -12,8 +12,8 @@ $save_to_file=filter_input(INPUT_POST,'save_to_file');
 $story_id=filter_input(INPUT_POST,'story_id');
 $story=null;
 if($story_id>0){
-    $story=new WorldStory($pdo,$story_id);
-    $config_json=$story->config_json;
+    $story=WorldStory::getById($pdo,$story_id);
+    $config_json=$story->getDecodedConfig();
     /*
     if($story->world_id===0){ unset($config_json->world_id); }
     */
@@ -25,9 +25,8 @@ if($story_id>0){
 $save_story_is_enabled=filter_input(INPUT_POST,'save_story_is_enabled',FILTER_VALIDATE_BOOL);
 $save_story_id=filter_input(INPUT_POST,'save_story_id',FILTER_VALIDATE_INT);
 if($save_story_is_enabled && $save_story_id>0 && Session::is_logined()){
-    $save_target_story=new WorldStory();
-    $result = $save_target_story->getDataById($pdo,$save_story_id);
-    if($result!=false){
+    $save_target_story=WorldStory::getById($pdo,$save_story_id);
+    if($save_target_story!==false){
         $config_json_data=$setting->getSettingArray();
         if(isset($_POST['save_target']) && is_array($_POST['save_target'])){
             $diff_array=$_POST['save_target'];
@@ -45,9 +44,8 @@ if($save_story_is_enabled && $save_story_id>0 && Session::is_logined()){
             }
             $config_json_data=array_intersect_key($config_json_data,$diff_array);
         }
-        $save_target_story->config_json=$config_json_data;
-
-        $save_target_story->updateConfigExec($pdo);
+        $save_target_story->setConfig($config_json_data);
+        WorldStory::UpdateFromRowObj($pdo,$save_target_story);
     }
 }
 
