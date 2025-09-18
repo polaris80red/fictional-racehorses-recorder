@@ -92,61 +92,6 @@ abstract class Table{
         }
         return $stmt;
     }
-    /**
-     * 定数STR_COLUMNSとINT_COLUMNSに存在する名前のパラメータでINSERT
-     */
-    protected function InsertExecFromThisProp(PDO $pdo, array $excluded_columns=[]){
-        $columns=array_merge(static::STR_COLUMNS,static::INT_COLUMNS);
-        // AUTO_INCREMENTで入れるキーを除外
-        $excluded_columns[]=static::UNIQUE_KEY_COLUMN;
-        $columns=array_diff($columns,$excluded_columns);
-        $sql=SqlMake::InsertSql(static::TABLE,$columns);
-        $stmt = $pdo->prepare($sql);
-        $stmt=$this->BindValuesFromThis($stmt, array_diff(static::STR_COLUMNS,$excluded_columns),PDO::PARAM_STR);
-        $stmt=$this->BindValuesFromThis($stmt, array_diff(static::INT_COLUMNS,$excluded_columns),PDO::PARAM_INT);
-        try{
-            $stmt->execute();
-            return true;
-        }catch (Exception $e){
-            echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
-            return false;
-        }
-    }
-    /**
-     * Auto Incrementの1つのカラムをユニークキーとするテーブルに簡易INSERT
-     * STR_COLUMNS＋INT_COLUMNSと一致するパラメータがクラスに必要
-     * UNIQUE_KEY_COLUMNのみ除外してINSERTを実行する
-     */
-    protected function SimpleInsertExec(PDO $pdo, array $excluded_columns=[]){
-        $excluded_columns[]=static::UNIQUE_KEY_COLUMN;
-        $result = self::InsertExecFromThisProp($pdo,$excluded_columns);
-        return $result;
-    }
-    /**
-     * 「UNIQUE_KEY_COLUMNとそれ以外」の構成の簡易INSERT
-     * STR_COLUMNS＋INT_COLUMNSおよび致するパラメータがクラスに必要
-     */
-    protected function SimpleUpdateExec(PDO $pdo, array $excluded_columns=[]){
-        $columns=array_merge(static::STR_COLUMNS,static::INT_COLUMNS);
-
-        // UPDATE対象からはユニークキーを取り除く（※WHERE文に使うためバインドからは取り除かない）
-        $update_set_columns=array_diff($columns,[static::UNIQUE_KEY_COLUMN],$excluded_columns);
-        $sql=SqlMake::UpdateSqlWhereRaw(
-            static::TABLE,$update_set_columns,
-            "`".static::UNIQUE_KEY_COLUMN."`=:".static::UNIQUE_KEY_COLUMN
-        );
-        $stmt = $pdo->prepare($sql);
-        $stmt=$this->BindValuesFromThis($stmt, array_diff(static::STR_COLUMNS,$excluded_columns),PDO::PARAM_STR);
-        $stmt=$this->BindValuesFromThis($stmt, array_diff(static::INT_COLUMNS,$excluded_columns),PDO::PARAM_INT);
-        try{
-            $stmt->execute();
-        }catch (Exception $e){
-            echo "<pre>"; print_r($stmt->debugDumpParams());echo "</pre>";
-            echo "<pre>"; print_r($e);echo "</pre>";
-            return false;
-        }
-        return true;
-    }
     // 競走馬・レースなど改修までの暫定
     public $error_msgs=[];
     public $error_exists=false;
