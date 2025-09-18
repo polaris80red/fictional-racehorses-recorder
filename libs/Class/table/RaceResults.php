@@ -183,6 +183,7 @@ class RaceResults extends Table{
         $this->varidateInt($this->favourite,'人気',0,99);
 
         $this->validateLength($this->f_time,'上り3f(平地)／平均1f(障害)',4);
+        $this->varidateInt($this->h_weight,'馬体重',0,2000);
         $this->validateLength($this->tc,'所属',10);
         $this->validateLength($this->trainer_name,'調教師名',32);
         $this->validateLength($this->training_country,'調教国コード',3);
