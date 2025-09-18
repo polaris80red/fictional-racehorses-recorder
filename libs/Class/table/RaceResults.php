@@ -85,8 +85,7 @@ class RaceResults extends Table{
      * キーでデータベースから取得
      */
     public function setDataById($pdo, string $race_id, string $horse_id){
-        $target_columns=array_diff(
-            array_merge(self::INT_COLUMNS,self::STR_COLUMNS),['number']);
+        $target_columns=(self::ROW_CLASS)::getColumnNames('number');
         $sql_select_columns_part=(new SqlMakeColumnNames($target_columns))->quotedString();
 
         $sql ="SELECT {$sql_select_columns_part} FROM `".self::TABLE;
