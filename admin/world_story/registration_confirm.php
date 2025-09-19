@@ -18,14 +18,13 @@ $editMode=($inputId>0);
 $TableClass=WorldStory::class;
 $TableRowClass=$TableClass::ROW_CLASS;
 
-$story=($TableClass)::getById($pdo,$inputId);
 if($editMode){
     $page->title.="（編集）";
-}
-if($editMode && $story===false){
-    $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当する設定がありません");
-}
-if($story===false){
+    $story=($TableClass)::getById($pdo,$inputId);
+    if($story===false){
+        $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当する設定がありません");
+    }
+}else{
     $story=new ($TableRowClass)();
 }
 $story->name=filter_input(INPUT_POST,'name');
