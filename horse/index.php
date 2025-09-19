@@ -45,11 +45,12 @@ $date_order = $setting->hors_history_sort_is_desc ? 'DESC':'ASC';
 $horse_id=filter_input(INPUT_GET,'horse_id');
 $show_registration_only=(bool)filter_input(INPUT_GET,'show_registration_only');
 
-$page_urlparam=new UrlParams([
+$page_urlparam=new UrlParams(array_diff([
     'horse_id'=>$horse_id,
     'horse_history_order'=>$get_order==='desc'?'desc':'asc',
     'show_registration_only'=>$show_registration_only,
-]);
+    'preview'=>$is_preview,
+],[0,false,null]));
 # 馬情報取得
 $horse=Horse::getByHorseId($pdo,$horse_id);
 if($horse===false){

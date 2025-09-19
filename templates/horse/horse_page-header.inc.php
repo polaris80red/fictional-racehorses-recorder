@@ -34,7 +34,7 @@
     <?php endif; ?>
 </div>
 <hr style="clear: both;margin-bottom: 2px;">
-<?php $param=['horse_id'=>$horse->horse_id,'show_registration_only'=>$show_registration_only??false]; ?>
+<?php $param=array_diff(['horse_id'=>$horse->horse_id,'show_registration_only'=>$show_registration_only??false],[0,false,null]); ?>
 <div class="horse_page_header" style="font-size:0.9em;">
     <a href="<?=InAppUrl::to('horse/',$param)?>">TOP</a>
     ｜
