@@ -29,7 +29,7 @@ if($editMode){
 }
 $story->name=filter_input(INPUT_POST,'name');
 $story->guest_visible=filter_input(INPUT_POST,'guest_visible',FILTER_VALIDATE_BOOL)?1:0;
-$story->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
+$story->sort_priority=filter_input(INPUT_POST,'sort_priority');
 $story->sort_number=filter_input(INPUT_POST,'sort_number');
 $story->is_read_only=filter_input(INPUT_POST,'is_read_only',FILTER_VALIDATE_BOOL)?1:0;
 $story->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
@@ -57,12 +57,9 @@ if(isset($_POST['save_target']) && is_array($_POST['save_target'])){
     $config_json_data=array_intersect_key($config_json_data,$diff_array);
 }
 
-do{
-    if($story->name===''){
-        $page->addErrorMsg("{$base_title}設定名称未設定");
-        break;
-    }
-}while(false);
+if(!$story->validate()){
+    $page->addErrorMsgArray($story->errorMessages);
+}
 if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
