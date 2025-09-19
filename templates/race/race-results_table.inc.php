@@ -3,7 +3,7 @@
  * レース結果の表テンプレート
  * @var Page $page
  * @var Setting $setting
- * @var Racce $race
+ * @var Race $race
  * @var RaceSearchResultPageRow[] $table_data
  * @var bool $mode_umm
  */
