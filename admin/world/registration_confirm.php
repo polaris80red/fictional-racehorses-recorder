@@ -34,11 +34,9 @@ $sort_number=(string)filter_input(INPUT_POST,'sort_number');
 $world->sort_number = $sort_number===''?null:(int)$sort_number;
 $world->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
-do{
-    if($world->name===''){
-        $page->addErrorMsg('ワールド名未設定');
-    }
-}while(false);
+if(!$world->validate()){
+    $page->addErrorMsgArray($world->errorMessages);
+}
 if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
