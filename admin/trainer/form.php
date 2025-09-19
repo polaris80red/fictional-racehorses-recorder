@@ -13,25 +13,29 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+$id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 $input_name=filter_input(INPUT_GET,'unique_name');
 
-$s_setting=new Setting(false);
-if($input_id>0){
-    $form_item=Trainer::getById($pdo,$input_id);
-    if($form_item!==false){
-        $page->title.="（編集）";
-    }else{
-        $input_id=0;
+$editMode=($id>0);
+$TableClass=Trainer::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
     }
-}
-if($input_id==0){
-    $form_item=new TrainerRow();
+}else{
+    $form_item=new ($TableRowClass)();
     if($input_name){
         $form_item->unique_name=$input_name;
     }
 }
-
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -66,7 +70,7 @@ if($input_id==0){
     ?></td>
 </tr>
 <tr>
-<?php if($form_item->id): ?>
+<?php if($form_item->id||$form_item->unique_name): ?>
 <th>キー名称</th>
     <td><?=(MkTagInput::Hidden('unique_name',$form_item->unique_name)).h($form_item->unique_name)?></td>
 </tr>
