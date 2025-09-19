@@ -327,7 +327,7 @@ switch($race_results->is_affliationed_nar){
 </tr>
 <tr><th colspan="2">スペシャル出馬表紹介</th></tr>
 <tr>
-    <td class="in_input" colspan="2">
+    <td colspan="2" style="max-width: 300px;">
         <?=nl2br(h($race_results->jra_sps_comment))?>&nbsp;
         <?php HTPrint::Hidden('jra_sps_comment',$race_results->jra_sps_comment); ?>
     </td>
