@@ -59,3 +59,19 @@ function checkRequired($targets) {
         }
     });
 }
+/**
+ * 指定したセレクタのチェックボックス群を全てオンにする、全てオンのときは全てオフにする
+ */
+function toggleCheckboxes(selector) {
+    const $checkboxes = $(selector);
+    const allChecked = $checkboxes.length > 0 && $checkboxes.filter(':checked').length === $checkboxes.length;
+    $checkboxes.prop('checked', !allChecked);
+}
+/**
+ * 指定したセレクタのチェックボックス群を全てオフにしたうえで、第2引数のチェックボックスだけオンにする
+ */
+function uncheckAndCheck(uncheckSelector,checkedSelector) {
+    const $checkboxes = $(uncheckSelector);
+    $checkboxes.prop('checked', false);
+    $(checkedSelector).prop('checked', true);
+}
