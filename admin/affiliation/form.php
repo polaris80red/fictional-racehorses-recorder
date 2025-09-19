@@ -13,25 +13,29 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+$id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 $input_name=filter_input(INPUT_GET,'name');
 
-$s_setting=new Setting(false);
-if($input_id>0){
-    $affiliation=Affiliation::getById($pdo,$input_id);
-    if($affiliation!==false){
-        $page->title.="（編集）";
-    }else{
-        $input_id=0;
-    }
-}
-if($input_id==0){
-    $affiliation=new AffiliationRow();
-    if($input_name){
-        $affiliation->unique_name=$input_name;
-    }
-}
+$editMode=($id>0);
+$TableClass=Affiliation::class;
+$TableRowClass=$TableClass::ROW_CLASS;
 
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
+}else{
+    $form_item=new ($TableRowClass)();
+    if($input_name){
+        $form_item->unique_name=$input_name;
+    }
+}
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -61,34 +65,34 @@ if($input_id==0){
 <tr>
     <th>ID</th>
     <td><?php
-        print_h($affiliation->id?:"新規登録");
-        HTPrint::Hidden('id',$affiliation->id);
+        print_h($form_item->id?:"新規登録");
+        HTPrint::Hidden('id',$form_item->id);
     ?></td>
 </tr>
 <tr>
-    <?php if($affiliation->id): ?>
+    <?php if($form_item->id||$form_item->unique_name): ?>
         <th>キー名称</th>
-        <td><?=(MkTagInput::Hidden('unique_name',$affiliation->unique_name)).h($affiliation->unique_name)?></td>
+        <td><?=(MkTagInput::Hidden('unique_name',$form_item->unique_name)).h($form_item->unique_name)?></td>
     <?php else: ?>
         <th>キー名称</th>
         <td class="in_input">
-            <input type="text" name="unique_name" class="required" required value="<?=h($affiliation->unique_name)?>">
+            <input type="text" name="unique_name" class="required" required value="<?=h($form_item->unique_name)?>">
         </td>
     <?php endif; ?>
 </tr>
 <tr>
     <th>表示順補正</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?=h($affiliation->sort_number)?>" placeholder="昇順"></td>
+    <td class="in_input"><input type="number" name="sort_number" value="<?=h($form_item->sort_number)?>" placeholder="昇順"></td>
 </tr>
 <tr>
     <th>プルダウンに表示</th>
     <td>
         <label><?php
-        $radio=new MkTagInputRadio('show_in_select_box',1,$affiliation->show_in_select_box);
+        $radio=new MkTagInputRadio('show_in_select_box',1,$form_item->show_in_select_box);
         $radio->print();
         ?>表示</label><br>
         <label><?php
-        $radio->value(0)->checkedIf($affiliation->show_in_select_box)->print();
+        $radio->value(0)->checkedIf($form_item->show_in_select_box)->print();
         ?>非表示</label>
     </td>
 </tr>
@@ -96,12 +100,12 @@ if($input_id==0){
     <th>論理削除状態</th>
     <td>
         <label><?php
-        $radio=new MkTagInputRadio('is_enabled',1,$affiliation->is_enabled);
+        $radio=new MkTagInputRadio('is_enabled',1,$form_item->is_enabled);
         $radio->print();
         ?>有効</label><br>
         <label><?php
-        $radio->value(0)->checkedIf($affiliation->is_enabled)
-        ->disabled($affiliation->id>0?false:true)->print();
+        $radio->value(0)->checkedIf($form_item->is_enabled)
+        ->disabled($form_item->id>0?false:true)->print();
         ?>無効化中</label>
     </td>
 </tr>

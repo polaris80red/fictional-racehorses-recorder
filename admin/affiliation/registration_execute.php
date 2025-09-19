@@ -14,14 +14,18 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
 
+$editMode=($id>0);
 $TableClass=Affiliation::class;
 $TableRowClass=$TableClass::ROW_CLASS;
 
-$form_item=new ($TableRowClass)();
-$check_form_item=false;
-if($id>0){
-    $check_form_item=($TableClass)::getById($pdo,$id);
-    $form_item->id=$id;
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
+}else{
+    $form_item=new ($TableRowClass)();
 }
 $form_item->unique_name=filter_input(INPUT_POST,'unique_name');
 $form_item->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
@@ -33,31 +37,21 @@ if($form_item->sort_number===''){
 }
 $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
-$error_exists=false;
 do{
     if(!(new FormCsrfToken())->isValid()){
-        $error_exists=true;
         ELog::error($page->title.": CSRFトークンエラー|".__FILE__);
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
-    if($id>0 && $check_form_item===false){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
-    }
-    if($form_item->unique_name===''){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定名称未設定");
-        break;
+    if(!$form_item->validate()){
+        $page->addErrorMsgArray($form_item->errorMessages);
     }
 }while(false);
-if($error_exists){
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($check_form_item!=false){
+if($editMode){
     // 編集モード
     $result = ($TableClass)::UpdateFromRowObj($pdo,$form_item);
     if($result){

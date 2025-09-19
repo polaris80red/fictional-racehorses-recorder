@@ -14,10 +14,19 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
-$form_item=new AffiliationRow();
-if($id>0){
-    $check_form_item=Affiliation::getById($pdo,$id);
-    $form_item->id=$id;
+
+$editMode=($id>0);
+$TableClass=Affiliation::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
+}else{
+    $form_item=new ($TableRowClass)();
 }
 $form_item->unique_name=filter_input(INPUT_POST,'unique_name');
 $form_item->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
@@ -29,28 +38,13 @@ if($form_item->sort_number===''){
 }
 $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
-$error_exists=false;
-do{
-    if($id>0 && $check_form_item===false){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
-    }
-    if($form_item->unique_name===''){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定｜キー名称未設定");
-        break;
-    }
-}while(false);
-if($error_exists){
+if(!$form_item->validate()){
+    $page->addErrorMsgArray($form_item->errorMessages);
+}
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($id>0){
-    $page->title.="（編集）";
-}
-
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
