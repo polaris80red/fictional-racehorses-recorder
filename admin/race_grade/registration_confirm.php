@@ -14,48 +14,47 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'race_grade_id',FILTER_VALIDATE_INT);
-$race_grade=new RaceGradeRow();
-if($id>0){
-    $check_race_grade=RaceGrade::getById($pdo,$id);
-    $race_grade->id=$id;
-}
-$race_grade->unique_name=filter_input(INPUT_POST,'unique_name');
-$race_grade->short_name=filter_input(INPUT_POST,'short_name');
-$race_grade->search_grade=filter_input(INPUT_POST,'search_grade');
-$race_grade->category=filter_input(INPUT_POST,'category');
-$race_grade->css_class=filter_input(INPUT_POST,'css_class');
-$race_grade->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
-$race_grade->sort_number=filter_input(INPUT_POST,'sort_number');
-if($race_grade->sort_number===''){
-    $race_grade->sort_number=null;
+
+$editMode=($id>0);
+$TableClass=RaceGrade::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
 }else{
-    $race_grade->sort_number=(int)$race_grade->sort_number;
+    $form_item=new ($TableRowClass)();
 }
-$race_grade->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
+$form_item->unique_name=filter_input(INPUT_POST,'unique_name');
+$form_item->short_name=filter_input(INPUT_POST,'short_name');
+$form_item->search_grade=filter_input(INPUT_POST,'search_grade');
+$form_item->category=filter_input(INPUT_POST,'category');
+$form_item->css_class=filter_input(INPUT_POST,'css_class');
+$form_item->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
+$form_item->sort_number=filter_input(INPUT_POST,'sort_number');
+if($form_item->sort_number===''){
+    $form_item->sort_number=null;
+}else{
+    $form_item->sort_number=(int)$form_item->sort_number;
+}
+$form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
 $error_exists=false;
 do{
-    if($id>0 && $check_race_grade===false){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
+    if(!$form_item->validate()){
+        $page->addErrorMsgArray($form_item->errorMessages);
     }
-    if($race_grade->unique_name===''){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定｜キー名称未設定");
-        break;
-    }
-    if(!$id && false!=RaceGrade::getByUniqueName($pdo,$race_grade->unique_name)){
-        $page->addErrorMsg("キー名 '{$race_grade->unique_name}' は既に存在します");
+    if(!$editMode && false!=RaceGrade::getByUniqueName($pdo,$form_item->unique_name)){
+        $page->addErrorMsg("キー名 '{$form_item->unique_name}' は既に存在します");
     }
 }while(false);
 if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($id>0){
-    $page->title.="（編集）";
-}
-
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -79,46 +78,46 @@ if($id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print_h($race_grade->id?:"新規登録");
-        HTPrint::Hidden('race_grade_id',$race_grade->id);
+        print_h($form_item->id?:"新規登録");
+        HTPrint::Hidden('race_grade_id',$form_item->id);
     ?></td>
 </tr>
 <tr>
     <th>名称</th>
-    <td><?php HTPrint::HiddenAndText('unique_name',$race_grade->unique_name); ?></td>
+    <td><?php HTPrint::HiddenAndText('unique_name',$form_item->unique_name); ?></td>
 </tr>
 <tr>
     <th>短縮名</th>
-    <td><?php HTPrint::HiddenAndText('short_name',$race_grade->short_name); ?></td>
+    <td><?php HTPrint::HiddenAndText('short_name',$form_item->short_name); ?></td>
 </tr>
 <tr>
     <th>検索判定</th>
-    <td><?php HTPrint::HiddenAndText('search_grade',$race_grade->search_grade); ?></td>
+    <td><?php HTPrint::HiddenAndText('search_grade',$form_item->search_grade); ?></td>
 </tr>
 <tr>
     <th>カテゴリ</th>
-    <td><?php HTPrint::HiddenAndText('category',$race_grade->category); ?></td>
+    <td><?php HTPrint::HiddenAndText('category',$form_item->category); ?></td>
 </tr>
 <tr>
     <th>CSSクラス名</th>
-    <td><?php HTPrint::HiddenAndText('css_class',$race_grade->css_class); ?></td>
+    <td><?php HTPrint::HiddenAndText('css_class',$form_item->css_class); ?></td>
 </tr>
 <tr>
     <th>表示順補正</th>
-    <td><?php HTPrint::HiddenAndText('sort_number',$race_grade->sort_number); ?></td>
+    <td><?php HTPrint::HiddenAndText('sort_number',$form_item->sort_number); ?></td>
 </tr>
 <tr>
     <th>プルダウンに表示</th>
     <td><?php
-        HTPrint::Hidden('show_in_select_box',$race_grade->show_in_select_box);
-        print $race_grade->show_in_select_box?'表示':'非表示';
+        HTPrint::Hidden('show_in_select_box',$form_item->show_in_select_box);
+        print $form_item->show_in_select_box?'表示':'非表示';
     ?></td>
 </tr>
 <tr>
     <th>選択肢</th>
     <td><?php
-        HTPrint::Hidden('is_enabled',$race_grade->is_enabled);
-        print $race_grade->is_enabled?'表示':'非表示';
+        HTPrint::Hidden('is_enabled',$form_item->is_enabled);
+        print $form_item->is_enabled?'表示':'非表示';
     ?></td>
 </tr>
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>

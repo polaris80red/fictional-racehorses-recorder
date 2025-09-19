@@ -13,25 +13,29 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+$id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 $input_name=filter_input(INPUT_GET,'name');
 
-$s_setting=new Setting(false);
-if($input_id>0){
-    $race_grade=RaceGrade::getById($pdo,$input_id);
-    if($race_grade!==false){
-        $page->title.="（編集）";
-    }else{
-        $input_id=0;
-    }
-}
-if($input_id==0){
-    $race_grade=new RaceGradeRow();
-    if($input_name){
-        $race_grade->unique_name=$input_name;
-    }
-}
+$editMode=($id>0);
+$TableClass=RaceGrade::class;
+$TableRowClass=$TableClass::ROW_CLASS;
 
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
+}else{
+    $form_item=new ($TableRowClass)();
+    if($input_name){
+        $form_item->unique_name=$input_name;
+    }
+}
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -61,24 +65,24 @@ if($input_id==0){
 <tr>
     <th>ID</th>
     <td><?php
-        print_r($race_grade->id?:"新規登録");
-        HTPrint::Hidden('race_grade_id',$race_grade->id);
+        print_r($form_item->id?:"新規登録");
+        HTPrint::Hidden('race_grade_id',$form_item->id);
     ?></td>
 </tr>
 <tr>
-    <?php if($race_grade->id||$input_name): ?>
+    <?php if($form_item->id||$input_name): ?>
         <th>キー名称</th>
-        <td><?=(MkTagInput::Hidden('unique_name',$race_grade->unique_name)).h($race_grade->unique_name)?></td>
+        <td><?=(MkTagInput::Hidden('unique_name',$form_item->unique_name)).h($form_item->unique_name)?></td>
     <?php else: ?>
         <th>キー名称</th>
         <td class="in_input">
-            <input type="text" name="unique_name" class="required" required value="<?=h($race_grade->unique_name)?>">
+            <input type="text" name="unique_name" class="required" required value="<?=h($form_item->unique_name)?>">
         </td>
     <?php endif; ?>
 </tr>
 <tr>
     <th>短縮名</th>
-    <td class="in_input"><input type="text" name="short_name" value="<?=h($race_grade->short_name)?>" placeholder="空ならキー名称を使用"></td>
+    <td class="in_input"><input type="text" name="short_name" value="<?=h($form_item->short_name)?>" placeholder="空ならキー名称を使用"></td>
 </tr>
 <tr>
     <th>検索判定</th>
@@ -89,7 +93,7 @@ if($input_id==0){
     echo '<option value=""></option>'."\n";
     $target_exists=false;
     foreach($search_grade_list as $val){
-        if($val==$race_grade->search_grade){
+        if($val==$form_item->search_grade){
             $selected_or_empty=' selected ';
         }else{
             $selected_or_empty='';
@@ -103,25 +107,25 @@ if($input_id==0){
 </tr>
 <tr>
     <th>カテゴリ</th>
-    <td class="in_input"><input type="text" name="category" value="<?=h($race_grade->category)?>"></td>
+    <td class="in_input"><input type="text" name="category" value="<?=h($form_item->category)?>"></td>
 </tr>
 <tr>
     <th>CSSクラス名</th>
-    <td class="in_input"><input type="text" name="css_class" value="<?=h($race_grade->css_class)?>"></td>
+    <td class="in_input"><input type="text" name="css_class" value="<?=h($form_item->css_class)?>"></td>
 </tr>
 <tr>
     <th>表示順補正</th>
-    <td class="in_input"><input type="number" name="sort_number" value="<?=h($race_grade->sort_number)?>" placeholder="昇順"></td>
+    <td class="in_input"><input type="number" name="sort_number" value="<?=h($form_item->sort_number)?>" placeholder="昇順"></td>
 </tr>
 <tr>
     <th>プルダウンに表示</th>
     <td>
         <label><?php
-        $radio=new MkTagInputRadio('show_in_select_box',1,$race_grade->show_in_select_box);
+        $radio=new MkTagInputRadio('show_in_select_box',1,$form_item->show_in_select_box);
         $radio->print();
         ?>表示</label><br>
         <label><?php
-        $radio->value(0)->checkedIf($race_grade->show_in_select_box)->print();
+        $radio->value(0)->checkedIf($form_item->show_in_select_box)->print();
         ?>非表示</label>
     </td>
 </tr>
@@ -129,23 +133,23 @@ if($input_id==0){
     <th>論理削除状態</th>
     <td>
         <label><?php
-        $radio=new MkTagInputRadio('is_enabled',1,$race_grade->is_enabled);
+        $radio=new MkTagInputRadio('is_enabled',1,$form_item->is_enabled);
         $radio->print();
         ?>有効</label><br>
         <label><?php
-        $radio->value(0)->checkedIf($race_grade->is_enabled)
-        ->disabled($race_grade->id>0?false:true)->print();
+        $radio->value(0)->checkedIf($form_item->is_enabled)
+        ->disabled($form_item->id>0?false:true)->print();
         ?>無効化中</label>
     </td>
 </tr>
 <tr><td colspan="2" style="text-align: right;"><input type="submit" value="登録内容確認"></td></tr>
 </table>
 </form>
-<?php if($race_grade->id): ?>
+<?php if($form_item->id): ?>
 <hr>
 <div style="text-align: right;">
 ※ キー名称はレース側のグレードも一括更新するため専用画面で変更してください<br>
-[ <a href="./update_unique_name/form.php?<?=h(new UrlParams(['u_name'=>$race_grade->unique_name]));?>">キー名称一括変換</a> ]
+[ <a href="./update_unique_name/form.php?<?=h(new UrlParams(['u_name'=>$form_item->unique_name]));?>">キー名称一括変換</a> ]
 </div>
 <?php endif; ?>
 <hr class="no-css-fallback">
