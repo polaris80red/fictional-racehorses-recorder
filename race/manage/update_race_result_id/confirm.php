@@ -18,17 +18,22 @@ $pdo= getPDO();
 do{
     if($race_result_id==''){
         $page->addErrorMsg('元レースID未入力');
+        break;
     }
     if($new_race_result_id==''){
         $page->addErrorMsg('新レースID未入力');
+        break;
     }
-    if($race_result_id!==htmlspecialchars($race_result_id)){
-        $page->addErrorMsg('元レースIDに特殊文字');
+    $old_id_checker=new Race();
+    if($old_id_checker->setRaceId($race_result_id)===false){
+        $page->addErrorMsgArray($old_id_checker->error_msgs);
     }
-    if($new_race_result_id!==htmlspecialchars($new_race_result_id)){
-        $page->addErrorMsg('新レースIDに特殊文字');
+    $new_id_checker=new Race();
+    if($new_id_checker->setRaceId($new_race_result_id)===false){
+        $page->addErrorMsgArray($new_id_checker->error_msgs);
     }
     if($page->error_exists){ break; }
+
     $race_data=new Race($pdo,$race_result_id);
     if(!$race_data->record_exists){
         $page->addErrorMsg('元IDレース情報取得失敗');
