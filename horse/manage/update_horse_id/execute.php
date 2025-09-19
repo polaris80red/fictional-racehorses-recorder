@@ -23,17 +23,24 @@ do{
     }
     if($horse_id==''){
         $page->addErrorMsg('元ID未入力');
+        break;
     }
     if($new_horse_id==''){
         $page->addErrorMsg('新ID未入力');
+        break;
     }
-    if($horse_id!==htmlspecialchars($horse_id)){
-        $page->addErrorMsg('元IDに特殊文字');
+    $old_id_check=new Horse();
+    if($old_id_check->setHorseId($horse_id)===false){
+        $page->addErrorMsg('元IDエラー');
+        $page->addErrorMsgArray($old_id_check->error_msgs);
     }
-    if($new_horse_id!==htmlspecialchars($new_horse_id)){
-        $page->addErrorMsg('新IDに特殊文字');
+    $new_id_check=new Horse();
+    if($new_id_check->setHorseId($new_horse_id)===false){
+        $page->addErrorMsg('新IDエラー');
+        $page->addErrorMsgArray($new_id_check->error_msgs);
     }
     if($page->error_exists){ break; }
+
     $horse_data=new Horse();
     $horse_data->setDataById($pdo,$horse_id);
     if(!$horse_data->record_exists){
