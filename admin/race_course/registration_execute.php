@@ -13,24 +13,32 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'race_course_id',FILTER_VALIDATE_INT);
-$edit_target_race_course=false;
-$race_course=new RaceCourseRow();
-if($id>0){
-    $edit_target_race_course=RaceCourse::getById($pdo,$id);
-    $race_course->id=$id;
-}
-$race_course->unique_name=filter_input(INPUT_POST,'unique_name');
-$race_course->short_name=filter_input(INPUT_POST,'short_name');
-$race_course->short_name_m=filter_input(INPUT_POST,'short_name_m');
-$race_course->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
-$race_course->sort_priority=filter_input(INPUT_POST,'sort_priority');
-$race_course->sort_number=filter_input(INPUT_POST,'sort_number');
-if($race_course->sort_number===''){
-    $race_course->sort_number=null;
+
+$editMode=($id>0);
+$TableClass=RaceCourse::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
 }else{
-    $race_course->sort_number=(int)$race_course->sort_number;
+    $form_item=new ($TableRowClass)();
 }
-$race_course->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
+$form_item->unique_name=filter_input(INPUT_POST,'unique_name');
+$form_item->short_name=filter_input(INPUT_POST,'short_name');
+$form_item->short_name_m=filter_input(INPUT_POST,'short_name_m');
+$form_item->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
+$form_item->sort_priority=filter_input(INPUT_POST,'sort_priority');
+$form_item->sort_number=filter_input(INPUT_POST,'sort_number');
+if($form_item->sort_number===''){
+    $form_item->sort_number=null;
+}else{
+    $form_item->sort_number=(int)$form_item->sort_number;
+}
+$form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
 do{
     if(!(new FormCsrfToken())->isValid()){
@@ -38,32 +46,26 @@ do{
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
-    if($id>0 && $edit_target_race_course===false){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定ID '{$input_id}' が指定されていますが該当する{$base_title}がありません");
+    if(!$form_item->validate()){
+        $page->addErrorMsgArray($form_item->errorMessages);
     }
-    if($race_course->unique_name===''){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定名称未設定");
-        break;
-    }
-    if(!$id && false!==RaceCourse::getByUniqueName($pdo,$race_course->unique_name)){
-        $page->addErrorMsg("キー名 '{$race_course->unique_name}' は既に存在します");
+    if(!$editMode && false!==RaceCourse::getByUniqueName($pdo,$form_item->unique_name)){
+        $page->addErrorMsg("キー名 '{$form_item->unique_name}' は既に存在します");
     }
 }while(false);
 if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($edit_target_race_course!=false){
+if($editMode){
     // 編集モード
-    $result = RaceCourse::UpdateFromRowObj($pdo,$race_course);
+    $result = RaceCourse::UpdateFromRowObj($pdo,$form_item);
     if($result){
         redirect_exit("./list.php");
     }
 }else{
     // 新規登録モード
-    $result = RaceCourse::InsertFromRowObj($pdo,$race_course);
+    $result = RaceCourse::InsertFromRowObj($pdo,$form_item);
     if($result){
         redirect_exit("./list.php");
     }

@@ -14,46 +14,44 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'race_course_id',FILTER_VALIDATE_INT);
-$race_course=new RaceCourseRow();
-if($id>0){
-    $check_race_course=RaceCourse::getById($pdo,$id);
-    $race_course->id=$id;
-}
-$race_course->unique_name=filter_input(INPUT_POST,'unique_name');
-$race_course->short_name=filter_input(INPUT_POST,'short_name');
-$race_course->short_name_m=filter_input(INPUT_POST,'short_name_m');
-$race_course->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
-$race_course->sort_priority=filter_input(INPUT_POST,'sort_priority');
-$race_course->sort_number=filter_input(INPUT_POST,'sort_number');
-if($race_course->sort_number===''){
-    $race_course->sort_number=null;
-}else{
-    $race_course->sort_number=(int)$race_course->sort_number;
-}
-$race_course->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
+$editMode=($id>0);
+$TableClass=RaceCourse::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
+}else{
+    $form_item=new ($TableRowClass)();
+}
+$form_item->unique_name=filter_input(INPUT_POST,'unique_name');
+$form_item->short_name=filter_input(INPUT_POST,'short_name');
+$form_item->short_name_m=filter_input(INPUT_POST,'short_name_m');
+$form_item->show_in_select_box=filter_input(INPUT_POST,'show_in_select_box',FILTER_VALIDATE_INT);
+$form_item->sort_priority=filter_input(INPUT_POST,'sort_priority');
+$form_item->sort_number=filter_input(INPUT_POST,'sort_number');
+if($form_item->sort_number===''){
+    $form_item->sort_number=null;
+}else{
+    $form_item->sort_number=(int)$form_item->sort_number;
+}
+$form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 do{
-    if($id>0 && $check_race_course===false){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
+    if(!$form_item->validate()){
+        $page->addErrorMsgArray($form_item->errorMessages);
     }
-    if($race_course->unique_name===''){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定名称未設定");
-        break;
-    }
-    if(!$id && false!==RaceCourse::getByUniqueName($pdo,$race_course->unique_name)){
-        $page->addErrorMsg("キー名 '{$race_course->unique_name}' は既に存在します");
+    if(!$editMode && false!==RaceCourse::getByUniqueName($pdo,$form_item->unique_name)){
+        $page->addErrorMsg("キー名 '{$form_item->unique_name}' は既に存在します");
     }
 }while(false);
 if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($id>0){
-    $page->title.="（編集）";
-}
-
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -82,42 +80,42 @@ if($id>0){
 <tr>
     <th>ID</th>
     <td><?php
-        print_h($race_course->id?:"新規登録");
-        HTPrint::Hidden('race_course_id',$race_course->id);
+        print_h($form_item->id?:"新規登録");
+        HTPrint::Hidden('race_course_id',$form_item->id);
     ?></td>
 </tr>
 <tr>
     <th>名称</th>
-    <td><?php HTPrint::HiddenAndText('unique_name',$race_course->unique_name); ?></td>
+    <td><?php HTPrint::HiddenAndText('unique_name',$form_item->unique_name); ?></td>
 </tr>
 <tr>
     <th>短縮名</th>
-    <td><?php HTPrint::HiddenAndText('short_name',$race_course->short_name); ?></td>
+    <td><?php HTPrint::HiddenAndText('short_name',$form_item->short_name); ?></td>
 </tr>
 <tr>
     <th>短縮名2</th>
-    <td><?php HTPrint::HiddenAndText('short_name_m',$race_course->short_name_m); ?></td>
+    <td><?php HTPrint::HiddenAndText('short_name_m',$form_item->short_name_m); ?></td>
 </tr>
 <tr>
     <th>表示順優先度</th>
-    <td><?php HTPrint::HiddenAndText('sort_priority',$race_course->sort_priority); ?></td>
+    <td><?php HTPrint::HiddenAndText('sort_priority',$form_item->sort_priority); ?></td>
 </tr>
 <tr>
     <th>表示順補正</th>
-    <td><?php HTPrint::HiddenAndText('sort_number',$race_course->sort_number); ?></td>
+    <td><?php HTPrint::HiddenAndText('sort_number',$form_item->sort_number); ?></td>
 </tr>
 <tr>
     <th>プルダウンに表示</th>
     <td><?php
-        HTPrint::Hidden('show_in_select_box',$race_course->show_in_select_box);
-        print $race_course->show_in_select_box?'表示':'非表示';
+        HTPrint::Hidden('show_in_select_box',$form_item->show_in_select_box);
+        print $form_item->show_in_select_box?'表示':'非表示';
     ?></td>
 </tr>
 <tr>
     <th>選択肢</th>
     <td><?php
-        HTPrint::Hidden('is_enabled',$race_course->is_enabled);
-        print $race_course->is_enabled?'表示':'非表示';
+        HTPrint::Hidden('is_enabled',$form_item->is_enabled);
+        print $form_item->is_enabled?'表示':'非表示';
     ?></td>
 </tr>
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>
