@@ -37,7 +37,6 @@ if($horse->sire_id){
         $horse->sire_name=$sire->name_ja?:$sire->name_en;
         if($sire->sex!==1){
             $page->addErrorMsg('父IDの該当馬が牡馬以外です。');
-            $error_exists=true;
         }
     }else{
         $horse->sire_id='';
@@ -52,13 +51,19 @@ if($horse->mare_id){
         $horse->bms_name=$mare->sire_name;
         if($mare->sex!==2){
             $page->addErrorMsg('母IDの該当馬が牝馬以外です。');
-            $error_exists=true;
         }
     }else{
         $horse->mare_id='';
     }
 }
-if($error_exists){
+$horse_tags=HorseTag::TagsStrToArray(filter_input(INPUT_POST,'horse_tags'));
+foreach($horse_tags as $tag){
+    if(mb_strlen($tag)>100){
+        $page->addErrorMsg('1つのタグは100文字以内で設定してください。');
+        break;
+    }
+}
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
@@ -230,9 +235,6 @@ th{
         <?php HTPrint::Hidden('profile',$horse->profile); ?>
     </td>
 </tr>
-<?php
-$horse_tags=HorseTag::TagsStrToArray(filter_input(INPUT_POST,'horse_tags'));
-?>
 <tr>
     <th>検索タグ</th>
 <tr>
