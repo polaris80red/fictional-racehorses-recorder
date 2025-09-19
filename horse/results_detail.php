@@ -278,7 +278,7 @@ $latest_race_is_exists=false; ?>
                     <?=nl2br(h($data->race_previous_note))?>
                 </td>
                 <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id]))?></td>
+                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id],"horse_{$horse->horse_id}"))?></td>
                 <?php endif;?>
             </tr>
         <?php endif;?>
@@ -303,7 +303,7 @@ $latest_race_is_exists=false; ?>
                     <?=nl2br(h($data->race_after_note))?>
                 </td>
                 <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id]))?></td>
+                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id],"horse_{$horse->horse_id}"))?></td>
                 <?php endif;?>
             </tr>
         <?php endif;?>
@@ -440,7 +440,7 @@ $latest_race_is_exists=false; ?>
                     <?=nl2br(h($data->race_previous_note))?>
                 </td>
                 <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id]))?></td>
+                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id],"horse_{$horse->horse_id}"))?></td>
                 <?php endif;?>
             </tr>
         <?php endif;?>
@@ -465,7 +465,7 @@ $latest_race_is_exists=false; ?>
                     <?=nl2br(h($data->race_after_note))?>
                 </td>
                 <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id]))?></td>
+                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id],"horse_{$horse->horse_id}"))?></td>
                 <?php endif;?>
             </tr>
         <?php endif;?>
