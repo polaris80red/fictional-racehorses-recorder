@@ -13,47 +13,41 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
+
 $editMode=($inputId>0);
 $TableClass=Themes::class;
 $TableRowClass=$TableClass::ROW_CLASS;
 
-$theme=($TableClass)::getById($pdo,$inputId);
 if($editMode){
     $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$inputId);
+    if($form_item===false){
+        $page->addErrorMsg("テーマID '{$inputId}' が指定されていますが該当するテーマがありません");
+    }
+}else{
+    $form_item=new ($TableRowClass)();
 }
-if($editMode && $theme===false){
-    $page->addErrorMsg("テーマID '{$inputId}' が指定されていますが該当するテーマがありません");
-}
-if($theme===false){
-    $theme=new ($TableRowClass)();
-}
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
-$theme->name=filter_input(INPUT_POST,'name');
-$theme->dir_name=filter_input(INPUT_POST,'dir_name');
-$theme->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
-$theme->sort_number=intOrNull(filter_input(INPUT_POST,'sort_number'));
 
-$theme->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
+$form_item->name=filter_input(INPUT_POST,'name');
+$form_item->dir_name=filter_input(INPUT_POST,'dir_name');
+$form_item->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
+$form_item->sort_number=intOrNull(filter_input(INPUT_POST,'sort_number'));
 
-$error_exists=false;
+$form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
+
 do{
     if(!(new FormCsrfToken())->isValid()){
         ELog::error($page->title.": CSRFトークンエラー|".__FILE__);
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
-    if($theme->name===''){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定名称未設定");
+    if(!$form_item->validate()){
+        $page->addErrorMsgArray($form_item->errorMessages);
         break;
     }
-    $path=APP_ROOT_REL_PATH.'themes/'.$theme->dir_name;
+    $path=APP_ROOT_DIR.'/themes/'.$form_item->dir_name;
     if(!is_dir($path)){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("指定された[ {$theme->dir_name} ]ディレクトリが存在しません。");
+        $page->addErrorMsg("指定された[ {$form_item->dir_name} ]ディレクトリが存在しません。");
         break;
     }
 }while(false);
@@ -63,13 +57,13 @@ if($page->error_exists){
 }
 if($editMode){
     // 編集モード
-    $result = ($TableClass)::UpdateFromRowObj($pdo,$theme);
+    $result = ($TableClass)::UpdateFromRowObj($pdo,$form_item);
     if($result){
         redirect_exit("./list.php");
     }
 }else{
     // 新規登録モード
-    $result = ($TableClass)::InsertFromRowObj($pdo,$theme);
+    $result = ($TableClass)::InsertFromRowObj($pdo,$form_item);
     if($result){
         redirect_exit("./list.php");
     }

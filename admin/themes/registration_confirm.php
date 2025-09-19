@@ -14,46 +14,42 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
+
 $editMode=($inputId>0);
 $TableClass=Themes::class;
 $TableRowClass=$TableClass::ROW_CLASS;
-$theme=($TableClass)::getById($pdo,$inputId);
+
 if($editMode){
     $page->title.="（編集）";
-}
-if($editMode && $theme===false){
-    $page->addErrorMsg("テーマID '{$inputId}' が指定されていますが該当するテーマがありません");
-}
-if($theme===false){
-    $theme=new ($TableRowClass)();
-}
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
-$theme->name=filter_input(INPUT_POST,'name');
-$theme->dir_name=filter_input(INPUT_POST,'dir_name');
-$theme->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
-$theme->sort_number=filter_input(INPUT_POST,'sort_number');
-if($theme->sort_number===''){
-    $theme->sort_number=null;
+    $form_item=($TableClass)::getById($pdo,$inputId);
+    if($form_item===false){
+        $page->addErrorMsg("テーマID '{$inputId}' が指定されていますが該当するテーマがありません");
+    }
 }else{
-    $theme->sort_number=(int)$theme->sort_number;
+    $form_item=new ($TableRowClass)();
 }
-$theme->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
+
+$form_item->name=filter_input(INPUT_POST,'name');
+$form_item->dir_name=filter_input(INPUT_POST,'dir_name');
+$form_item->sort_priority=filter_input(INPUT_POST,'sort_priority',FILTER_VALIDATE_INT);
+$form_item->sort_number=filter_input(INPUT_POST,'sort_number');
+if($form_item->sort_number===''){
+    $form_item->sort_number=null;
+}else{
+    $form_item->sort_number=(int)$form_item->sort_number;
+}
+$form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
 do{
-    if($theme->name===''){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定名称未設定");
+    if(!$form_item->validate()){
+        $page->addErrorMsgArray($form_item->errorMessages);
         break;
     }
-    $path=APP_ROOT_REL_PATH.'themes/'.$theme->dir_name;
+    $path=APP_ROOT_DIR.'/themes/'.$form_item->dir_name;
     if(!is_dir($path)){
-        $page->addErrorMsg("指定された[ {$theme->dir_name} ]ディレクトリが存在しません。");
+        $page->addErrorMsg("指定された[ {$form_item->dir_name} ]ディレクトリが存在しません。");
         break;
     }
-
 }while(false);
 if($page->error_exists){
     $page->printCommonErrorPage();
@@ -87,31 +83,31 @@ if($page->error_exists){
 <tr>
     <th>ID</th>
     <td><?php
-        print_h($theme->id?:"新規登録");
-        HTPrint::Hidden('id',$theme->id);
+        print_h($form_item->id?:"新規登録");
+        HTPrint::Hidden('id',$form_item->id);
     ?></td>
 </tr>
 <tr>
     <th>名称</th>
-    <td><?php HTPrint::HiddenAndText('name',$theme->name); ?></td>
+    <td><?php HTPrint::HiddenAndText('name',$form_item->name); ?></td>
 </tr>
 <tr>
     <th>テーマディレクトリ名</th>
-    <td><?php HTPrint::HiddenAndText('dir_name',$theme->dir_name); ?></td>
+    <td><?php HTPrint::HiddenAndText('dir_name',$form_item->dir_name); ?></td>
 </tr>
 <tr>
     <th>表示順優先度</th>
-    <td><?php HTPrint::HiddenAndText('sort_priority',$theme->sort_priority); ?></td>
+    <td><?php HTPrint::HiddenAndText('sort_priority',$form_item->sort_priority); ?></td>
 </tr>
 <tr>
     <th>表示順補正</th>
-    <td><?php HTPrint::HiddenAndText('sort_number',$theme->sort_number); ?></td>
+    <td><?php HTPrint::HiddenAndText('sort_number',$form_item->sort_number); ?></td>
 </tr>
 <tr>
     <th>選択肢</th>
     <td><?php
-        HTPrint::Hidden('is_enabled',$theme->is_enabled);
-        print $theme->is_enabled?'表示':'非表示';
+        HTPrint::Hidden('is_enabled',$form_item->is_enabled);
+        print $form_item->is_enabled?'表示':'非表示';
     ?></td>
 </tr>
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>

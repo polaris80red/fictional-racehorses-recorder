@@ -1,5 +1,6 @@
 <?php
 class ThemesRow extends TableRow {
+    use TableRowValidate;
     public const INT_COLUMNS=[
         'id',
         'sort_priority',
@@ -16,4 +17,16 @@ class ThemesRow extends TableRow {
     public $sort_priority   =0;
     public $sort_number     =null;
     public $is_enabled      =1;
+    /**
+     * SET済みのプロパティを検証して$hasErrorsをセットする
+     * @return bool エラーがなければtrue
+     */
+    public function validate(): bool
+    {
+        $this->validateStrLength($this->name,'名称',32);
+        $this->validateStrLength($this->dir_name,'ディレクトリ名',100);
+        $this->varidateInt($this->sort_priority,'表示順優先度');
+        $this->varidateInt($this->sort_number,'表示順補正');
+        return !$this->hasErrors;
+    }
 }
