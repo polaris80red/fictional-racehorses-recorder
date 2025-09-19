@@ -17,14 +17,13 @@ $editMode=($inputId>0);
 $TableClass=World::class;
 $TableRowClass=$TableClass::ROW_CLASS;
 
-$world=($TableClass)::getById($pdo,$inputId);
 if($editMode){
     $page->title.="（編集）";
-}
-if($editMode && $world===false){
-    $page->addErrorMsg("ワールドID '{$inputId}' が指定されていますが該当するワールドがありません");
-}
-if($world===false){
+    $world=($TableClass)::getById($pdo,$inputId);
+    if($world===false){
+        $page->addErrorMsg("ワールドID '{$inputId}' が指定されていますが該当するワールドがありません");
+    }
+}else{
     $world=new ($TableRowClass)();
 }
 if($page->error_exists){
