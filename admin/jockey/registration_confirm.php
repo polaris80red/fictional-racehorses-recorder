@@ -14,10 +14,19 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
-$form_item=new JockeyRow();
-if($id>0){
-    $check_form_item=Jockey::getById($pdo,$id);
-    $form_item->id=$id;
+
+$editMode=($id>0);
+$TableClass=Jockey::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
+}else{
+    $form_item=new ($TableRowClass)();
 }
 $form_item->unique_name=filter_input(INPUT_POST,'unique_name');
 $form_item->name=filter_input(INPUT_POST,'name');
@@ -27,27 +36,13 @@ $form_item->trainer_name=filter_input(INPUT_POST,'trainer_name');
 $form_item->is_anonymous=filter_input(INPUT_POST,'is_anonymous',FILTER_VALIDATE_BOOL)?1:0;
 $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
-$error_exists=false;
-do{
-    if($form_item->unique_name==''){
-        $page->addErrorMsg("キー名が入力されていません");
-    }
-    if(mb_strlen($form_item->short_name_10,'UTF-8')>10){
-        $page->addErrorMsg("略名は10文字以内で設定してください");
-    }
-    if($id>0 && $check_form_item===false){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
-    }
-}while(false);
+if(!$form_item->validate()){
+    $page->addErrorMsgArray($form_item->errorMessages);
+}
 if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($id>0){
-    $page->title.="（編集）";
-}
-
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
