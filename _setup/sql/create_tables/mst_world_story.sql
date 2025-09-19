@@ -10,7 +10,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `mst_world_story` (
   `id` int(11) NOT NULL COMMENT 'キー',
-  `name` varchar(32) NOT NULL DEFAULT '' COMMENT '名称',
+  `name` varchar(50) NOT NULL COMMENT '名称',
   `guest_visible` tinyint(4) NOT NULL DEFAULT 1 COMMENT 'ログインユーザー以外でも表示',
   `config_json` text NOT NULL DEFAULT '' COMMENT '表示設定JSON',
   `sort_priority` int(11) NOT NULL DEFAULT 0 COMMENT '表示順優先度',
