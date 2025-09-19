@@ -22,6 +22,9 @@ do{
     if($new_unique_name==''){
         $page->addErrorMsg('新しい名称が未入力');
     }
+    if(mb_strlen($new_unique_name)>32){
+        $page->addErrorMsg('キー名は32文字以下で入力してください');
+    }
     if($page->error_exists){ break; }
 }while(false);
 if($page->error_exists){
