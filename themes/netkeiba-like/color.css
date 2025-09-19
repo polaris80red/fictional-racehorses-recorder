@@ -18,6 +18,7 @@ td span.result_number {
 .horse_history .race_grade_1 .race_name,
 .result_1st,
 .favourite_1,
+td.f_time.asc-1,
 table.syutsuba td.result_1st span.result_number
 {
 	background-color:#ffef7f;
@@ -28,6 +29,7 @@ table.syutsuba td.result_1st span.result_number
 .horse_history .race_grade_2 .race_name,
 .result_2nd,
 .favourite_2,
+td.f_time.asc-2,
 table.syutsuba td.result_2nd span.result_number
 {
 	background-color:#cbdeff;
@@ -38,6 +40,7 @@ table.syutsuba td.result_2nd span.result_number
 .horse_history .race_grade_3 .race_name,
 .result_3rd,
 .favourite_3,
+td.f_time.asc-3,
 table.syutsuba td.result_3rd span.result_number
 {
 	background-color:#efc79f;
