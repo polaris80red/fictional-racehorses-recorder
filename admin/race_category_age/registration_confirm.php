@@ -14,10 +14,19 @@ if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
-$form_item=new RaceCategoryAgeRow();
-if($id>0){
-    $check_form_item=RaceCategoryAge::getById($pdo,$id);
-    $form_item->id=$id;
+
+$editMode=($id>0);
+$TableClass=RaceCategoryAge::class;
+$TableRowClass=$TableClass::ROW_CLASS;
+
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
+}else{
+    $form_item=new ($TableRowClass)();
 }
 $form_item->search_id=filter_input(INPUT_POST,'search_id');
 $form_item->name=filter_input(INPUT_POST,'name');
@@ -30,23 +39,15 @@ if($form_item->sort_number===''){
     $form_item->sort_number=(int)$form_item->sort_number;
 }
 $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
-
-$error_exists=false;
 do{
-    if($id>0 && $check_form_item===false){
-        $error_exists=true;
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定ID '{$id}' が指定されていますが該当する{$base_title}がありません");
+    if(!$form_item->validate()){
+        $page->addErrorMsgArray($form_item->errorMessages);
     }
 }while(false);
-if($error_exists){
+if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-if($id>0){
-    $page->title.="（編集）";
-}
-
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
