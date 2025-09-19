@@ -13,25 +13,25 @@ $session=new Session();
 if(!Session::is_logined()){ $page->exitToHome(); }
 
 $pdo=getPDO();
-$input_id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
-$input_name=filter_input(INPUT_GET,'name');
+$id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 
-$s_setting=new Setting(false);
-if($input_id>0){
-    $form_item=RaceSpecialResults::getById($pdo,$input_id);
-    if($form_item!==false){
-        $page->title.="（編集）";
-    }else{
-        $input_id=0;
-    }
-}
-if($input_id==0){
-    $form_item=new RaceSpecialResultsRow();
-    if($input_name){
-        $form_item->name=$input_name;
-    }
-}
+$editMode=($id>0);
+$TableClass=RaceSpecialResults::class;
+$TableRowClass=$TableClass::ROW_CLASS;
 
+if($editMode){
+    $page->title.="（編集）";
+    $form_item=($TableClass)::getById($pdo,$id);
+    if($form_item===false){
+        $page->addErrorMsg("ID '{$id}' が指定されていますが該当するレコードがありません");
+    }
+}else{
+    $form_item=new ($TableRowClass)();
+}
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
