@@ -46,10 +46,8 @@ do{
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
-    if($story->name===''){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg("{$base_title}設定名称未設定");
-        break;
+    if(!$story->validate()){
+        $page->addErrorMsgArray($story->errorMessages);
     }
 }while(false);
 if($page->error_exists){

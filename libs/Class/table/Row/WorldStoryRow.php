@@ -1,5 +1,6 @@
 <?php
 class WorldStoryRow extends TableRow {
+    use TableRowValidate;
     public const STR_COLUMNS=[
         'name',
         'config_json',
@@ -26,5 +27,13 @@ class WorldStoryRow extends TableRow {
     }
     public function setConfig($config_obj){
         $this->config_json = json_encode($config_obj,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
+    }
+    public function validate(): bool
+    {
+        $this->validateRequired($this->name,'名称');
+        $this->validateStrLength($this->name,'名称',50);
+        $this->varidateInt($this->sort_priority,'表示順優先度');
+        $this->varidateInt($this->sort_number,'表示順補正');
+        return !$this->hasErrors;
     }
 }
