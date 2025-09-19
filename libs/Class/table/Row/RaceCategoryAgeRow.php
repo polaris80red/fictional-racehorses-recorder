@@ -1,5 +1,6 @@
 <?php
 class RaceCategoryAgeRow extends TableRow {
+    use TableRowValidate;
     public const INT_COLUMNS=[
         'id',
         'search_id',
@@ -18,4 +19,17 @@ class RaceCategoryAgeRow extends TableRow {
     public $name_umamusume;
     public $sort_number;
     public $is_enabled=1;
+    /**
+     * SET済みのプロパティを検証して$hasErrorsをセットする
+     * @return bool エラーがなければtrue
+     */
+    public function validate(): bool
+    {
+        $this->varidateInt($this->search_id,'検索ID',0,100);
+        $this->validateStrLength($this->name,'名称',100);
+        $this->validateStrLength($this->short_name_2,'2字略名',2);
+        $this->validateStrLength($this->name_umamusume,'擬人化用名称',100);
+        $this->varidateInt($this->sort_number,'表示順補正');
+        return !$this->hasErrors;
+    }
 }
