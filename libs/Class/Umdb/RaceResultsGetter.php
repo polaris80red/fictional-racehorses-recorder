@@ -15,6 +15,9 @@ class RaceResultsGetter{
     public bool $hasThisweek=false;
     public bool $hasSps=false;
     public int $rowNumber=0;
+
+    private array $f_time_list=[];
+    public array $f_time_class_list=[];
     
     private int $raceYear;
 
@@ -106,6 +109,9 @@ class RaceResultsGetter{
             if($raceResult->jra_sps_comment){
                 $this->hasSps=true;
             }
+            if($raceResult->f_time){
+                $this->f_time_list[]=$raceResult->f_time;
+            }
             $row->sex = $raceResult->sex?:$horse->sex;
             $row->sexStr=sex2String((int)$row->sex);
             $row->age=empty($horse->birth_year)?'':$this->raceYear-$horse->birth_year;
@@ -150,6 +156,18 @@ class RaceResultsGetter{
             $table_data[]=$row;
         }
         $this->rowNumber=count($table_data);
+
+        asort($this->f_time_list);
+        $this->f_time_list = array_values(array_unique($this->f_time_list));
+        if(isset($this->f_time_list[0])){
+            $this->f_time_class_list[$this->f_time_list[0]]='asc-1';
+        }
+        if(isset($this->f_time_list[1])){
+            $this->f_time_class_list[$this->f_time_list[1]]='asc-2';
+        }
+        if(isset($this->f_time_list[2])){
+            $this->f_time_class_list[$this->f_time_list[2]]='asc-3';
+        }
         return $table_data;
     }
 }

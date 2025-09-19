@@ -4,6 +4,7 @@
  * @var Page $page
  * @var Setting $setting
  * @var Race $race
+ * @var RaceResultsGetter $resultsGetter
  * @var RaceSearchResultPageRow[] $table_data
  * @var bool $mode_umm
  */
@@ -160,7 +161,13 @@ $i=0;
             if($raceResult->corner_4>0){ $corner_numbers[]=$raceResult->corner_4; }
         ?>
         <td class="col_corner_numbers"><?=h(implode('-',$corner_numbers))?></td>
-        <td><?=h($raceResult->f_time)?></td>
+        <?php
+            $f_time_class='';
+            if($raceResult->f_time!=''){
+                $f_time_class=$resultsGetter->f_time_class_list[$raceResult->f_time]??'';
+            }
+        ?>
+        <td class="<?=h($f_time_class)?>"><?=h($raceResult->f_time)?></td>
         <?php if(!$mode_umm): ?>
             <td><?=h($raceResult->h_weight)?></td>
         <?php endif; ?>
