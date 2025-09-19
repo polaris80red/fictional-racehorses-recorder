@@ -28,17 +28,19 @@
     <th>斤量</th>
     <?php if(!$mode_umm): ?><th>馬体重</th><?php endif; ?>
     <th>タイム</th>
-    <th>1着馬<span class="nowrap">(2着馬)</span></th><th>記</th>
+    <th>1着馬<span class="nowrap">(2着馬)</span></th>
+    <th>記</th>
     <?php if($page->is_editable): ?><th></th><?php endif; ?>
 </tr>
 </thead>
 <?php
-$FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id='') use($page,$horse_id,$mode_umm){
+$colSpan=12+(!$mode_umm?2:0)+($page->is_editable?1:0);
+$FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id='') use($page,$horse_id,$mode_umm,$colSpan){
     $ret_text='';
     if($non_registered_prev_race_number>0){
         $ret_text.="<tr><td style=\"color:#999999;\">（{$non_registered_prev_race_number}戦～）</td>";
-        $ret_text.=str_repeat("<td></td>",2)."<td>……</td>".str_repeat("<td></td>",9);
-        if(!$mode_umm) { $ret_text.=str_repeat("<td></td>",2); }
+        $ret_text.="<td></td><td>……</td>";
+        $ret_text.=str_repeat("<td></td>",($colSpan-2-($page->is_editable?1:0)));
         if($page->is_editable){
             $params=['horse_id'=>$horse_id];
             if($next_race_id!==''){
