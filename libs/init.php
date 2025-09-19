@@ -42,6 +42,11 @@ spl_autoload_register(function ($class_name) {
         require_once $path;
         return;
     }
+    $path=__DIR__.'/Class/table/Traits/'.$class_name . '.php';
+    if(file_exists($path)){
+        require_once $path;
+        return;
+    }
     // Searchディレクトリのクラス
     $path=__DIR__.'/Class/Search/'.$class_name . '.php';
     if(file_exists($path)){

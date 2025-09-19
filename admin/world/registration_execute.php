@@ -39,10 +39,8 @@ do{
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
-    if($world->name===''){
-        $page->debug_dump_var[]=['POST'=>$_POST];
-        $page->addErrorMsg('ワールド名未設定');
-        break;
+    if(!$world->validate()){
+        $page->addErrorMsgArray($world->errorMessages);
     }
 }while(false);
 if($page->error_exists){
