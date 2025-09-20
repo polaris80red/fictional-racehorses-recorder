@@ -475,20 +475,26 @@ $latest_race_is_exists=false; ?>
     <?php endif; ?>
 <?php endforeach; ?>
 </table>
-<form id="show_note_switch" method="get" action="#" style="margin-top: 4px;padding-left:0.5em;max-width:600px; border:solid 1px #999;" oncontextmenu="return false;">
-    レース前後メモ切替：
-    <label oncontextmenu="uncheckAndCheck('#show_note_switch input[type=checkbox]','input[name=show_horse_note]');">
-        <input type="checkbox" name="show_horse_note" value="1"<?=!$show_horse_note?'':' checked'?>>競走馬
+<form id="show_mode_switch" method="get" action="#" style="margin-top: 4px;padding-left:0.5em; border:solid 1px #999; font-size:90%" oncontextmenu="return false;">
+    表示切替：
+    <input type="button" class="toggle" value="全選択・全解除" onclick="toggleCheckboxes('#show_mode_switch input[type=checkbox]');">
+    <label oncontextmenu="uncheckAndCheck('#show_mode_switch input[type=checkbox]','input[name=show_horse_note]');">
+        <input type="checkbox" name="show_horse_note" value="1"<?=!$show_horse_note?'':' checked'?>>競走馬メモ
     </label>
-    ｜<label oncontextmenu="uncheckAndCheck('#show_note_switch input[type=checkbox]','input[name=show_race_note]');">
-        <input type="checkbox" name="show_race_note" value="1"<?=!$show_race_note?'':' checked'?>>レース
+    ｜<label oncontextmenu="uncheckAndCheck('#show_mode_switch input[type=checkbox]','input[name=show_race_note]');">
+        <input type="checkbox" name="show_race_note" value="1"<?=!$show_race_note?'':' checked'?>>レースメモ
     </label>
-    　<input type="button" class="toggle" value="全選択・全解除" onclick="toggleCheckboxes('#show_note_switch input[type=checkbox]');">
-    　<input type="submit" value="切替実行">
+    <?php if($registration_only_race_is_exists||$show_registration_only):?>
+        ｜<label oncontextmenu="uncheckAndCheck('#show_mode_switch input[type=checkbox]','input[name=show_registration_only]');">
+            <input type="checkbox" name="show_registration_only" value="1"<?=!$show_registration_only?'':' checked'?>>非出走レース
+        </label>
+    <?php endif;?>
+    &nbsp;<input type="submit" value="切替実行">
     <?php
         $params= array_diff(array_diff_key($page_urlparam->toArray(),[
             'show_horse_note'=>false,
             'show_race_note'=>false,
+            'show_registration_only'=>false,
         ]),[0,'',false]);
         foreach($params as $key => $val){
             MkTagInput::Hidden($key,$val)->print();
@@ -502,14 +508,6 @@ $latest_race_is_exists=false; ?>
         print('<hr>');
         include $tpl;
     }
-?>
-<?php
-if($registration_only_race_is_exists||$show_registration_only){
-    print('<hr>');
-    $a_tag=new MkTagA("特別登録のみのレースを".($show_registration_only?"非表示(現在:表示)":"表示(現在:非表示)")."");
-    $a_tag->href("?".$page_urlparam->toString(['show_registration_only'=>!$show_registration_only]));
-    $a_tag->print();
-}
 ?>
 <?php $horse_tags=(new HorseTag($pdo))->getTagNames($page->horse->horse_id); ?>
 <?php if(count($horse_tags)>0):?>
