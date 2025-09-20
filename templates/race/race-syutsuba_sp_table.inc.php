@@ -35,43 +35,42 @@
 <span style="border:solid 1px #999; padding-left:0.4em; padding-right:0.4em;" class="<?php echo "waku_".$data['frame_number']; ?>"> <?php echo $data['frame_number']; ?></span>
 <?php endif; ?>
 </td>
-<td><?php echo empty($data['horse_number'])?"":$data['horse_number']; ?></td>
+<td><?=h($data['horse_number'])?></td>
 <td style="min-width:160px;">
 <?php
-    $training_country='';
-    if(!empty($data['training_country'])){
-        $training_country=$data['training_country'];
-    }else{
-        $training_country=$data['horse_training_country'];
-    }
+    $training_country=$data['training_country']?:$data['horse_training_country'];
+    $horse_name_line=[];
     if(($data['is_jra']==1 || $data['is_nar']==1)){
         // 中央競馬または地方競馬の場合、調教国・生産国でカク外・マル外マークをつける
         if($training_country!='' && $training_country!='JPN'){
             // 外国調教馬にカク外表記
-            echo "[外]";
+            $horse_name_line[]="[外]";
         }else{
             // 中央競馬の場合のみ地方所属馬と元地方所属馬のカク地・マル地マーク
             if($data['is_jra']){
                 if($data['is_affliationed_nar']==1){
-                    echo "[地]";
+                    $horse_name_line[]="[地]";
                 }
                 if($data['is_affliationed_nar']==2){
-                    echo "(地)";
+                    $horse_name_line[]="(地)";
                 }
             }
             // 外国産馬のマル外表記
             if($data['breeding_country']!='' && $data['breeding_country']!='JPN'){
-                echo "(外)";
+                $horse_name_line[]="(外)";
             }
         }
     }
-    echo '<a class="horse_name" href="'.$page->to_app_root_path.'horse/?horse_id='.h($data['horse_id']).'">';
-    print_h($data['name_ja']?:$data['name_en']);
-    echo "</a>";
+    $aTag=new MkTagA($data['name_ja']?:$data['name_en'],InAppUrl::to('horse/',['horse_id'=>$data['horse_id']]));
+    $aTag->addClass('horse_name');
+    $horse_name_line[]=$aTag->__toString();
     if($data['is_jra']==0 && $data['is_nar']==0){
-        echo "<span style=\"\"> (".($data['training_country']?:$data['horse_training_country']).")</span> ";
+        $horse_name_line[]="<span style=\"\"> (".($data['training_country']?:$data['horse_training_country']).")</span> ";
     }
-    echo "<br>";
+    ?>
+    <?=implode('',$horse_name_line)?><br>
+    <?php
+    $trainerLine=[];
     $trainer=$data['trainer_name']?:($data['horse_trainer_name']?:'□□□□');
     if($data['race_trainer_mst_is_enabled']==1){
         if($data['race_trainer_mst_is_anonymous']==1){
@@ -86,13 +85,14 @@
             $trainer=$data['trainer_mst_short_name_10']?:$data['horse_trainer_name'];
         }
     }
-    print_h($trainer);
+    $trainerLine[]=$trainer;
     if(!empty($data['tc'])){
-        echo "（{$data['tc']}）";
+        $trainerLine[]="（{$data['tc']}）";
     }else{
-        echo "（{$data['horse_tc']}）";
+        $trainerLine[]="（{$data['horse_tc']}）";
     }
-?><br>
+?>
+<?=h(implode('',$trainerLine))?><br>
 父：<?=h(($data['sire_name_ja']?:$data['sire_name_en'])?:$data['sire_name']?:"□□□□□□")?><br>
 母：<?=h(($data['mare_name_ja']?:$data['mare_name_en'])?:$data['mare_name']?:"□□□□□□")?><br>
 母の父：<?=h(($data['bms_name_ja']?:$data['bms_name_en'])?:($data['mare_sire_name']?:($data['bms_name']?:"□□□□□□")))?><br>
@@ -101,7 +101,8 @@
     <span class="nowrap"><?=h($data['sex_str'].$data['age']."歳")?></span><?php
 if($data['color']){ print_h("/".$data['color']);}
 if($data['handicap']){ print_h(" ".$data['handicap']."kg");}
-
+?><br>
+<?php
 $jockey=$data['jockey_name']?:'□□□□';
 if($data['jockey_mst_is_enabled']==1){
     if($data['jockey_mst_is_anonymous']==1){
@@ -110,8 +111,8 @@ if($data['jockey_mst_is_enabled']==1){
         $jockey=$data['jockey_mst_short_name_10']?:$data['jockey_name'];
     }
 }
-echo "<br>".h($jockey);
-?></td>
+?>
+<?=h($jockey)?></td>
 <?php
 $i=1;
 
