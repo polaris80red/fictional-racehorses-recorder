@@ -53,6 +53,21 @@ $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id=''
     }
     return $ret_text;
 };
+$FUNC_print_note_row=function(string $title,$tr_class,$race_id,$note,$horse_id='')use($page,$colSpan){
+    if($note==''){ return; }
+    ?>
+        <tr class="<?=h($tr_class)?>">
+            <td></td>
+            <td style="text-align: center;"><?=h($title)?></td>
+            <td colspan="<?=$colSpan-2?>">
+                <?=nl2br(h($note))?>
+            </td>
+            <?php if($page->is_editable):?>
+                <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race_id],$horse_id?"horse_{$horse_id}":''))?></td>
+            <?php endif;?>
+        </tr>
+    <?php
+};
 $registration_only_race_is_exists=false;
 $latest_race_is_exists=false;
 ?>
@@ -87,6 +102,14 @@ $latest_race_is_exists=false;
         }
         $tr_class->add($grade->css_class);
         if($race->is_enabled===0){ $tr_class->add('disabled_row'); }
+        // レースメモの描画
+        if($date_order==='ASC'){
+            $FUNC_print_note_row('前',$tr_class,$race->race_id,$show_race_note?$race->previous_note:'');
+            $FUNC_print_note_row('前',$tr_class,$race->race_id,$show_horse_note?$data->race_previous_note:'',$horse_id);
+        }else if($date_order==='DESC'){
+            $FUNC_print_note_row('後',$tr_class,$race->race_id,$show_race_note?$race->after_note:'');
+            $FUNC_print_note_row('後',$tr_class,$race->race_id,$show_horse_note?$data->race_after_note:'',$horse_id);
+        }
     ?>
     <tr class="<?=h($tr_class)?>">
         <?php
@@ -181,9 +204,45 @@ $latest_race_is_exists=false;
                 ])))?></td>
         <?php endif; ?>
     </tr>
+    <?php
+        // レースメモの描画
+        if($date_order==='DESC'){
+            $FUNC_print_note_row('前',$tr_class,$race->race_id,$show_race_note?$race->previous_note:'');
+            $FUNC_print_note_row('前',$tr_class,$race->race_id,$show_horse_note?$data->race_previous_note:'',$horse_id);
+        }else if($date_order==='ASC'){
+            $FUNC_print_note_row('後',$tr_class,$race->race_id,$show_race_note?$race->after_note:'');
+            $FUNC_print_note_row('後',$tr_class,$race->race_id,$show_horse_note?$data->race_after_note:'',$horse_id);
+        }
+    ?>
     <?php if($date_order=='DESC'):// 日付降順の場合の過去未登録行の追加処理 ?>
         <?=$FUNC_print_empty_row($data->non_registered_prev_race_number,$race->race_id)?>
     <?php endif; ?>
 <?php endforeach; ?>
 </tbody>
 </table>
+<form id="show_mode_switch" method="get" action="#" style="margin-top: 4px;padding-left:0.5em; border:solid 1px #999; font-size:90%" oncontextmenu="return false;">
+    表示切替：
+    <input type="button" class="toggle" value="全選択・全解除" onclick="toggleCheckboxes('#show_mode_switch input[type=checkbox]');">
+    <label oncontextmenu="uncheckAndCheck('#show_mode_switch input[type=checkbox]','input[name=show_horse_note]');">
+        <input type="checkbox" name="show_horse_note" value="1"<?=!$show_horse_note?'':' checked'?>>競走馬メモ
+    </label>
+    ｜<label oncontextmenu="uncheckAndCheck('#show_mode_switch input[type=checkbox]','input[name=show_race_note]');">
+        <input type="checkbox" name="show_race_note" value="1"<?=!$show_race_note?'':' checked'?>>レースメモ
+    </label>
+    <?php if($registration_only_race_is_exists||$show_registration_only):?>
+        ｜<label oncontextmenu="uncheckAndCheck('#show_mode_switch input[type=checkbox]','input[name=show_registration_only]');">
+            <input type="checkbox" name="show_registration_only" value="1"<?=!$show_registration_only?'':' checked'?>>非出走レース
+        </label>
+    <?php endif;?>
+    &nbsp;<input type="submit" value="切替実行">
+    <?php
+        $params= array_diff(array_diff_key($page_urlparam->toArray(),[
+            'show_horse_note'=>false,
+            'show_race_note'=>false,
+            'show_registration_only'=>false,
+        ]),[0,'',false]);
+        foreach($params as $key => $val){
+            MkTagInput::Hidden($key,$val)->print();
+        }
+    ?>
+</form>
