@@ -153,12 +153,12 @@ foreach(['芝','ダ','障'] as $row){
 </tr>
 <tr>
     <th>レース名</th>
-    <td class="in_input"><input type="text" name="race_name" class="required" list="race_name_list" value="<?=h($race->race_name)?>" required></td>
+    <td class="in_input"><input type="text" name="race_name" class="required" list="race_name_list" value="<?=h($race->race_name)?>" placeholder="レース名" required></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=race_name]');clearElmVal('*[name=race_short_name]');"></td>
 </tr>
 <tr>
     <th>出馬表等略名</th>
-    <td class="in_input"><input type="text" name="race_short_name" list="race_short_name_list" value="<?=h($race->race_short_name)?>"></td>
+    <td class="in_input"><input type="text" name="race_short_name" list="race_short_name_list" value="<?=h($race->race_short_name)?>" placeholder="出馬表など略名"></td>
     <td class=""></td>
 </tr>
 <tr>
@@ -197,7 +197,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
             echo "<option value=\"{$row['id']}\" {$selected}>{$row['id']}: ".h($row['name'])."</option>";
         }
     }
-    ?></select><input type="button" id="agegrade_to_name" value="馬齢・条件から命名"></td>
+    ?></select><input type="button" id="agegrade_to_name" value="馬齢・格付から命名"></td>
     <td></td>
 </tr>
 <tr>
@@ -261,7 +261,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
 </tr>
 <tr>
     <th>頭数</th>
-    <td class="in_input"><input type="number" name="number_of_starters" value="<?=h($race->number_of_starters)?>"></td>
+    <td class="in_input"><input type="number" name="number_of_starters" style="width: 5em;" value="<?=h($race->number_of_starters)?>" placeholder="頭数"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=number_of_starters]');"></td>
 </tr>
 <tr>
@@ -282,7 +282,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
 </tr>
 <tr>
     <th>正規日付</th>
-    <td class="in_input"><input type="text" id="race_date_picker" name="date" value="<?=h($race->date)?>" onchange="setYM();setWeekSelect();getWeekNum();clearElmVal('*[name=year_select]');"></td>
+    <td class="in_input"><input type="text" id="race_date_picker" name="date" value="<?=h($race->date)?>" onchange="setYM();setWeekSelect();getWeekNum();clearElmVal('*[name=year_select]');" placeholder="yyyy-mm-dd"></td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=date]');"></td>
 </tr>
 <tr>
