@@ -224,6 +224,21 @@ $FUNC_print_empty_row=function($non_registered_prev_race_number,$next_race_id=''
     }
     return $ret_text;
 };
+$FUNC_print_note_row=function(string $title,$tr_class,$race_id,$note,$horse_id='')use($page,$colSpan){
+    if($note==''){ return; }
+    ?>
+        <tr class="<?=h($tr_class)?>">
+            <td></td>
+            <td style="text-align: center;"><?=h($title)?></td>
+            <td colspan="<?=$colSpan-2?>">
+                <?=nl2br(h($note))?>
+            </td>
+            <?php if($page->is_editable):?>
+                <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race_id],$horse_id?"horse_{$horse_id}":''))?></td>
+            <?php endif;?>
+        </tr>
+    <?php
+};
 $registration_only_race_is_exists=false;
 $latest_race_is_exists=false; ?>
 <?php foreach ($race_history as $data):?>
@@ -256,58 +271,15 @@ $latest_race_is_exists=false; ?>
         }
         $tr_class->add($grade->css_class);
         if($race->is_enabled===0){ $tr_class->add('disabled_row'); }
+        // レースメモの描画
+        if($date_order==='ASC'){
+            $FUNC_print_note_row('前',$tr_class,$race->race_id,$show_race_note?$race->previous_note:'');
+            $FUNC_print_note_row('前',$tr_class,$race->race_id,$show_horse_note?$data->race_previous_note:'',$horse_id);
+        }else if($date_order==='DESC'){
+            $FUNC_print_note_row('後',$tr_class,$race->race_id,$show_race_note?$race->after_note:'');
+            $FUNC_print_note_row('後',$tr_class,$race->race_id,$show_horse_note?$data->race_after_note:'',$horse_id);
+        }
     ?>
-    <?php if($date_order==='ASC'):?>
-        <?php if($show_race_note && $race->previous_note):?>
-            <tr class="<?=h($tr_class)?>">
-                <td></td>
-                <td style="text-align: center;">前</td>
-                <td colspan="<?=$colSpan-2?>">
-                    <?=nl2br(h($race->previous_note))?>
-                </td>
-                <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id]))?></td>
-                <?php endif;?>
-            </tr>
-        <?php endif;?>
-        <?php if($show_horse_note && $data->race_previous_note):?>
-            <tr class="<?=h($tr_class)?>">
-                <td></td>
-                <td style="text-align: center;">前</td>
-                <td colspan="<?=$colSpan-2?>">
-                    <?=nl2br(h($data->race_previous_note))?>
-                </td>
-                <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id],"horse_{$horse->horse_id}"))?></td>
-                <?php endif;?>
-            </tr>
-        <?php endif;?>
-    <?php elseif($date_order==='DESC'):?>
-        <?php if($show_race_note && $race->after_note):?>
-            <tr class="<?=h($tr_class)?>">
-                <td></td>
-                <td style="text-align: center;">後</td>
-                <td colspan="<?=$colSpan-2?>">
-                    <?=nl2br(h($race->after_note))?>
-                </td>
-                <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id]))?></td>
-                <?php endif;?>
-            </tr>
-        <?php endif;?>
-        <?php if($show_horse_note && $data->race_after_note):?>
-            <tr class="<?=h($tr_class)?>">
-                <td></td>
-                <td style="text-align: center;">後</td>
-                <td colspan="<?=$colSpan-2?>">
-                    <?=nl2br(h($data->race_after_note))?>
-                </td>
-                <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id],"horse_{$horse->horse_id}"))?></td>
-                <?php endif;?>
-            </tr>
-        <?php endif;?>
-    <?php endif;?>
     <tr class="<?=h($tr_class)?>">
         <?php
             $datetime=null;
@@ -419,57 +391,16 @@ $latest_race_is_exists=false; ?>
                 ])))?></td>
         <?php endif; ?>
     </tr>
-    <?php if($date_order==='DESC'):?>
-        <?php if($show_race_note && $race->previous_note):?>
-            <tr class="<?=h($tr_class)?>">
-                <td></td>
-                <td style="text-align: center;">前</td>
-                <td colspan="<?=$colSpan-2?>">
-                    <?=nl2br(h($race->previous_note))?>
-                </td>
-                <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id]))?></td>
-                <?php endif;?>
-            </tr>
-        <?php endif;?>
-        <?php if($show_horse_note && $data->race_previous_note):?>
-            <tr class="<?=h($tr_class)?>">
-                <td></td>
-                <td style="text-align: center;">前</td>
-                <td colspan="<?=$colSpan-2?>">
-                    <?=nl2br(h($data->race_previous_note))?>
-                </td>
-                <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id],"horse_{$horse->horse_id}"))?></td>
-                <?php endif;?>
-            </tr>
-        <?php endif;?>
-    <?php elseif($date_order==='ASC'):?>
-        <?php if($show_race_note && $race->after_note):?>
-            <tr class="<?=h($tr_class)?>">
-                <td></td>
-                <td style="text-align: center;">後</td>
-                <td colspan="<?=$colSpan-2?>">
-                    <?=nl2br(h($race->after_note))?>
-                </td>
-                <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id]))?></td>
-                <?php endif;?>
-            </tr>
-        <?php endif;?>
-        <?php if($show_horse_note && $data->race_after_note):?>
-            <tr class="<?=h($tr_class)?>">
-                <td></td>
-                <td style="text-align: center;">後</td>
-                <td colspan="<?=$colSpan-2?>">
-                    <?=nl2br(h($data->race_after_note))?>
-                </td>
-                <?php if($page->is_editable):?>
-                    <td><?=new MkTagA('記',InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id],"horse_{$horse->horse_id}"))?></td>
-                <?php endif;?>
-            </tr>
-        <?php endif;?>
-    <?php endif;?>
+    <?php
+        // レースメモの描画
+        if($date_order==='DESC'){
+            $FUNC_print_note_row('前',$tr_class,$race->race_id,$show_race_note?$race->previous_note:'');
+            $FUNC_print_note_row('前',$tr_class,$race->race_id,$show_horse_note?$data->race_previous_note:'',$horse_id);
+        }else if($date_order==='ASC'){
+            $FUNC_print_note_row('後',$tr_class,$race->race_id,$show_race_note?$race->after_note:'');
+            $FUNC_print_note_row('後',$tr_class,$race->race_id,$show_horse_note?$data->race_after_note:'',$horse_id);
+        }
+    ?>
     <?php if($date_order=='DESC'):// 空行の追加 ?>
         <?=$FUNC_print_empty_row($data->non_registered_prev_race_number,$race->race_id)?>
     <?php endif; ?>
