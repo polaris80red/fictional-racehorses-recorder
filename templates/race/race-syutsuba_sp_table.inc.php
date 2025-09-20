@@ -6,6 +6,7 @@
  */
 ?>
 <table class="syutsuba sps">
+<thead>
     <tr>
         <th>枠<br>番</th>
         <th>馬<br>番</th>
@@ -16,8 +17,10 @@
         <th>3走前</th>
         <th>4走前</th>
     </tr>
+</thead>
+<tbody>
+<?php foreach ($table_data as $data):?>
 <?php
-foreach ($table_data as $data) {
     // 1件目からない場合　表を描画しない
     if(empty($data['horse_id'])){
         continue;
@@ -235,6 +238,7 @@ foreach($data['horse_results'] as $prev_race){
     }
 }
 ?>
-</tr><?php
-}
-?></table>
+</tr>
+</tbody>
+<?php endforeach;?>
+</table>
