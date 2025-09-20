@@ -17,9 +17,10 @@ class Imploader{
         return $this;
     }
     /**
-     * 項目を追加
+     * 項目を追加（nullの場合は何もしない）
      */
-    public function add(string|array $input){
+    public function add(string|array|null $input){
+        if($input===null){ return $this; }
         if(is_array($input)){
             foreach($input as $value){ $this->list[]=$value; }
         }else{
