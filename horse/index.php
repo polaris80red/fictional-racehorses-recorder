@@ -11,6 +11,8 @@ $session=new Session();
 $page->is_editable=Session::is_logined();
 // ログイン中でも強制的にプレビュー表示にできるパラメータ
 $is_preview=filter_input(INPUT_GET,'preview',FILTER_VALIDATE_BOOL);
+$show_race_note=filter_input(INPUT_GET,'show_race_note',FILTER_VALIDATE_BOOL);
+$show_horse_note=filter_input(INPUT_GET,'show_horse_note',FILTER_VALIDATE_BOOL);
 if($is_preview){
     $page->is_editable=false;
 }
@@ -164,14 +166,6 @@ switch($setting->age_view_mode){
         print('<hr>');
         include $tpl;
     }
-?>
-<?php
-if($registration_only_race_is_exists||$show_registration_only){
-    print('<hr>');
-    $a_tag=new MkTagA("特別登録のみのレースを".($show_registration_only?"非表示(現在:表示)":"表示(現在:非表示)")."");
-    $a_tag->href("?".$page_urlparam->toString(['show_registration_only'=>!$show_registration_only]));
-    $a_tag->print();
-}
 ?>
 <?php $horse_tags=(new HorseTag($pdo))->getTagNames($page->horse->horse_id); ?>
 <?php if(count($horse_tags)>0):?>
