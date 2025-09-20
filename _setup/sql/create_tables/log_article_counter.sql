@@ -11,7 +11,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `log_article_counter` (
   `id` int(11) NOT NULL COMMENT 'サロゲートキー',
   `article_type` varchar(50) NOT NULL COMMENT '記事などの種類',
-  `article_id` varchar(32) NOT NULL COMMENT '記事などのキー（競走馬ID・レースID）',
+  `article_id` varchar(100) NOT NULL COMMENT '記事などのキー（競走馬ID・レースID）',
   `view_count` int(11) NOT NULL DEFAULT 0 COMMENT '表示回数',
   `created_at` datetime NOT NULL COMMENT '新規登録日時',
   `updated_at` datetime NOT NULL COMMENT '最終更新日時'
