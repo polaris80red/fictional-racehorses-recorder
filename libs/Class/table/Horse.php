@@ -13,6 +13,8 @@ class Horse extends Table{
     public $name_ja ='';
     public $name_en ='';
     public $birth_year =null;
+    public $birth_month=null;
+    public $birth_day_of_month=null;
     public $sex =0;
     public $color ='';
     public $tc ='';
@@ -88,6 +90,14 @@ class Horse extends Table{
         // 生年は未定義と0を区別
         $birth_year=(string)(filter_input(INPUT_POST,'birth_year')?:filter_input(INPUT_POST,'birth_year_select'));
         $this->birth_year=$birth_year===''?null:(int)$birth_year;
+
+        // 誕生月の補正
+        $birth_month=(int)(filter_input(INPUT_POST,'birth_month')?:filter_input(INPUT_POST,'birth_month_select'));
+        $this->birth_month=($birth_month>0 && $birth_month<=12)?$birth_month:null;
+
+        // 誕生日の補正
+        $birth_day_of_month=(int)(filter_input(INPUT_POST,'birth_day_of_month')?:filter_input(INPUT_POST,'birth_day_of_month_select'));
+        $this->birth_day_of_month=($birth_day_of_month>0 && $birth_day_of_month<=31)?$birth_day_of_month:null;
 
         $this->sex=(int)filter_input(INPUT_POST,'sex');
 

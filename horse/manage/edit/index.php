@@ -106,6 +106,23 @@ $world_list=World::getAll($pdo);
     </td>
 </tr>
 <tr>
+    <th>月日</th>
+    <td class="in_input">
+        <select name="birth_month_select" style="width:4em;">
+            <option value="">月</option>
+            <?php for($i=1; $i<=12; $i++):?>
+                <option value="<?=$i?>"<?=($i==$horse->birth_month)?' selected ':''?>><?=$i?>月</option>
+            <?php endfor;?>
+        </select>
+        <select name="birth_day_of_month_select" style="width:4em;">
+            <option value="">日</option>
+            <?php for($i=1; $i<=31; $i++):?>
+                <option value="<?=$i?>"<?=($i==$horse->birth_day_of_month)?' selected ':''?>><?=$i?>日</option>
+            <?php endfor;?>
+        </select>
+    </td>
+</tr>
+<tr>
     <th>性別</th>
     <td>
     <label><?php HTPrint::Radio("sex",0,$horse->sex);?>未選択</label><br>
