@@ -127,6 +127,9 @@ class Horse extends Table{
         return $this->error_exists?false:true;
     }
     public function varidate(){
+        if(intval($this->birth_day_of_month)>0 && $this->birth_month==null){
+            $this->addErrorMessages("誕生日指定時は誕生月も指定してください。");
+        }
         $this->validateLength($this->color,'毛色',3);
         $this->validateLength($this->tc,'所属',10);
         $this->validateLength($this->trainer_name,'調教師名',32);
