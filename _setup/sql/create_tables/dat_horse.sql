@@ -14,6 +14,8 @@ CREATE TABLE `dat_horse` (
   `name_ja` varchar(18) NOT NULL COMMENT '日本語名',
   `name_en` varchar(18) NOT NULL DEFAULT '' COMMENT '英字名',
   `birth_year` int(11) DEFAULT NULL COMMENT '生年',
+  `birth_month` tinyint(4) DEFAULT NULL COMMENT '生年月日の月',
+  `birth_day_of_month` tinyint(4) DEFAULT NULL COMMENT '生年月日の日',
   `sex` int(11) NOT NULL DEFAULT 0 COMMENT '性別',
   `color` varchar(3) DEFAULT NULL COMMENT '毛色',
   `tc` varchar(10) NOT NULL DEFAULT '' COMMENT '所属',
