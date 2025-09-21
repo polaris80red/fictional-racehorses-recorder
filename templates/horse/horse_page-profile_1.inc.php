@@ -46,7 +46,7 @@
         <td><?=$trainer_search_tag?></td>
     </tr>
     <tr>
-        <th><?=$setting->birth_year_mode===0?"生年":"世代"?></th>
+        <th><?=$setting->birth_year_mode===0?"生年月日":"世代"?></th>
         <td><?php
         if($page->horse->birth_year>0){
             $birth_year_search=new HorseSearch();
@@ -55,8 +55,17 @@
             $birth_year_str=$setting->getBirthYearFormat($page->horse->birth_year);
             (new MkTagA(h($birth_year_str),$url))->print();
         }
+        if($setting->birth_year_mode===0){
+            print_h(($horse->birth_month?"{$horse->birth_month}月":'').($horse->birth_day_of_month?"{$horse->birth_day_of_month}日":''));
+        }
         ?></td>
     </tr>
+    <?php if($setting->birth_year_mode!==0):?>
+    <tr>
+        <th>誕生日</th>
+        <td><?=h(($horse->birth_month?"{$horse->birth_month}月":'').($horse->birth_day_of_month?"{$horse->birth_day_of_month}日":''))?></td>
+    </tr>
+    <?php endif; ?>
     <?php
         $a_tag_sanku=new MkTagA('産駒');
         $a_tag_sanku->setStyles(['display'=>'inline-block','float'=>'right;']);
