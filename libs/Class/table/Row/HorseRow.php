@@ -3,6 +3,8 @@ class HorseRow extends TableRow {
     public const INT_COLUMNS=[
         'world_id',
         'birth_year',
+        'birth_month',
+        'birth_day_of_month',
         'sex',
         'is_affliationed_nar',
         'is_sire_or_dam',
@@ -35,6 +37,8 @@ class HorseRow extends TableRow {
     public $name_ja;
     public $name_en;
     public $birth_year=null;
+    public $birth_month=null;
+    public $birth_day_of_month=null;
     public $sex;
     public $color ='';
     public $tc ='';

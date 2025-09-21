@@ -121,8 +121,13 @@ th{
     <td><?php HTPrint::HiddenAndText('name_en',$horse->name_en) ?></td>
 </tr>
 <tr>
-    <th>生年</th>
-    <td><?php HTPrint::HiddenAndText('birth_year',$horse->birth_year) ?></td>
+    <th>生年月日</th>
+    <td>
+        <?php HTPrint::HiddenAndText('birth_year',$horse->birth_year) ?>
+        <?php HTPrint::Hidden('birth_month',$horse->birth_month) ?>
+        <?php HTPrint::Hidden('birth_day_of_month',$horse->birth_day_of_month) ?>
+        <?=h(($horse->birth_month?"{$horse->birth_month}月":'').($horse->birth_day_of_month?"{$horse->birth_day_of_month}日":''))?>
+    </td>
 </tr>
 <tr>
     <th>性別</th>
