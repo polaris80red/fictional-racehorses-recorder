@@ -35,7 +35,8 @@
     </tr>
     <tr>
         <td><?=(new MkTagA('レース結果一括編集',$race_history->race_count_all>0?InAppUrl::to('horse/manage/bulk_edit/',['horse_id'=>$page->horse->horse_id]):''))?></td>
-        <td></td><td></td>
+        <td></td>
+        <td><?=(new MkTagA('エクスポート',InAppUrl::to('horse/export/',['horse_id'=>$page->horse->horse_id])))?></td>
     </tr>
 <?php if($page->horse->birth_year!==null): ?>
     <tr>
