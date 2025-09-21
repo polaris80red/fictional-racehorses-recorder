@@ -19,6 +19,9 @@ a:link:hover {
     text-decoration: underline;
     background-color: #CCFFFF;
 }
+input[type="submit"]{
+	font-weight: bold;
+}
 .no-css-fallback { display: none; }
 
 .edit_menu table { margin-top: 8px;}
