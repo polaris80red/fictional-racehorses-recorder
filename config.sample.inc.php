@@ -38,7 +38,7 @@ $cfg['SHOW_LOGIN_LINK']=true;
  */
 
 // 表示設定のリンクをログイン中でない閲覧者に表示するかどうか
-$cfg['SHOW_DISPLAY_SETTINGS_FOR_GUESTS']=false;
+$cfg['SHOW_DISPLAY_SETTINGS_FOR_GUESTS']=true;
 /**   SHOW_DISPLAY_SETTINGS_FOR_GUESTS
  *  true    :常にリンクを表示します
  *  false   :ログインしていなければリンクを表示しません
