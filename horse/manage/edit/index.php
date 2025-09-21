@@ -70,11 +70,11 @@ $world_list=World::getAll($pdo);
 </tr>
 <tr>
     <th>馬名</th>
-    <td class="in_input"><input type="text" name="name_ja" value="<?=h($horse->name_ja)?>"></td>
+    <td class="in_input"><input type="text" name="name_ja" value="<?=h($horse->name_ja)?>" placeholder="馬名"></td>
 </tr>
 <tr>
     <th>馬名（欧字）</th>
-    <td class="in_input"><input type="text" name="name_en" value="<?=h($horse->name_en)?>" onchange="convertHankaku('input[name=name_en]');"></td>
+    <td class="in_input"><input type="text" name="name_en" value="<?=h($horse->name_en)?>" placeholder="欧字馬名" onchange="convertHankaku('input[name=name_en]');"></td>
 </tr>
 <tr>
     <th><?php
@@ -106,7 +106,7 @@ $world_list=World::getAll($pdo);
     </td>
 </tr>
 <tr>
-    <th>月日</th>
+    <th>誕生月日</th>
     <td class="in_input">
         <select name="birth_month_select" style="width:4em;">
             <option value="">月</option>
@@ -181,11 +181,11 @@ if(count($affiliation_list)>0){
 </tr>
 <tr>
     <th>調教師</th>
-    <td class="in_input"><input type="text" name="trainer_name" value="<?=h($horse->trainer_name)?>"></td>
+    <td class="in_input"><input type="text" name="trainer_name" value="<?=h($horse->trainer_name)?>" placeholder="調教師名"></td>
 </tr>
 <tr>
     <th>調教国</th>
-    <td class="in_input"><input type="text" name="training_country" value="<?=h($horse->training_country)?>"></td>
+    <td class="in_input"><input type="text" name="training_country" value="<?=h($horse->training_country)?>" placeholder="調教国コード"></td>
 </tr>
 <tr>
     <th>馬主</th>
@@ -197,7 +197,7 @@ if(count($affiliation_list)>0){
 </tr>
 <tr>
     <th>生産国</th>
-    <td class="in_input"><input type="text" name="breeding_country" value="<?=h($horse->breeding_country)?>"></td>
+    <td class="in_input"><input type="text" name="breeding_country" value="<?=h($horse->breeding_country)?>" placeholder="生産国コード"></td>
 </tr>
 <tr>
     <th>地方所属馬</th>
@@ -208,23 +208,23 @@ if(count($affiliation_list)>0){
 </tr>
 <tr>
     <th>父ID</th>
-    <td class="in_input"><input type="text" name="sire_id" value="<?=h($horse->sire_id)?>" onchange="convertHankaku('input[name=sire_id]');"></td>
+    <td class="in_input"><input type="text" name="sire_id" placeholder="父競走馬ID" value="<?=h($horse->sire_id)?>" onchange="convertHankaku('input[name=sire_id]');"></td>
 </tr>
 <tr>
     <th>父名</th>
-    <td class="in_input"><input type="text" name="sire_name" placeholder="父ID該当時は上書き" value="<?=h($horse->sire_name)?>"></td>
+    <td class="in_input"><input type="text" name="sire_name" placeholder="父ID該当時はID側優先" value="<?=h($horse->sire_name)?>"></td>
 </tr>
 <tr>
     <th>母ID</th>
-    <td class="in_input"><input type="text" name="mare_id" value="<?=h($horse->mare_id)?>" onchange="convertHankaku('input[name=mare_id]');"></td>
+    <td class="in_input"><input type="text" name="mare_id" placeholder="母競走馬ID" value="<?=h($horse->mare_id)?>" onchange="convertHankaku('input[name=mare_id]');"></td>
 </tr>
 <tr>
     <th>母名</th>
-    <td class="in_input"><input type="text" name="mare_name" placeholder="母ID該当時は上書き" value="<?=h($horse->mare_name)?>"></td>
+    <td class="in_input"><input type="text" name="mare_name" placeholder="母ID該当時はID側優先" value="<?=h($horse->mare_name)?>"></td>
 </tr>
 <tr>
     <th>母の父</th>
-    <td class="in_input"><input type="text" name="bms_name" placeholder="母ID該当時は上書き" value="<?=h($horse->bms_name)?>"></td>
+    <td class="in_input"><input type="text" name="bms_name" placeholder="母ID該当時はID側優先" value="<?=h($horse->bms_name)?>"></td>
 </tr>
 <tr>
     <th>種牡馬<br>または<br>繫殖馬</th>
@@ -235,7 +235,7 @@ if(count($affiliation_list)>0){
 </tr>
 <tr>
     <th>馬名意味</th>
-    <td class="in_input"><input type="text" name="meaning" value="<?=h($horse->meaning)?>"></td>
+    <td class="in_input"><input type="text" name="meaning" value="<?=h($horse->meaning)?>" placeholder="馬名意味"></td>
 </tr>
 <tr>
     <th>備考</th>
