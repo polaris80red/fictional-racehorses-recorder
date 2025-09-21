@@ -113,14 +113,14 @@ class Setting{
     }
     public function setDefault(){
         $this->year_select_min_diff=2;
-        $this->year_select_max_diff=5;
+        $this->year_select_max_diff=3;
         $this->year_view_mode=0;
         $this->age_view_mode=0;
 
         $this->horse_record_year=0;
         $this->horse_record_date='ymd';
         $this->horse_record_day='d';
-        $this->zero_year=2030;
+        $this->zero_year=0;
         $this->select_zero_year=2030;
         $this->birth_year_mode=0;
         $this->syutsuba_year=1;
