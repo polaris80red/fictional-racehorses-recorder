@@ -45,7 +45,10 @@ $world_list=World::getAll($pdo);
 <main id="content">
 <hr class="no-css-fallback">
 <form action="./confirm.php" method="post">
-<input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0;?>">
+<div style="margin-bottom: 2px;">
+    <input type="submit" value="競走馬データ登録内容確認">
+    <input type="hidden" name="edit_mode" value="<?=$is_edit_mode?1:0;?>">
+</div>
 <table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>競走馬ID</th>
