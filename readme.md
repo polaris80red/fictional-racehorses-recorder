@@ -15,7 +15,7 @@ fictional-racehorses-recorder 架空競走馬戦績管理ツール
 
 ## 必要環境
 このツールは Apache + PHP + MySQL(MariaDB) 環境で動作するWEBアプリケーションです。
-- XAMPPなどを用いたローカル環境での利用を主に想定しています。
+- XAMPPやLaragonなどを用いたローカル環境での利用を主に想定しています。
 
 ## 導入手順1
 - 設置するWEBサイト領域の任意のディレクトリにファイルを展開してください。
@@ -78,7 +78,7 @@ fictional-racehorses-recorder 架空競走馬戦績管理ツール
     - [月別開催日程｜地方競馬情報サイト](https://www.keiba.go.jp/KeibaWeb/MonthlyConveneInfo/MonthlyConveneInfoTop) の地方競馬サイトの開催日程表の順
 - **mst_race_course__optuonal_other.sql**：(オプション)レース場マスタの一部国名
     - [海外競馬の勝馬投票券（馬券）発売のルール-JRA](https://www.jra.go.jp/keiba/overseas/rule/) の国コード順に一部の国名
-- **mst_race_grade.sql**：レース格付マスタ
+- **mst_race_grade.sql**：レース格付マスタ(推奨)
 - **mst_race_special_results.sql**：レース特殊結果マスタ(推奨)
 - **mst_race_week.sql**：レース週マスタ(必須)
 - **mst_themes.sql**：テーママスタ
