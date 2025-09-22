@@ -41,7 +41,8 @@ $cfg['SHOW_LOGIN_LINK']=true;
 $cfg['SHOW_DISPLAY_SETTINGS_FOR_GUESTS']=true;
 /**   SHOW_DISPLAY_SETTINGS_FOR_GUESTS
  *  true    :常にリンクを表示します
- *  false   :ログインしていなければリンクを表示しません
+ *  false   :ログインしていないときはリンクを表示しません。
+ *           また、セッションにキャッシュした設定を使用せず、毎回ファイルまたはデータベースを読み込みます。
  */
 
 // 表示回数カウントのオン・オフ
