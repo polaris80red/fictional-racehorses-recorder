@@ -87,29 +87,34 @@ class Setting{
     public function __construct(bool $activateToSession = true ){
         if(!$activateToSession){ return false; }
         $this->setDefault();
-        if(!isset($_SESSION[APP_INSTANCE_KEY]['setting'])){
-            //  セッション側に設定がない場合は保存してある値の設定を試みる
-            if(DISPLAY_CONFIG_SOURCE==='json'){
-                // JSONファイルから取得する
-                if(file_exists(DISPLAY_CONFIG_JSON_PATH)){
-                    $setting=json_decode(file_get_contents(DISPLAY_CONFIG_JSON_PATH));
-                    $this->setByStdClass($setting);
-                }
-            }else{
-                // データベースから取得する
-                // TODO: $pdoを外から渡すように全箇所変更
-                $setting=(new ConfigTable(getPDO()))->getAllParams();
-                if($setting!==false){
-                    $this->setByStdClass($setting);
-                }
-            }
-            $this->saveToSessionAll();
-        }else{
-            // セッション側に設定があればこのオブジェクトに設定
+        $getFromSession=true;
+        if(!SHOW_DISPLAY_SETTINGS_FOR_GUESTS && !Session::is_logined()){
+            // ゲストの表示設定リンクを無効化してある場合、手動でセッションを更新できないため常に最新値を使う
+            $getFromSession=false;
+        }
+        if($getFromSession && isset($_SESSION[APP_INSTANCE_KEY]['setting'])){
+            // セッションからこのオブジェクトに設定
             $this->setSettingBySession();
             // 定数的パラメータの設定
             $this->setConstLikeParam();
+            return;
         }
+        // 保存してある値で設定を試みる
+        if(DISPLAY_CONFIG_SOURCE==='json'){
+            // JSONファイルから取得する
+            if(file_exists(DISPLAY_CONFIG_JSON_PATH)){
+                $setting=json_decode(file_get_contents(DISPLAY_CONFIG_JSON_PATH));
+                $this->setByStdClass($setting);
+            }
+        }else{
+            // データベースから取得する
+            // TODO: $pdoを外から渡すように全箇所変更
+            $setting=(new ConfigTable(getPDO()))->getAllParams();
+            if($setting!==false){
+                $this->setByStdClass($setting);
+            }
+        }
+        $this->saveToSessionAll();
     }
     public function setDefault(){
         $this->year_select_min_diff=2;
