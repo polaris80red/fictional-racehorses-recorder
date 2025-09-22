@@ -7,7 +7,7 @@ $cfg['DB_PASS']     ='';
 $cfg['DB_CHARSET']  ='utf8mb4';
 
 // サイト名
-$cfg['SITE_NAME']  ='UMDB';
+$cfg['SITE_NAME']  ='FRR 架空競走馬戦績管理';
 
 // リモートIPでのアクセスの許可（公開設定）
 $cfg['ALLOW_REMOTE_ACCESS']=false;
