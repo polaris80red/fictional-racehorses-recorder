@@ -79,9 +79,11 @@ $cfg['LOG_LEVEL']=0;
  *      0:ログを出力しない
  *     -1:全て出力 */
 
+// 管理者ログインユーザーID
 $cfg['ADMINISTRATOR_USER'] ='admin';
+// 管理者ログインパスワード
 $cfg['ADMINISTRATOR_PASS'] ='';
-/**
+/**   ADMINISTRATOR_PASS
  * パスワードをpassword_hashで処理したハッシュ値を記載します。
  * ADMINISTRATOR_PASS が空の場合は、IDのみ入力でログインします。
  * 下記コメントアウト例（adminで一致します）のように設定ファイル上でpassword_hash処理をしても動作しますが、
@@ -93,7 +95,7 @@ $cfg['ADMINISTRATOR_PASS'] ='';
 
 // デフォルトの表示設定の保存・読み込み先
 $cfg['DISPLAY_CONFIG_SOURCE'] = 'db';
-/**   SITE_CONFIG_MODE
+/**   DISPLAY_CONFIG_SOURCE
  *  db  :データベースに保存・取得します
  *  json:jsonファイルに保存・取得します
  *      同じWEBサイト領域に、特定のワールド用のサブサイトを作成する場合などに
