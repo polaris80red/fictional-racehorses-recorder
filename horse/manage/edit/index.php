@@ -128,7 +128,7 @@ $world_list=World::getAll($pdo);
 <tr>
     <th>性別</th>
     <td>
-    <label><?php HTPrint::Radio("sex",0,$horse->sex);?>未選択</label><br>
+    <label><?php HTPrint::Radio("sex",0,$horse->sex);?>未選択</label>
     <label><?php HTPrint::Radio("sex",1,$horse->sex);?>牡</label>
     <label><?php HTPrint::Radio("sex",2,$horse->sex);?>牝</label>
     <label><?php HTPrint::Radio("sex",3,$horse->sex);?>セン</label></td>
@@ -183,24 +183,22 @@ if(count($affiliation_list)>0){
     </td>
 </tr>
 <tr>
-    <th>調教師</th>
-    <td class="in_input"><input type="text" name="trainer_name" value="<?=h($horse->trainer_name)?>" placeholder="調教師名"></td>
-</tr>
-<tr>
-    <th>調教国</th>
-    <td class="in_input"><input type="text" name="training_country" value="<?=h($horse->training_country)?>" placeholder="調教国コード"></td>
+    <th>調教師・国</th>
+    <td class="in_input">
+        <input type="text" name="trainer_name" value="<?=h($horse->trainer_name)?>" placeholder="調教師名">
+        <input type="text" name="training_country" style="width: 4em;" value="<?=h($horse->training_country)?>" placeholder="国コード">
+    </td>
 </tr>
 <tr>
     <th>馬主</th>
     <td class="in_input"><input type="text" name="owner_name" value="<?=h($horse->owner_name)?>" placeholder="馬主"></td>
 </tr>
 <tr>
-    <th>生産者</th>
-    <td class="in_input"><input type="text" name="breeder_name" value="<?=h($horse->breeder_name)?>" placeholder="生産者"></td>
-</tr>
-<tr>
-    <th>生産国</th>
-    <td class="in_input"><input type="text" name="breeding_country" value="<?=h($horse->breeding_country)?>" placeholder="生産国コード"></td>
+    <th>生産者・国</th>
+    <td class="in_input">
+        <input type="text" name="breeder_name" value="<?=h($horse->breeder_name)?>" placeholder="生産者">
+        <input type="text" name="breeding_country" style="width: 4em;" value="<?=h($horse->breeding_country)?>" placeholder="国コード">
+    </td>
 </tr>
 <tr>
     <th>地方所属馬</th>
@@ -230,9 +228,9 @@ if(count($affiliation_list)>0){
     <td class="in_input"><input type="text" name="bms_name" placeholder="母ID該当時はID側優先" value="<?=h($horse->bms_name)?>"></td>
 </tr>
 <tr>
-    <th>種牡馬<br>または<br>繫殖馬</th>
+    <th>繫殖(種牡)馬</th>
     <td>
-    <label><?php HTPrint::Radio("is_sire_or_dam",1,$horse->is_sire_or_dam);?>はい</label><br>
+    <label><?php HTPrint::Radio("is_sire_or_dam",1,$horse->is_sire_or_dam);?>はい</label>
     <label><?php HTPrint::Radio("is_sire_or_dam",0,$horse->is_sire_or_dam);?>いいえ</label>
     </td>
 </tr>

@@ -158,24 +158,24 @@ th{
     <td><?php HTPrint::HiddenAndText('tc',$horse->tc) ?></td>
 </tr>
 <tr>
-    <th>調教師</th>
-    <td><?php HTPrint::HiddenAndText('trainer_name',$horse->trainer_name) ?></td>
-</tr>
-<tr>
-    <th>調教国</th>
-    <td><?php HTPrint::HiddenAndText('training_country',$horse->training_country) ?></td>
+    <th>調教師・国</th>
+    <td>
+        <?php HTPrint::Hidden('trainer_name',$horse->trainer_name) ?>
+        <?php HTPrint::Hidden('training_country',$horse->training_country) ?>
+        <?=h($horse->trainer_name)?><?=h($horse->training_country?"({$horse->training_country})":'')?>
+    </td>
 </tr>
 <tr>
     <th>馬主</th>
     <td><?php HTPrint::HiddenAndText('owner_name',$horse->owner_name) ?></td>
 </tr>
 <tr>
-    <th>生産者</th>
-    <td><?php HTPrint::HiddenAndText('breeder_name',$horse->breeder_name) ?></td>
-</tr>
-<tr>
-    <th>生産国</th>
-    <td><?php HTPrint::HiddenAndText('breeding_country',$horse->breeding_country) ?></td>
+    <th>生産者・国</th>
+    <td>
+        <?php HTPrint::Hidden('breeder_name',$horse->breeder_name) ?>
+        <?php HTPrint::Hidden('breeding_country',$horse->breeding_country) ?>
+        <?=h($horse->breeder_name)?><?=h($horse->breeding_country?"({$horse->breeding_country})":'')?>
+    </td>
 </tr>
 <tr>
     <th>地方所属馬</th>
@@ -205,7 +205,7 @@ th{
     <td><?php HTPrint::HiddenAndText('bms_name',$horse->bms_name) ?></td>
 </tr>
 <tr>
-    <th>種牡馬<br>または<br>繫殖馬</th>
+    <th>繫殖(種牡)馬</th>
     <td><?php
         print $horse->is_sire_or_dam?'はい':'いいえ';
         HTPrint::Hidden('is_sire_or_dam',$horse->is_sire_or_dam);  
