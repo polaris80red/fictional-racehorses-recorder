@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__,2).'/libs/init.php';
-defineAppRootRelPath(2);
+InAppUrl::init(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -9,8 +9,15 @@ $base_title="ユーザーアカウント";
 $page->title="{$base_title}登録：内容確認";
 $page->ForceNoindex();
 
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $currentUser=Session::currentUser();
-if($currentUser===null || !$currentUser->canUserManage()){ $page->exitToHome(); }
+if(!$currentUser->canUserManage()){
+    $page->setErrorReturnLink('管理画面に戻る',InAppUrl::to('admin/'));
+    $page->error_msgs[]="ユーザー管理には管理者権限が必要です。";
+    header("HTTP/1.1 403 Forbidden");
+    $page->printCommonErrorPage();
+    exit;
+}
 
 $pdo=getPDO();
 $inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
