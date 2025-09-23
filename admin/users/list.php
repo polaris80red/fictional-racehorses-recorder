@@ -27,7 +27,10 @@ $tableData=Users::getAll($pdo,true);
     <?php $page->printScriptLink('js/functions.js'); ?>
     <style>
         tr.super_admin td:nth-child(2){ color: red; background-color: #ffffa0ff; }
-        tr.super_admin td:nth-child(n+4){ background-color: #EEE; }
+        tr.super_admin td:nth-child(n+4):not(:last-child){
+            background-color: #EEE;
+            text-decoration: line-through;
+        }
     </style>
 </head>
 <body>
@@ -42,6 +45,7 @@ $tableData=Users::getAll($pdo,true);
         <th>ID</th>
         <th>ログインID</th>
         <th>表示名</th>
+        <th>役割・権限</th>
         <th>ログイン可能期限</th>
         <th>最終ログイン</th>
         <th>利用可否</th>
@@ -56,6 +60,7 @@ $tableData=Users::getAll($pdo,true);
             <td><?=h($user->id)?></td>
             <td <?=$user->username===ADMINISTRATOR_USER?'title="管理者アカウント"':''?>><?=h($user->username)?></td>
             <td><?=h($user->display_name)?></td>
+            <td><?=h(Role::RoleInfoList[$user->role]['name']??'')?></td>
             <?php
                 $datetime=Datetime::createFromFormat('Y-m-d H:i:s',$user->login_enabled_until??'');
                 $dateStr=$datetime===false?'':$datetime->format('Y-m-d');

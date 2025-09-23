@@ -34,6 +34,7 @@ if($password!==''){
     $form_item->password_hash=password_hash($password,PASSWORD_DEFAULT);
 }
 $form_item->display_name=filter_input(INPUT_POST,'display_name');
+$form_item->role=filter_input(INPUT_POST,'role',FILTER_VALIDATE_INT);
 $login_enabled_until=(string)filter_input(INPUT_POST,'login_enabled_until');
 $form_item->login_enabled_until=null;
 $datetime=$login_enabled_until===''?false:DateTime::createFromFormat('Y-m-d H:i:s',$login_enabled_until);
