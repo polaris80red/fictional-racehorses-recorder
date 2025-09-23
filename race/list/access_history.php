@@ -10,7 +10,7 @@ $page->title="最近アクセスしたレースの一覧";
 $page->ForceNoindex();
 $session=new Session();
 // 暫定でログイン＝編集可能
-$page->is_editable=Session::is_logined();
+$page->is_editable=Session::isLoggedIn();
 $pdo= getPDO();
 
 $show_column_umm_turn=false;

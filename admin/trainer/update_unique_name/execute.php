@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="調教師マスタ管理｜キー名称の一括変更：実行";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $u_name=(string)filter_input(INPUT_POST,'u_name');
 $new_unique_name=trim((string)filter_input(INPUT_POST,'new_unique_name'));

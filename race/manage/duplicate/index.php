@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="レース結果一括複写";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }  
+if(!Session::isLoggedIn()){ $page->exitToHome(); }  
 $pdo= getPDO();
 $id_list = filter_input(INPUT_GET, 'id_list', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 if(!isset($id_list) || count($id_list)==0){

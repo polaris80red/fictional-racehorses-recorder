@@ -7,7 +7,7 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース結果登録実行";
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $race_id=(string)filter_input(INPUT_POST,'race_id');
 $is_edit_mode=filter_input(INPUT_POST,'edit_mode')?1:0;

@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="競馬場マスタ管理｜キー名称の一括変更";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $unique_name=filter_input(INPUT_GET,'u_name');
 

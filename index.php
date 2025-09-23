@@ -9,7 +9,7 @@ $page->title=SITE_NAME;
 $session=new Session();
 $session->login_return_url='';
 // 暫定でログイン＝編集可能
-$page->is_editable=SESSION::is_logined();
+$page->is_editable=SESSION::isLoggedIn();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>

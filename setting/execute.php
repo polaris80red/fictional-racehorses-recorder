@@ -24,7 +24,7 @@ if($story_id>0){
 // ストーリー設定への保存処理
 $save_story_is_enabled=filter_input(INPUT_POST,'save_story_is_enabled',FILTER_VALIDATE_BOOL);
 $save_story_id=filter_input(INPUT_POST,'save_story_id',FILTER_VALIDATE_INT);
-if($save_story_is_enabled && $save_story_id>0 && Session::is_logined()){
+if($save_story_is_enabled && $save_story_id>0 && Session::isLoggedIn()){
     $save_target_story=WorldStory::getById($pdo,$save_story_id);
     if($save_target_story!==false){
         $config_json_data=$setting->getSettingArray();
@@ -53,7 +53,7 @@ if($save_story_is_enabled && $save_story_id>0 && Session::is_logined()){
 $setting->saveToSessionAll();
 // ログイン中かつ保存する選択でなければデフォルト値には反映しない
 //（ログアウトやセッションが切れるまでのみ有効）
-if(Session::is_logined() && $save_to_file){
+if(Session::isLoggedIn() && $save_to_file){
     if(DISPLAY_CONFIG_SOURCE==='json'){
         file_put_contents(DISPLAY_CONFIG_JSON_PATH,json_encode($setting->getSettingArray(),JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
     }else{

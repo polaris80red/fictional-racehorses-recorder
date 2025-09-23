@@ -9,7 +9,7 @@ $page->title="ストーリー設定登録";
 $page->ForceNoindex();
 
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $inputId=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
@@ -139,14 +139,14 @@ if(!$editMode && $input_world_id>0){
     <th>ワールド</th>
     <td><?=h($setting->world_id>0?$world->name:'')?></td>
     <td class="in_input"><select name="world_id">
-<?php if($session->is_logined()): ?>
+<?php if($session->isLoggedIn()): ?>
     <option value="">未選択</option>
 <?php endif; ?>
     <?php
     $world_list=World::getAll($pdo);
     if(count($world_list)>0){
         foreach($world_list as $row){
-            if(!$session->is_logined() && $row['guest_visible']==0){ continue; }
+            if(!$session->isLoggedIn() && $row['guest_visible']==0){ continue; }
             $selected= $row['id']==$setting->world_id?" selected":"";
             echo "<option value=\"{$row['id']}\" {$selected}>{$row['name']}</option>";
         }

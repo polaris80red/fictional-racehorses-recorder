@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="レース結果ID一括修正・実行";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $race_result_id=(string)filter_input(INPUT_POST,'race_id');
 $new_race_result_id=(string)filter_input(INPUT_POST,'new_race_id');

@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="競走馬登録";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $horse_id=!empty($_GET['horse_id'])?$_GET['horse_id']:"";
 

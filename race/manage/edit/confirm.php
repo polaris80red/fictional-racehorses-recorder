@@ -7,7 +7,7 @@ $page->setSetting($setting);
 $page->title="レース結果登録内容確認";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $csrf_token=new FormCsrfToken();
 
 $race_id=(string)filter_input(INPUT_POST,'race_id');

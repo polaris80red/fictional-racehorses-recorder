@@ -4,7 +4,7 @@ class Session{
     /**
      * ログイン中かどうかの判定
      */
-    public static function is_logined(){
+    public static function isLoggedIn(){
         if(isset($_SESSION[APP_INSTANCE_KEY]['currentUser'])){
             return true;
         }

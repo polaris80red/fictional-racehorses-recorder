@@ -88,7 +88,7 @@ class Setting{
         if(!$activateToSession){ return false; }
         $this->setDefault();
         $getFromSession=true;
-        if(!SHOW_DISPLAY_SETTINGS_FOR_GUESTS && !Session::is_logined()){
+        if(!SHOW_DISPLAY_SETTINGS_FOR_GUESTS && !Session::isLoggedIn()){
             // ゲストの表示設定リンクを無効化してある場合、手動でセッションを更新できないため常に最新値を使う
             $getFromSession=false;
         }

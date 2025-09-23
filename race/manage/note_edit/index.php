@@ -6,7 +6,7 @@ $page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース前後メモ一括編集";
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $page->error_return_url=$page->to_race_list_path;
 $page->error_return_link_text="レース検索に戻る";

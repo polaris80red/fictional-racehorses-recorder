@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="競走馬検索";
 $session=new Session();
 // 暫定でログイン＝編集可能
-$page->is_editable=Session::is_logined();
+$page->is_editable=Session::isLoggedIn();
 
 $pdo=getPDO();
 $search = new HorseSearch();

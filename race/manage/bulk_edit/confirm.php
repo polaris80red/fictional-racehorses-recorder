@@ -6,7 +6,7 @@ $page=new Page(3);
 $setting=new Setting();
 $page->setSetting($setting);
 $page->title="レース個別結果一括編集｜内容確認";
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $csrf_token=new FormCsrfToken();
 
 $page->error_return_url=$page->to_race_list_path;

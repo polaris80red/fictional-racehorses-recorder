@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="レース結果情報登録";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }  
+if(!Session::isLoggedIn()){ $page->exitToHome(); }  
 $pdo= getPDO();
 
 $race_id=(string)filter_input(INPUT_GET,'race_id');

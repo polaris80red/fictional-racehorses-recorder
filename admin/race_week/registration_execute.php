@@ -9,7 +9,7 @@ $base_title="レース週マスタ";
 $page->title="{$base_title}｜設定登録：処理実行";
 
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);

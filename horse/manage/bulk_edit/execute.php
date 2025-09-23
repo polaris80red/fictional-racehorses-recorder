@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="競走馬レース情報一括編集｜実行";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $pdo= getPDO();
 
 if(!(new FormCsrfToken())->isValid()){

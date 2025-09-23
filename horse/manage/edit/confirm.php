@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="競走馬登録内容確認";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $csrf_token=new FormCsrfToken();
 
 $horse_id=(string)filter_input(INPUT_POST,'horse_id');

@@ -9,7 +9,7 @@ $page->title="ワールド一覧";
 $page->ForceNoindex();
 
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 
