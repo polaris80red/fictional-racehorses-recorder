@@ -6,8 +6,9 @@ $setting=new Setting();
 $page->setSetting($setting);
 $session=new Session();
 $return_url=(string)$session->login_return_url;
-$id=filter_input(INPUT_POST,'id');
-$password=filter_input(INPUT_POST,'password');
+$id=(string)filter_input(INPUT_POST,'id');
+$password=(string)filter_input(INPUT_POST,'password');
+$pdo=getPDO();
 
 // ALLOW_REMOTE_EDITOR_LOGIN で許可されていない場合、localhost以外からのログインは拒否する
 (function(){
@@ -40,6 +41,10 @@ do{
     if((new FormCsrfToken())->isValid()==false){
         break;
     }
+    if($id===''){
+        break;
+    }
+    $user=Users::getByUsername($pdo,$id);
     if($id===ADMINISTRATOR_USER){
         // SuperAdminの場合のログイン処理
         if(ADMINISTRATOR_PASS==='' && $password===''){
@@ -47,10 +52,32 @@ do{
         }else if(!password_verify($password,ADMINISTRATOR_PASS)){
             break;
         }
-        Session::loginSuperAdmin();
+        Session::loginSuperAdmin($user?:null);
     }else{
-        // TODO: SuperAdmin以外のログイン処理
-        break;
+        if(!$user){
+            // 該当ユーザーなし
+            break;
+        }
+        if(!$user->is_enabled){
+            // 無効化されている
+            break;
+        }
+        if($user->login_enabled_until!=null){
+            $until=new DateTime($user->login_enabled_until);
+            $now=new DateTime();
+            if($now>$until){
+                // 期限切れ
+                break;
+            }
+        }
+        if(!password_verify($password,$user->password_hash)){
+            break;
+        }
+        Session::Login($user);
+    }
+    if($user){
+        $user->last_login_at=PROCESS_STARTED_AT;
+        Users::UpdateFromRowObj($pdo,$user);
     }
     $setting=new Setting();// ログイン処理時に初期化しなおす
     redirect_exit($page->to_app_root_path.$return_url);

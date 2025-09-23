@@ -10,6 +10,13 @@ class Session{
         }
         return false;
     }
+    /**
+     * 通常のログイン処理
+     */
+    public static function Login(UsersRow $user){
+        $_SESSION[APP_INSTANCE_KEY]['currentUser']['id'] = $user->id;
+        $_SESSION[APP_INSTANCE_KEY]['currentUser']['isSuperAdmin'] = false;
+    }
     public static function Logout(){
         unset($_SESSION[APP_INSTANCE_KEY]['currentUser']);
     }
@@ -28,7 +35,8 @@ class Session{
     /**
      * 固定管理者でのログイン処理
      */
-    public static function loginSuperAdmin(){
+    public static function loginSuperAdmin(UsersRow|null $user=null){
+        $_SESSION[APP_INSTANCE_KEY]['currentUser']['id'] = $user!==null?$user->id:null;
         $_SESSION[APP_INSTANCE_KEY]['currentUser']['isSuperAdmin'] = true;
     }
     /**
