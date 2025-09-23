@@ -1,7 +1,6 @@
 <?php
 class Page{
     public $title='';
-    public $is_logined=false;
     public $is_editable = false;
     private $noindex=false;
 
