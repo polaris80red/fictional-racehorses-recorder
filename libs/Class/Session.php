@@ -4,19 +4,19 @@ class Session{
     private $is_logined=false;
 
     public function __construct(){
-        if(isset($_SESSION[APP_INSTANCE_KEY]['is_logined'])){
-            $this->is_logined=$_SESSION[APP_INSTANCE_KEY]['is_logined']?true:false;
+        if(isset($_SESSION[APP_INSTANCE_KEY]['isLoggedIn'])){
+            $this->is_logined=$_SESSION[APP_INSTANCE_KEY]['isLoggedIn']?true:false;
         }
     }
     public static function is_logined(){
-        if(!isset($_SESSION[APP_INSTANCE_KEY]['is_logined'])){ return false; }
-        return $_SESSION[APP_INSTANCE_KEY]['is_logined']?true:false;
+        if(!isset($_SESSION[APP_INSTANCE_KEY]['isLoggedIn'])){ return false; }
+        return $_SESSION[APP_INSTANCE_KEY]['isLoggedIn']?true:false;
     }
     public function Login(){
-        $this->is_logined = $_SESSION[APP_INSTANCE_KEY]['is_logined'] = true;
+        $this->is_logined = $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = true;
     }
     public function Logout(){
-        $this->is_logined = $_SESSION[APP_INSTANCE_KEY]['is_logined'] = false;
+        $this->is_logined = $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = false;
     }
     public function __set($property, $value){
         if(!isset($_SESSION[APP_INSTANCE_KEY][self::PUBLIC_PARAM_KEY])){
