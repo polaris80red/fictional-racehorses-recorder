@@ -9,7 +9,6 @@ $base_title="ユーザーアカウント";
 $page->title="{$base_title}登録：内容確認";
 $page->ForceNoindex();
 
-$session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $pdo=getPDO();

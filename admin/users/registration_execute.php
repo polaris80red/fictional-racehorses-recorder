@@ -8,7 +8,6 @@ $page->setSetting($setting);
 $base_title="ユーザーアカウント";
 $page->title="{$base_title}登録：処理実行";
 
-$session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $pdo=getPDO();
