@@ -139,14 +139,11 @@ if(!$editMode && $input_world_id>0){
     <th>ワールド</th>
     <td><?=h($setting->world_id>0?$world->name:'')?></td>
     <td class="in_input"><select name="world_id">
-<?php if($session->isLoggedIn()): ?>
     <option value="">未選択</option>
-<?php endif; ?>
     <?php
     $world_list=World::getAll($pdo);
     if(count($world_list)>0){
         foreach($world_list as $row){
-            if(!$session->isLoggedIn() && $row['guest_visible']==0){ continue; }
             $selected= $row['id']==$setting->world_id?" selected":"";
             echo "<option value=\"{$row['id']}\" {$selected}>{$row['name']}</option>";
         }
