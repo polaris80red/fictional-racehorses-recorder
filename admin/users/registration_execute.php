@@ -8,7 +8,8 @@ $page->setSetting($setting);
 $base_title="ユーザーアカウント";
 $page->title="{$base_title}登録：処理実行";
 
-if(!Session::isLoggedIn()){ $page->exitToHome(); }
+$currentUser=Session::currentUser();
+if($currentUser===null || !$currentUser->canUserManage()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT)?:null;
@@ -56,7 +57,6 @@ if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-$currentUser=Session::currentUser();
 $form_item->updated_by=$currentUser->getId();
 $form_item->updated_at=PROCESS_STARTED_AT;
 if($editMode){

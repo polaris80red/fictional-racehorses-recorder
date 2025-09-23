@@ -9,7 +9,8 @@ $base_title="ユーザーアカウント";
 $page->title="{$base_title}一覧";
 $page->ForceNoindex();
 
-if(!Session::isLoggedIn()){ $page->exitToHome(); }
+$currentUser=Session::currentUser();
+if($currentUser===null || !$currentUser->canUserManage()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 
