@@ -1,13 +1,6 @@
 <?php
 class Session{
     public const PUBLIC_PARAM_KEY='public';
-    private $is_logined=false;
-
-    public function __construct(){
-        if(isset($_SESSION[APP_INSTANCE_KEY]['isLoggedIn'])){
-            $this->is_logined=$_SESSION[APP_INSTANCE_KEY]['isLoggedIn']?true:false;
-        }
-    }
     /**
      * ログイン中かどうかの判定（新しい処理に置き換え終わったら廃止する）
      */
@@ -16,10 +9,10 @@ class Session{
         return $_SESSION[APP_INSTANCE_KEY]['isLoggedIn']?true:false;
     }
     public function Login(){
-        $this->is_logined = $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = true;
+        $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = true;
     }
     public function Logout(){
-        $this->is_logined = $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = false;
+        $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = false;
         unset($_SESSION[APP_INSTANCE_KEY]['currentUser']);
     }
     public function __set($property, $value){
