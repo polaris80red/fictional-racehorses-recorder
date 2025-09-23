@@ -40,14 +40,16 @@ do{
     if((new FormCsrfToken())->isValid()==false){
         break;
     }
-    if($id!==ADMINISTRATOR_USER){
-        break;
-    }
-    if(ADMINISTRATOR_PASS==='' && $password===''){
-        // パスワード未設定ではパスワードなしで通る
-
-    }else if(!password_verify($password,ADMINISTRATOR_PASS)){
-    //if($password!==ADMINISTRATOR_PASS){
+    if($id===ADMINISTRATOR_USER){
+        // SuperAdminの場合のログイン処理
+        if(ADMINISTRATOR_PASS==='' && $password===''){
+            // パスワード未設定ではパスワードなしで通す
+        }else if(!password_verify($password,ADMINISTRATOR_PASS)){
+            break;
+        }
+        Session::loginSuperAdmin();
+    }else{
+        // TODO: SuperAdmin以外のログイン処理
         break;
     }
     $session->Login();
