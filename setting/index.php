@@ -54,7 +54,7 @@ $story_list=WorldStory::getAll($pdo);
     <?php
     if(count($story_list)>0){
         foreach($story_list as $row){
-            if(!$session->isLoggedIn() && $row['guest_visible']==0){ continue; }
+            if(!SESSION::isLoggedIn() && $row['guest_visible']==0){ continue; }
             echo "<option value=\"{$row['id']}\">{$row['name']}</option>";
         }
     }
@@ -81,7 +81,7 @@ $story_list=WorldStory::getAll($pdo);
     <?php
     if(count($story_list)>0){
         foreach($story_list as $row){
-            if(!$session->isLoggedIn() && $row['guest_visible']==0){ continue; }
+            if(!SESSION::isLoggedIn() && $row['guest_visible']==0){ continue; }
             if($row['is_read_only']){continue;}
             echo "<option value=\"{$row['id']}\">{$row['name']}</option>";
         }
@@ -108,13 +108,13 @@ $story_list=WorldStory::getAll($pdo);
         }
     ?><?=h($world->name??'')?></td>
     <td class="in_input"><select name="world_id">
-<?php if($session->isLoggedIn()): ?>
+<?php if(SESSION::isLoggedIn()): ?>
     <option value="">未選択</option>
 <?php endif; ?>
     <?php
     if(count($world_list)>0){
         foreach($world_list as $row){
-            if(!$session->isLoggedIn() && $row['guest_visible']==0){ continue; }
+            if(!SESSION::isLoggedIn() && $row['guest_visible']==0){ continue; }
             $selected= $row['id']==$setting->world_id?" selected":"";
             echo "<option value=\"{$row['id']}\" {$selected}>{$row['name']}</option>";
         }
