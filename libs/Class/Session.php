@@ -15,6 +15,7 @@ class Session{
      */
     public static function Login(UsersRow $user){
         $_SESSION[APP_INSTANCE_KEY]['currentUser']['id'] = $user->id;
+        $_SESSION[APP_INSTANCE_KEY]['currentUser']['role'] = $user->role;
         $_SESSION[APP_INSTANCE_KEY]['currentUser']['isSuperAdmin'] = false;
     }
     public static function Logout(){
@@ -37,6 +38,7 @@ class Session{
      */
     public static function loginSuperAdmin(UsersRow|null $user=null){
         $_SESSION[APP_INSTANCE_KEY]['currentUser']['id'] = $user!==null?$user->id:null;
+        $_SESSION[APP_INSTANCE_KEY]['currentUser']['role'] = $user!==null?$user->role:null;
         $_SESSION[APP_INSTANCE_KEY]['currentUser']['isSuperAdmin'] = true;
     }
     /**
@@ -50,12 +52,13 @@ class Session{
         }
         if($user !== null){ return $user; }
         $id=$_SESSION[APP_INSTANCE_KEY]['currentUser']['id']??null;
+        $role=$_SESSION[APP_INSTANCE_KEY]['currentUser']['role']??null;
         // 設定ファイルによる管理者の場合用のセット処理
         if(($_SESSION[APP_INSTANCE_KEY]['currentUser']['isSuperAdmin']??false)===true){
-            $user=User::superAdmin($id);
+            $user=User::superAdmin($id,$role);
             return $user;
         }
-        $user =new User($id);
+        $user =new User($id,$role);
         // TODO: 通常のデータベースからのユーザー情報・権限セット処理
         return $user;
     }
