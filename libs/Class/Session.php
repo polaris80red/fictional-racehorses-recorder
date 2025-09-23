@@ -11,7 +11,7 @@ class Session{
     public function Login(){
         $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = true;
     }
-    public function Logout(){
+    public static function Logout(){
         $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = false;
         unset($_SESSION[APP_INSTANCE_KEY]['currentUser']);
     }

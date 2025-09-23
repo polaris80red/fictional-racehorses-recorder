@@ -6,8 +6,7 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="ログアウト - ".SITE_NAME;
 $page->ForceNoindex();
-$session=new Session();
-$session->Logout();
+Session::Logout();
 $_SESSION[APP_INSTANCE_KEY]=[];
 session_destroy();
 ?><!DOCTYPE html>
