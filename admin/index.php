@@ -7,11 +7,10 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="管理画面 - ".SITE_NAME;
 $page->ForceNoindex();
-$session=new Session();
-
 if(!Session::isLoggedIn()){
     header('Location: '.InAppUrl::to('sign-in/'));
 }
+$currentUser=Session::currentUser();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -42,7 +41,7 @@ if(!Session::isLoggedIn()){
         <td>どのワールドを表示するかや、年の範囲・日付形式などを設定します</td>
     </tr>
     <tr>
-        <td><?=(new MkTagA("ユーザーアカウント管理",InAppUrl::to('admin/users/list.php')));?></td>
+        <td><?=(new MkTagA("ユーザーアカウント管理",!$currentUser->canUserManage()?'':InAppUrl::to('admin/users/list.php')));?></td>
         <td>ユーザーアカウントを管理します</td>
     </tr>
     <tr>

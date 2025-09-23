@@ -9,7 +9,8 @@ $base_title="ユーザーアカウント";
 $page->title="{$base_title}登録：内容確認";
 $page->ForceNoindex();
 
-if(!Session::isLoggedIn()){ $page->exitToHome(); }
+$currentUser=Session::currentUser();
+if($currentUser===null || !$currentUser->canUserManage()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
