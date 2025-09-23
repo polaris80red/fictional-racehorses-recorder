@@ -49,12 +49,13 @@ class Session{
             return null;
         }
         if($user !== null){ return $user; }
+        $id=$_SESSION[APP_INSTANCE_KEY]['currentUser']['id']??null;
         // 設定ファイルによる管理者の場合用のセット処理
         if(($_SESSION[APP_INSTANCE_KEY]['currentUser']['isSuperAdmin']??false)===true){
-            $user=User::superAdmin();
+            $user=User::superAdmin($id);
             return $user;
         }
-        $user =new User();
+        $user =new User($id);
         // TODO: 通常のデータベースからのユーザー情報・権限セット処理
         return $user;
     }

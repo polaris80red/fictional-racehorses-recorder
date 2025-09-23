@@ -56,6 +56,8 @@ if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
+$currentUser=Session::currentUser();
+$form_item->updated_by=$currentUser->getId();
 $form_item->updated_at=PROCESS_STARTED_AT;
 if($editMode){
     // 編集モード
@@ -65,7 +67,8 @@ if($editMode){
     }
 }else{
     // 新規登録モード
-    $form_item->created_at=PROCESS_STARTED_AT;
+    $form_item->created_by = $form_item->updated_by;
+    $form_item->created_at = $form_item->updated_at;
     $result = ($TableClass)::InsertFromRowObj($pdo,$form_item);
     if($result){
         redirect_exit("./list.php");
