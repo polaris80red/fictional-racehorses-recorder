@@ -69,6 +69,14 @@ class Page{
         $this->error_msgs=array_merge($this->error_msgs,$messages);
     }
     /**
+     * エラーページに表示する移動用リンクを設定する
+     */
+    public function setErrorReturnLink(string $linsText, string $href){
+        $this->error_return_link_text=$linsText;
+        $this->error_return_url=$href;
+        return $this;
+    }
+    /**
      * 相対パスをprintする
      * @param string $suffix パスの後に追加する文字列
      */
