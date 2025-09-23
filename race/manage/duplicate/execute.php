@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="レース結果一括複写・実行";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }  
+if(!Session::isLoggedIn()){ $page->exitToHome(); }  
 $pdo= getPDO();
 
 $posted_race_list = filter_input(INPUT_POST, 'race', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);

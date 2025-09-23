@@ -38,7 +38,7 @@ $jockey=Jockey::getByUniqueName($pdo,$jockey_name);
 $jockey_view_name=$jockey_name;
 if($jockey!==false){
     // レコードがある場合
-    if($jockey->is_anonymous==1 && !Session::is_logined()){
+    if($jockey->is_anonymous==1 && !Session::isLoggedIn()){
         $jockey_view_name="□□□□";
     }else{
         $jockey_view_name=$jockey->short_name_10?:$jockey_name;
@@ -340,7 +340,7 @@ $prev_date='';
             $trainer_view_name=$trainer_un;
             $trainer=Trainer::getByUniqueName($pdo,$trainer_un);
             if($trainer){
-                if($trainer->is_anonymous && !Session::is_logined()){
+                if($trainer->is_anonymous && !Session::isLoggedIn()){
                     $trainer_view_name='□□□□';
                 }else{
                     $trainer_view_name=$trainer->short_name_10?:$trainer_un;

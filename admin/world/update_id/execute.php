@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="ワールド管理｜IDの一括変更：実行";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $world_id=(string)filter_input(INPUT_POST,'world_id');
 $new_world_id=trim((string)filter_input(INPUT_POST,'new_world_id'));

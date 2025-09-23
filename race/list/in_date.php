@@ -166,7 +166,7 @@ $func_weekday_class=function($weekday_num){
 <?php
 $new_race_url_param= (new UrlParams())->set('date',$date);
 $a_tag=new MkTagA("同日のレースを登録",APP_ROOT_REL_PATH."race/manage/edit/?".$new_race_url_param);
-if(Session::is_logined()):
+if(Session::isLoggedIn()):
 ?>[ <?=$a_tag;?> ]<?php
 endif;
 

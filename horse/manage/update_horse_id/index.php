@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="競走馬ID一括修正";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $horse_id=filter_input(INPUT_GET,'horse_id');
 

@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="競走馬情報｜プロフィール";
 $session=new Session();
 // 暫定でログイン＝編集可能
-$page->is_editable=Session::is_logined();
+$page->is_editable=Session::isLoggedIn();
 // ログイン中でも強制的にプレビュー表示にできるパラメータ
 $is_preview=filter_input(INPUT_GET,'preview',FILTER_VALIDATE_BOOL);
 if($is_preview){

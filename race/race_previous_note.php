@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="レース前メモ";
 $session=new Session();
 // 暫定でログイン＝編集可能
-$page->is_editable=Session::is_logined();
+$page->is_editable=Session::isLoggedIn();
 
 $page->error_return_url=$page->to_race_list_path;
 $page->error_return_link_text="レース検索に戻る";

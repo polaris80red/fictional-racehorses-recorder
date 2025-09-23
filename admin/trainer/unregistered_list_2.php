@@ -10,7 +10,7 @@ $page->title="{$base_title}未登録リスト（個別結果）";
 $page->ForceNoindex();
 
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $current_page=max(filter_input(INPUT_GET,'page',FILTER_VALIDATE_INT),1);

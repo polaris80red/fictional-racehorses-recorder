@@ -10,7 +10,7 @@ $page->title="{$base_title}｜設定一覧";
 $page->ForceNoindex();
 
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $search_page=max(filter_input(INPUT_GET,'page',FILTER_VALIDATE_INT),1);

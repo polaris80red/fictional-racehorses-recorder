@@ -208,11 +208,11 @@ $url=$this->to_app_root_path."race/list/access_history.php";
 <?php endif; ?>
 </div><!-- /float_left -->
 <div style="width:20%;float:right;text-align:right;">
-<?php if(SHOW_DISPLAY_SETTINGS_FOR_GUESTS||Session::is_logined()): ?>
+<?php if(SHOW_DISPLAY_SETTINGS_FOR_GUESTS||Session::isLoggedIn()): ?>
     <a href="<?=$pref?>setting/">[設定]</a>
 <?php endif; ?>
 <?php if(SHOW_LOGIN_LINK): ?>
-    <?php if(!Session::is_logined()): ?>
+    <?php if(!Session::isLoggedIn()): ?>
     <a href="<?=$pref?>sign-in/" class="nowrap">[ログイン]</a>
     <?php else: ?>
     <a href="<?=$pref?>sign-out.php" class="nowrap">[ログアウト]</a>
@@ -281,7 +281,7 @@ $url=$this->to_app_root_path."race/list/access_history.php";
         echo "<div class=\"footer_navigation\">";
         if($is_enabled){
             echo '<a href="'.$this->to_app_root_path.'">[HOME]</a>';
-            if(Session::is_logined()){
+            if(Session::isLoggedIn()){
             echo ' <a href="'.$this->to_app_root_path.'/admin">[管理画面]</a>';
             }
         }else{

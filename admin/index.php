@@ -9,7 +9,7 @@ $page->title="管理画面 - ".SITE_NAME;
 $page->ForceNoindex();
 $session=new Session();
 
-if(!$session->is_logined()){
+if(!$session->isLoggedIn()){
     header('Location: '.InAppUrl::to('sign-in/'));
 }
 ?><!DOCTYPE html>

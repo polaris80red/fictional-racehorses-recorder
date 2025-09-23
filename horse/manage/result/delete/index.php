@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="レース結果詳細・削除確認";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $race_id=filter_input(INPUT_POST,'race_id');
 $horse_id=filter_input(INPUT_POST,'horse_id');

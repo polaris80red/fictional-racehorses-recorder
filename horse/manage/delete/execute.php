@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="競走馬データ削除・実行";
 $page->ForceNoindex();
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $horse_id=(string)filter_input(INPUT_POST,'horse_id');
 

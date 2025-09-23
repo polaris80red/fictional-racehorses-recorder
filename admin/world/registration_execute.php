@@ -8,7 +8,7 @@ $page->setSetting($setting);
 $page->title="ワールド登録：処理実行";
 
 $session=new Session();
-if(!Session::is_logined()){ $page->exitToHome(); }
+if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $pdo=getPDO();
 $inputId=filter_input(INPUT_POST,'world_id',FILTER_VALIDATE_INT);

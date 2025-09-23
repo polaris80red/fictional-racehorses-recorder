@@ -60,7 +60,7 @@ class RaceSearch extends Search{
 
     function __construct($do_set=false){
         // 結果無しレースの検索初期値はログイン中オン・非ログインはオフ
-        $this->show_empty=Session::is_logined()?true:false;
+        $this->show_empty=Session::isLoggedIn()?true:false;
         if($do_set){
             $this->setByUrl();
         }

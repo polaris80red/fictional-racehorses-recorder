@@ -169,7 +169,7 @@ if($next_month>=13){
 ?>｜<?php
     $url_param_str=$url_params->toString(['year'=>$next_year,'month'=>$next_month,'turn'=>$next_turn]);
     echo (new MkTagA('次ターン',"?{$url_param_str}"));
-    if(Session::is_logined()){
+    if(Session::isLoggedIn()){
         echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/manage/edit/?year={$year}&month={$month}\">この月のレースを登録</a> ]";
     }
 ?>
@@ -180,7 +180,7 @@ if($next_month>=13){
 ?>｜<?php
     $url_param_str=$url_params->toString(['year'=>$next_year,'month'=>$next_month]);
     echo (new MkTagA('次月',"?{$url_param_str}"));
-    if(Session::is_logined()){
+    if(Session::isLoggedIn()){
         echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/manage/edit/?year={$year}&month={$month}\">この月のレースを登録</a> ]";
     }
 ?>
@@ -203,7 +203,7 @@ if($next_month>=13){
     echo (new MkTagA('次週',"?{$url_param_str}"));
 ?>
 <?php
-if(Session::is_logined()){
+if(Session::isLoggedIn()){
     $week_obj=RaceWeek::getById($pdo,$week_id);
     $week_name=$week_obj?$week_obj->name:'';
     echo "　[ <a href=\"".APP_ROOT_REL_PATH."race/manage/edit/?year={$year}&week_id={$week_id}\">この週のレースを登録</a> ]";
@@ -261,7 +261,7 @@ $prev_week_id=0;
             $new_race_url_param->set('year',$year)->set('week_id',$race->week_id);
             $week_str="第{$race->week_id}週（{$raceWeek->name}）";
             $a_tag=new MkTagA($week_str);
-            if(Session::is_logined()){
+            if(Session::isLoggedIn()){
                 $a_tag->setLinkText("この週のレースを登録｜{$week_str}");
                 $a_tag->href(APP_ROOT_REL_PATH."race/manage/edit/?{$new_race_url_param}");
             }

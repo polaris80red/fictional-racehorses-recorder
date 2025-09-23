@@ -8,7 +8,7 @@ $page->title="システム設定";
 $page->ForceNoindex();
 $session=new Session();
 // 暫定でログイン＝編集可能
-$page->is_editable=SESSION::is_logined();
+$page->is_editable=SESSION::isLoggedIn();
 
 $pdo=getPDO();
 
@@ -54,7 +54,7 @@ $story_list=WorldStory::getAll($pdo);
     <?php
     if(count($story_list)>0){
         foreach($story_list as $row){
-            if(!$session->is_logined() && $row['guest_visible']==0){ continue; }
+            if(!$session->isLoggedIn() && $row['guest_visible']==0){ continue; }
             echo "<option value=\"{$row['id']}\">{$row['name']}</option>";
         }
     }
@@ -66,7 +66,7 @@ $story_list=WorldStory::getAll($pdo);
     <th>初期設定に書出し</th>
     <td>
         <label><input type="radio" name="save_to_file" value="0" checked>しない</label>
-        <label><input type="radio" name="save_to_file" value="1"<?php echo Session::is_logined()?'':' disabled'; ?>>する</label>
+        <label><input type="radio" name="save_to_file" value="1"<?php echo Session::isLoggedIn()?'':' disabled'; ?>>する</label>
     </td>
     <td colspan="2">初期設定を変更しログアウト後も適用</td>
 </tr>
@@ -74,14 +74,14 @@ $story_list=WorldStory::getAll($pdo);
     <th>選択した設定にも上書き</th>
     <td>
         <label><input type="radio" name="save_story_is_enabled" value="0" checked onclick="clearElmVal('*[name=save_story_id]');highlightIfNotEmpty('[name=save_story_id]');">しない</label>
-        <label><input type="radio" name="save_story_is_enabled" value="1"<?php echo Session::is_logined()?'':' disabled'; ?>>する</label>
+        <label><input type="radio" name="save_story_is_enabled" value="1"<?php echo Session::isLoggedIn()?'':' disabled'; ?>>する</label>
     </td>
-    <td class="in_input"><select name="save_story_id" onchange="clearElmVal('*[name=story_id]');"<?php echo Session::is_logined()?'':' disabled'; ?>>
+    <td class="in_input"><select name="save_story_id" onchange="clearElmVal('*[name=story_id]');"<?php echo Session::isLoggedIn()?'':' disabled'; ?>>
     <option value="" selected>未選択</option>
     <?php
     if(count($story_list)>0){
         foreach($story_list as $row){
-            if(!$session->is_logined() && $row['guest_visible']==0){ continue; }
+            if(!$session->isLoggedIn() && $row['guest_visible']==0){ continue; }
             if($row['is_read_only']){continue;}
             echo "<option value=\"{$row['id']}\">{$row['name']}</option>";
         }
@@ -92,8 +92,8 @@ $story_list=WorldStory::getAll($pdo);
 <tr><td colspan="4" style="text-align: right;">※ 右のチェックボックスにONがある場合、ONの項目だけをプリセット設定にする</td></tr>
 <tr><td colspan="4" style="text-align: right;">
     上書き設定制御：
-    <input type="button" value="オンオフ反転" onclick="save_check_tgl();"<?php echo Session::is_logined()?'':' disabled'; ?>>
-    <input type="button" value="全てオフ（すべて保存対象）に戻す" onclick="save_check_tgl(false);"<?php echo Session::is_logined()?'':' disabled'; ?>></td></tr>
+    <input type="button" value="オンオフ反転" onclick="save_check_tgl();"<?php echo Session::isLoggedIn()?'':' disabled'; ?>>
+    <input type="button" value="全てオフ（すべて保存対象）に戻す" onclick="save_check_tgl(false);"<?php echo Session::isLoggedIn()?'':' disabled'; ?>></td></tr>
 <tr>
     <th></th>
     <th>現在値</th>
@@ -108,13 +108,13 @@ $story_list=WorldStory::getAll($pdo);
         }
     ?><?=h($world->name??'')?></td>
     <td class="in_input"><select name="world_id">
-<?php if($session->is_logined()): ?>
+<?php if($session->isLoggedIn()): ?>
     <option value="">未選択</option>
 <?php endif; ?>
     <?php
     if(count($world_list)>0){
         foreach($world_list as $row){
-            if(!$session->is_logined() && $row['guest_visible']==0){ continue; }
+            if(!$session->isLoggedIn() && $row['guest_visible']==0){ continue; }
             $selected= $row['id']==$setting->world_id?" selected":"";
             echo "<option value=\"{$row['id']}\" {$selected}>{$row['name']}</option>";
         }
