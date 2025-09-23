@@ -87,6 +87,17 @@ if($page->error_exists){
     <td class="in_input"><input type="text" name="display_name" class="required" value="<?=h($form_item->display_name)?>" required></td>
 </tr>
 <tr>
+    <th>役割・権限</th>
+    <td class="in_input">
+        <select name="role">
+            <option value=""></option>
+            <?php foreach(Role::RoleInfoList as $key=>$row):?>
+                <option value="<?=h($key)?>"<?=$form_item->role==$key?' selected':''?>><?=h($row['name'])?></option>
+            <?php endforeach;?>
+        </select>
+    </td>
+</tr>
+<tr>
     <th>ログイン可能期限</th>
     <?php
         $datetime=Datetime::createFromFormat('Y-m-d H:i:s',$form_item->login_enabled_until??'');

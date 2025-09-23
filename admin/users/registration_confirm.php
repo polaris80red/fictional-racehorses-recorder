@@ -36,6 +36,7 @@ if($password !== filter_input(INPUT_POST,'password_2')){
     $page->addErrorMsg('パスワード再入力が一致しません');
 }
 $form_item->display_name=filter_input(INPUT_POST,'display_name');
+$form_item->role=filter_input(INPUT_POST,'role',FILTER_VALIDATE_INT);
 $login_enabled_until=(string)filter_input(INPUT_POST,'login_enabled_until');
 $form_item->login_enabled_until=null;
 $datetime=$login_enabled_until===''?false:DateTime::createFromFormat('Y-m-d H:i:s',$login_enabled_until.' 23:59:59');
@@ -97,6 +98,13 @@ if($page->error_exists){
 <tr>
     <th>表示名</th>
     <td><?php HTPrint::HiddenAndText('display_name',$form_item->display_name); ?></td>
+</tr>
+<tr>
+    <th>表示名</th>
+    <td>
+        <?php HTPrint::Hidden('role',$form_item->role);?>
+        <?=h(Role::RoleInfoList[$form_item->role]['name']??'')?>
+    </td>
 </tr>
 <tr>
     <th>ログイン可能期限</th>
