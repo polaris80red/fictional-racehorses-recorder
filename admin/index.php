@@ -42,6 +42,10 @@ if(!Session::isLoggedIn()){
         <td>どのワールドを表示するかや、年の範囲・日付形式などを設定します</td>
     </tr>
     <tr>
+        <td><?=(new MkTagA("ユーザーアカウント管理",InAppUrl::to('admin/users/list.php')));?></td>
+        <td>ユーザーアカウントを管理します</td>
+    </tr>
+    <tr>
         <td colspan="2"></td>
     </tr>
     <tr>
