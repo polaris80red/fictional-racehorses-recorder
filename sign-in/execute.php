@@ -52,7 +52,6 @@ do{
         // TODO: SuperAdmin以外のログイン処理
         break;
     }
-    $session->Login();
     $setting=new Setting();// ログイン処理時に初期化しなおす
     redirect_exit($page->to_app_root_path.$return_url);
 }while(false);

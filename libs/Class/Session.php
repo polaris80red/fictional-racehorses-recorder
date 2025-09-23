@@ -2,17 +2,15 @@
 class Session{
     public const PUBLIC_PARAM_KEY='public';
     /**
-     * ログイン中かどうかの判定（新しい処理に置き換え終わったら廃止する）
+     * ログイン中かどうかの判定
      */
     public static function is_logined(){
-        if(!isset($_SESSION[APP_INSTANCE_KEY]['isLoggedIn'])){ return false; }
-        return $_SESSION[APP_INSTANCE_KEY]['isLoggedIn']?true:false;
-    }
-    public function Login(){
-        $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = true;
+        if(isset($_SESSION[APP_INSTANCE_KEY]['currentUser'])){
+            return true;
+        }
+        return false;
     }
     public static function Logout(){
-        $_SESSION[APP_INSTANCE_KEY]['isLoggedIn'] = false;
         unset($_SESSION[APP_INSTANCE_KEY]['currentUser']);
     }
     public function __set($property, $value){
