@@ -13,6 +13,7 @@ CREATE TABLE `mst_users` (
   `username` varchar(100) NOT NULL COMMENT 'ログインID',
   `password_hash` text NOT NULL COMMENT 'パスワードハッシュ値',
   `display_name` varchar(100) NOT NULL COMMENT '表示名',
+  `role` int(11) DEFAULT NULL COMMENT '権限・役割',
   `login_enabled_from` datetime DEFAULT NULL COMMENT 'ログイン可能期間の開始日時',
   `login_enabled_until` datetime DEFAULT NULL COMMENT 'ログイン可能期間の終了日時',
   `last_login_at` datetime DEFAULT NULL COMMENT '最終ログイン日時',

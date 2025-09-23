@@ -13,6 +13,7 @@ class UsersRow extends TableRow {
     ];
     public const INT_COLUMNS=[
         'id',
+        'role',
         'is_enabled',
         'created_by',
         'updated_by',
@@ -21,6 +22,7 @@ class UsersRow extends TableRow {
     public string $username ='';
     public string $password_hash='';
     public string $display_name = '';
+    public int|null $role = null;
     public string|null $login_enabled_from = null;
     public string|null $login_enabled_until = null;
     public string|null $last_login_at = null;
