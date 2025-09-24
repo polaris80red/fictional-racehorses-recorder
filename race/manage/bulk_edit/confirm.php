@@ -22,8 +22,8 @@ if(empty($_POST['race_id'])){
 }
 $race_id=filter_input(INPUT_POST,'race_id');
 # レース情報取得
-$race = new Race($pdo, $race_id);
-if(!$race->record_exists){
+$race = Race::getByRaceId($pdo, $race_id);
+if(!$race){
     $page->error_msgs[]="レース情報取得失敗";
     $page->error_msgs[]="入力ID：{$race_id}";
     header("HTTP/1.1 404 Not Found");

@@ -28,9 +28,9 @@ $horse=false;
 if($horse_id){
     $horse=Horse::getByHorseId($pdo, $horse_id);
 }
-$race=new Race();
+$race=false;
 if($race_result_id){
-    $race->setDataById($pdo, $race_result_id);
+    $race=Race::getByRaceId($pdo, $race_result_id);
 }
 do{
     if($horse_id!=='' && !$horse){
@@ -38,7 +38,7 @@ do{
         $page->addErrorMsg("存在しない競走馬ID｜$horse_id");
         break;
     }
-    if($race_result_id!=='' && !$race->record_exists){
+    if($race_result_id!=='' && !$race){
         // レースID指定ありでレコード無し
         $page->addErrorMsg("存在しないレース結果ID｜$race_result_id");
         break;
@@ -78,7 +78,7 @@ do{
     if(!$is_edit_mode && $next_race_id!=''){
         $next_race_data = new RaceResults();
         $next_race_data->setDataById($pdo,$next_race_id,$horse_id);
-        $next_race = new Race($pdo,$next_race_id);
+        $next_race = Race::getByRaceId($pdo,$next_race_id);
     }
 }while(false);
 if($page->error_exists){

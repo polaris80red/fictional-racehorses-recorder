@@ -21,8 +21,8 @@ do{
         $page->addErrorMsg('元レースIDに特殊文字');
     }
     if($page->error_exists){ break; }
-    $race_data=new Race($pdo,$race_result_id);
-    if(!$race_data->record_exists){
+    $race_data=Race::getByRaceId($pdo,$race_result_id);
+    if(!$race_data){
         $page->addErrorMsg('元IDレース情報取得失敗');
         $page->addErrorMsg("入力元ID：{$race_result_id}");
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * レースページ下部の編集メニュー
- * @var Race $race
+ * @var RaceRow $race
  */
 ?><hr>
 <input type="button" id="edit_tgl" value="編集" style="<?=!EDIT_MENU_TOGGLE?'display:none;':''?>">
