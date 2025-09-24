@@ -359,7 +359,7 @@ if($page->error_exists){
         <textarea name="race_after_note" style="width: 25em; min-height:3em;"><?=h($form_data->race_after_note)?></textarea>
     </td>
 </tr>
-<?php $is_grade_race = in_array($race->grade,['G1','G2','G3','Jpn1','Jpn2','Jpn3']) ?>
+<?php $is_grade_race = in_array($race->grade??null,['G1','G2','G3','Jpn1','Jpn2','Jpn3']) ?>
 <tr>
     <th colspan="3">今週の注目レース</th>
 </tr>
@@ -395,7 +395,7 @@ if($page->error_exists){
 <tr>
     <th colspan="3">スペシャル出馬表 紹介 <input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_sps_comment]','スペシャル出馬表紹介');"></th>
 </tr>
-<?php if(in_array($race->grade,['G1','Jpn1'])): ?>
+<?php if(in_array($race->grade??null,['G1','Jpn1'])): ?>
 <tr>
     <td class="in_input" colspan="3">
         <textarea name="jra_sps_comment" style="width: 95%;min-height:6em;"><?=h($form_data->jra_sps_comment)?></textarea><br>
