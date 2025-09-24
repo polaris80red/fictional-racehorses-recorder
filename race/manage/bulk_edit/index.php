@@ -34,7 +34,13 @@ if(!$race->record_exists){
     $page->printCommonErrorPage();
     exit;
 }
-
+if(!Session::currentUser()->canEditOtherHorse()){
+    // ほかのユーザーの競走馬の記録を編集できる権限がない場合は一括編集不可
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg("編集権限がありません");
+    $page->printCommonErrorPage();
+    exit;
+}
 $week_data=RaceWeek::getById($pdo,$race->week_id);
 $week_month=$week_data->month;
 $turn=$week_data->umm_month_turn;
