@@ -27,9 +27,8 @@ $page_urlparam=new UrlParams([
     'horse_id'=>$horse_id,
 ]);
 # 馬情報取得
-$horse=new Horse();
-$horse->setDataById($pdo, $horse_id);
-if(!$horse->record_exists){
+$horse=Horse::getByHorseId($pdo, $horse_id);
+if(!$horse){
     $page->error_msgs[]="競走馬情報取得失敗";
     $page->error_msgs[]="入力ID：{$horse_id}";
     header("HTTP/1.1 404 Not Found");

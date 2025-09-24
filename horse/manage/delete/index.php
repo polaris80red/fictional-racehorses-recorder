@@ -19,9 +19,8 @@ do{
         $page->addErrorMsg('元ID未入力');
     }
     if($page->error_exists){ break; }
-    $horse_data=new Horse();
-    $horse_data->setDataById($pdo,$horse_id);
-    if(!$horse_data->record_exists){
+    $horse_data=Horse::getByHorseId($pdo,$horse_id);
+    if(!$horse_data){
         $page->addErrorMsg('元ID馬情報取得失敗');
         $page->addErrorMsg("入力元ID：{$horse_id}");
     }

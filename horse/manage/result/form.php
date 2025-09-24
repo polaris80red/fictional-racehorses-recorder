@@ -24,16 +24,16 @@ $form_data->result_number=$result_number;
 
 # 対象取得
 $pdo= getPDO();
-$horse=new Horse();
+$horse=false;
 if($horse_id){
-    $horse->setDataById($pdo, $horse_id);
+    $horse=Horse::getByHorseId($pdo, $horse_id);
 }
 $race=new Race();
 if($race_result_id){
     $race->setDataById($pdo, $race_result_id);
 }
 do{
-    if($horse_id!=='' && !$horse->record_exists){
+    if($horse_id!=='' && !$horse){
         // 競走馬ID指定ありでレコード無し
         $page->addErrorMsg("存在しない競走馬ID｜$horse_id");
         break;

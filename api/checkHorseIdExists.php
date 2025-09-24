@@ -7,9 +7,8 @@ header('Content-Type: text/plain; charset=UTF-8');
 $pdo=getPDO();
 $horse_id=trim(filter_input(INPUT_GET,'horse_id'));
 if(!$horse_id){exit;}
-$horse=new Horse();
-$horse->setDataById($pdo, $horse_id);
-if($horse->record_exists){
+$horse=Horse::getByHorseId($pdo, $horse_id);
+if($horse){
     echo "true";
 }else{
     echo "false";

@@ -142,8 +142,12 @@ abstract class Table{
     }
     // 行クラスを使用する新形式対応
     public const ROW_CLASS = TableRow::class;
-    public static function InsertFromRowObj(PDO $pdo, TableRow $row_obj){
-        $exclude_columns=[static::UNIQUE_KEY_COLUMN];
+    /**
+     * 行クラスインスタンスを使ってInsertする
+     * @param bool $exclude_unique_key true=UNIQUE_KEY_COLUMNを含めない（キーがAuto Incrementカラムでない場合falseにする）
+     */
+    public static function InsertFromRowObj(PDO $pdo, TableRow $row_obj, bool $exclude_unique_key=true){
+        $exclude_columns=$exclude_unique_key?[static::UNIQUE_KEY_COLUMN]:[];
         $int_columns=(static::ROW_CLASS)::getIntColmunNames($exclude_columns);
         $str_columns=(static::ROW_CLASS)::getStrColmunNames($exclude_columns);
 

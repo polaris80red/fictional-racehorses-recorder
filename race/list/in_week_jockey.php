@@ -277,8 +277,7 @@ $prev_date='';
         $raceGrade=$row->gradeRow;
         $raceCourse=$row->courseRow;
         $raceResult=$resultGetter->get($race->race_id);
-        $horse=new Horse();
-        $horse->setDataById($pdo,$raceResult->horse_id);
+        $horse=Horse::getByHorseId($pdo,$raceResult->horse_id);
     ?>
     <?php if($week_id===0 && $umm_month_turn==0 && $month>0 && $prev_turn!==$raceWeek->umm_month_turn): ?>
         <?php

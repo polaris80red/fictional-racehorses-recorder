@@ -16,10 +16,10 @@ $is_edit_mode=filter_input(INPUT_GET,'edit_mode')?1:0;
 # 対象取得
 $pdo= getPDO();
 // 既存データ取得
-$horse= new Horse();
-$horse->setDataById($pdo,$horse_id);
-if(!$horse->record_exists){
+$horse= Horse::getByHorseId($pdo,$horse_id);
+if(!$horse){
     $is_edit_mode=0;
+    $horse=new HorseRow();
     $horse->world_id=$setting->world_id;
 }else{
     $is_edit_mode=1;

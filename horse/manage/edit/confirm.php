@@ -16,24 +16,24 @@ $is_edit_mode=filter_input(INPUT_POST,'edit_mode')?1:0;
 # 対象取得
 $pdo= getPDO();
 // 既存データ取得
-$horse= new Horse();
-$horse->setDataById($pdo,$horse_id);
-if(!$horse->record_exists){ 
+$horse= Horse::getByHorseId($pdo,$horse_id);
+if(!$horse){ 
     $is_edit_mode=0;
+    $horse=new HorseRow();
 }else{
     $is_edit_mode=1;
 }
-if($horse->setDataByPost()==false){
-    $page->addErrorMsgArray($horse->error_msgs);
+$horse->setFromPost();
+$horse->validate();
+if($horse->hasErrors){
+    $page->addErrorMsgArray($horse->errorMessages);
     $page->printCommonErrorPage();
     exit;
 }
-$error_exists=false;
 // 父IDから母情報を取得
 if($horse->sire_id){
-    $sire= new Horse();
-    $sire->setDataById($pdo,$horse->sire_id);
-    if($sire->record_exists){
+    $sire=Horse::getByHorseId($pdo,$horse->sire_id);
+    if($sire!==false){
         $horse->sire_name=$sire->name_ja?:$sire->name_en;
         if($sire->sex!==1){
             $page->addErrorMsg('父IDの該当馬が牡馬以外です。');
@@ -44,9 +44,8 @@ if($horse->sire_id){
 }
 // 母IDから母情報を取得
 if($horse->mare_id){
-    $mare= new Horse();
-    $mare->setDataById($pdo,$horse->mare_id);
-    if($mare->record_exists){
+    $simarere=Horse::getByHorseId($pdo,$horse->mare_id);
+    if($mare!==false){
         $horse->mare_name=$mare->name_ja?:$mare->name_en;
         $horse->bms_name=$mare->sire_name;
         if($mare->sex!==2){
