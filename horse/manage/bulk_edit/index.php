@@ -33,6 +33,12 @@ if(!$horse){
     $page->printCommonErrorPage();
     exit;
 }
+if(!Session::currentUser()->canHorseEdit($horse)){
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg("編集権限がありません");
+    $page->printCommonErrorPage();
+    exit;
+}
 $race_history=new HorseRaceHistory($pdo,$horse_id);
 $race_history->setDateOrder('ASC');
 $race_history->getData();
