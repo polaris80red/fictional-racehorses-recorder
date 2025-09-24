@@ -35,6 +35,11 @@ do{
         $page->addErrorMsg("入力元ID：{$horse_id}");
         break;
     }
+    if($horse_data && !Session::currentUser()->canHorseEdit($horse_data)){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg("編集権限がありません");
+        break;
+    }
     $horse_data->horse_id = $new_horse_id;
     $horse_data->validate();
     if($horse_data->hasErrors){

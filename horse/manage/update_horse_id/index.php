@@ -15,8 +15,28 @@ $horse_id=filter_input(INPUT_GET,'horse_id');
 $pdo= getPDO();
 # 対象取得
 do{
+    if($horse_id==''){
+        header("HTTP/1.1 404 Not Found");
+        $page->addErrorMsg('元ID未指定');
+        break;
+    }
+    $horse=Horse::getByHorseId($pdo,$horse_id);
+    if(!$horse){
+        header("HTTP/1.1 404 Not Found");
+        $page->addErrorMsg('元ID馬情報取得失敗');
+        $page->addErrorMsg("入力元ID：{$horse_id}");
+        break;
+    }
+    if($horse && !Session::currentUser()->canHorseEdit($horse)){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg("編集権限がありません");
+        break;
+    }
 }while(false);
-
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html>
 <head>
