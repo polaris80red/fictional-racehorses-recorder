@@ -8,6 +8,7 @@ $page->setSetting($setting);
 $page->title="競走馬登録実行";
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
+$currentUser=Session::currentUser();
 
 $horse_id=(string)filter_input(INPUT_POST,'horse_id');
 $is_edit_mode=filter_input(INPUT_POST,'edit_mode')?1:0;
@@ -44,13 +45,15 @@ if($horse->hasErrors){
 if(!$is_edit_mode){
     (new SurrogateKeyGenerator($pdo))->autoReset();
 }
+$horse->updated_by=$currentUser->getId();
 $horse->updated_at=PROCESS_STARTED_AT;
 $pdo->beginTransaction();
 try{
     if($is_edit_mode){
         Horse::UpdateFromRowObj($pdo,$horse);
     }else{
-        $horse->created_at=PROCESS_STARTED_AT;
+        $horse->created_by=$horse->updated_by;
+        $horse->created_at=$horse->updated_at;
         Horse::InsertFromRowObj($pdo,$horse);
     }
 
