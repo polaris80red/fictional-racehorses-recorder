@@ -30,7 +30,7 @@
 ?>
         </td>
         <td>
-            <?=(new MkTagA('競走馬ID修正',"./manage/update_horse_id/?horse_id=".urlencode($page->horse->horse_id)))?>
+            <?=(new MkTagA('競走馬ID修正',InAppUrl::to('horse/manage/update_horse_id/',['horse_id'=>$page->horse->horse_id])))?>
         </td>
     </tr>
     <tr>
