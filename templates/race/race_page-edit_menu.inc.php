@@ -35,26 +35,26 @@
     <tr>
 <?php
 $a_tag=new MkTagA('最後に開いた馬をこのレースに追加');
-$latest_horse=new Horse();
+$latest_horse=false;
 if(!empty($session->latest_horse['id'])){
-    $latest_horse->setDataById($pdo,$session->latest_horse['id']);
+    $latest_horse=Horse::getByHorseId($pdo,$session->latest_horse['id']);
 }
-if($latest_horse->record_exists){
+if($latest_horse){
     if($latest_horse_exists){
         $a_tag->title("最後に開いた競走馬は既に登録されています")->setStyle('text-decoration','line-through');
     }else if($latest_horse->birth_year==null){
         $a_tag->title("生年仮登録馬のため戦績追加不可")->setStyle('text-decoration','line-through');
     }else{
-        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['horse_id'=>$session->latest_horse['id'],'race_id'=>$race->race_id]);
+        $url=InAppUrl::to(Routes::HORSE_RACE_RESULT_EDIT,['horse_id'=>$latest_horse->horse_id,'race_id'=>$race->race_id]);
         $a_tag->href($url);
     }
 }
 ?>
         <td colspan="2"><?=$a_tag?></td>
         <td>
-<?php if(!empty($session->latest_horse['id'])): ?>
-    <?php $url=InAppUrl::to('horse/',['horse_id'=>$session->latest_horse['id']]);?>
-    <a href="<?=h($url)?>"><?=h($session->latest_horse['name']?:$session->latest_horse['id'])?></a>
+<?php if($latest_horse): ?>
+    <?php $url=InAppUrl::to('horse/',['horse_id'=>$latest_horse->horse_id]);?>
+    <a href="<?=h($url)?>"><?=h(($latest_horse->name_ja?:$latest_horse->name_en)?:$latest_horse->horse_id)?></a>
 <?php endif; ?>
         </td>
     </tr>

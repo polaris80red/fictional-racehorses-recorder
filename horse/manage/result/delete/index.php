@@ -32,8 +32,11 @@ do{
         $page->addErrorMsg("存在しないレース結果");
         break;
     }
-    $horse=new Horse();
-    $horse->setDataById($pdo, $horse_race_result->horse_id);
+    $horse=Horse::getByHorseId($pdo, $horse_race_result->horse_id);
+    if(!$horse){
+        $page->addErrorMsg("競走馬取得エラー");
+        break;
+    }
     $race=new Race($pdo, $horse_race_result->race_id);
 }while(false);
 if($page->error_exists){

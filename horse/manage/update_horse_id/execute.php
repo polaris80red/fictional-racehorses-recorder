@@ -29,27 +29,21 @@ do{
         $page->addErrorMsg('新ID未入力');
         break;
     }
-    $old_id_check=new Horse();
-    if($old_id_check->setHorseId($horse_id)===false){
-        $page->addErrorMsg('元IDエラー');
-        $page->addErrorMsgArray($old_id_check->error_msgs);
-    }
-    $new_id_check=new Horse();
-    if($new_id_check->setHorseId($new_horse_id)===false){
-        $page->addErrorMsg('新IDエラー');
-        $page->addErrorMsgArray($new_id_check->error_msgs);
-    }
-    if($page->error_exists){ break; }
-
-    $horse_data=new Horse();
-    $horse_data->setDataById($pdo,$horse_id);
-    if(!$horse_data->record_exists){
+    $horse_data=Horse::getByHorseId($pdo,$horse_id);
+    if(!$horse_data){
         $page->addErrorMsg('元ID馬情報取得失敗');
         $page->addErrorMsg("入力元ID：{$horse_id}");
+        break;
     }
-    $new_id_horse_data=new Horse();
-    $new_id_horse_data->setDataById($pdo,$new_horse_id);
-    if($new_id_horse_data->record_exists){
+    $horse_data->horse_id = $new_horse_id;
+    $horse_data->validate();
+    if($horse_data->hasErrors){
+        $page->addErrorMsg('新IDエラー');
+        $page->addErrorMsgArray($horse_data->errorMessages);
+        break;
+    }
+    $new_id_horse=Horse::getByHorseId($pdo,$new_horse_id);
+    if($new_id_horse!==false){
         $page->addErrorMsg('新IDが既に存在');
         $page->addErrorMsg("入力新ID：{$new_horse_id}");
     }

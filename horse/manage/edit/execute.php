@@ -27,17 +27,17 @@ if(!(new FormCsrfToken())->isValid()){
 }
 $pdo= getPDO();
 // 既存データ取得
-$horse= new Horse();
-$horse->setDataById($pdo,$horse_id);
-if(!$horse->record_exists){
+$horse= Horse::getByHorseId($pdo,$horse_id);
+if(!$horse){ 
     $is_edit_mode=0;
-    $horse->horse_id=$horse_id;
+    $horse=new HorseRow();
 }else{
     $is_edit_mode=1;
 }
-if($horse->setDataByPost()==false){
-    $page->debug_dump_var[]=$horse;
-    $page->addErrorMsgArray($horse->error_msgs);
+$horse->setFromPost();
+$horse->validate();
+if($horse->hasErrors){
+    $page->addErrorMsgArray($horse->errorMessages);
     $page->printCommonErrorPage();
     exit;
 }
@@ -48,10 +48,10 @@ $horse->updated_at=PROCESS_STARTED_AT;
 $pdo->beginTransaction();
 try{
     if($is_edit_mode){
-        $horse->UpdateExec($pdo);
+        Horse::UpdateFromRowObj($pdo,$horse);
     }else{
         $horse->created_at=PROCESS_STARTED_AT;
-        $horse->InsertExec($pdo);
+        Horse::InsertFromRowObj($pdo,$horse);
     }
 
     // タグの登録更新処理

@@ -33,51 +33,52 @@ do{
         break;
     }
     if($input->race_id==""){
-        $is_error=1;
-        $error_msgs[]="レースIDなし。";
-        break;
+        $page->addErrorMsg("レースID未指定。");
     }
     if($input->horse_id==""){
-        $is_error=1;
-        $error_msgs[]="競走馬IDなし。";
-        break;
+        $page->addErrorMsg("競走馬ID未指定。");
     }
-    if($input->result_number==0){
-        //$is_error=1;
-        //$error_msgs[]="着順未指定。";
-        //break;
-    }
-    
+    if($page->error_exists){ break; }
+
     $pdo= getPDO();
     $old_horse_result= new RaceResults();
     $old_horse_result->setDataById(
         $pdo,
         $input->race_id,
         $input->horse_id);
-    $horse=new Horse();
-    $horse->setDataById($pdo, $input->horse_id);
+
+    $horse=Horse::getByHorseId($pdo, $input->horse_id);
     $race=new Race($pdo, $input->race_id);
-    if(!$race->record_exists){
-        $is_error=1;
-        $error_msgs[]="存在しないレースID";
-        break;
-    }
-    if(!$horse->record_exists){
-        $is_error=1;
-        $error_msgs[]="存在しない競走馬ID";
-        break;
-    }
-    if($horse->world_id!==$race->world_id){
-        $is_error=1;
-        $error_msgs[]="競走馬とレース情報のワールドが一致していません";
-        break;
+    if($is_edit_mode==1){
+        if(!$old_horse_result->record_exists){
+            $page->addErrorMsg("編集対象のレース結果が存在しません。");
+            break;
+        }
+    }else{
+        if($old_horse_result->record_exists){
+            $page->addErrorMsg("結果が既に存在します");
+            break;
+        }
+        if(!$race->record_exists){
+            $page->addErrorMsg("存在しないレースID");
+        }
+        if(!$horse){
+            $page->addErrorMsg("存在しない競走馬ID");
+        }
+        if($horse->world_id!==$race->world_id){
+            $page->addErrorMsg("競走馬とレース情報のワールドが一致していません");
+            break;
+        }
+        if($horse->birth_year===null){
+            $page->addErrorMsg("対象馬は生年未登録です");
+        }
     }
     $input->varidate();
-    if($input->error_exists){
-        $page->addErrorMsgArray($input->error_msgs);
+    if($page->error_exists){
         $page->printCommonErrorPage();
         exit;
     }
+    $error_msgs=[];
     $input->updated_at=PROCESS_STARTED_AT;
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
