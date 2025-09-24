@@ -10,9 +10,6 @@ $page->ForceNoindex();
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
-$is_error=0;
-$error_msgs=[];
-
 $input = new RaceResults();
 $is_edit_mode = 0;
 if(filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOLEAN)){
@@ -28,8 +25,7 @@ $input->setDataByForm(INPUT_POST);
 do{
     if(!(new FormCsrfToken())->isValid()){
         ELog::error($page->title.": CSRFトークンエラー");
-        $is_error=1;
-        $error_msgs[]="登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）";
+        $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
     if($input->race_id==""){
@@ -73,24 +69,19 @@ do{
             $page->addErrorMsg("対象馬は生年未登録です");
         }
     }
-    $input->varidate();
-    if($page->error_exists){
-        $page->printCommonErrorPage();
-        exit;
+    if(!$input->varidate()){
+        $page->addErrorMsgArray($input->error_msgs);
     }
-    $error_msgs=[];
     $input->updated_at=PROCESS_STARTED_AT;
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
-            $is_error=1;
-            $error_msgs[]="対象のレース結果が存在しません。";
+            $page->addErrorMsg("対象のレース結果が存在しません。");
             break;
         }
         $input->UpdateExec($pdo);
     }else{
         if($old_horse_result->record_exists){
-            $is_error=1;
-            $error_msgs[]="結果が既に存在します";
+            $page->addErrorMsg("結果が既に存在します");
             break;
         }
         $input->created_at=PROCESS_STARTED_AT;
@@ -119,6 +110,10 @@ do{
         'name'=>$horse->name_ja?:$horse->name_en,
     ];
 }while(false);
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 
 ?><!DOCTYPE html>
 <html lang="ja">
@@ -138,15 +133,6 @@ do{
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<?php
-if($is_error!==0){
-    echo '<div style="border:solid 1px red;padding:8px;margin-bottom:8px;">';
-    echo "<h2>処理中止</h2>";
-    echo nl2br(h(implode("\n",$error_msgs)));
-    echo "</div>";
-}
-?>
-<?php if($is_error==0): ?>
 <h2>登録完了</h2>
 <hr>
 <div><?php
@@ -330,7 +316,6 @@ switch($input->is_affliationed_nar){
 </table>
 </form>
 <div style="clear: both;"></div>
-<?php endif; ?>
 <hr class="no-css-fallback">
 </main>
 <footer>
