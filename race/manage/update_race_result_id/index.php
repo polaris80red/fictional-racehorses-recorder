@@ -69,7 +69,7 @@ function checkRaceIdExists() {
       dataType: 'text',
       success: function(response) {
         if (response.trim() === 'true') {
-          const href_pref ='<?=InAppUrl::to('race/result.php?race_id=')?>';
+          const href_pref ='<?=InAppUrl::to('race/result/?race_id=')?>';
           $('#duplicate_id_link').attr('href', href_pref+raceId);
           $('#duplicate_id_link').text('ID: '+raceId+' は存在します');
         }else{
