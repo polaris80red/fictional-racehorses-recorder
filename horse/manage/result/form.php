@@ -281,12 +281,13 @@ if($page->error_exists){
     <td>
     <?php
     $radio=new MkTagInputRadio("sex");
-    $radio->value(0)->checkedIf($form_data->sex);
+    $sex=$form_data->sex??0;
+    $radio->value(0)->checkedIf($sex);
     ?>
     <label><?=$radio?>元の値</label>
-    <?php if($horse->sex===2){ $radio->disabled(); } ?>
-    <label><?=$radio->value(1)->checkedIf($form_data->sex)?>牡</label>
-    <label><?=$radio->value(3)->checkedIf($form_data->sex)?>せん</label>
+    <?php if($sex===2){ $radio->disabled(); } ?>
+    <label><?=$radio->value(1)->checkedIf($sex)?>牡</label>
+    <label><?=$radio->value(3)->checkedIf($sex)?>せん</label>
 </tr>
 <tr>
     <th>所属上書</th>
