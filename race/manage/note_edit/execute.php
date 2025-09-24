@@ -80,6 +80,7 @@ if((string)$race->after_note!==$input_after_note){
     $after_is_changed = $has_change = true;
 }
 if($prev_is_changed||$after_is_changed){
+    $race->updated_by=Session::currentUser()->getId();
     $race->updated_at=PROCESS_STARTED_AT;
     $race->UpdateExec($pdo);
 }

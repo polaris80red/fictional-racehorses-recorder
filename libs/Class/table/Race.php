@@ -34,6 +34,8 @@ class Race extends Table{
     public $month =null;
     public $week_id =0;
     public $is_enabled =1;
+    public $created_by =null;
+    public $updated_by =null;
     public $created_at =null;
     public $updated_at =null;
 
@@ -230,6 +232,7 @@ class Race extends Table{
         $stmt = $pdo->prepare($sql);
         $stmt = $this->BindValues($stmt);
         $stmt->bindValue(':race_id',$this->race_id,PDO::PARAM_STR);
+        $stmt->bindValue(':created_by',$this->created_by?:null,PDO::PARAM_STR);
         $stmt->bindValue(':created_at',$this->created_at?:null,PDO::PARAM_STR);
         $result = $stmt->execute();
         return;
@@ -250,8 +253,8 @@ class Race extends Table{
      */
     private function BindValues($stmt){
         $stmt=$this->BindValuesFromThis($stmt, (self::ROW_CLASS)::getStrColmunNames([
-            'race_course_name','grade','weather','track_condition','date','updated_at',
-            'created_at', // 処理によってバインドしないため除外するカラム
+            'race_course_name','grade','weather','track_condition','date','updated_by','updated_at',
+            'created_by','created_at', // 処理によってバインドしないため除外するカラム
         ]),PDO::PARAM_STR);
         $stmt=$this->BindValuesFromThis($stmt, (self::ROW_CLASS)::getIntColmunNames([
             'number_of_starters'
@@ -267,8 +270,8 @@ class Race extends Table{
         }else{
             $stmt->BindValue(':date',null);
         }
-        // 頭数0の場合はNULL
         $stmt->BindValue(':number_of_starters',intOrNullIfZero($this->number_of_starters),PDO::PARAM_INT);
+        $stmt->BindValue(':updated_by',$this->updated_by?:null,PDO::PARAM_STR);
         $stmt->BindValue(':updated_at',$this->updated_at?:null,PDO::PARAM_STR);
         return $stmt;
     }
