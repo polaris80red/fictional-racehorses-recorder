@@ -25,7 +25,12 @@ if($show_disabled){ $url_params->set('show_disabled',true);}
 if($is_jra_only){ $url_params->set('is_jra_only',true);}
 if($race_course_name){ $url_params->set('race_course_name',$race_course_name);}
 
-$datetime=new DateTime($date);
+$datetime=DateTime::createFromFormat('Y-m-d',$date);
+if(!$datetime){
+    $page->addErrorMsg('日付が指定されていません');
+    $page->printCommonErrorPage();
+    exit;
+}
 $date_str= $datetime->format('Y-m-d');
 $year=$datetime->format('Y');
 $weekdaynum=$datetime->format('w');
