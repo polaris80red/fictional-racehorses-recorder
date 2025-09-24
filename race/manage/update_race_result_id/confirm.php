@@ -34,13 +34,20 @@ do{
     }
     if($page->error_exists){ break; }
 
-    $race_data=new Race($pdo,$race_result_id);
-    if(!$race_data->record_exists){
+    $race_data=Race::getByRaceId($pdo,$race_result_id);
+    if(!$race_data){
+        header("HTTP/1.1 404 Not Found");
         $page->addErrorMsg('元IDレース情報取得失敗');
         $page->addErrorMsg("入力元ID：{$race_result_id}");
+        break;
     }
-    $new_id_race_data=new Race($pdo,$new_race_result_id);
-    if($new_id_race_data->record_exists){
+    if(!Session::currentUser()->canEditRace($race_data)){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg("編集権限がありません");
+        break;
+    }
+    $new_id_race_data=Race::getByRaceId($pdo,$new_race_result_id);
+    if($new_id_race_data){
         $page->addErrorMsg('新IDレースが既に存在');
         $page->addErrorMsg("入力新ID：{$new_race_result_id}");
     }

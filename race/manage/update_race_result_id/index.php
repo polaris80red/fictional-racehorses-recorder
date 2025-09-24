@@ -15,8 +15,27 @@ $race_result_id=filter_input(INPUT_GET,'race_id');
 $pdo= getPDO();
 # 対象取得
 do{
+    if($race_result_id==''){
+        $page->addErrorMsg('元レースID未指定');
+        break;
+    }
+    $race_data=Race::getByRaceId($pdo,$race_result_id);
+    if(!$race_data){
+        header("HTTP/1.1 404 Not Found");
+        $page->addErrorMsg('元IDレース情報取得失敗');
+        $page->addErrorMsg("入力元ID：{$race_result_id}");
+        break;
+    }
+    if(!Session::currentUser()->canEditRace($race_data)){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg("編集権限がありません");
+        break;
+    }
 }while(false);
-
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html>
 <head>
