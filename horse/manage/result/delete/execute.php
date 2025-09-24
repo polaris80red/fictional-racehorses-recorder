@@ -37,6 +37,16 @@ do{
         $page->addErrorMsg("存在しないレース結果");
         break;
     }
+    $horse=Horse::getByHorseId($pdo,$horse_id);
+    if(!$horse){
+        $page->addErrorMsg("競走馬取得エラー");
+        break;
+    }
+    if($horse && !Session::currentUser()->canHorseEdit($horse)){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg("編集権限がありません");
+        break;
+    }
 }while(false);
 if($page->error_exists){
     $page->printCommonErrorPage();
