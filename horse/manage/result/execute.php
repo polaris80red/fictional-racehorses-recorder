@@ -49,7 +49,7 @@ do{
         $page->addErrorMsg("編集権限がありません");
         break;
     }
-    $race=new Race($pdo, $input->race_id);
+    $race=Race::getByRaceId($pdo, $input->race_id);
     if($is_edit_mode==1){
         if(!$old_horse_result->record_exists){
             $page->addErrorMsg("編集対象のレース結果が存在しません。");
@@ -60,7 +60,7 @@ do{
             $page->addErrorMsg("結果が既に存在します");
             break;
         }
-        if(!$race->record_exists){
+        if(!$race){
             $page->addErrorMsg("存在しないレースID");
         }
         if(!$horse){

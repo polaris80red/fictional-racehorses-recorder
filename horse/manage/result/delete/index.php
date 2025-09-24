@@ -37,7 +37,7 @@ do{
         $page->addErrorMsg("競走馬取得エラー");
         break;
     }
-    $race=new Race($pdo, $horse_race_result->race_id);
+    $race=Race::getByRaceId($pdo, $horse_race_result->race_id);
 }while(false);
 if($page->error_exists){
     $page->printCommonErrorPage();

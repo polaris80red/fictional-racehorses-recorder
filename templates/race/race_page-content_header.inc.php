@@ -3,7 +3,7 @@
  * レースページ上部の共通部分
  * @var Page $page
  * @var Setting $setting
- * @var Race $race
+ * @var RaceRow $race
  */
 // 未定義なら定義する
 $hasThisweek=$hasThisweek??false;
