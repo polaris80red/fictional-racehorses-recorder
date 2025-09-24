@@ -14,6 +14,8 @@ class RaceRow extends TableRow {
         'month',
         'week_id',
         'is_enabled',
+        'created_by',
+        'updated_by',
     ];
     public const STR_COLUMNS=[
         'race_id',
@@ -60,6 +62,8 @@ class RaceRow extends TableRow {
     public $month =null;
     public $week_id =0;
     public $is_enabled =1;
+    public $created_by =null;
+    public $updated_by =null;
     public $created_at =null;
     public $updated_at =null;
 }

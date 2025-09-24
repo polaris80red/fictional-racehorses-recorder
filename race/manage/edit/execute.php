@@ -41,12 +41,14 @@ if(!$is_edit_mode){
 }
 $pdo->beginTransaction();
 try{
+    $race->updated_by=Session::currentUser()->getId();
     $race->updated_at=PROCESS_STARTED_AT;
     if($is_edit_mode==1){
         $race->UpdateExec($pdo);
         $redirect_url=$page->getRaceResultUrl($race->race_id);
     }else{
-        $race->created_at=PROCESS_STARTED_AT;
+        $race->created_by=$race->updated_by;
+        $race->created_at=$race->updated_at;
         $race->InsertExec($pdo);
         $redirect_url=$page->getRaceResultUrl($race->race_id);
         if($horse_id!==''){
