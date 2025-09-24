@@ -7,55 +7,17 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="競走馬情報｜詳細戦績";
 $session=new Session();
-// 暫定でログイン＝編集可能
-$page->is_editable=Session::isLoggedIn();
-// ログイン中でも強制的にプレビュー表示にできるパラメータ
-$is_preview=filter_input(INPUT_GET,'preview',FILTER_VALIDATE_BOOL);
-if($is_preview){
-    $page->is_editable=false;
-}
-$page->has_edit_menu=true;
 
 $page->error_return_url=InAppUrl::to("horse/search");
 $page->error_return_link_text="競走馬検索に戻る";
-$pdo= getPDO();
-
-$is_edit_mode = false;
-if(filter_input(INPUT_GET,'mode')==='edit'){
-    $is_edit_mode = true;
-}
-$is_edit_mode=true;
 if(empty($_GET['horse_id'])){
     $page->error_msgs[]="競走馬ID未指定";
     header("HTTP/1.1 404 Not Found");
     $page->printCommonErrorPage();
     exit;
 }
-$get_order=filter_input(INPUT_GET,'horse_history_order');
-switch($get_order){
-    case 'asc':
-        $setting->saveToSession('hors_history_sort_is_desc',false);
-        break;
-    case 'desc':
-        $setting->saveToSession('hors_history_sort_is_desc',true);
-        break;
-}
-
-$date_order = $setting->hors_history_sort_is_desc ? 'DESC':'ASC';
+$pdo= getPDO();
 $horse_id=filter_input(INPUT_GET,'horse_id');
-$show_registration_only=(bool)filter_input(INPUT_GET,'show_registration_only');
-$show_race_note=filter_input(INPUT_GET,'show_race_note',FILTER_VALIDATE_BOOL);
-$show_horse_note=filter_input(INPUT_GET,'show_horse_note',FILTER_VALIDATE_BOOL);
-
-$page_urlparam=new UrlParams(array_diff([
-    'horse_id'=>$horse_id,
-    'horse_history_order'=>$get_order==='desc'?'desc':'asc',
-    'show_registration_only'=>$show_registration_only,
-    'show_race_note'=>$show_race_note,
-    'show_horse_note'=>$show_horse_note,
-    'preview'=>$is_preview,
-],[0,'',false]));
-# 馬情報取得
 $horse=Horse::getByHorseId($pdo,$horse_id);
 if($horse===false){
     $page->error_msgs[]="競走馬情報取得失敗";
@@ -68,6 +30,39 @@ $page->horse = $horse;
 if(ENABLE_ACCESS_COUNTER){
     ArticleCounter::countup($pdo,ArticleCounter::TYPE_HORSE_RESULTS_DETAIL,$horse_id);
 }
+// 編集可否チェック
+$page->is_editable=Session::isLoggedIn() && Session::currentUser()->canHorseEdit($horse);
+
+// ログイン中でも強制的にプレビュー表示にできるパラメータ
+$is_preview=filter_input(INPUT_GET,'preview',FILTER_VALIDATE_BOOL);
+if($is_preview){
+    $page->is_editable=false;
+}
+$page->has_edit_menu=true;
+
+$get_order=filter_input(INPUT_GET,'horse_history_order');
+switch($get_order){
+    case 'asc':
+        $setting->saveToSession('hors_history_sort_is_desc',false);
+        break;
+    case 'desc':
+        $setting->saveToSession('hors_history_sort_is_desc',true);
+        break;
+}
+
+$date_order = $setting->hors_history_sort_is_desc ? 'DESC':'ASC';
+$show_registration_only=(bool)filter_input(INPUT_GET,'show_registration_only');
+$show_race_note=filter_input(INPUT_GET,'show_race_note',FILTER_VALIDATE_BOOL);
+$show_horse_note=filter_input(INPUT_GET,'show_horse_note',FILTER_VALIDATE_BOOL);
+
+$page_urlparam=new UrlParams(array_diff([
+    'horse_id'=>$horse_id,
+    'horse_history_order'=>$get_order==='desc'?'desc':'asc',
+    'show_registration_only'=>$show_registration_only,
+    'show_race_note'=>$show_race_note,
+    'show_horse_note'=>$show_horse_note,
+    'preview'=>$is_preview,
+],[0,'',false]));
 
 $session->latest_horse=[
     'id'=>$horse_id,

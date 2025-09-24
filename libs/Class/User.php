@@ -27,4 +27,11 @@ class User {
     public function canUserManage():bool {
         return $this->isSuperAdmin||($this->role===Role::Administrator);
     }
+    public function canHorseEdit(HorseRow $horse):bool {
+        if($this->role===Role::Author && ($horse->created_by??null) !== $this->id){
+            // 投稿者は自身で登録した馬以外は編集不可
+            return false;
+        }
+        return true;
+    }
 }
