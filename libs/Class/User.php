@@ -34,4 +34,13 @@ class User {
         }
         return true;
     }
+    /**
+     * ほかのユーザーが登録した競走馬を含む可能性がある一括編集画面を使用可能かどうかの判定
+     */
+    public function canEditOtherHorse():bool {
+        if($this->role===Role::Author){
+            return false;
+        }
+        return true;
+    }
 }

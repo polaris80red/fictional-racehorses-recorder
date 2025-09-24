@@ -28,6 +28,13 @@ if(!$race->record_exists){
     $page->printCommonErrorPage();
     exit;
 }
+if(!Session::currentUser()->canEditOtherHorse()){
+    // ほかのユーザーの競走馬の記録を編集できる権限がない場合は一括編集不可
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg("編集権限がありません");
+    $page->printCommonErrorPage();
+    exit;
+}
 $page->error_return_url=InAppUrl::to('race/syutsuba.php',['race_id'=>$race_id]);
 $page->error_return_link_text="出馬表に戻る";
 if(!(new FormCsrfToken())->isValid()){
