@@ -10,6 +10,8 @@ class HorseRow extends TableRow {
         'is_affliationed_nar',
         'is_sire_or_dam',
         'is_enabled',
+        'created_by',
+        'updated_by',
     ];
     public const STR_COLUMNS=[
         'horse_id',
@@ -59,6 +61,8 @@ class HorseRow extends TableRow {
     public $note ='';
     public $profile =null;
     public $is_enabled=1;
+    public $created_by =null;
+    public $updated_by =null;
     public $created_at =null;
     public $updated_at =null;
 
