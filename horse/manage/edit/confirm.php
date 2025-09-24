@@ -50,7 +50,7 @@ if($horse->sire_id){
 }
 // 母IDから母情報を取得
 if($horse->mare_id){
-    $simarere=Horse::getByHorseId($pdo,$horse->mare_id);
+    $mare=Horse::getByHorseId($pdo,$horse->mare_id);
     if($mare!==false){
         $horse->mare_name=$mare->name_ja?:$mare->name_en;
         $horse->bms_name=$mare->sire_name;
