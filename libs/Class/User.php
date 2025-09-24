@@ -28,6 +28,9 @@ class User {
         return $this->isSuperAdmin||($this->role===Role::Administrator);
     }
     public function canHorseEdit(HorseRow $horse):bool {
+        if($this->isSuperAdmin){
+            return true;
+        }
         if($this->role===Role::Author && ($horse->created_by??null) !== $this->id){
             // 投稿者は自身で登録した馬以外は編集不可
             return false;
@@ -38,7 +41,20 @@ class User {
      * ほかのユーザーが登録した競走馬を含む可能性がある一括編集画面を使用可能かどうかの判定
      */
     public function canEditOtherHorse():bool {
+        if($this->isSuperAdmin){
+            return true;
+        }
         if($this->role===Role::Author){
+            return false;
+        }
+        return true;
+    }
+    public function canEditRace(RaceRow $race):bool {
+        if($this->isSuperAdmin){
+            return true;
+        }
+        if($this->role===Role::Author && ($race->created_by??null) !== $this->id){
+            // 投稿者は自身で登録したレース以外は編集不可
             return false;
         }
         return true;
