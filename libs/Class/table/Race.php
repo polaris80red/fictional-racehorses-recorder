@@ -64,6 +64,13 @@ class Race extends Table{
         }
     }
     /**
+     * 行クラス形式用の暫定的な新しい取得処理
+     */
+    public static function getByRaceId(PDO $pdo, string $raceId){
+        $result = self::getByUniqueKey($pdo,'race_id',$raceId,PDO::PARAM_STR);
+        return $result==false ? false : (new (static::ROW_CLASS))->setFromArray($result);
+    }
+    /**
      * @param string $race_id
      */
     public function setRaceId($race_id){
