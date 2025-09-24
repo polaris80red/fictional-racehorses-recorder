@@ -17,12 +17,18 @@ $pdo= getPDO();
 do{
     if($horse_id==''){
         $page->addErrorMsg('元ID未入力');
+        break;
     }
-    if($page->error_exists){ break; }
-    $horse_data=Horse::getByHorseId($pdo,$horse_id);
-    if(!$horse_data){
+    $horse=Horse::getByHorseId($pdo,$horse_id);
+    if(!$horse){
         $page->addErrorMsg('元ID馬情報取得失敗');
         $page->addErrorMsg("入力元ID：{$horse_id}");
+        break;
+    }
+    if($horse && !Session::currentUser()->canHorseEdit($horse)){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg("編集権限がありません");
+        break;
     }
 }while(false);
 if($page->error_exists){
@@ -65,7 +71,7 @@ th{
 <table>
 <tr>
     <th>対象馬</th>
-    <td><?=h(implode('/',array_diff([$horse_data->name_ja,$horse_data->name_en],[''])))?></td>
+    <td><?=h(implode('/',array_diff([$horse->name_ja,$horse->name_en],[''])))?></td>
 </tr>
 <tr>
     <th>対象競走馬ID</th>

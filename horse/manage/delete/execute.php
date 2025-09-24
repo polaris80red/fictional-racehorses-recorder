@@ -17,15 +17,18 @@ $pdo= getPDO();
 do{
     if($horse_id==''){
         $page->addErrorMsg('元ID未入力');
+        break;
     }
-    if($horse_id!==htmlspecialchars($horse_id)){
-        $page->addErrorMsg('元IDに特殊文字');
-    }
-    if($page->error_exists){ break; }
-    $horse_data=Horse::getByHorseId($pdo,$horse_id);
-    if(!$horse_data){
+    $horse=Horse::getByHorseId($pdo,$horse_id);
+    if(!$horse){
         $page->addErrorMsg('元ID馬情報取得失敗');
         $page->addErrorMsg("入力元ID：{$horse_id}");
+        break;
+    }
+    if($horse && !Session::currentUser()->canHorseEdit($horse)){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg("編集権限がありません");
+        break;
     }
 }while(false);
 if($page->error_exists){
@@ -86,7 +89,7 @@ th{
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-競走馬データ <?=h($horse_id."：".$horse_data->name_ja?:$horse_data->name_en)?> を削除しました。
+競走馬データ <?=h($horse_id."：".$horse->name_ja?:$horse->name_en)?> を削除しました。
 <hr class="no-css-fallback">
 </main>
 <footer>
