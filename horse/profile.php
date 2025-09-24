@@ -7,28 +7,36 @@ $setting=new Setting();
 $page->setSetting($setting);
 $page->title="競走馬情報｜プロフィール";
 $session=new Session();
-// 暫定でログイン＝編集可能
-$page->is_editable=Session::isLoggedIn();
-// ログイン中でも強制的にプレビュー表示にできるパラメータ
-$is_preview=filter_input(INPUT_GET,'preview',FILTER_VALIDATE_BOOL);
-if($is_preview){
-    $page->is_editable=false;
-}
 
 $page->error_return_url=InAppUrl::to("horse/search");
 $page->error_return_link_text="競走馬検索に戻る";
-$pdo= getPDO();
-
-$is_edit_mode = false;
-if(filter_input(INPUT_GET,'mode')==='edit'){
-    $is_edit_mode = true;
-}
-$is_edit_mode=true;
 if(empty($_GET['horse_id'])){
     $page->error_msgs[]="競走馬ID未指定";
     header("HTTP/1.1 404 Not Found");
     $page->printCommonErrorPage();
     exit;
+}
+$pdo= getPDO();
+$horse_id=filter_input(INPUT_GET,'horse_id');
+$horse=Horse::getByHorseId($pdo,$horse_id);
+if($horse===false){
+    $page->error_msgs[]="競走馬情報取得失敗";
+    $page->error_msgs[]="入力ID：{$horse_id}";
+    header("HTTP/1.1 404 Not Found");
+    $page->printCommonErrorPage();
+    exit;
+}
+$page->horse = $horse;
+if(ENABLE_ACCESS_COUNTER){
+    ArticleCounter::countup($pdo,'horse_profile',$horse_id);
+}
+// 編集可否チェック
+$page->is_editable=Session::isLoggedIn() && Session::currentUser()->canHorseEdit($horse);
+
+// ログイン中でも強制的にプレビュー表示にできるパラメータ
+$is_preview=filter_input(INPUT_GET,'preview',FILTER_VALIDATE_BOOL);
+if($is_preview){
+    $page->is_editable=false;
 }
 $get_order=filter_input(INPUT_GET,'horse_history_order');
 switch($get_order){
@@ -41,7 +49,6 @@ switch($get_order){
 }
 
 $date_order = $setting->hors_history_sort_is_desc ? 'DESC':'ASC';
-$horse_id=filter_input(INPUT_GET,'horse_id');
 $show_registration_only=(bool)filter_input(INPUT_GET,'show_registration_only');
 
 $page_urlparam=new UrlParams([
@@ -49,15 +56,7 @@ $page_urlparam=new UrlParams([
     'horse_history_order'=>$get_order==='desc'?'desc':'asc',
     'show_registration_only'=>$show_registration_only,
 ]);
-# 馬情報取得
-$horse=Horse::getByHorseId($pdo,$horse_id);
-if($horse===false){
-    $page->error_msgs[]="競走馬情報取得失敗";
-    $page->error_msgs[]="入力ID：{$horse_id}";
-    header("HTTP/1.1 404 Not Found");
-    $page->printCommonErrorPage();
-    exit;
-}
+
 $page->error_return_url=InAppUrl::to("horse/",['horse_id'=>$horse_id]);
 $page->error_return_link_text="競走馬ページに戻る";
 if($horse->profile==''){
@@ -66,10 +65,6 @@ if($horse->profile==''){
     header("HTTP/1.1 404 Not Found");
     $page->printCommonErrorPage();
     exit;
-}
-$page->horse = $horse;
-if(ENABLE_ACCESS_COUNTER){
-    ArticleCounter::countup($pdo,'horse_profile',$horse_id);
 }
 
 $session->latest_horse=[
