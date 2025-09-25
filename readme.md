@@ -4,6 +4,8 @@ fictional-racehorses-recorder 架空競走馬戦績管理ツール
 競馬創作や競走馬擬人化創作を執筆する際のために、競走成績や対戦関係を競馬情報サイトのようなデータベースで管理できるWEBアプリケーションです。
 - [Github](https://github.com/polaris80red/fictional-racehorses-recorder)
 
+※ アップデート時は **_setup** ディレクトリの **UPDATE.txt** を参照してください
+
 # 目次
 
 - [必要環境](#必要環境)
