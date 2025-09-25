@@ -72,6 +72,7 @@ do{
                     $this->user->failed_login_attempts=0;
                     $limit=LOGIN_LOCK_DURATION_MINUTES;
                     $this->user->login_locked_until=(new DateTime())->modify("+{$limit}min")->format('Y-m-d H:i:s');
+                    ELog::error("連続ログイン失敗によりロック開始:username={$this->user->username}, REMOTE_ADDR={$_SERVER['REMOTE_ADDR']}");
                 }
             }
             Users::UpdateFromRowObj($this->pdo,$this->user);
@@ -92,8 +93,8 @@ do{
         if($login_locked_until && $login_locked_until>(new DateTime())){
             header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('連続ログイン失敗により一時的にログインを禁止しています');
-            $page->printCommonErrorPage();
-            exit;
+            ELog::error("ロック中のログイン試行:username={$user->username}, REMOTE_ADDR={$_SERVER['REMOTE_ADDR']}");
+            break;
         }
     }
     if($id===ADMINISTRATOR_USER){
@@ -102,28 +103,38 @@ do{
             // パスワード未設定ではパスワードなしで通す
         }else if(!password_verify($password,ADMINISTRATOR_PASS)){
             $userUpdater->failed();
+            header('HTTP/1.1 403 Forbidden');
+            $page->addErrorMsg('ID・パスワードを確認してください');
             break;
         }
         Session::loginSuperAdmin($user?:null);
     }else{
         if(!$user){
             // 該当ユーザーなし
+            header('HTTP/1.1 403 Forbidden');
+            $page->addErrorMsg('ID・パスワードを確認してください');
             break;
         }
         if(!$user->is_enabled){
             // 無効化されている
+            header('HTTP/1.1 403 Forbidden');
+            $page->addErrorMsg('このアカウントは現在利用できません');
             break;
         }
         if($user->login_enabled_until!=null){
-            $until=new DateTime($user->login_enabled_until);
+            $until=DateTime::createFromFormat('Y-m-d H:i:s',$user->login_enabled_until);
             $now=new DateTime();
-            if($now>$until){
+            if($until && $now>$until){
                 // 期限切れ
+                header('HTTP/1.1 403 Forbidden');
+                $page->addErrorMsg('アカウントの利用可能期限が切れています');
                 break;
             }
         }
         if(!password_verify($password,$user->password_hash)){
             $userUpdater->failed();
+            header('HTTP/1.1 403 Forbidden');
+            $page->addErrorMsg('ID・パスワードを確認してください');
             break;
         }
         Session::Login($user);
@@ -132,4 +143,4 @@ do{
     $setting=new Setting();// ログイン処理時に初期化しなおす
     redirect_exit($page->to_app_root_path.$return_url);
 }while(false);
-redirect_exit('./?error=true');
+$page->printCommonErrorPage();
