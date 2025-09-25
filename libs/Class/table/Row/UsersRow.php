@@ -8,12 +8,14 @@ class UsersRow extends TableRow {
         'login_enabled_from',
         'login_enabled_until',
         'last_login_at',
+        'login_locked_until',
         'created_at',
         'updated_at',
     ];
     public const INT_COLUMNS=[
         'id',
         'role',
+        'failed_login_attempts',
         'is_enabled',
         'created_by',
         'updated_by',
@@ -26,6 +28,8 @@ class UsersRow extends TableRow {
     public string|null $login_enabled_from = null;
     public string|null $login_enabled_until = null;
     public string|null $last_login_at = null;
+    public int $failed_login_attempts = 0;
+    public string|null $login_locked_until = null;
     public int $is_enabled = 1;
     public int|null $created_by = null;
     public int|null $updated_by = null;
