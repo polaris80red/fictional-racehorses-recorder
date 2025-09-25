@@ -288,8 +288,8 @@ $url=$this->to_app_root_path."race/list/access_history.php";
         echo "<div class=\"footer_navigation\">";
         if($is_enabled){
             echo '<a href="'.$this->to_app_root_path.'">[HOME]</a>';
-            if(Session::isLoggedIn()){
-            echo ' <a href="'.$this->to_app_root_path.'/admin">[管理画面]</a>';
+            if(Session::isLoggedIn() && Session::currentUser()->canManageMaster()){
+            echo ' <a href="'.$this->to_app_root_path.'admin">[管理画面]</a>';
             }
             if(Session::isLoggedIn() && !Session::currentUser()->isSuperAdmin()){
                 $tag=new MkTagA('[ユーザー情報設定]');
