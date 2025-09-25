@@ -102,6 +102,15 @@ $cfg['DISPLAY_CONFIG_SOURCE'] = 'db';
  *      データベースの共通設定と別の設定を使うために使用します。
  */
 
+// 連続ログイン失敗時のログイン試行ロック
+$cfg['LOGIN_MAX_FAILED_ATTEMPTS']   = 10;
+$cfg['LOGIN_LOCK_DURATION_MINUTES'] = 30;
+/**
+ * LOGIN_MAX_FAILED_ATTEMPTSの回数連続でパスワードを間違えると、
+ * そのアカウントはLOGIN_LOCK_DURATION_MINUTESで指定した時間(分単位)の間ログインできなくなります。
+ * 0の場合は制限しません。
+ */
+
 // デフォルトの表示設定のソースがファイルの場合のパス
 $cfg['DISPLAY_CONFIG_JSON_PATH'] = $cfg['STORAGE_DIR'].'/display_settings.json';
 

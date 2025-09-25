@@ -56,6 +56,9 @@ class EnvConfigInitializer {
         define('DISPLAY_CONFIG_SOURCE',$display_config_source);
         define('DISPLAY_CONFIG_JSON_PATH',$cfg['DISPLAY_CONFIG_JSON_PATH']);
 
+        define('LOGIN_MAX_FAILED_ATTEMPTS',max((int)$cfg['LOGIN_MAX_FAILED_ATTEMPTS'],0));
+        define('LOGIN_LOCK_DURATION_MINUTES',max((int)$cfg['LOGIN_LOCK_DURATION_MINUTES'],0));
+
         $app_instance_key=$cfg['APP_INSTANCE_KEY'];
         // 未設定の場合はアプリルートのディレクトリ名を付与する
         define('APP_INSTANCE_KEY',$app_instance_key?:basename(APP_ROOT_DIR));

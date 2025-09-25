@@ -50,11 +50,58 @@ do{
     } catch (Exception $e) {
         $user=false;
     }
+    /**
+     * ログイン成功・失敗時のユーザーレコード更新処理
+     */
+    $userUpdater=new class($pdo,$user){
+        private PDO $pdo;
+        private UsersRow|false $user;
+        public function __construct(PDO $pdo,UsersRow|false $user){
+            $this->pdo=$pdo;
+            $this->user=$user;
+        }
+        /**
+         * ログイン失敗時のカウントアップ・時間制限セット
+         */
+        public function failed(){
+            if($this->user===false){return;}
+            $this->user;
+            $this->user->failed_login_attempts+=1;
+            if(LOGIN_MAX_FAILED_ATTEMPTS && LOGIN_LOCK_DURATION_MINUTES){
+                if($this->user->failed_login_attempts>=LOGIN_MAX_FAILED_ATTEMPTS){
+                    $this->user->failed_login_attempts=0;
+                    $limit=LOGIN_LOCK_DURATION_MINUTES;
+                    $this->user->login_locked_until=(new DateTime())->modify("+{$limit}min")->format('Y-m-d H:i:s');
+                }
+            }
+            Users::UpdateFromRowObj($this->pdo,$this->user);
+        }
+        /**
+         * ログイン成功時の失敗情報リセット、最終ログイン更新
+         */
+        public function success(){
+            if($this->user==null){return;}
+            $this->user->failed_login_attempts=0;
+            $this->user->login_locked_until=null;
+            $this->user->last_login_at=PROCESS_STARTED_AT;
+            Users::UpdateFromRowObj($this->pdo,$this->user);
+        }
+    };
+    if($user && LOGIN_LOCK_DURATION_MINUTES){
+        $login_locked_until=DateTime::createFromFormat('Y-m-d H:i:s',$user->login_locked_until?:'');
+        if($login_locked_until && $login_locked_until>(new DateTime())){
+            header('HTTP/1.1 403 Forbidden');
+            $page->addErrorMsg('連続ログイン失敗により一時的にログインを禁止しています');
+            $page->printCommonErrorPage();
+            exit;
+        }
+    }
     if($id===ADMINISTRATOR_USER){
         // SuperAdminの場合のログイン処理
         if(ADMINISTRATOR_PASS==='' && $password===''){
             // パスワード未設定ではパスワードなしで通す
         }else if(!password_verify($password,ADMINISTRATOR_PASS)){
+            $userUpdater->failed();
             break;
         }
         Session::loginSuperAdmin($user?:null);
@@ -76,14 +123,12 @@ do{
             }
         }
         if(!password_verify($password,$user->password_hash)){
+            $userUpdater->failed();
             break;
         }
         Session::Login($user);
     }
-    if($user){
-        $user->last_login_at=PROCESS_STARTED_AT;
-        Users::UpdateFromRowObj($pdo,$user);
-    }
+    $userUpdater->success();
     $setting=new Setting();// ログイン処理時に初期化しなおす
     redirect_exit($page->to_app_root_path.$return_url);
 }while(false);
