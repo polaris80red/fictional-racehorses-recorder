@@ -29,6 +29,13 @@ if($race_id!=''){
         $page->printCommonErrorPage();
         exit;
     }
+    // 暫定的な編集権限判定（TODO: 他の処理を行クラス使用に揃える）
+    if($is_edit_mode==1 && !Session::currentUser()->canEditRace(Race::getByRaceId($pdo,$race_id))){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg("編集権限がありません");
+        $page->printCommonErrorPage();
+        exit;
+    }
 }
 if($race->setDataByPost()==false){
     $page->addErrorMsgArray($race->error_msgs);

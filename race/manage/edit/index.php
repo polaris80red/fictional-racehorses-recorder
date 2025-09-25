@@ -49,7 +49,13 @@ if($is_edit_mode==0 && $race_id!=''){
     $race->previous_note='';
     $race->after_note='';
 }
-#echo '<pre>'.print_r($race,true).'</pre>'; exit;
+// 暫定的な編集権限判定（TODO: 他の処理を行クラス使用に揃える）
+if($is_edit_mode==1 && !Session::currentUser()->canEditRace(Race::getByRaceId($pdo,$race_id))){
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg("編集権限がありません");
+    $page->printCommonErrorPage();
+    exit;
+}
 
 $world_list=World::getAll($pdo);
 $sex_category_list=RaceCategorySex::getAll($pdo);
