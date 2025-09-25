@@ -21,6 +21,9 @@ class User {
     public function getId(){
         return $this->id;
     }
+    public function isSuperAdmin():bool{
+        return $this->isSuperAdmin;
+    }
     /**
      * ユーザー管理を使用可能かどうかの判定
      */
