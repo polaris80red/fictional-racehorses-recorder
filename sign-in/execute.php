@@ -44,7 +44,12 @@ do{
     if($id===''){
         break;
     }
-    $user=Users::getByUsername($pdo,$id);
+    try {
+        // ユーザーテーブル自体が未作成の場合も設定ファイルの固定管理者での最低限の使用は可能にする
+        $user=Users::getByUsername($pdo,$id);
+    } catch (Exception $e) {
+        $user=false;
+    }
     if($id===ADMINISTRATOR_USER){
         // SuperAdminの場合のログイン処理
         if(ADMINISTRATOR_PASS==='' && $password===''){
