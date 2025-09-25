@@ -3,9 +3,9 @@
  * レース結果の表テンプレート（netkeiba風並び順）
  * @var Page $page
  * @var Setting $setting
- * @var Race $race
+ * @var RaceRow $race
  * @var RaceResultsGetter $resultsGetter
- * @var RaceSearchResultPageRow[] $table_data
+ * @var RaceResultsPageRow[] $table_data
  * @var bool $mode_umm
  */
 ?><?php
