@@ -404,7 +404,7 @@ HTPrint::DataList('distance_list',[
     '1000','1200','1400','1600','1800','2000','2200','2400','2600','3000','3200','3600','1500','1150'
     ]);
 ?>
-<?php if($is_edit_mode): ?>
+<?php if($is_edit_mode && Session::currentUser()->canDeleteRace()): ?>
 <form action="../delete/" method="post" style="text-align:right;">
 <input type="hidden" name="race_id" value="<?=h($race_id)?>">
 <input type="submit" value="レース結果データ削除確認" style="color:red;">
