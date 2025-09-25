@@ -9,14 +9,17 @@ $page->title="競馬場マスタ管理｜キー名称の一括変更";
 $page->ForceNoindex();
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
-
+if(!Session::currentUser()->canManageMaster()){
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg('マスタ管理権限がありません');
+}
 $unique_name=filter_input(INPUT_GET,'u_name');
 
 $pdo= getPDO();
-# 対象取得
-do{
-}while(false);
-
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html>
 <head>
