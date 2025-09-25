@@ -70,4 +70,18 @@ class User {
         $allowRoles=[Role::Administrator,Role::Maintainer,Role::Editor];
         return $this->isSuperAdmin?:in_array($this->role,$allowRoles);
     }
+    /**
+     * 通常マスタの管理権限
+     */
+    public function canManageMaster(){
+        $allowRoles=[Role::Administrator,Role::Maintainer];
+        return $this->isSuperAdmin?:in_array($this->role,$allowRoles);
+    }
+    /**
+     * システム設定の変更権限
+     */
+    public function canManageSystemSettings():bool{
+        $allowRoles=[Role::Administrator];
+        return $this->isSuperAdmin?:in_array($this->role,$allowRoles);
+    }
 }
