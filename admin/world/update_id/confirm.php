@@ -16,6 +16,10 @@ $new_world_id=trim((string)filter_input(INPUT_POST,'new_world_id'));
 $pdo= getPDO();
 # 対象取得
 do{
+    if(!Session::currentUser()->canManageSystemSettings()){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg('システム設定管理権限がありません');
+    }
     if($world_id==''){
         $page->addErrorMsg('変換対象の名称が未入力');
     }

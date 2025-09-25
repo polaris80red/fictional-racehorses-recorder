@@ -16,6 +16,10 @@ $new_world_id=trim((string)filter_input(INPUT_POST,'new_world_id'));
 $pdo= getPDO();
 # 対象取得
 do{
+    if(!Session::currentUser()->canManageSystemSettings()){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg('システム設定管理権限がありません');
+    }
     if(!(new FormCsrfToken())->isValid()){
         ELog::error($page->title.": CSRFトークンエラー|".__FILE__);
         $page->addErrorMsg("入力フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
