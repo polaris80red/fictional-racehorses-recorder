@@ -200,7 +200,13 @@ $latest_horse_exists=false;
         }
     ?>
     <?php if($page->is_editable): ?>
-    <td><a href="<?=h($url)?>" title="編集">編</a></td>
+        <?php
+        $editTag=new MkTagA('編');
+        if(Session::currentUser()->canHorseEdit($horse)){
+            $editTag->href($url)->title('編集');            
+        }
+        ?>
+        <td><?=$editTag?></td>
     <?php endif; ?>
     </tr>
 <?php endforeach;?>
