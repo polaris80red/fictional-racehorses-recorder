@@ -11,5 +11,7 @@ Windows環境では空フォルダで上書きしても既存ファイルは残�
 
 # 【データ構造の変更等を伴うバージョンアップの履歴・必要手順】
 ## ■ v0.1.8 以下のバージョンからアップデートする場合
-- データベースに mst_users テーブルが存在しない場合、v0.1.8 以下のバージョンです。
-- _setup/create_tables/の mst_users.sql を実行することで、 mst_users テーブルが作成されます。
+- データベースに mst_users および sys_login_attempt_ip テーブルが存在しない場合、v0.1.8 以下のバージョンです。
+- _setup/create_tables/の下記２つの.sqlを実行してテーブルを作成してください。
+  - mst_users.sql
+  - sys_login_attempt_ip.sql

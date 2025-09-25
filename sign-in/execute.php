@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__).'/libs/init.php';
+InAppUrl::init(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -9,6 +10,7 @@ $return_url=(string)$session->login_return_url;
 $id=(string)filter_input(INPUT_POST,'id');
 $password=(string)filter_input(INPUT_POST,'password');
 $pdo=getPDO();
+$page->setErrorReturnLink('ログインフォームに戻る',InAppUrl::to('sign-in/'));
 
 // ALLOW_REMOTE_EDITOR_LOGIN で許可されていない場合、localhost以外からのログインは拒否する
 (function(){
@@ -37,11 +39,23 @@ $pdo=getPDO();
 $error_exists=false;
 
 $page->title="ログイン実行";
+$LoginAttemptIp=new LoginAttemptIp($pdo,$_SERVER['REMOTE_ADDR']);
+$LoginAttemptIpRow=$LoginAttemptIp->get();
 do{
+    $ipLoginLockedUntil=DateTime::createFromFormat('Y-m-d H:i:s',$LoginAttemptIpRow['login_locked_until']??'');
+    $nowDateTime=new DateTime(PROCESS_STARTED_AT);
+    if($ipLoginLockedUntil && $ipLoginLockedUntil>$nowDateTime){
+        header('HTTP/1.1 403 Forbidden');
+        $page->addErrorMsg('同一IPの連続ログイン失敗により一時的にログインを禁止しています');
+        ELog::error("IPロック中のログイン試行: REMOTE_ADDR={$_SERVER['REMOTE_ADDR']}, input_username={$id}");
+        break;
+    }
     if((new FormCsrfToken())->isValid()==false){
+        $page->addErrorMsg('ログインフォームを更新して再試行してください(CSRFトークンエラー)');
         break;
     }
     if($id===''){
+        $page->addErrorMsg('ユーザー名未入力');
         break;
     }
     try {
@@ -140,7 +154,21 @@ do{
         Session::Login($user);
     }
     $userUpdater->success();
-    $setting=new Setting();// ログイン処理時に初期化しなおす
+    if($LoginAttemptIpRow){
+        // IP単位のログイン試行レコードがあればログイン成功でリセットする
+        $LoginAttemptIp->reset();
+    }
+    $setting=new Setting();// ログイン処理時に表示設定を初期化しなおす
     redirect_exit($page->to_app_root_path.$return_url);
 }while(false);
+if(LOGIN_IP_MAX_FAILED_ATTEMPTS && LOGIN_IP_LOCK_DURATION_MINUTES){
+    if(($LoginAttemptIpRow['login_failed_attempts']??0)+1 >= LOGIN_IP_MAX_FAILED_ATTEMPTS){
+        // 今回のログイン失敗で規定回数に達する場合
+        $LoginAttemptIp->lock($nowDateTime->modify("+".LOGIN_IP_LOCK_DURATION_MINUTES."min")->format('Y-m-d H:i:s'));
+        $page->addErrorMsg("同一IPの連続ログイン失敗回数が規定を超えたため一定時間ログインを制限します");
+        ELog::error("IP連続ログイン失敗によりロック開始: REMOTE_ADDR={$_SERVER['REMOTE_ADDR']}, input={$id}");
+    }else{
+        $LoginAttemptIp->increment();
+    }
+}
 $page->printCommonErrorPage();
