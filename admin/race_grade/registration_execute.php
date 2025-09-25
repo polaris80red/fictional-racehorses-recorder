@@ -42,6 +42,10 @@ if($form_item->sort_number===''){
 $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
 do{
+    if(!Session::currentUser()->canManageSystemSettings()){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg('システム設定管理権限がありません');
+    }
     if(!(new FormCsrfToken())->isValid()){
         ELog::error($page->title.": CSRFトークンエラー|".__FILE__);
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");

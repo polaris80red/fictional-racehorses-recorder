@@ -11,7 +11,10 @@ $page->ForceNoindex();
 
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
-
+if(!Session::currentUser()->canManageSystemSettings()){
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg('システム設定管理権限がありません');
+}
 $pdo=getPDO();
 $id=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
 $input_name=filter_input(INPUT_GET,'name');

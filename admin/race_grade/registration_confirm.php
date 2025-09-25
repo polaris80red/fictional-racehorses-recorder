@@ -44,6 +44,10 @@ $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL
 
 $error_exists=false;
 do{
+    if(!Session::currentUser()->canManageSystemSettings()){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg('システム設定管理権限がありません');
+    }
     if(!$form_item->validate()){
         $page->addErrorMsgArray($form_item->errorMessages);
     }
