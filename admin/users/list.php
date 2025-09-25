@@ -34,7 +34,7 @@ $tableData=Users::getAll($pdo,true);
     <?php $page->printScriptLink('js/functions.js'); ?>
     <style>
         tr.super_admin td:nth-child(2){ color: red; background-color: #ffffa0ff; }
-        tr.super_admin td:nth-child(n+4):not(:last-child){
+        tr.super_admin td:nth-child(n+4):nth-last-child(n+3){
             background-color: #EEE;
             text-decoration: line-through;
         }
@@ -54,8 +54,8 @@ $tableData=Users::getAll($pdo,true);
         <th>表示名</th>
         <th>役割・権限</th>
         <th>ログイン可能期限</th>
-        <th>最終ログイン</th>
         <th>利用可否</th>
+        <th>最終ログイン</th>
         <th></th>
     </tr>
     <?php foreach($tableData as $row): ?>
@@ -73,8 +73,8 @@ $tableData=Users::getAll($pdo,true);
                 $dateStr=$datetime===false?'':$datetime->format('Y-m-d');
             ?>
             <td><?=h($dateStr)?></td>
-            <td><?=h($user->last_login_at)?></td>
             <td><?=$user->is_enabled?'有効':'無効'?></td>
+            <td><?=h($user->last_login_at)?></td>
             <td><?=(new MkTagA('編',$url))?></td>
         </tr>
     <?php endforeach; ?>
