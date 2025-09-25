@@ -34,10 +34,16 @@ if(!$race){
     $page->printCommonErrorPage();
     exit;
 }
+if(!Session::currentUser()->canEditRace($race)){
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg("レース情報の編集権限がありません");
+    $page->printCommonErrorPage();
+    exit;
+}
 if(!Session::currentUser()->canEditOtherHorse()){
     // ほかのユーザーの競走馬の記録を編集できる権限がない場合は一括編集不可
     header("HTTP/1.1 403 Forbidden");
-    $page->addErrorMsg("編集権限がありません");
+    $page->addErrorMsg("競走馬情報の編集権限がありません");
     $page->printCommonErrorPage();
     exit;
 }
