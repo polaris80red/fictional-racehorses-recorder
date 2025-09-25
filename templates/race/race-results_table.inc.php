@@ -5,7 +5,7 @@
  * @var Setting $setting
  * @var RaceRow $race
  * @var RaceResultsGetter $resultsGetter
- * @var RaceSearchResultPageRow[] $table_data
+ * @var RaceResultsPageRow[] $table_data
  * @var bool $mode_umm
  */
 ?><?php
