@@ -49,11 +49,11 @@ Access denied:<br>
 <?php endif; ?>
 <table>
     <tr>
-        <th>ID</th>
-        <td class="in_input"><input type="text" name="id" style="width:10em;" value=""<?php echo $login_disable_status?' disabled':''; ?>></td>
+        <th>ユーザー名(ID)</th>
+        <td class="in_input"><input type="text" name="id" style="width:10em;" value=""<?php echo $login_disable_status?' disabled':''; ?> required></td>
     </tr>
     <tr>
-        <th>パス</th>
+        <th>パスワード</th>
         <td class="in_input"><input type="password" name="password" style="width:10em;" value=""<?php echo $login_disable_status?' disabled':''; ?>></td>
     </tr>
 </table>
