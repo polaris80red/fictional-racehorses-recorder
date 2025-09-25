@@ -107,7 +107,7 @@ if($page->error_exists){
     <td><?php HTPrint::HiddenAndText('display_name',$form_item->display_name); ?></td>
 </tr>
 <tr>
-    <th>表示名</th>
+    <th>役割・権限</th>
     <td>
         <?php HTPrint::Hidden('role',$form_item->role);?>
         <?=h(Role::RoleInfoList[$form_item->role]['name']??'')?>
