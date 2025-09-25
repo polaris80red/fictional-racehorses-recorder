@@ -9,7 +9,10 @@ $page->title="ワールド登録：処理実行";
 
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
-
+if(!Session::currentUser()->canManageSystemSettings()){
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg('システム設定管理権限がありません');
+}
 $pdo=getPDO();
 $inputId=filter_input(INPUT_POST,'world_id',FILTER_VALIDATE_INT);
 $editMode=($inputId>0);

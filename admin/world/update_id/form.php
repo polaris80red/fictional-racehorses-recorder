@@ -13,10 +13,16 @@ if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $world_id=filter_input(INPUT_GET,'id');
 
 $pdo= getPDO();
-# 対象取得
 do{
+    if(!Session::currentUser()->canManageSystemSettings()){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg('システム設定管理権限がありません');
+    }
 }while(false);
-
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html>
 <head>

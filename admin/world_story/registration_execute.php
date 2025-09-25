@@ -41,6 +41,10 @@ $save_to_session=filter_input(INPUT_POST,'save_to_session',FILTER_VALIDATE_BOOL)
 $save_to_defaults=filter_input(INPUT_POST,'save_to_defaults',FILTER_VALIDATE_BOOL);
 
 do{
+    if(!Session::currentUser()->canManageSystemSettings()){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg('システム設定管理権限がありません');
+    }
     if(!(new FormCsrfToken())->isValid()){
         ELog::error($page->title.": CSRFトークンエラー|".__FILE__);
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
