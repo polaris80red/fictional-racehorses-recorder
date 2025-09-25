@@ -9,6 +9,7 @@ $page->ForceNoindex();
 $session=new Session();
 // 暫定でログイン＝編集可能
 $page->is_editable=SESSION::isLoggedIn();
+$currentUser=Session::currentUser();
 
 $pdo=getPDO();
 
@@ -39,7 +40,7 @@ $story_list=WorldStory::getAll($pdo);
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<?php if($page->is_editable): ?>
+<?php if($currentUser && $currentUser->canManageMaster()): ?>
 <a href="<?php print $page->to_app_root_path ?>admin/world/list.php">[ワールド管理]</a>
 <a href="<?php print $page->to_app_root_path ?>admin/world_story/list.php">[ストーリー設定管理]</a>
 <a href="<?php print $page->to_app_root_path ?>admin/themes/list.php">[テーマ設定管理]</a>
@@ -66,17 +67,20 @@ $story_list=WorldStory::getAll($pdo);
     <th>初期設定に書出し</th>
     <td>
         <label><input type="radio" name="save_to_file" value="0" checked>しない</label>
-        <label><input type="radio" name="save_to_file" value="1"<?php echo Session::isLoggedIn()?'':' disabled'; ?>>する</label>
+        <label><input type="radio" name="save_to_file" value="1"<?=(Session::isLoggedIn() && $currentUser->canManageSystemSettings())?'':' disabled'; ?>>する</label>
     </td>
     <td colspan="2">初期設定を変更しログアウト後も適用</td>
 </tr>
+<?php
+$canEditStorySettings= Session::isLoggedIn() && $currentUser->canManageSystemSettings();
+?>
 <tr>
     <th>選択した設定にも上書き</th>
     <td>
         <label><input type="radio" name="save_story_is_enabled" value="0" checked onclick="clearElmVal('*[name=save_story_id]');highlightIfNotEmpty('[name=save_story_id]');">しない</label>
-        <label><input type="radio" name="save_story_is_enabled" value="1"<?php echo Session::isLoggedIn()?'':' disabled'; ?>>する</label>
+        <label><input type="radio" name="save_story_is_enabled" value="1"<?=$canEditStorySettings?'':' disabled'; ?>>する</label>
     </td>
-    <td class="in_input"><select name="save_story_id" onchange="clearElmVal('*[name=story_id]');"<?php echo Session::isLoggedIn()?'':' disabled'; ?>>
+    <td class="in_input"><select name="save_story_id" onchange="clearElmVal('*[name=story_id]');"<?=$canEditStorySettings?'':' disabled'; ?>>
     <option value="" selected>未選択</option>
     <?php
     if(count($story_list)>0){
@@ -92,8 +96,8 @@ $story_list=WorldStory::getAll($pdo);
 <tr><td colspan="4" style="text-align: right;">※ 右のチェックボックスにONがある場合、ONの項目だけをプリセット設定にする</td></tr>
 <tr><td colspan="4" style="text-align: right;">
     上書き設定制御：
-    <input type="button" value="オンオフ反転" onclick="save_check_tgl();"<?php echo Session::isLoggedIn()?'':' disabled'; ?>>
-    <input type="button" value="全てオフ（すべて保存対象）に戻す" onclick="save_check_tgl(false);"<?php echo Session::isLoggedIn()?'':' disabled'; ?>></td></tr>
+    <input type="button" value="オンオフ反転" onclick="save_check_tgl();"<?=$canEditStorySettings?'':' disabled'; ?>>
+    <input type="button" value="全てオフ（すべて保存対象）に戻す" onclick="save_check_tgl(false);"<?=$canEditStorySettings?'':' disabled'; ?>></td></tr>
 <tr>
     <th></th>
     <th>現在値</th>

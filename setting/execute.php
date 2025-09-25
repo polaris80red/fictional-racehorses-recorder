@@ -25,6 +25,12 @@ if($story_id>0){
 $save_story_is_enabled=filter_input(INPUT_POST,'save_story_is_enabled',FILTER_VALIDATE_BOOL);
 $save_story_id=filter_input(INPUT_POST,'save_story_id',FILTER_VALIDATE_INT);
 if($save_story_is_enabled && $save_story_id>0 && Session::isLoggedIn()){
+    if(!$currentUser->canManageSystemSettings()){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg('システム設定の変更権限がありません');
+        $page->printCommonErrorPage();
+        exit;
+    }
     $save_target_story=WorldStory::getById($pdo,$save_story_id);
     if($save_target_story!==false){
         $config_json_data=$setting->getSettingArray();
@@ -54,6 +60,12 @@ $setting->saveToSessionAll();
 // ログイン中かつ保存する選択でなければデフォルト値には反映しない
 //（ログアウトやセッションが切れるまでのみ有効）
 if(Session::isLoggedIn() && $save_to_file){
+    if(!$currentUser->canManageSystemSettings()){
+        header("HTTP/1.1 403 Forbidden");
+        $page->addErrorMsg('システム設定の変更権限がありません');
+        $page->printCommonErrorPage();
+        exit;
+    }
     if(DISPLAY_CONFIG_SOURCE==='json'){
         file_put_contents(DISPLAY_CONFIG_JSON_PATH,json_encode($setting->getSettingArray(),JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
     }else{
