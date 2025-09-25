@@ -60,4 +60,11 @@ class User {
         }
         return false;
     }
+    /**
+     * レース情報の削除
+     */
+    public function canDeleteRace():bool {
+        $allowRoles=[Role::Administrator,Role::Maintainer,Role::Editor];
+        return $this->isSuperAdmin?:in_array($this->role,$allowRoles);
+    }
 }
