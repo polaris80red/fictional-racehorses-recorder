@@ -59,6 +59,9 @@ class EnvConfigInitializer {
         define('LOGIN_MAX_FAILED_ATTEMPTS',max((int)$cfg['LOGIN_MAX_FAILED_ATTEMPTS'],0));
         define('LOGIN_LOCK_DURATION_MINUTES',max((int)$cfg['LOGIN_LOCK_DURATION_MINUTES'],0));
 
+        define('LOGIN_IP_MAX_FAILED_ATTEMPTS',max((int)$cfg['LOGIN_IP_MAX_FAILED_ATTEMPTS'],0));
+        define('LOGIN_IP_LOCK_DURATION_MINUTES',max((int)$cfg['LOGIN_IP_LOCK_DURATION_MINUTES'],0));
+
         $app_instance_key=$cfg['APP_INSTANCE_KEY'];
         // 未設定の場合はアプリルートのディレクトリ名を付与する
         define('APP_INSTANCE_KEY',$app_instance_key?:basename(APP_ROOT_DIR));

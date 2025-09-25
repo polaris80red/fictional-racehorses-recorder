@@ -21,6 +21,15 @@ $login_disable_status=(function(){
         return '実行中のコンピューター以外からのログインは設定で禁止されています。';
     }
 })();
+$pdo=getPDO();
+$LoginAttemptIp=new LoginAttemptIp($pdo,$_SERVER['REMOTE_ADDR']);
+$LoginAttemptIpRow=$LoginAttemptIp->get();
+$until=DateTime::createFromFormat('Y-m-d H:i:s',$LoginAttemptIpRow['login_locked_until']??'');
+if(LOGIN_IP_LOCK_DURATION_MINUTES && $until && $until>(new DateTime(PROCESS_STARTED_AT))){
+    header('HTTP/1.1 403 Forbidden');
+    $login_disable_status ="同一IPログイン連続失敗のためログインを制限しています。\n";
+    $login_disable_status.="（".$until->format('Y-m-d H:i:s')."まで）";
+}
 
 ?><!DOCTYPE html>
 <html lang="ja">
@@ -45,7 +54,7 @@ $login_disable_status=(function(){
 <?php if($login_disable_status): ?>
 <p style="color: #CC0000;">
 Access denied:<br>
-<?=h($login_disable_status)?></p>
+<?=nl2br(h($login_disable_status))?></p>
 <?php endif; ?>
 <table>
     <tr>

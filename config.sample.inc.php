@@ -102,12 +102,20 @@ $cfg['DISPLAY_CONFIG_SOURCE'] = 'db';
  *      データベースの共通設定と別の設定を使うために使用します。
  */
 
-// 連続ログイン失敗時のログイン試行ロック
+// 連続ログイン失敗時のログイン試行ロック（アカウント単位）
 $cfg['LOGIN_MAX_FAILED_ATTEMPTS']   = 10;
 $cfg['LOGIN_LOCK_DURATION_MINUTES'] = 30;
 /**
  * LOGIN_MAX_FAILED_ATTEMPTSの回数連続でパスワードを間違えると、
- * そのアカウントはLOGIN_LOCK_DURATION_MINUTESで指定した時間(分単位)の間ログインできなくなります。
+ * そのアカウントはLOGIN_LOCK_DURATION_MINUTESで指定した時間(分単位)後までログインできなくなります。
+ * 0の場合は制限しません。
+ */
+// 連続ログイン失敗時のログイン試行ロック（IP単位）
+$cfg['LOGIN_IP_MAX_FAILED_ATTEMPTS']   = 15;
+$cfg['LOGIN_IP_LOCK_DURATION_MINUTES'] = 30;
+/**
+ * LOGIN_IP_MAX_FAILED_ATTEMPTSの回数連続でログインに失敗すると、
+ * そのIPはLOGIN_IP_LOCK_DURATION_MINUTESで指定した時間(分単位)後までログインできなくなります。
  * 0の場合は制限しません。
  */
 
