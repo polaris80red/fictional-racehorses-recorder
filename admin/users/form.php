@@ -30,7 +30,7 @@ if($editMode){
     $page->title.="（編集）";
     $form_item=($TableClass)::getById($pdo,$inputId);
     if($form_item===false){
-        $page->addErrorMsg("テーマID '{$inputId}' が指定されていますが該当するテーマがありません");
+        $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当するレコードがありません");
     }
 }else{
     $form_item=new ($TableRowClass)();
