@@ -10,7 +10,10 @@ $page->title="{$base_title}｜登録：処理実行";
 
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
-
+if(!Session::currentUser()->canManageMaster()){
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg('マスタ管理権限がありません');
+}
 $pdo=getPDO();
 $id=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
 
