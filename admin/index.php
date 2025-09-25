@@ -63,7 +63,7 @@ $currentUser=Session::currentUser();
         <td>配色CSSファイルやテンプレートの保存先を作成・管理します</td>
     </tr>
     <tr>
-        <th colspan="2">競走馬関連マスタ管理</th>
+        <th colspan="2">マスタ設定</th>
     </tr>
     <tr>
         <td><?=(new MkTagA("所属マスタ管理",InAppUrl::to('admin/affiliation/list.php')));?></td>
@@ -78,22 +78,19 @@ $currentUser=Session::currentUser();
         <td></td>
     </tr>
     <tr>
-        <td><?=(new MkTagA("レース特殊結果マスタ設定",InAppUrl::to('admin/race_special_results/list.php')));?></td>
-        <td></td>
-    </tr>
-    <tr>
-        <th colspan="2">レース情報関連マスタ</th>
-    </tr>
-    <tr>
         <td><?=(new MkTagA("競馬場マスタ管理",InAppUrl::to('admin/race_course/list.php')));?></td>
         <td>競馬場データを管理します</td>
     </tr>
     <tr>
-        <td><?=(new MkTagA("レース格付マスタ管理",InAppUrl::to('admin/race_grade/list.php')));?></td>
+        <th colspan="2">システム系マスタ設定</th>
+    </tr>
+    <tr>
+        <td><?=(new MkTagA("レース特殊結果マスタ設定",InAppUrl::to('admin/race_special_results/list.php')));?></td>
         <td></td>
     </tr>
     <tr>
-        <td colspan="2"></td>
+        <td><?=(new MkTagA("レース格付マスタ管理",InAppUrl::to('admin/race_grade/list.php')));?></td>
+        <td></td>
     </tr>
     <tr>
         <td><?=(new MkTagA("馬齢条件マスタ管理",InAppUrl::to('admin/race_category_age/list.php')));?></td>
