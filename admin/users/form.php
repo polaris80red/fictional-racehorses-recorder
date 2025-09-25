@@ -64,7 +64,7 @@ if($page->error_exists){
 <hr class="no-css-fallback">
 <a href="./list.php">一覧に戻る</a>
 <form method="post" action="./registration_confirm.php">
-<table class="edit-form-table">
+<table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>ID</th>
     <td><?php
@@ -127,7 +127,17 @@ if($page->error_exists){
 </tr>
 <tr><td colspan="2" style="text-align: right;"><input type="submit" value="登録内容確認"></td></tr>
 </table>
+<table class="edit-form-table floatLedt">
+    <tr><th colspan="2">役割・権限情報</th></tr>
+    <?php foreach(Role::RoleInfoList as $row): ?>
+        <tr>
+            <td><?=h($row['name']??'')?></td>
+            <td style="max-width: 250px;"><?=nl2br(h($row['caption']??''))?></td>
+        </tr>
+    <?php endforeach;?>
+</table>
 </form>
+<div style="clear: both;"></div>
 <script>
 $("#date_picker").datepicker({
     changeYear:true,
