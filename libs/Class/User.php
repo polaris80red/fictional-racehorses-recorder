@@ -25,38 +25,39 @@ class User {
      * ユーザー管理を使用可能かどうかの判定
      */
     public function canUserManage():bool {
-        return $this->isSuperAdmin||($this->role===Role::Administrator);
+        $allowRoles=[Role::Administrator];
+        return $this->isSuperAdmin?:in_array($this->role,$allowRoles);
     }
     public function canHorseEdit(HorseRow $horse):bool {
-        if($this->isSuperAdmin){
+        $allowRoles=[Role::Administrator,Role::Maintainer,Role::Editor];
+        if($this->isSuperAdmin||in_array($this->role,$allowRoles)){
             return true;
         }
-        if($this->role===Role::Author && ($horse->created_by??null) !== $this->id){
-            // 投稿者は自身で登録した馬以外は編集不可
-            return false;
+        if($this->role===Role::Author && ($horse->created_by??null) === $this->id){
+            // 投稿者は自身で登録した馬のみ編集可能
+            return true;
         }
-        return true;
+        return false;
     }
     /**
      * ほかのユーザーが登録した競走馬を含む可能性がある一括編集画面を使用可能かどうかの判定
      */
     public function canEditOtherHorse():bool {
-        if($this->isSuperAdmin){
-            return true;
-        }
-        if($this->role===Role::Author){
-            return false;
-        }
-        return true;
+        $allowRoles=[Role::Administrator,Role::Maintainer,Role::Editor];
+        return $this->isSuperAdmin?:in_array($this->role,$allowRoles);
     }
+    /**
+     * レース情報の編集権限
+     */
     public function canEditRace(RaceRow $race):bool {
-        if($this->isSuperAdmin){
+        $allowRoles=[Role::Administrator,Role::Maintainer,Role::Editor];
+        if($this->isSuperAdmin||in_array($this->role,$allowRoles)){
             return true;
         }
-        if($this->role===Role::Author && ($race->created_by??null) !== $this->id){
-            // 投稿者は自身で登録したレース以外は編集不可
-            return false;
+        if($this->role===Role::Author && ($race->created_by??null) === $this->id){
+            // 投稿者は自身で登録したレースのみ編集可能
+            return true;
         }
-        return true;
+        return false;
     }
 }
