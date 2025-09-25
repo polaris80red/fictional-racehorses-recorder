@@ -9,14 +9,17 @@ $page->title="レース格付マスタ｜キー名称の一括変更";
 $page->ForceNoindex();
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
-
+if(!Session::currentUser()->canManageSystemSettings()){
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg('システム設定管理権限がありません');
+}
 $unique_name=filter_input(INPUT_GET,'u_name');
 
 $pdo= getPDO();
-# 対象取得
-do{
-}while(false);
-
+if($page->error_exists){
+    $page->printCommonErrorPage();
+    exit;
+}
 ?><!DOCTYPE html>
 <html>
 <head>
