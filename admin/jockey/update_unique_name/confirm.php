@@ -9,7 +9,10 @@ $page->title="騎手マスタ管理｜キー名称の一括変更：確認";
 $page->ForceNoindex();
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
-
+if(!Session::currentUser()->canManageMaster()){
+    header("HTTP/1.1 403 Forbidden");
+    $page->addErrorMsg('マスタ管理権限がありません');
+}
 $u_name=(string)filter_input(INPUT_POST,'u_name');
 $new_unique_name=trim((string)filter_input(INPUT_POST,'new_unique_name'));
 
