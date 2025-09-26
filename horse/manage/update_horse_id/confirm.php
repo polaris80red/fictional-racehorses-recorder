@@ -30,7 +30,7 @@ do{
         $page->addErrorMsg("入力元ID：{$horse_id}");
         break;
     }
-    if($horse_data && !Session::currentUser()->canHorseEdit($horse_data)){
+    if($horse_data && !Session::currentUser()->canEditHorse($horse_data)){
         header("HTTP/1.1 403 Forbidden");
         $page->addErrorMsg("編集権限がありません");
         break;

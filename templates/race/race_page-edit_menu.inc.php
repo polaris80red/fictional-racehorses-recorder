@@ -46,7 +46,7 @@ if(!empty($session->latest_horse['id'])){
     $latest_horse=Horse::getByHorseId($pdo,$session->latest_horse['id']);
 }
 if($latest_horse){
-    if(!$currentUser->canHorseEdit($latest_horse)){
+    if(!$currentUser->canEditHorse($latest_horse)){
         $a_tag->title("最後に開いた競走馬を編集できる権限がありません")->setStyle('text-decoration','line-through');
     }else if($latest_horse_exists){
         $a_tag->title("最後に開いた競走馬は既に登録されています")->setStyle('text-decoration','line-through');
