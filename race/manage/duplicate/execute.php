@@ -16,6 +16,8 @@ $year=filter_input(INPUT_POST,'year');
 $world_id=filter_input(INPUT_POST,'world_id');
 
 $insert_objs=[];
+$currentUser=Session::currentUser();
+$currentUserId=$currentUser->getId();
 foreach($posted_race_list as $key => $posted_race){
     if(empty($posted_race['save'])){
       continue;
@@ -31,6 +33,8 @@ foreach($posted_race_list as $key => $posted_race){
     $race_obj->year = $year;
     $race_obj->previous_note='';
     $race_obj->after_note='';
+    $race_obj->created_by=$currentUserId;
+    $race_obj->updated_by=$currentUserId;
     $race_obj->created_at=PROCESS_STARTED_AT;
     $race_obj->updated_at=PROCESS_STARTED_AT;
     $insert_objs[]=$race_obj;
