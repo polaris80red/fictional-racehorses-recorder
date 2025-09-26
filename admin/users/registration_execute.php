@@ -68,7 +68,7 @@ if(filter_input(INPUT_POST,'login_url_token_generate',FILTER_VALIDATE_BOOL)){
     // 手動指定の場合
     $form_item->login_url_token=(string)filter_input(INPUT_POST,'login_url_token');
     $tokenCheckUser=Users::getByToken($pdo,$form_item->login_url_token);
-    if($tokenCheckUser && $tokenCheckUser->id!==$form_item->id){
+    if($form_item->login_url_token && $tokenCheckUser && $tokenCheckUser->id!==$form_item->id){
         $page->addErrorMsg("トークンが既存ユーザーと重複しています");
     }
 }
