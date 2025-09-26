@@ -65,7 +65,11 @@ if($save_to_session){
 }
 // デフォルト設定への反映処理
 if($save_to_defaults){
-    (new ConfigTable($pdo))->setTimestamp(PROCESS_STARTED_AT)->saveAllParams($setting->getSettingArray());
+    if(DISPLAY_CONFIG_SOURCE==='json'){
+        file_put_contents(DISPLAY_CONFIG_JSON_PATH,json_encode($setting->getSettingArray(),JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
+    }else{
+        (new ConfigTable($pdo))->setTimestamp(PROCESS_STARTED_AT)->saveAllParams($setting->getSettingArray());
+    }
 }
 if($editMode){
     // 編集モード
