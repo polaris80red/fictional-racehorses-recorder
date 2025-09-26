@@ -9,6 +9,7 @@ $session=new Session();
 $return_url=(string)$session->login_return_url;
 $id=(string)filter_input(INPUT_POST,'id');
 $password=(string)filter_input(INPUT_POST,'password');
+$login_url_token=(string)filter_input(INPUT_POST,'login_url_token');
 $pdo=getPDO();
 $page->setErrorReturnLink('ログインフォームに戻る',InAppUrl::to('sign-in/'));
 
@@ -50,22 +51,14 @@ do{
         ELog::error("IPロック中のログイン試行: REMOTE_ADDR={$_SERVER['REMOTE_ADDR']}, input_username={$id}");
         break;
     }
-    if((new FormCsrfToken())->isValid()==false){
-        $page->addErrorMsg('ログインフォームを更新して再試行してください(CSRFトークンエラー)');
-        break;
-    }
     if($id===''){
+        header('HTTP/1.1 403 Forbidden');
         $page->addErrorMsg('ユーザー名未入力');
         break;
     }
-    try {
-        // ユーザーテーブル自体が未作成の場合も設定ファイルの固定管理者での最低限の使用は可能にする
-        $user=Users::getByUsername($pdo,$id);
-    } catch (Exception $e) {
-        $user=false;
-    }
+    $user=Users::getByUsername($pdo,$id);
     /**
-     * ログイン成功・失敗時のユーザーレコード更新処理
+     * ログイン成功・失敗時のユーザーレコード更新処理クラス
      */
     $userUpdater=new class($pdo,$user){
         private PDO $pdo;
@@ -85,7 +78,7 @@ do{
                 if($this->user->failed_login_attempts>=LOGIN_MAX_FAILED_ATTEMPTS){
                     $this->user->failed_login_attempts=0;
                     $limit=LOGIN_LOCK_DURATION_MINUTES;
-                    $this->user->login_locked_until=(new DateTime())->modify("+{$limit}min")->format('Y-m-d H:i:s');
+                    $this->user->login_locked_until=(new DateTime(PROCESS_STARTED_AT))->modify("+{$limit}min")->format('Y-m-d H:i:s');
                     ELog::error("連続ログイン失敗によりロック開始:username={$this->user->username}, REMOTE_ADDR={$_SERVER['REMOTE_ADDR']}");
                 }
             }
@@ -104,7 +97,7 @@ do{
     };
     if($user && LOGIN_LOCK_DURATION_MINUTES){
         $login_locked_until=DateTime::createFromFormat('Y-m-d H:i:s',$user->login_locked_until?:'');
-        if($login_locked_until && $login_locked_until>(new DateTime())){
+        if($login_locked_until && $login_locked_until > $nowDateTime){
             header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('連続ログイン失敗により一時的にログインを禁止しています');
             ELog::error("ロック中のログイン試行:username={$user->username}, REMOTE_ADDR={$_SERVER['REMOTE_ADDR']}");
@@ -112,11 +105,11 @@ do{
         }
     }
     if($id===ADMINISTRATOR_USER){
-        // SuperAdminの場合のログイン処理
+        // SuperAdminの場合のログイン処理（期限や有効無効チェックを行わず設定ファイルのパスワードを適用する）
         if(ADMINISTRATOR_PASS==='' && $password===''){
             // パスワード未設定ではパスワードなしで通す
         }else if(!password_verify($password,ADMINISTRATOR_PASS)){
-            $userUpdater->failed();
+            $userUpdater->failed(); // 同ユーザー名のレコードがある場合は管理者も連続ログイン失敗回数判定を利用
             header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('ID・パスワードを確認してください');
             break;
@@ -130,20 +123,25 @@ do{
             break;
         }
         if(!$user->is_enabled){
-            // 無効化されている
+            // ユーザーが無効化されている
             header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('このアカウントは現在利用できません');
             break;
         }
-        if($user->login_enabled_until!=null){
-            $until=DateTime::createFromFormat('Y-m-d H:i:s',$user->login_enabled_until);
-            $now=new DateTime();
-            if($until && $now>$until){
-                // 期限切れ
-                header('HTTP/1.1 403 Forbidden');
-                $page->addErrorMsg('アカウントの利用可能期限が切れています');
-                break;
-            }
+        $until=DateTime::createFromFormat('Y-m-d H:i:s',$user->login_enabled_until??'');
+        if($until && $nowDateTime>$until){
+            // 期限切れ
+            header('HTTP/1.1 403 Forbidden');
+            $page->addErrorMsg('アカウントの利用可能期限が切れています');
+            break;
+        }
+        if($user && $user->login_url_token && $user->login_url_token!==$login_url_token){
+            // 専用URLのあるユーザーは専用URL以外からのアクセスを弾く
+            // 専用URL外からのアクセスはユーザー単位の失敗回数にはカウントしない
+            header('HTTP/1.1 403 Forbidden');
+            $page->setErrorReturnLink('トップに戻る',InAppUrl::to());
+            $page->addErrorMsg("このユーザー '{$user->username}' は専用URLからログインしてください");
+            break;
         }
         if(!password_verify($password,$user->password_hash)){
             $userUpdater->failed();

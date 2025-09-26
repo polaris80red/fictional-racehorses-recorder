@@ -48,6 +48,30 @@ $datetime=$login_enabled_until===''?false:DateTime::createFromFormat('Y-m-d H:i:
 if($datetime){
     $form_item->login_enabled_until=$datetime->format('Y-m-d H:i:s');
 }
+if(filter_input(INPUT_POST,'login_url_token_generate',FILTER_VALIDATE_BOOL)){
+    $bytes=16;
+    $maxRetry=100;
+    $i=0;
+    do{
+        $token = base64_encode(random_bytes($bytes));
+        $token = strtr($token, '+=/', '--.');
+        if(Users::getByToken($pdo,$token)===false){
+            $form_item->login_url_token=$token;
+            break;
+        }
+        $i++;
+    }while($i<$maxRetry);
+    if($i>=$maxRetry){
+        $page->addErrorMsg("自動生成トークンの重複再生成の回数が規定を超えたため中止しました");
+    }
+}else{
+    // 手動指定の場合
+    $form_item->login_url_token=(string)filter_input(INPUT_POST,'login_url_token');
+    $tokenCheckUser=Users::getByToken($pdo,$form_item->login_url_token);
+    if($tokenCheckUser && $tokenCheckUser->id!==$form_item->id){
+        $page->addErrorMsg("トークンが既存ユーザーと重複しています");
+    }
+}
 $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 do{
     if(!(new FormCsrfToken())->isValid()){
@@ -69,15 +93,94 @@ $form_item->updated_at=PROCESS_STARTED_AT;
 if($editMode){
     // 編集モード
     $result = ($TableClass)::UpdateFromRowObj($pdo,$form_item);
-    if($result){
-        redirect_exit("./list.php");
-    }
 }else{
     // 新規登録モード
     $form_item->created_by = $form_item->updated_by;
     $form_item->created_at = $form_item->updated_at;
     $result = ($TableClass)::InsertFromRowObj($pdo,$form_item);
-    if($result){
-        redirect_exit("./list.php");
-    }
 }
+?><!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title><?php $page->printTitle();  ?></title>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-language" content="ja">
+    <?=$page->getMetaNoindex()?>
+    <?php $page->printBaseStylesheetLinks(); ?>
+    <?php $page->printJqueryResource(); ?>
+    <?php $page->printScriptLink('js/functions.js'); ?>
+</head>
+<body>
+<header>
+<?php $page->printHeaderNavigation(); ?>
+<h1 class="page_title"><?php $page->printTitle(); ?></h1>
+</header>
+<main id="content">
+<hr class="no-css-fallback">
+<p>登録が完了しました。</p>
+<a href="./list.php">一覧へ戻る</a>
+<form>
+<table class="edit-form-table">
+<tr>
+    <th>ログインユーザー名</th>
+    <td><?php HTPrint::HiddenAndText('username',$form_item->username); ?></td>
+</tr>
+<tr>
+    <th>パスワード</th>
+    <td><?php HTPrint::Hidden('password',$password); ?><?=str_repeat('*',mb_strlen($password))?></td>
+</tr>
+<tr>
+    <th>表示名</th>
+    <td><?php HTPrint::HiddenAndText('display_name',$form_item->display_name); ?></td>
+</tr>
+<tr>
+    <th>役割・権限</th>
+    <td>
+        <?php HTPrint::Hidden('role',$form_item->role);?>
+        <?=h(Role::RoleInfoList[$form_item->role]['name']??'')?>
+    </td>
+</tr>
+<tr>
+    <th>ログイン可能期限</th>
+    <?php
+        $datetime=Datetime::createFromFormat('Y-m-d H:i:s',$form_item->login_enabled_until??'');
+        $dateStr=$datetime===false?'':$datetime->format('Y-m-d');
+    ?>
+    <td>
+        <?php HTPrint::Hidden('login_enabled_until',$datetime===false?'':$datetime->format('Y-m-d H:i:s')); ?>
+        <?=$datetime===false?'':$datetime->format('Y-m-d')?>
+    </td>
+</tr>
+<tr>
+    <th>利用可否</th>
+    <td><?php
+        HTPrint::Hidden('is_enabled',$form_item->is_enabled);
+        print $form_item->is_enabled?'有効':'無効';
+    ?></td>
+</tr>
+</table>
+<?php if($form_item->login_url_token):?>
+<table class="edit-form-table">
+<tr>
+    <th>専用ログインURL</th>
+    <td><input type="button" value="クリップボードにコピー" onclick="copyToClipboard('#login_url');"></td>
+</tr>
+<tr>
+    <?php
+    $url=getSignInURL(3,['t'=>$form_item->login_url_token]);
+    ?>
+    <td colspan="2">
+        <?=h($url)?><input type="hidden" id="login_url" value="<?=h($url)?>"><br>
+    </td>
+</tr>
+</table>
+<?php endif;?>
+</form>
+<a href="./list.php">一覧へ戻る</a>
+<hr class="no-css-fallback">
+</main>
+<footer>
+<?php $page->printFooterHomeLink(); ?>
+</footer>
+</body>
+</html>
