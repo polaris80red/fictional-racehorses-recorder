@@ -510,7 +510,7 @@ function randomSet(){
     $('input#dice_result').val(dice_str_1);
 }
 </script>
-<?php if($is_edit_mode): ?>
+<?php if($is_edit_mode && Session::currentUser()->canDeleteRaceResult($horse)): ?>
 <form action="./delete/" method="post" style="text-align:right;">
 <input type="hidden" name="race_id" value="<?=h($race_result_id)?>">
 <input type="hidden" name="horse_id" value="<?=h($horse_id)?>">
