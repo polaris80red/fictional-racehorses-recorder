@@ -83,7 +83,7 @@ th{ background-color: #EEE;}
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<p>[<?=h($world['name'])?>]に以下のレースを登録しました。</p>
+<p>[<?=h($world->name)?>]に以下のレースを登録しました。</p>
 <table>
 <tr>
   <th>ID</th>
