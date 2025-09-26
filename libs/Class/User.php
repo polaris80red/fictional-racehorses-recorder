@@ -27,7 +27,7 @@ class User {
     /**
      * ユーザー管理を使用可能かどうかの判定
      */
-    public function canUserManage():bool {
+    public function canManageUser():bool {
         $allowRoles=[Role::Administrator];
         return $this->isSuperAdmin?:in_array($this->role,$allowRoles);
     }

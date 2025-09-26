@@ -41,7 +41,7 @@ $currentUser=Session::currentUser();
         <td>どのワールドを表示するかや、年の範囲・日付形式などを設定します</td>
     </tr>
     <tr>
-        <td><?=(new MkTagA("ユーザーアカウント管理",!$currentUser->canUserManage()?'':InAppUrl::to('admin/users/list.php')));?></td>
+        <td><?=(new MkTagA("ユーザーアカウント管理",!$currentUser->canManageUser()?'':InAppUrl::to('admin/users/list.php')));?></td>
         <td>ユーザーアカウントを管理します</td>
     </tr>
     <tr>

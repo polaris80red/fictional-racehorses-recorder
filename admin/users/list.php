@@ -11,7 +11,7 @@ $page->ForceNoindex();
 
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $currentUser=Session::currentUser();
-if(!$currentUser->canUserManage()){
+if(!$currentUser->canManageUser()){
     $page->setErrorReturnLink('管理画面に戻る',InAppUrl::to('admin/'));
     $page->error_msgs[]="ユーザー管理には管理者権限が必要です。";
     header("HTTP/1.1 403 Forbidden");
