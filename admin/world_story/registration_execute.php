@@ -58,7 +58,7 @@ if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }
-$setting->setByStdClass($story->config_json);
+$setting->setByStdClass($story->getDecodedConfig());
 // 現在のセッションへの反映処理
 if($save_to_session){
     $setting->saveToSessionAll();
