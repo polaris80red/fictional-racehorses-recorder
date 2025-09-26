@@ -276,13 +276,12 @@ if(count($affiliation_list)>0){
 <hr style="clear: both;">
 <input type="submit" value="競走馬データ登録内容確認">
 </form>
-<?php if($is_edit_mode){ ?>
-<hr>
+<?php if($is_edit_mode && Session::currentUser()->canDeleteHorse($horse)):?>
 <form action="../delete/" method="post" style="text-align:right;">
 <input type="hidden" name="horse_id" value="<?=h($horse_id)?>">
 <input type="submit" value="競走馬データ削除確認" style="color:red;">
 </form>
-<?php } ?>
+<?php endif;?>
 <script>
 $(function() {
   $('input[type="number"]').on('input', function() {
