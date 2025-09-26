@@ -31,7 +31,7 @@ class User {
         $allowRoles=[Role::Administrator];
         return $this->isSuperAdmin?:in_array($this->role,$allowRoles);
     }
-    public function canHorseEdit(HorseRow $horse):bool {
+    public function canEditHorse(HorseRow $horse):bool {
         $allowRoles=[Role::Administrator,Role::Maintainer,Role::Editor];
         if($this->isSuperAdmin||in_array($this->role,$allowRoles)){
             return true;

@@ -31,7 +31,7 @@ if(ENABLE_ACCESS_COUNTER){
     ArticleCounter::countup($pdo,ArticleCounter::TYPE_HORSE_RESULTS_DETAIL,$horse_id);
 }
 // 編集可否チェック
-$page->is_editable=Session::isLoggedIn() && Session::currentUser()->canHorseEdit($horse);
+$page->is_editable=Session::isLoggedIn() && Session::currentUser()->canEditHorse($horse);
 
 // ログイン中でも強制的にプレビュー表示にできるパラメータ
 $is_preview=filter_input(INPUT_GET,'preview',FILTER_VALIDATE_BOOL);
