@@ -90,6 +90,20 @@ if($page->error_exists){
 </tr>
 <?php endif;?>
 <tr>
+    <th rowspan="2">専用ログインページ<br>URLトークン</th>
+    <td class="in_input"><input type="text" name="login_url_token" value="<?=h($form_item->login_url_token)?>"></td>
+</tr>
+<tr>
+    <td>
+        <input type="hidden" name="login_url_token_generate" value="0">
+        <label><?php
+        $radio=(new MkTagInput('checkbox','login_url_token_generate',1))->checked(false);
+        $radio->print();
+        ?>自動生成する</label>
+    </td>
+</tr>
+<tr><td colspan="2">※設定時は専用URLからのみログイン可能</td></tr>
+<tr>
     <th>表示名</th>
     <td class="in_input"><input type="text" name="display_name" class="required" value="<?=h($form_item->display_name)?>" required></td>
 </tr>
@@ -136,8 +150,26 @@ if($page->error_exists){
         </tr>
     <?php endforeach;?>
 </table>
-</form>
+</table>
 <div style="clear: both;"></div>
+<?php if($form_item->login_url_token):?>
+<hr>
+<table class="edit-form-table">
+<tr>
+    <th>現在の専用ログインURL</th>
+    <td><input type="button" value="クリップボードにコピー" onclick="copyToClipboard('#login_url');"></td>
+</tr>
+<tr>
+    <?php
+    $url=getSignInURL(3,['t'=>$form_item->login_url_token]);
+    ?>
+    <td colspan="2">
+        <?=h($url)?><input type="hidden" id="login_url" value="<?=h($url)?>"><br>
+    </td>
+</tr>
+</table>
+<?php endif;?>
+</form>
 <script>
 $("#date_picker").datepicker({
     changeYear:true,

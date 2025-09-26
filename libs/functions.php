@@ -10,6 +10,18 @@ function ifZero2Empty($var){
 function printResultClass($int){
     print getResultClass($int);
 }
+/**
+ * ログインページの絶対URLを返す
+ * @param int $hierarchyNnumberFromAppRoot 呼び出し元ページの階層
+ * @param array $addParams URLパラメータとして付与する配列
+ */
+function getSignInURL(int $hierarchyNnumberFromAppRoot,array $addParams){
+    $url =($_SERVER['HTTPS']?'https://':'http://');
+    $url.=$_SERVER['HTTP_HOST'].dirname($_SERVER['REQUEST_URI'],$hierarchyNnumberFromAppRoot);
+    $url.='/sign-in/?';
+    $url.=http_build_query($addParams);
+    return $url;
+}
 function tmpModifyFormat(DateTime $dateTime,string $modify,string $format=''){
     $tmpDateTime = clone $dateTime;
     $tmpDateTime->modify($modify);

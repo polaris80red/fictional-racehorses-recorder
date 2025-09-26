@@ -19,4 +19,11 @@ class Users extends Table{
         }
         return (new (static::ROW_CLASS))->setFromArray($result);
     }
+    public static function getByToken(PDO $pdo, $login_url_token){
+        $result = self::getByUniqueKey($pdo,'login_url_token',$login_url_token,PDO::PARAM_STR);
+        if($result==false){
+            return false;
+        }
+        return (new (static::ROW_CLASS))->setFromArray($result);
+    }
 }

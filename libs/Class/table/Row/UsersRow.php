@@ -7,6 +7,7 @@ class UsersRow extends TableRow {
         'display_name',
         'login_enabled_from',
         'login_enabled_until',
+        'login_url_token',
         'last_login_at',
         'login_locked_until',
         'created_at',
@@ -27,6 +28,7 @@ class UsersRow extends TableRow {
     public int|null $role = null;
     public string|null $login_enabled_from = null;
     public string|null $login_enabled_until = null;
+    public string|null $login_url_token = null;
     public string|null $last_login_at = null;
     public int $failed_login_attempts = 0;
     public string|null $login_locked_until = null;
@@ -40,6 +42,7 @@ class UsersRow extends TableRow {
     {
         $this->validateStrLength($this->username,'ログインユーザー名',50);
         $this->validateStrLength($this->display_name,'表示名',50);
+        $this->validateStrLength($this->login_url_token,'ログインURLトークン',100);
         return !$this->hasErrors;
     }
 }

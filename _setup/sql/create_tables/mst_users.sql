@@ -16,6 +16,7 @@ CREATE TABLE `mst_users` (
   `role` int(11) DEFAULT NULL COMMENT '権限・役割',
   `login_enabled_from` datetime DEFAULT NULL COMMENT 'ログイン可能期間の開始日時',
   `login_enabled_until` datetime DEFAULT NULL COMMENT 'ログイン可能期間の終了日時',
+  `login_url_token` varchar(100) DEFAULT NULL COMMENT '専用ログインURLのトークン',
   `last_login_at` datetime DEFAULT NULL COMMENT '最終ログイン日時',
   `failed_login_attempts` int(11) NOT NULL DEFAULT 0 COMMENT '連続ログイン失敗回数',
   `login_locked_until` datetime DEFAULT NULL COMMENT 'ログイン禁止の終了日時',

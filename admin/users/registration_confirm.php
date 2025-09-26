@@ -50,6 +50,22 @@ $datetime=$login_enabled_until===''?false:DateTime::createFromFormat('Y-m-d H:i:
 if($datetime){
     $form_item->login_enabled_until=$datetime->format('Y-m-d H:i:s');
 }
+
+$login_url_token=(string)filter_input(INPUT_POST,'login_url_token');
+$login_url_token_generate=false;
+if(filter_input(INPUT_POST,'login_url_token_generate',FILTER_VALIDATE_BOOL)){
+    $login_url_token_generate=true;
+    $form_item->login_url_token='';
+}else{
+    $form_item->login_url_token=$login_url_token;
+    $tokenCheckUser=Users::getByToken($pdo,$form_item->login_url_token);
+    if($tokenCheckUser && $tokenCheckUser->id!==$form_item->id){
+        $page->addErrorMsg("トークンが既存ユーザーと重複しています");
+    }
+}
+if($form_item->role===Role::GuestAuthor && $form_item->login_enabled_until==''){
+    $page->addErrorMsg("ゲスト投稿者権限のユーザーには必ず期限を制限してください");
+}
 $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 
 do{
@@ -101,6 +117,14 @@ if($page->error_exists){
 <tr>
     <th>パスワード</th>
     <td><?php HTPrint::Hidden('password',$password); ?><?=str_repeat('*',mb_strlen($password))?></td>
+</tr>
+<tr>
+    <th>専用ログインページ<br>URLトークン</th>
+    <td>
+        <?php HTPrint::Hidden('login_url_token',$form_item->login_url_token);?>
+        <?php HTPrint::Hidden('login_url_token_generate',$login_url_token_generate);?>
+        <?=h($login_url_token_generate?'自動生成する':$form_item->login_url_token)?>
+    </td>
 </tr>
 <tr>
     <th>表示名</th>
