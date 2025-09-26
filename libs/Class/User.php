@@ -41,6 +41,14 @@ class User {
         if(in_array($this->role,$roles) && ($horse->created_by??null) === $this->id){
             return true;
         }
+        // 自身が1日以内に登録した競走馬と戦績のみ編集可能な権限
+        if($this->role===Role::GuestAuthor && ($horse->created_by??null) === $this->id){
+            $checkDateTime=DateTime::createFromFormat('Y-m-d H:i:s',$horse->created_at??'');
+            $now=new DateTime(PROCESS_STARTED_AT);
+            if($checkDateTime && $checkDateTime->modify('+1day')>$now){
+                return true;
+            }
+        }
         return false;
     }
     /**
@@ -77,6 +85,14 @@ class User {
         $roles=[Role::Author];
         if(in_array($this->role,$roles) && ($race->created_by??null) === $this->id){
             return true;
+        }
+        // 自身が1日以内に登録したレースのみ編集可能な権限
+        if($this->role===Role::GuestAuthor && ($race->created_by??null) === $this->id){
+            $checkDateTime=DateTime::createFromFormat('Y-m-d H:i:s',$race->created_at??'');
+            $now=new DateTime(PROCESS_STARTED_AT);
+            if($checkDateTime && $checkDateTime->modify('+1day')>$now){
+                return true;
+            }
         }
         return false;
     }
