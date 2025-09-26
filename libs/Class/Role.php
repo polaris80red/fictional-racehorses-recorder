@@ -7,6 +7,7 @@ class Role {
     const Maintainer=2;
     const Editor=3;
     const Author=4;
+    const GuestAuthor=5;
 
     const RoleInfoList=[
         self::Administrator=>[
@@ -24,6 +25,10 @@ class Role {
         self::Author=>[
             'name'=>'投稿者',
             'caption'=>"自分が登録した馬とその戦績、および自分が登録したレースのみ編集可。レース削除不可",
+        ],
+        self::GuestAuthor=>[
+            'name'=>'ゲスト投稿者(非推奨)',
+            'caption'=>"自分が直近1日以内に登録した馬関連とレースのみ編集可。削除は全て不可",
         ],
     ];
 }
