@@ -36,8 +36,24 @@ class User {
         if($this->isSuperAdmin||in_array($this->role,$allowRoles)){
             return true;
         }
-        if($this->role===Role::Author && ($horse->created_by??null) === $this->id){
-            // 投稿者は自身で登録した馬のみ編集可能
+        // 自身で登録した馬のみ編集可能な権限
+        $roles=[Role::Author];
+        if(in_array($this->role,$roles) && ($horse->created_by??null) === $this->id){
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 競走馬データの削除権限判定
+     */
+    public function canDeleteHorse(HorseRow $horse):bool {
+        $allowRoles=[Role::Administrator,Role::Maintainer,Role::Editor];
+        if($this->isSuperAdmin||in_array($this->role,$allowRoles)){
+            return true;
+        }
+        // 自身で登録した馬のみ削除可能な権限
+        $roles=[Role::Author];
+        if(in_array($this->role,$roles) && ($horse->created_by??null) === $this->id){
             return true;
         }
         return false;
@@ -57,8 +73,9 @@ class User {
         if($this->isSuperAdmin||in_array($this->role,$allowRoles)){
             return true;
         }
-        if($this->role===Role::Author && ($race->created_by??null) === $this->id){
-            // 投稿者は自身で登録したレースのみ編集可能
+        // 自身で登録したレースのみ編集可能な権限
+        $roles=[Role::Author];
+        if(in_array($this->role,$roles) && ($race->created_by??null) === $this->id){
             return true;
         }
         return false;
@@ -69,6 +86,21 @@ class User {
     public function canDeleteRace():bool {
         $allowRoles=[Role::Administrator,Role::Maintainer,Role::Editor];
         return $this->isSuperAdmin?:in_array($this->role,$allowRoles);
+    }
+    /**
+     * レース個別結果の削除
+     */
+    public function canDeleteRaceResult(HorseRow $horse):bool {
+        $allowRoles=[Role::Administrator,Role::Maintainer,Role::Editor];
+        if($this->isSuperAdmin||in_array($this->role,$allowRoles)){
+            return true;
+        }
+        // 自身で登録した馬の結果のみ削除可能な権限
+        $roles=[Role::Author];
+        if(in_array($this->role,$roles) && ($horse->created_by??null) === $this->id){
+            return true;
+        }
+        return false;
     }
     /**
      * 通常マスタの管理権限
