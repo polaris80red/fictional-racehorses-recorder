@@ -16,16 +16,15 @@ $page->setErrorReturnLink('ログインフォームに戻る',InAppUrl::to('sign
 $page->title="ログイン実行";
 $LoginAttemptIp=new LoginAttemptIp($pdo,$_SERVER['REMOTE_ADDR']);
 $LoginAttemptIpRow=$LoginAttemptIp->get();
+$errorHeader='HTTP/1.1 403 Forbidden';
 do{
     if(READONLY_MODE){
-        header('HTTP/1.1 403 Forbidden');
         $msg ="読み取り専用モードのためログインできません。\n";
         $msg.="設定ファイルの 'READONLY_MODE' を確認してください。";
         $page->addErrorMsg($msg);
         break;
     }
     if(!ALLOW_REMOTE_EDITOR_LOGIN && is_remote_access()){
-        header('HTTP/1.1 403 Forbidden');
         $msg ="実行中のコンピューター以外からのログインは設定で禁止されています。\n";
         $msg.="設定ファイルの 'ALLOW_REMOTE_EDITOR_LOGIN' を確認してください。";
         $page->addErrorMsg($msg);
@@ -34,13 +33,11 @@ do{
     $ipLoginLockedUntil=DateTime::createFromFormat('Y-m-d H:i:s',$LoginAttemptIpRow['login_locked_until']??'');
     $nowDateTime=new DateTime(PROCESS_STARTED_AT);
     if($ipLoginLockedUntil && $ipLoginLockedUntil>$nowDateTime){
-        header('HTTP/1.1 403 Forbidden');
         $page->addErrorMsg('同一IPの連続ログイン失敗により一時的にログインを禁止しています');
         ELog::error("IPロック中のログイン試行: REMOTE_ADDR={$_SERVER['REMOTE_ADDR']}, input_username={$id}");
         break;
     }
     if($id===''){
-        header('HTTP/1.1 403 Forbidden');
         $page->addErrorMsg('ユーザー名未入力');
         break;
     }
@@ -86,7 +83,6 @@ do{
     if($user && LOGIN_LOCK_DURATION_MINUTES){
         $login_locked_until=DateTime::createFromFormat('Y-m-d H:i:s',$user->login_locked_until?:'');
         if($login_locked_until && $login_locked_until > $nowDateTime){
-            header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('連続ログイン失敗により一時的にログインを禁止しています');
             ELog::error("ロック中のログイン試行:username={$user->username}, REMOTE_ADDR={$_SERVER['REMOTE_ADDR']}");
             break;
@@ -95,7 +91,6 @@ do{
     if($id===ADMINISTRATOR_USER){
         // SuperAdminの場合のログイン処理（期限や有効無効チェックを行わず設定ファイルのパスワードを適用する）
         if(ALLOW_REMOTE_EDITOR_LOGIN && ADMINISTRATOR_PASS===''){
-            header('HTTP/1.1 403 Forbidden');
             $msg ="[設定エラー]\n";
             $msg.="リモートログインを許可している場合に使用できないパスワードが設定されています。\n";
             $msg.="設定ファイルの 'ALLOW_REMOTE_EDITOR_LOGIN','ADMINISTRATOR_PASS' を確認してください。";
@@ -104,7 +99,6 @@ do{
         }
         if(ADMINISTRATOR_ALLOWED_IPS!=[]){
             if(in_array($_SERVER['REMOTE_ADDR'],ADMINISTRATOR_ALLOWED_IPS)===false){
-                header('HTTP/1.1 403 Forbidden');
                 $msg ="このユーザーは現在のIPアドレス {$_SERVER['REMOTE_ADDR']} からはログインできません。\n";
                 $msg.="設定ファイルの 'ADMINISTRATOR_ALLOWED_IPS' を確認してください。";
                 $page->addErrorMsg($msg);
@@ -115,7 +109,6 @@ do{
             // パスワード未設定ではパスワードなしで通す
         }else if(!password_verify($password,ADMINISTRATOR_PASS)){
             $userUpdater->failed(); // 同ユーザー名のレコードがある場合は管理者も連続ログイン失敗回数判定を利用
-            header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('ID・パスワードを確認してください');
             break;
         }
@@ -123,34 +116,29 @@ do{
     }else{
         if(!$user){
             // 該当ユーザーなし
-            header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('ID・パスワードを確認してください');
             break;
         }
         if(!$user->is_enabled){
             // ユーザーが無効化されている
-            header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('このアカウントは現在利用できません');
             break;
         }
         $until=DateTime::createFromFormat('Y-m-d H:i:s',$user->login_enabled_until??'');
         if($until && $nowDateTime>$until){
             // 期限切れ
-            header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('アカウントの利用可能期限が切れています');
             break;
         }
         if($user && $user->login_url_token && $user->login_url_token!==$login_url_token){
             // 専用URLのあるユーザーは専用URL以外からのアクセスを弾く
             // 専用URL外からのアクセスはユーザー単位の失敗回数にはカウントしない
-            header('HTTP/1.1 403 Forbidden');
             $page->setErrorReturnLink('トップに戻る',InAppUrl::to());
             $page->addErrorMsg("このユーザー '{$user->username}' は専用URLからログインしてください");
             break;
         }
         if(!password_verify($password,$user->password_hash)){
             $userUpdater->failed();
-            header('HTTP/1.1 403 Forbidden');
             $page->addErrorMsg('ID・パスワードを確認してください');
             break;
         }
@@ -174,4 +162,5 @@ if(LOGIN_IP_MAX_FAILED_ATTEMPTS && LOGIN_IP_LOCK_DURATION_MINUTES){
         $LoginAttemptIp->increment();
     }
 }
+header($errorHeader);
 $page->printCommonErrorPage();
