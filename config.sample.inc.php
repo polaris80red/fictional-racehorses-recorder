@@ -79,9 +79,9 @@ $cfg['LOG_LEVEL']=0;
  *      0:ログを出力しない
  *     -1:全て出力 */
 
-// 管理者ログインユーザーID
+// 固定管理者のログインユーザーID
 $cfg['ADMINISTRATOR_USER'] ='admin';
-// 管理者ログインパスワード
+// 固定管理者のログインパスワード
 $cfg['ADMINISTRATOR_PASS'] ='';
 /**   ADMINISTRATOR_PASS
  * パスワードをpassword_hashで処理したハッシュ値を記載します。
@@ -92,6 +92,12 @@ $cfg['ADMINISTRATOR_PASS'] ='';
  */
 //$cfg['ADMINISTRATOR_PASS'] =password_hash('admin',PASSWORD_DEFAULT);
 
+// 固定管理者のログインを許可するIP（空は無制限）
+$cfg['ADMINISTRATOR_ALLOWED_IPS'] = [];
+/**   ADMINISTRATOR_ALLOWED_IPS
+ * この設定ファイルで指定したADMINISTRATOR_USERは、
+ * ADMINISTRATOR_ALLOWED_IPSのリストに追加したIPからしかログインできなくなります。
+ */
 
 // デフォルトの表示設定の保存・読み込み先
 $cfg['DISPLAY_CONFIG_SOURCE'] = 'db';

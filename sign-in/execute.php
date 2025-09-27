@@ -106,6 +106,15 @@ do{
     }
     if($id===ADMINISTRATOR_USER){
         // SuperAdminの場合のログイン処理（期限や有効無効チェックを行わず設定ファイルのパスワードを適用する）
+        if(ADMINISTRATOR_ALLOWED_IPS!=[]){
+            if(in_array($_SERVER['REMOTE_ADDR'],ADMINISTRATOR_ALLOWED_IPS)===false){
+                header('HTTP/1.1 403 Forbidden');
+                $msg ="このユーザーは現在のIPアドレス {$_SERVER['REMOTE_ADDR']} からはログインできません。\n";
+                $msg.="設定ファイルの 'ADMINISTRATOR_ALLOWED_IPS' を確認してください。";
+                $page->addErrorMsg($msg);
+                break;
+            }
+        }
         if(ADMINISTRATOR_PASS==='' && $password===''){
             // パスワード未設定ではパスワードなしで通す
         }else if(!password_verify($password,ADMINISTRATOR_PASS)){
