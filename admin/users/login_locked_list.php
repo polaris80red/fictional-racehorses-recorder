@@ -5,8 +5,7 @@ InAppUrl::init(2);
 $page=new Page(2);
 $setting=new Setting();
 $page->setSetting($setting);
-$base_title="ユーザーアカウント";
-$page->title="{$base_title}一覧";
+$page->title="一時ロック中・候補アカウント一覧";
 $page->ForceNoindex();
 
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
@@ -18,10 +17,14 @@ if(!$currentUser->canManageUser()){
     $page->printCommonErrorPage();
     exit;
 }
-
 $pdo=getPDO();
 
-$tableData=Users::getAll($pdo,true);
+$sql="SELECT * FROM ".Users::QuotedTable();
+$sql.=" WHERE `login_locked_until` IS NOT NULL OR `failed_login_attempts` > 0";
+$sql.=" ORDER BY `login_locked_until` ASC;";
+$stmt=$pdo->prepare($sql);
+$stmt->execute();
+$tableData=$stmt->fetchAll();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -33,11 +36,7 @@ $tableData=Users::getAll($pdo,true);
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink('js/functions.js'); ?>
     <style>
-        tr.super_admin td:nth-child(2){ color: red; background-color: #ffffa0ff; }
-        tr.super_admin td:nth-child(n+4):nth-last-child(n+3){
-            background-color: #EEE;
-            text-decoration: line-through;
-        }
+        td.col_failed_login_attempts { text-align: right; }
     </style>
 </head>
 <body>
@@ -47,42 +46,45 @@ $tableData=Users::getAll($pdo,true);
 </header>
 <main id="content">
 <hr class="no-css-fallback">
+連続でのログイン失敗が継続中か、規定回数に達して制限されて以降未ログインのアカウントの一覧です。
+<hr>
+<a href="./list.php">ユーザーアカウント一覧に戻る</a>
 <table class="admin-master-list">
     <tr>
         <th>ID</th>
         <th>ログインID</th>
         <th>表示名</th>
         <th>役割・権限</th>
-        <th>ログイン可能期限</th>
-        <th>利用可否</th>
-        <th>最終ログイン</th>
+        <th>連続失敗<br>回数</th>
+        <th>ログイン制限<br>終了日時</th>
+        <th>最終ログイン成功</th>
         <th></th>
     </tr>
     <?php foreach($tableData as $row): ?>
         <?php
             $user=(new UsersRow())->setFromArray($row);
-            $url="./form.php?id={$user->id}";
+            $edit_url="./form.php?id={$user->id}";
         ?>
         <tr class="<?=$user->is_enabled?'':'disabled';?><?=$user->username===ADMINISTRATOR_USER?' super_admin':''?>">
             <td><?=h($user->id)?></td>
             <td <?=$user->username===ADMINISTRATOR_USER?'title="管理者アカウント"':''?>><?=h($user->username)?></td>
             <td><?=h($user->display_name)?></td>
             <td><?=h(Role::RoleInfoList[$user->role]['name']??'')?></td>
+            <td class="col_failed_login_attempts"><?=h($user->failed_login_attempts)?>回</td>
             <?php
-                $datetime=Datetime::createFromFormat('Y-m-d H:i:s',$user->login_enabled_until??'');
-                $dateStr=$datetime===false?'':$datetime->format('Y-m-d');
+                $datetime=Datetime::createFromFormat('Y-m-d H:i:s',$user->login_locked_until??'');
+                $dateStr=$datetime===false?'':($datetime->format('Y/m/d H:i:s')."まで");
+            ?>
+            <td style="<?=$datetime<(new DateTime(PROCESS_STARTED_AT))?'color:#999;':''?>"><?=h($dateStr)?></td>
+            <?php
+                $datetime=Datetime::createFromFormat('Y-m-d H:i:s',$user->last_login_at??'');
+                $dateStr=$datetime===false?'':$datetime->format('Y/m/d H:i:s');
             ?>
             <td><?=h($dateStr)?></td>
-            <td><?=$user->is_enabled?'有効':'無効'?></td>
-            <td><?=h($user->last_login_at)?></td>
-            <td><?=(new MkTagA('編',$url))?></td>
+            <td><?=(new MkTagA('編',$edit_url))?></td>
         </tr>
     <?php endforeach; ?>
 </table>
-<hr>
-[ <a href="./form.php"><?php print $base_title; ?>新規登録</a> ]<br>
-
-[ <a href="./login_locked_list.php">ログイン制限確認</a> ]
 <hr class="no-css-fallback">
 </main>
 <footer>
