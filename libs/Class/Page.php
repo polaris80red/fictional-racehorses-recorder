@@ -335,14 +335,14 @@ $url=$this->to_app_root_path."race/list/access_history.php";
 <div style="border:solid 1px red;padding:1.0em;">
 <?php
         if(count($this->error_msgs)>0){
-            echo implode("<br>\n",$this->error_msgs);
+            echo nl2br(h(implode("\n",$this->error_msgs)));
         }
 ?>
 </div>
 <?php
         if(count($this->debug_msgs)>0){
             echo "<div style=\"border:solid 1px red;padding: 1em;\"><pre>";
-            echo implode("\n\n",$this->debug_msgs);
+            echo h(implode("\n\n",$this->debug_msgs));
             echo "</pre></div>";
         }
         $this->printDebugDumpDiv();

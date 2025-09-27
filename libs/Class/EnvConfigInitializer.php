@@ -47,6 +47,7 @@ class EnvConfigInitializer {
         define('LOG_LEVEL',$cfg['LOG_LEVEL']);
         define('ADMINISTRATOR_USER',$cfg['ADMINISTRATOR_USER']);
         define('ADMINISTRATOR_PASS',$cfg['ADMINISTRATOR_PASS']);
+        define('ADMINISTRATOR_ALLOWED_IPS',$cfg['ADMINISTRATOR_ALLOWED_IPS']);
 
         $display_config_source=$cfg['DISPLAY_CONFIG_SOURCE'];
         if(!in_array($display_config_source,['db','json'])){
