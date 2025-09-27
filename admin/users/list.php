@@ -81,8 +81,9 @@ $tableData=Users::getAll($pdo,true);
 </table>
 <hr>
 [ <a href="./form.php"><?php print $base_title; ?>新規登録</a> ]<br>
-
-[ <a href="./login_locked_list.php">ログイン制限確認</a> ]
+<hr>
+[ <a href="./login_locked_list.php">ログイン制限ユーザー確認</a> ]<br>
+[ <a href="./login_locked_ip_list.php">ログイン制限アドレス確認</a> ]
 <hr class="no-css-fallback">
 </main>
 <footer>
