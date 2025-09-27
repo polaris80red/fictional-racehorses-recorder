@@ -13,36 +13,24 @@ $login_url_token=(string)filter_input(INPUT_POST,'login_url_token');
 $pdo=getPDO();
 $page->setErrorReturnLink('ログインフォームに戻る',InAppUrl::to('sign-in/'));
 
-// ALLOW_REMOTE_EDITOR_LOGIN で許可されていない場合、localhost以外からのログインは拒否する
-(function(){
-    if(READONLY_MODE){
-        header('HTTP/1.1 403 Forbidden');
-        header('Content-Type: text/plain; charset=UTF-8');
-        echo 'Access denied: 読み取り専用モードのためログインできません。';
-        exit;        
-    }
-    if(ALLOW_REMOTE_EDITOR_LOGIN===true){
-        if(ADMINISTRATOR_PASS===''){
-            header('HTTP/1.1 403 Forbidden');
-            header('Content-Type: text/plain; charset=UTF-8');
-            echo 'Access denied: リモートIPからのアクセスを許可している場合、管理者パスワード未設定ではログインできません。';
-            exit;
-        }
-        return;
-    }
-    if(is_remote_access()){
-        header('HTTP/1.1 403 Forbidden');
-        header('Content-Type: text/plain; charset=UTF-8');
-        echo 'Access denied: 実行中のコンピューター以外からのログインは設定で禁止されています。';
-        exit;
-    }
-})();
-$error_exists=false;
-
 $page->title="ログイン実行";
 $LoginAttemptIp=new LoginAttemptIp($pdo,$_SERVER['REMOTE_ADDR']);
 $LoginAttemptIpRow=$LoginAttemptIp->get();
 do{
+    if(READONLY_MODE){
+        header('HTTP/1.1 403 Forbidden');
+        $msg ="読み取り専用モードのためログインできません。\n";
+        $msg.="設定ファイルの 'READONLY_MODE' を確認してください。";
+        $page->addErrorMsg($msg);
+        break;
+    }
+    if(!ALLOW_REMOTE_EDITOR_LOGIN && is_remote_access()){
+        header('HTTP/1.1 403 Forbidden');
+        $msg ="実行中のコンピューター以外からのログインは設定で禁止されています。\n";
+        $msg.="設定ファイルの 'ALLOW_REMOTE_EDITOR_LOGIN' を確認してください。";
+        $page->addErrorMsg($msg);
+        break;
+    }
     $ipLoginLockedUntil=DateTime::createFromFormat('Y-m-d H:i:s',$LoginAttemptIpRow['login_locked_until']??'');
     $nowDateTime=new DateTime(PROCESS_STARTED_AT);
     if($ipLoginLockedUntil && $ipLoginLockedUntil>$nowDateTime){
@@ -106,6 +94,14 @@ do{
     }
     if($id===ADMINISTRATOR_USER){
         // SuperAdminの場合のログイン処理（期限や有効無効チェックを行わず設定ファイルのパスワードを適用する）
+        if(ALLOW_REMOTE_EDITOR_LOGIN && ADMINISTRATOR_PASS===''){
+            header('HTTP/1.1 403 Forbidden');
+            $msg ="[設定エラー]\n";
+            $msg.="リモートログインを許可している場合に使用できないパスワードが設定されています。\n";
+            $msg.="設定ファイルの 'ALLOW_REMOTE_EDITOR_LOGIN','ADMINISTRATOR_PASS' を確認してください。";
+            $page->addErrorMsg($msg);
+            break;
+        }
         if(ADMINISTRATOR_ALLOWED_IPS!=[]){
             if(in_array($_SERVER['REMOTE_ADDR'],ADMINISTRATOR_ALLOWED_IPS)===false){
                 header('HTTP/1.1 403 Forbidden');
