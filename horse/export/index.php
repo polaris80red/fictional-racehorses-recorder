@@ -28,6 +28,7 @@ if($horse===false){
     $page->printCommonErrorPage();
     exit;
 }
+$sex_str=sex2String($horse->sex);
 $urlparam=new UrlParams(['horse_id'=>$horse_id]);
 ?><!DOCTYPE html>
 <html lang="ja">
@@ -45,6 +46,7 @@ $urlparam=new UrlParams(['horse_id'=>$horse_id]);
 </header>
 <main id="content">
 <hr class="no-css-fallback">
+<?php include (new TemplateImporter('horse/horse_page-header.inc.php'));?>
 <?php include (new TemplateImporter('horse/export/index.inc.php')); ?>
 <hr class="no-css-fallback">
 </main>
