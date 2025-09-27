@@ -18,6 +18,11 @@ $LoginAttemptIp=new LoginAttemptIp($pdo,$_SERVER['REMOTE_ADDR']);
 $LoginAttemptIpRow=$LoginAttemptIp->get();
 $errorHeader='HTTP/1.1 403 Forbidden';
 do{
+    if(Session::isLoggedIn()){
+        $page->setErrorReturnLink('トップに戻る',InAppUrl::to());
+        $page->addErrorMsg('既にログイン中です');
+        break;
+    }
     if(READONLY_MODE){
         $msg ="読み取り専用モードのためログインできません。\n";
         $msg.="設定ファイルの 'READONLY_MODE' を確認してください。";
