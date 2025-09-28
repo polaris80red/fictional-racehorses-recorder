@@ -20,11 +20,6 @@ $page->error_return_link_text="レース検索に戻る";
 
 $pdo= getPDO();
 
-$is_edit_mode = false;
-if(filter_input(INPUT_GET,'mode')==='edit'){
-    $is_edit_mode = true;
-}
-$is_edit_mode=true;
 if(empty($_GET['race_id'])){
     $page->error_msgs[]="レースID未指定";
     header("HTTP/1.1 404 Not Found");
