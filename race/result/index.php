@@ -15,31 +15,31 @@ if($is_preview){
     $page->is_editable=false;
 }
 
-$page->error_return_url=$page->to_race_list_path;
-$page->error_return_link_text="レース検索に戻る";
-
 $pdo= getPDO();
+do{
+    $errorHeader="HTTP/1.1 404 Not Found";
+    $page->setErrorReturnLink("レース検索に戻る",$page->to_race_list_path);
 
-if(empty($_GET['race_id'])){
-    $page->error_msgs[]="レースID未指定";
-    header("HTTP/1.1 404 Not Found");
-    $page->printCommonErrorPage();
-    exit;
-}
-$race_id=filter_input(INPUT_GET,'race_id');
-$show_registration_only=(bool)filter_input(INPUT_GET,'show_registration_only');
-# レース情報取得
-$race = Race::getByRaceId($pdo, $race_id);
-if(!$race){
-    $page->error_msgs[]="レース情報取得失敗";
-    $page->error_msgs[]="入力ID：{$race_id}";
-    header("HTTP/1.1 404 Not Found");
+    $race_id=(string)filter_input(INPUT_GET,'race_id');
+    if($race_id===''){
+        $page->addErrorMsg("レースID未指定");
+        break;
+    }
+    $race = Race::getByRaceId($pdo, $race_id);
+    if(!$race){
+        $page->addErrorMsg("レース情報取得失敗\n入力ID：{$race_id}");
+        break;
+    }
+}while(false);
+if($page->error_exists){
+    header($errorHeader);
     $page->printCommonErrorPage();
     exit;
 }
 if(ENABLE_ACCESS_COUNTER){
     ArticleCounter::countup($pdo,ArticleCounter::TYPE_RACE_RESULT,$race_id);
 }
+$show_registration_only=(bool)filter_input(INPUT_GET,'show_registration_only');
 $session->latest_race=[
     'id'=>$race_id,
     'year'=>$race->year,
