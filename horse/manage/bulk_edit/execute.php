@@ -9,43 +9,41 @@ $page->title="競走馬レース情報一括編集｜実行";
 $page->ForceNoindex();
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
+
 $pdo= getPDO();
-
-if(!(new FormCsrfToken())->isValid()){
-    ELog::error($page->title.": CSRFトークンエラー");
-    $page->addErrorMsg("入力フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
+do{
+    $errorHeader="HTTP/1.1 404 Not Found";
+    $page->setErrorReturnLink("競走馬検索に戻る",InAppUrl::to("horse/search"));
+    $horse_id=(string)filter_input(INPUT_POST,'horse_id');
+    if($horse_id==''){
+        $page->addErrorMsg("競走馬ID未指定");
+        break;
+    }
+    $horse=Horse::getByHorseId($pdo,$horse_id);
+    if($horse===false){
+        $page->addErrorMsg("競走馬情報取得失敗\n入力ID：{$horse_id}");
+        break;
+    }
+    $errorHeader="HTTP/1.1 403 Forbidden";
+    $page->setErrorReturnLink("競走馬情報に戻る",InAppUrl::to("horse/",['horse_id'=>$horse_id]));
+    if(!(new FormCsrfToken())->isValid()){
+        ELog::error($page->title.": CSRFトークンエラー");
+        $page->addErrorMsg("入力フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
+        break;
+    }
+    if(!Session::currentUser()->canEditHorse($horse)){
+        $page->addErrorMsg("編集権限がありません");
+        break;  
+    }
+}while(false);
+if($page->error_exists){
+    header($errorHeader);
     $page->printCommonErrorPage();
     exit;
 }
-
-$page->error_return_url=InAppUrl::to("horse/search");
-$page->error_return_link_text="競走馬検索に戻る";
-if(empty($_POST['horse_id'])){
-    $page->error_msgs[]="競走馬ID未指定";
-    header("HTTP/1.1 404 Not Found");
-    $page->printCommonErrorPage();
-    exit;
-}
-$horse_id=filter_input(INPUT_POST,'horse_id');
-
 $page_urlparam=new UrlParams([
     'horse_id'=>$horse_id,
 ]);
-# 馬情報取得
-$horse=Horse::getByHorseId($pdo, $horse_id);
-if(!$horse){
-    $page->error_msgs[]="競走馬情報取得失敗";
-    $page->error_msgs[]="入力ID：{$horse_id}";
-    header("HTTP/1.1 404 Not Found");
-    $page->printCommonErrorPage();
-    exit;
-}
-if(!Session::currentUser()->canEditHorse($horse)){
-    header("HTTP/1.1 403 Forbidden");
-    $page->addErrorMsg("編集権限がありません");
-    $page->printCommonErrorPage();
-    exit;
-}
 $race_history=new HorseRaceHistory($pdo,$horse_id);
 $race_history->setDateOrder('ASC');
 $race_history->getData();
