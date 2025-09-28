@@ -8,21 +8,23 @@ $page->setSetting($setting);
 $page->title="競走馬情報｜詳細戦績";
 $session=new Session();
 
-$page->error_return_url=InAppUrl::to("horse/search");
-$page->error_return_link_text="競走馬検索に戻る";
-if(empty($_GET['horse_id'])){
-    $page->error_msgs[]="競走馬ID未指定";
-    header("HTTP/1.1 404 Not Found");
-    $page->printCommonErrorPage();
-    exit;
-}
 $pdo= getPDO();
-$horse_id=filter_input(INPUT_GET,'horse_id');
-$horse=Horse::getByHorseId($pdo,$horse_id);
-if($horse===false){
-    $page->error_msgs[]="競走馬情報取得失敗";
-    $page->error_msgs[]="入力ID：{$horse_id}";
-    header("HTTP/1.1 404 Not Found");
+$page->setErrorReturnLink("競走馬検索に戻る",InAppUrl::to("horse/search"));
+$errorHeader="HTTP/1.1 404 Not Found";
+do{
+    $horse_id=(string)filter_input(INPUT_GET,'horse_id');
+    if($horse_id==''){
+        $page->addErrorMsg("競走馬ID未指定");
+        break;
+    }
+    $horse=Horse::getByHorseId($pdo,$horse_id);
+    if($horse===false){
+        $page->addErrorMsg("競走馬情報取得失敗\n入力ID：{$horse_id}");
+        break;
+    }
+}while(false);
+if($page->error_exists){
+    header($errorHeader);
     $page->printCommonErrorPage();
     exit;
 }
