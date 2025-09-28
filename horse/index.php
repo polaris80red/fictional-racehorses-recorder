@@ -23,11 +23,7 @@ do{
         break;
     }
 }while(false);
-if($page->error_exists){
-    header($errorHeader);
-    $page->printCommonErrorPage();
-    exit;
-}
+$page->renderErrorsAndExitIfAny($errorHeader);
 $page->horse = $horse;
 if(ENABLE_ACCESS_COUNTER){
     ArticleCounter::countup($pdo,ArticleCounter::TYPE_HORSE,$horse_id);
