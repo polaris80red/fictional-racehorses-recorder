@@ -27,9 +27,5 @@ do{
         break;
     }
 }while(false);
-if($page->error_exists){
-    header($errorHeader);
-    $page->printCommonErrorPage();
-    exit;
-}
+$page->renderErrorsAndExitIfAny($errorHeader);
 include (new TemplateImporter('horse/export/common.inc.php'));

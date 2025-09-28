@@ -27,11 +27,7 @@ do{
         break;
     }
 }while(false);
-if($page->error_exists){
-    header($errorHeader);
-    $page->printCommonErrorPage();
-    exit;
-}
+$page->renderErrorsAndExitIfAny($errorHeader);
 $get_order=strtoupper((string)filter_input(INPUT_GET,'horse_history_order'));
 $date_order = in_array($get_order,['ASC','DESC'])?$get_order:'ASC';
 $show_registration_only=(bool)filter_input(INPUT_GET,'show_registration_only');

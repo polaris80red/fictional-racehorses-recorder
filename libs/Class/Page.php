@@ -306,6 +306,16 @@ $url=$this->to_app_root_path."race/list/access_history.php";
         exit;
     }
     /**
+     * エラーが存在すればエラーページを表示して終了する
+     */
+    public function renderErrorsAndExitIfAny(string $errorHeader = 'HTTP/1.1 403 Forbidden'){
+        if($this->error_exists){
+            header($errorHeader);
+            $this->printCommonErrorPage();
+            exit;
+        }
+    }
+    /**
      * 簡易エラーページを出力する
      */
     public function printCommonErrorPage(){

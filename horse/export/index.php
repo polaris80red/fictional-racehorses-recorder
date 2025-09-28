@@ -24,11 +24,7 @@ do{
         break;
     }
 }while(false);
-if($page->error_exists){
-    header($errorHeader);
-    $page->printCommonErrorPage();
-    exit;
-}
+$page->renderErrorsAndExitIfAny($errorHeader);
 $sex_str=sex2String($horse->sex);
 $urlparam=new UrlParams(['horse_id'=>$horse_id]);
 ?><!DOCTYPE html>
