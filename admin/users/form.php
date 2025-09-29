@@ -11,34 +11,31 @@ $page->ForceNoindex();
 
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $currentUser=Session::currentUser();
-if(!$currentUser->canManageUser()){
-    $page->setErrorReturnLink('管理画面に戻る',InAppUrl::to('admin/'));
-    $page->error_msgs[]="ユーザー管理には管理者権限が必要です。";
-    header("HTTP/1.1 403 Forbidden");
-    $page->printCommonErrorPage();
-    exit;
-}
-
-$pdo=getPDO();
-$inputId=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
-
-$editMode=($inputId>0);
 $TableClass=Users::class;
 $TableRowClass=$TableClass::ROW_CLASS;
 
-if($editMode){
-    $page->title.="（編集）";
-    $form_item=($TableClass)::getById($pdo,$inputId);
-    if($form_item===false){
-        $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当するレコードがありません");
+do{
+    if(!$currentUser->canManageUser()){
+        $page->setErrorReturnLink('管理画面に戻る',InAppUrl::to('admin/'));
+        $page->addErrorMsg("ユーザー管理には管理者権限が必要です。");
+        $page->printCommonErrorPage();
+        break;
     }
-}else{
-    $form_item=new ($TableRowClass)();
-}
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
+    $pdo=getPDO();
+    $inputId=filter_input(INPUT_GET,'id',FILTER_VALIDATE_INT);
+    $editMode=($inputId>0);
+    if($editMode){
+        $page->title.="（編集）";
+        $form_item=($TableClass)::getById($pdo,$inputId);
+        if($form_item===false){
+            $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当するレコードがありません");
+            break;
+        }
+    }else{
+        $form_item=new ($TableRowClass)();
+    }
+}while(false);
+$page->renderErrorsAndExitIfAny();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>

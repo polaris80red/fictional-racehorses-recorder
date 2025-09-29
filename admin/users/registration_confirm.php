@@ -11,73 +11,68 @@ $page->ForceNoindex();
 
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $currentUser=Session::currentUser();
-if(!$currentUser->canManageUser()){
-    $page->setErrorReturnLink('管理画面に戻る',InAppUrl::to('admin/'));
-    $page->error_msgs[]="ユーザー管理には管理者権限が必要です。";
-    header("HTTP/1.1 403 Forbidden");
-    $page->printCommonErrorPage();
-    exit;
-}
-
-$pdo=getPDO();
-$inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
-
-$editMode=($inputId>0);
 $TableClass=Users::class;
 $TableRowClass=$TableClass::ROW_CLASS;
 
-if($editMode){
-    $page->title.="（編集）";
-    $form_item=($TableClass)::getById($pdo,$inputId);
-    if($form_item===false){
-        $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当するレコードがありません");
-    }
-}else{
-    $form_item=new ($TableRowClass)();
-}
-
-$form_item->username=filter_input(INPUT_POST,'username');
-$password=(string)filter_input(INPUT_POST,'password');
-$password2=(string)filter_input(INPUT_POST,'password_2');
-if($password !== filter_input(INPUT_POST,'password_2')){
-    $page->addErrorMsg('パスワード再入力が一致しません');
-}
-$form_item->display_name=filter_input(INPUT_POST,'display_name');
-$form_item->role=filter_input(INPUT_POST,'role',FILTER_VALIDATE_INT);
-$login_enabled_until=(string)filter_input(INPUT_POST,'login_enabled_until');
-$form_item->login_enabled_until=null;
-$datetime=$login_enabled_until===''?false:DateTime::createFromFormat('Y-m-d H:i:s',$login_enabled_until.' 23:59:59');
-if($datetime){
-    $form_item->login_enabled_until=$datetime->format('Y-m-d H:i:s');
-}
-
-$login_url_token=(string)filter_input(INPUT_POST,'login_url_token');
-$login_url_token_generate=false;
-if(filter_input(INPUT_POST,'login_url_token_generate',FILTER_VALIDATE_BOOL)){
-    $login_url_token_generate=true;
-    $form_item->login_url_token='';
-}else{
-    $form_item->login_url_token=$login_url_token;
-    $tokenCheckUser=Users::getByToken($pdo,$form_item->login_url_token);
-    if($form_item->login_url_token && $tokenCheckUser && $tokenCheckUser->id!==$form_item->id){
-        $page->addErrorMsg("トークンが既存ユーザーと重複しています");
-    }
-}
-if($form_item->role===Role::GuestAuthor && $form_item->login_enabled_until==''){
-    $page->addErrorMsg("ゲスト投稿者権限のユーザーには必ず期限を制限してください");
-}
-$form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
-
 do{
+    if(!$currentUser->canManageUser()){
+        $page->setErrorReturnLink('管理画面に戻る',InAppUrl::to('admin/'));
+        $page->addErrorMsg("ユーザー管理には管理者権限が必要です。");
+        $page->printCommonErrorPage();
+        break;
+    }
+    $pdo=getPDO();
+    $inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT);
+    $editMode=($inputId>0);
+    if($editMode){
+        $page->title.="（編集）";
+        $form_item=($TableClass)::getById($pdo,$inputId);
+        if($form_item===false){
+            $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当するレコードがありません");
+            break;
+        }
+    }else{
+        $form_item=new ($TableRowClass)();
+    }
+    $form_item->username=filter_input(INPUT_POST,'username');
+    $password=(string)filter_input(INPUT_POST,'password');
+    $password2=(string)filter_input(INPUT_POST,'password_2');
+    if($password !== filter_input(INPUT_POST,'password_2')){
+        $page->addErrorMsg('パスワード再入力が一致しません');
+        break;
+    }
+    $form_item->display_name=filter_input(INPUT_POST,'display_name');
+    $form_item->role=filter_input(INPUT_POST,'role',FILTER_VALIDATE_INT);
+    $login_enabled_until=(string)filter_input(INPUT_POST,'login_enabled_until');
+    $form_item->login_enabled_until=null;
+    $datetime=$login_enabled_until===''?false:DateTime::createFromFormat('Y-m-d H:i:s',$login_enabled_until.' 23:59:59');
+    if($datetime){
+        $form_item->login_enabled_until=$datetime->format('Y-m-d H:i:s');
+    }
+    $login_url_token=(string)filter_input(INPUT_POST,'login_url_token');
+    $login_url_token_generate=false;
+    if(filter_input(INPUT_POST,'login_url_token_generate',FILTER_VALIDATE_BOOL)){
+        $login_url_token_generate=true;
+        $form_item->login_url_token='';
+    }else{
+        $form_item->login_url_token=$login_url_token;
+        $tokenCheckUser=Users::getByToken($pdo,$form_item->login_url_token);
+        if($form_item->login_url_token && $tokenCheckUser && $tokenCheckUser->id!==$form_item->id){
+            $page->addErrorMsg("トークンが既存ユーザーと重複しています");
+            break;
+        }
+    }
+    if($form_item->role===Role::GuestAuthor && $form_item->login_enabled_until==''){
+        $page->addErrorMsg("ゲスト投稿者権限のユーザーには必ず期限を制限してください");
+        break;
+    }
+    $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
     if(!$form_item->validate()){
         $page->addErrorMsgArray($form_item->errorMessages);
         break;
     }
 }while(false);
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
+$page->renderErrorsAndExitIfAny();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -157,7 +152,7 @@ if($page->error_exists){
 </tr>
 <tr><td colspan="2" style="text-align: left;"><input type="submit" value="登録実行"></td></tr>
 </table>
-<?php (new FormCsrfToken())->printHiddenInputTag(); ?>
+<?=(new FormCsrfToken())?>
 </form>
 <hr class="no-css-fallback">
 </main>
