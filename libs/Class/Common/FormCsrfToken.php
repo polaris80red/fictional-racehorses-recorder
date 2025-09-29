@@ -30,7 +30,7 @@ class FormCsrfToken {
     /**
      * hiddenのinputタグ文字列を返す
      */
-    public function getHiddenInputTag(): string
+    public function __toString(): string
     {
         $str="<input type=\"hidden\" name=".self::TOKEN_KEY." value=\"".$this->new_token."\">";
         return $str;
@@ -39,7 +39,7 @@ class FormCsrfToken {
      * hiddenのinputタグをprintする
      */
     public function printHiddenInputTag(){
-        print $this->getHiddenInputTag();
+        print $this->__toString();
     }
 
     /**
