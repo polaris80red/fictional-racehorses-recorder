@@ -11,30 +11,25 @@ $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $horse_id=(string)filter_input(INPUT_POST,'horse_id');
-
 $pdo= getPDO();
-# 対象取得
 do{
+    $errorHeader="HTTP/1.1 404 Not Found";
     if($horse_id==''){
         $page->addErrorMsg('元ID未入力');
         break;
     }
     $horse=Horse::getByHorseId($pdo,$horse_id);
     if(!$horse){
-        $page->addErrorMsg('元ID馬情報取得失敗');
-        $page->addErrorMsg("入力元ID：{$horse_id}");
+        $page->addErrorMsg("元ID馬情報取得失敗\n入力元ID：{$horse_id}");
         break;
     }
+    $errorHeader="HTTP/1.1 403 Forbidden";
     if($horse && !Session::currentUser()->canDeleteHorse($horse)){
-        header("HTTP/1.1 403 Forbidden");
         $page->addErrorMsg("削除権限がありません");
         break;
     }
 }while(false);
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
+$page->renderErrorsAndExitIfAny($errorHeader);
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -96,6 +91,7 @@ $(function() {
     });
 });
 </script>
+<?=(new FormCsrfToken())?>
 </form>
 <hr class="no-css-fallback">
 </main>
