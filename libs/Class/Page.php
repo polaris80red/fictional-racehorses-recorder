@@ -144,6 +144,16 @@ class Page{
         return $this;
     }
     /**
+     * titleタグ用のテキストを取得する
+     */
+    public function renderTitle(string $title=''){
+        $retStr=$title?:$this->title;
+        if($retStr && APPEND_SITE_NAME_TO_TITLE){
+            $retStr .= TITLE_SITE_NAME_SEPARATOR.SITE_NAME;
+        }
+        return $retStr;
+    }
+    /**
      * ページタイトルをprintする
      */
     public function printTitle(){
