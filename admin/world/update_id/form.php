@@ -53,7 +53,7 @@ if($page->error_exists){
     <td style="min-width:15em;"><?php HTPrint::HiddenAndText('world_id',$world_id); ?></td>
 </tr>
 <tr>
-    <th>新名称</th>
+    <th>新ID</th>
     <td class="in_input"><input type="text" name="new_world_id" value=""></td>
 </tr>
 </table>
