@@ -52,6 +52,7 @@ if(!$show_disabled){ $where_parts[]="r.`is_enabled`=1"; }
 if($race_course_name){
     $where_parts[]="`race_course_name` LIKE :race_course_name";
     $pre_bind->add(':race_course_name',$race_course_name);
+    $page->title.="({$race_course_name})";
 }
 $race_list_getter->addWhereParts($where_parts);
 $race_list_getter->addOrderParts([
