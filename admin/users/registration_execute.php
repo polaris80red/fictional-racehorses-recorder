@@ -10,84 +10,81 @@ $page->title="{$base_title}登録：処理実行";
 
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $currentUser=Session::currentUser();
-if(!$currentUser->canManageUser()){
-    $page->setErrorReturnLink('管理画面に戻る',InAppUrl::to('admin/'));
-    $page->error_msgs[]="ユーザー管理には管理者権限が必要です。";
-    header("HTTP/1.1 403 Forbidden");
-    $page->printCommonErrorPage();
-    exit;
-}
-
-$pdo=getPDO();
-$inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT)?:null;
-
-$editMode=($inputId>0);
 $TableClass=Users::class;
 $TableRowClass=$TableClass::ROW_CLASS;
 
-if($editMode){
-    $page->title.="（編集）";
-    $form_item=($TableClass)::getById($pdo,$inputId);
-    if($form_item===false){
-        $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当するレコードがありません");
-    }
-}else{
-    $form_item=new ($TableRowClass)();
-}
-
-$form_item->username=filter_input(INPUT_POST,'username');
-$password=(string)filter_input(INPUT_POST,'password');
-if($password!==''){
-    $form_item->password_hash=password_hash($password,PASSWORD_DEFAULT);
-}
-$form_item->display_name=filter_input(INPUT_POST,'display_name');
-$form_item->role=filter_input(INPUT_POST,'role',FILTER_VALIDATE_INT);
-$login_enabled_until=(string)filter_input(INPUT_POST,'login_enabled_until');
-$form_item->login_enabled_until=null;
-$datetime=$login_enabled_until===''?false:DateTime::createFromFormat('Y-m-d H:i:s',$login_enabled_until);
-if($datetime){
-    $form_item->login_enabled_until=$datetime->format('Y-m-d H:i:s');
-}
-if(filter_input(INPUT_POST,'login_url_token_generate',FILTER_VALIDATE_BOOL)){
-    $bytes=16;
-    $maxRetry=100;
-    $i=0;
-    do{
-        $token = base64_encode(random_bytes($bytes));
-        $token = strtr($token, '+=/', '--.');
-        if(Users::getByToken($pdo,$token)===false){
-            $form_item->login_url_token=$token;
-            break;
-        }
-        $i++;
-    }while($i<$maxRetry);
-    if($i>=$maxRetry){
-        $page->addErrorMsg("自動生成トークンの重複再生成の回数が規定を超えたため中止しました");
-    }
-}else{
-    // 手動指定の場合
-    $form_item->login_url_token=(string)filter_input(INPUT_POST,'login_url_token');
-    $tokenCheckUser=Users::getByToken($pdo,$form_item->login_url_token);
-    if($form_item->login_url_token && $tokenCheckUser && $tokenCheckUser->id!==$form_item->id){
-        $page->addErrorMsg("トークンが既存ユーザーと重複しています");
-    }
-}
-$form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
 do{
+    if(!$currentUser->canManageUser()){
+        $page->setErrorReturnLink('管理画面に戻る',InAppUrl::to('admin/'));
+        $page->addErrorMsg("ユーザー管理には管理者権限が必要です。");
+        $page->printCommonErrorPage();
+        break;
+    }
     if(!(new FormCsrfToken())->isValid()){
         ELog::error($page->title.": CSRFトークンエラー|".__FILE__);
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
+    $pdo=getPDO();
+    $inputId=filter_input(INPUT_POST,'id',FILTER_VALIDATE_INT)?:null;
+    $editMode=($inputId>0);
+    if($editMode){
+        $page->title.="（編集）";
+        $form_item=($TableClass)::getById($pdo,$inputId);
+        if($form_item===false){
+            $page->addErrorMsg("ID '{$inputId}' が指定されていますが該当するレコードがありません");
+            break;
+        }
+    }else{
+        $form_item=new ($TableRowClass)();
+    }
+    $form_item->username=filter_input(INPUT_POST,'username');
+    $password=(string)filter_input(INPUT_POST,'password');
+    if($password!==''){
+        $form_item->password_hash=password_hash($password,PASSWORD_DEFAULT);
+    }
+    $form_item->display_name=filter_input(INPUT_POST,'display_name');
+    $form_item->role=filter_input(INPUT_POST,'role',FILTER_VALIDATE_INT);
+    $login_enabled_until=(string)filter_input(INPUT_POST,'login_enabled_until');
+    $form_item->login_enabled_until=null;
+    $datetime=$login_enabled_until===''?false:DateTime::createFromFormat('Y-m-d H:i:s',$login_enabled_until);
+    if($datetime){
+        $form_item->login_enabled_until=$datetime->format('Y-m-d H:i:s');
+    }
+    if(filter_input(INPUT_POST,'login_url_token_generate',FILTER_VALIDATE_BOOL)){
+        $bytes=16;
+        $maxRetry=100;
+        $i=0;
+        do{
+            $token = base64_encode(random_bytes($bytes));
+            $token = strtr($token, '+=/', '--.');
+            if(Users::getByToken($pdo,$token)===false){
+                $form_item->login_url_token=$token;
+                break;
+            }
+            $i++;
+        }while($i<$maxRetry);
+        if($i>=$maxRetry){
+            $page->addErrorMsg("自動生成トークンの重複再生成の回数が規定を超えたため中止しました");
+            break;
+        }
+    }else{
+        // 手動指定の場合
+        $form_item->login_url_token=(string)filter_input(INPUT_POST,'login_url_token');
+        $tokenCheckUser=Users::getByToken($pdo,$form_item->login_url_token);
+        if($form_item->login_url_token && $tokenCheckUser && $tokenCheckUser->id!==$form_item->id){
+            $page->addErrorMsg("トークンが既存ユーザーと重複しています");
+            break;
+        }
+    }
+    $form_item->is_enabled=filter_input(INPUT_POST,'is_enabled',FILTER_VALIDATE_BOOL)?1:0;
     if(!$form_item->validate()){
         $page->addErrorMsgArray($form_item->errorMessages);
         break;
     }
 }while(false);
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
+$page->renderErrorsAndExitIfAny();
+
 $form_item->updated_by=$currentUser->getId();
 $form_item->updated_at=PROCESS_STARTED_AT;
 if($editMode){
