@@ -5,7 +5,7 @@ InAppUrl::init(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
-$page->title="管理画面 - ".SITE_NAME;
+$page->title="管理画面";
 $page->ForceNoindex();
 if(!Session::isLoggedIn()){
     header('Location: '.InAppUrl::to('sign-in/'));
@@ -14,7 +14,7 @@ $currentUser=Session::currentUser();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?></title>
+    <title><?=h($page->renderTitle())?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -27,7 +27,7 @@ $currentUser=Session::currentUser();
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php $page->printTitle(); ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
