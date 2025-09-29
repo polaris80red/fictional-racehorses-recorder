@@ -106,7 +106,7 @@ $flag = $stmt->execute();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?></title>
+    <title><?=h($page->renderTitle())?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -137,7 +137,7 @@ table.weekdaybtn td a:hover{
 <?php $page->printHeaderNavigation(); ?>
 <h1 class="page_title"><?php
 (new MkTagA($page_title_text1,$page->getRaceYearSearchUrl($year)))->print();
-echo $page_title_text2;
+print_h($page_title_text2);
 ?></h1>
 </header>
 <main id="content">
