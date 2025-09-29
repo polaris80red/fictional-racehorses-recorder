@@ -154,20 +154,6 @@ class Page{
         return $retStr;
     }
     /**
-     * ページタイトルをprintする
-     */
-    public function printTitle(){
-        print $this->title;
-        return $this;
-    }
-    /**
-     * ページタイトルをprintする
-     */
-    public function printSiteName(string $prefix='', string $suffix=''){
-        print $prefix.SITE_NAME.$suffix;
-        return $this;
-    }
-    /**
      * 設定と関係なくnoindexに設定する
      */
     public function ForceNoindex(){
