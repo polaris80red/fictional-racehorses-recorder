@@ -66,10 +66,15 @@ if(!$resultsGetter->hasAfterNote && !$race->after_note){
     $page->printCommonErrorPage();
     exit;
 }
+
+$title=(function($pageTitle)use($race){
+    $t=$race->race_name;
+    return $pageTitle.' | '.$t;
+})($page->title);
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?></title>
+    <title><?=h($page->renderTitle($title))?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
