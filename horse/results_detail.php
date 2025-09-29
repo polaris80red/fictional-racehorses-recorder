@@ -5,7 +5,7 @@ InAppUrl::init(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
-$page->title="競走馬情報｜詳細戦績";
+$page->title="競走馬情報 | 詳細戦績";
 $session=new Session();
 
 $pdo= getPDO();
@@ -82,10 +82,18 @@ $race_history->setDateOrder($date_order);
 $race_history->getData();
 
 $sex_str=sex2String($horse->sex);
+
+$title=(function($pageTitle)use($horse){
+    $t = $horse->name_ja?:'';
+    if($horse->name_en){
+        $t.=$t?" ({$horse->name_en})":$horse->name_en;
+    }
+    return $pageTitle.($t?" | {$t}":'');
+})($page->title);
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?></title>
+    <title><?=h($page->renderTitle($title))?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -117,7 +125,7 @@ table.horse_base_data a {text-decoration: none;}
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php $page->printTitle(); ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
