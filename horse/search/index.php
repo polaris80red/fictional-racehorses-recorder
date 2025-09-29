@@ -28,7 +28,7 @@ $horse_id_is_visibled = filter_var($search->horse_id_is_visibled,FILTER_VALIDATE
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?></title>
+    <title><?=h($page->renderTitle())?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -44,7 +44,7 @@ $horse_id_is_visibled = filter_var($search->horse_id_is_visibled,FILTER_VALIDATE
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php $page->printTitle(); ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
