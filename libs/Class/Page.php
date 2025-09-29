@@ -333,7 +333,7 @@ $url=$this->to_app_root_path."race/list/access_history.php";
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php echo $this->title; ?></title>
+    <title><?=$this->renderTitle()?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$this->ForceNoindex()->getMetaNoindex();?>
@@ -344,13 +344,13 @@ $url=$this->to_app_root_path."race/list/access_history.php";
 <body>
 <header>
 <?php $this->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $this->title; ?></h1>
+<h1 class="page_title"><?=h($this->title)?></h1>
 </header>
 <main>
 <hr class="no-css-fallback">
 <h2>エラー</h2>
 <?php if($this->error_return_url): ?>
-<p><a href="<?php echo $this->error_return_url; ?>"><?php echo ($this->error_return_link_text?:$this->error_return_url) ?></a></p>
+<p><a href="<?=h($this->error_return_url)?>"><?=h($this->error_return_link_text?:$this->error_return_url)?></a></p>
 <?php endif; ?>
 <div style="border:solid 1px red;padding:1.0em;">
 <?php
