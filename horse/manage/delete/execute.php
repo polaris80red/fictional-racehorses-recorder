@@ -11,56 +11,54 @@ $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $horse_id=(string)filter_input(INPUT_POST,'horse_id');
-
 $pdo= getPDO();
-# 対象取得
 do{
+    $errorHeader="HTTP/1.1 404 Not Found";
     if($horse_id==''){
         $page->addErrorMsg('元ID未入力');
         break;
     }
     $horse=Horse::getByHorseId($pdo,$horse_id);
     if(!$horse){
-        $page->addErrorMsg('元ID馬情報取得失敗');
-        $page->addErrorMsg("入力元ID：{$horse_id}");
+        $page->addErrorMsg("元ID馬情報取得失敗\n入力元ID：{$horse_id}");
+        break;
+    }
+    $errorHeader="HTTP/1.1 403 Forbidden";
+    if(!(new FormCsrfToken())->isValid()){
+        ELog::error($page->title.": CSRFトークンエラー");
+        $page->addErrorMsg("入力フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
     if($horse && !Session::currentUser()->canDeleteHorse($horse)){
-        header("HTTP/1.1 403 Forbidden");
         $page->addErrorMsg("削除権限がありません");
         break;
     }
 }while(false);
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}else{
-    $pdo->beginTransaction();
-    try{
-        $escaped_horse_id=SqlValueNormalizer::escapeLike($horse_id);
-        $sql="DELETE FROM `".HorseTag::TABLE."` WHERE `horse_id` LIKE :old_id;";
-        $stmt1=$pdo->prepare($sql);
-        $stmt1->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
-        $stmt1->execute();
+$page->renderErrorsAndExitIfAny($errorHeader);
+$pdo->beginTransaction();
+try{
+    $escaped_horse_id=SqlValueNormalizer::escapeLike($horse_id);
+    $sql="DELETE FROM `".HorseTag::TABLE."` WHERE `horse_id` LIKE :old_id;";
+    $stmt1=$pdo->prepare($sql);
+    $stmt1->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
+    $stmt1->execute();
 
-        $sql="DELETE FROM `".RaceResults::TABLE."` WHERE `horse_id` LIKE :old_id;";
-        $stmt2=$pdo->prepare($sql);
-        $stmt2->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
-        $stmt2->execute();
+    $sql="DELETE FROM `".RaceResults::TABLE."` WHERE `horse_id` LIKE :old_id;";
+    $stmt2=$pdo->prepare($sql);
+    $stmt2->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
+    $stmt2->execute();
 
-        $sql="DELETE FROM `".Horse::TABLE."` WHERE `horse_id` LIKE :old_id;";
-        $stmt3=$pdo->prepare($sql);
-        $stmt3->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
-        $stmt3->execute();
+    $sql="DELETE FROM `".Horse::TABLE."` WHERE `horse_id` LIKE :old_id;";
+    $stmt3=$pdo->prepare($sql);
+    $stmt3->bindValue(':old_id',$escaped_horse_id,PDO::PARAM_STR);
+    $stmt3->execute();
 
-        $pdo->commit();
-    }catch(Exception $e){
-        $pdo->rollBack();
-        $page->addErrorMsg("PDO_ERROR:".print_r($e,true));
-        $page->printCommonErrorPage();
-    }
+    $pdo->commit();
+}catch(Exception $e){
+    $pdo->rollBack();
+    $page->addErrorMsg("PDO_ERROR:".print_r($e,true));
+    $page->renderErrorsAndExitIfAny($errorHeader);
 }
-
 ?><!DOCTYPE html>
 <html>
 <head>
