@@ -12,6 +12,9 @@ class EnvConfigInitializer {
         define('DB_CHARSET',$cfg['DB_CHARSET']);
         
         define('SITE_NAME',$cfg['SITE_NAME']);
+        define('APPEND_SITE_NAME_TO_TITLE',
+            filter_var($cfg['APPEND_SITE_NAME_TO_TITLE'],FILTER_VALIDATE_BOOL));
+        define('TITLE_SITE_NAME_SEPARATOR',$cfg['TITLE_SITE_NAME_SEPARATOR']);
 
         define('ALLOW_REMOTE_ACCESS',
             filter_var($cfg['ALLOW_REMOTE_ACCESS'],FILTER_VALIDATE_BOOL));

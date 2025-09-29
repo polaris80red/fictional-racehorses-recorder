@@ -8,6 +8,10 @@ $cfg['DB_CHARSET']  ='utf8mb4';
 
 // サイト名
 $cfg['SITE_NAME']  ='FRR 架空競走馬戦績管理';
+// サイト名をタイトルタグに付与するかどうか（trueで付与、falseで付与しない）
+$cfg['APPEND_SITE_NAME_TO_TITLE'] = true;
+// タイトルにサイト名を付与するときの区切り文字列
+$cfg['TITLE_SITE_NAME_SEPARATOR']  =' - ';
 
 // リモートIPでのアクセスの許可（公開設定）
 $cfg['ALLOW_REMOTE_ACCESS']=false;
