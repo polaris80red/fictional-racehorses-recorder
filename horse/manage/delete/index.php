@@ -63,7 +63,7 @@ th{
 <main id="content">
 <hr class="no-css-fallback">
 <form action="execute.php" method="post">
-<table>
+<table class="edit-form-table">
 <tr>
     <th>対象馬</th>
     <td><?=h(implode('/',array_diff([$horse->name_ja,$horse->name_en],[''])))?></td>
