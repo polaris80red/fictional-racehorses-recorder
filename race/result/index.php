@@ -76,10 +76,15 @@ switch($setting->age_view_mode){
 }
 $registration_only_horse_is_exists=false;
 $latest_horse_exists=false;
+
+$title=(function($pageTitle)use($race){
+    $t=$race->race_name;
+    return $pageTitle.' | '.$t;
+})($page->title);
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?></title>
+    <title><?=h($page->renderTitle($title))?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -100,7 +105,7 @@ $latest_horse_exists=false;
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $page->title; ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">

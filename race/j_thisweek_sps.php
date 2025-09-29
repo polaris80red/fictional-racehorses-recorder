@@ -5,7 +5,7 @@ InAppUrl::init(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
-$page->title="スペシャル出馬表(紹介文)";
+$page->title="今週の注目レース/スペシャル出馬表(紹介文)";
 $session=new Session();
 // 暫定でログイン＝編集可能
 $page->is_editable=Session::isLoggedIn();
@@ -57,10 +57,11 @@ if(!$hasSps){
     $page->printCommonErrorPage();
     exit;
 }
+$title="スペシャル出馬表紹介文：{$race->race_name} 今週の注目レース";
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?></title>
+    <title><?=h($page->renderTitle($title))?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>

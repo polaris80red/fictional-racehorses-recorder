@@ -8,7 +8,7 @@ InAppUrl::init(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
-$page->title="出馬表";
+$page->title="出馬表(4走)";
 $session=new Session();
 // 暫定でログイン＝編集可能
 $page->is_editable=Session::isLoggedIn();
@@ -53,10 +53,14 @@ $table_data=$syutsuba_getter->getSyutsubaData($race, $rr_count);
 $hasThisweek=$syutsuba_getter->hasThisweek;
 $hasSps=$syutsuba_getter->hasSps;
 
+$title=(function($pageTitle)use($race){
+    $t=$race->race_name;
+    return $pageTitle.' | '.$t;
+})($page->title);
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php $page->printTitle(); ?></title>
+    <title><?=h($page->renderTitle($title))?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
