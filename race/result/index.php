@@ -89,8 +89,8 @@ $title=(function($pageTitle)use($race){
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink("js/functions.js"); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
 <style>
 .race_results td:nth-child(1){ text-align:center; }
 .race_results td:nth-child(2){ text-align:center; }

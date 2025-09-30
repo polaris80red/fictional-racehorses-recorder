@@ -38,7 +38,7 @@ $page->renderErrorsAndExitIfAny($errorHeader);
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
+    <?=$page->renderJqueryResource()?>
 <style>
 table{
 	border-collapse:collapse;

@@ -192,8 +192,8 @@ foreach ($race_history as $key => $data){
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink("js/functions.js"); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
 <style>
 td.changed{ background-color: yellow; }
 

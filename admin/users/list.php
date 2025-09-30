@@ -30,8 +30,8 @@ $tableData=Users::getAll($pdo,true);
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink('js/functions.js'); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
     <style>
         tr.super_admin td:nth-child(2){ color: red; background-color: #ffffa0ff; }
         tr.super_admin td:nth-child(n+4):nth-last-child(n+3){

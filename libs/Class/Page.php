@@ -115,33 +115,31 @@ class Page{
     protected function renderStylesheetLinkRaw(string $href){
         return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$href}\">\n";
     }
-    public function printScriptLink(string $path){
-        $this->printScriptLinkRaw($this->to_app_root_path.$path);
-        return $this;
+    public function renderScriptLink(string $path){
+        return $this->renderScriptLinkRaw($this->to_app_root_path.$path);
     }
-    public function printScriptLinkRaw(string $src){
-        print "<script src=\"{$src}\"></script>\n";
-        return $this;
+    protected function renderScriptLinkRaw(string $src){
+        return "<script src=\"{$src}\"></script>";
     }
     protected function renderVendorStylesheetLink(string $path){
         return $this->renderStylesheetLink('vendor/'.$path);
     }
-    protected function printVendorScriptLink(string $path){
-        $this->printScriptLink('vendor/'.$path);
-        return $this;
+    protected function renderVendorScriptLink(string $path){
+        return $this->renderScriptLink('vendor/'.$path);
     }
-    public function printJqueryResource(){
+    public function renderJqueryResource(){
+        $tags=[];
         if(USE_LOCAL_JQUERY_FILE){
-            print $this->renderVendorStylesheetLink(VENDOR_Jquery_UI_DIR.'/jquery-ui.min.css');
-            $this->printVendorScriptLink(VENDOR_Jquery_FILE);   
-            $this->printVendorScriptLink(VENDOR_Jquery_UI_DIR.'/jquery-ui.min.js');
+            $tags[]=$this->renderVendorStylesheetLink(VENDOR_Jquery_UI_DIR.'/jquery-ui.min.css');
+            $tags[]=$this->renderVendorScriptLink(VENDOR_Jquery_FILE);   
+            $tags[]=$this->renderVendorScriptLink(VENDOR_Jquery_UI_DIR.'/jquery-ui.min.js');
         }else{
-            print CDN_Jquery_UI_CSS_TAG."\n";
-            print CDN_Jquery_TAG."\n";
-            print CDN_Jquery_UI_JS_TAG."\n";
+            $tags[]=CDN_Jquery_UI_CSS_TAG;
+            $tags[]=CDN_Jquery_TAG;
+            $tags[]=CDN_Jquery_UI_JS_TAG;
         }
-        $this->printVendorScriptLink(VENDOR_Jquery_DatePicker_FILE);
-        return $this;
+        $tags[]=$this->renderVendorScriptLink(VENDOR_Jquery_DatePicker_FILE);
+        return implode("\n",$tags);
     }
     /**
      * titleタグ用のテキストを取得する

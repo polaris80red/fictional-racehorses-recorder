@@ -45,7 +45,7 @@ if($page->error_exists){
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
+    <?=$page->renderJqueryResource()?>
 <style>
 .font_red{
     color:#FF0000;

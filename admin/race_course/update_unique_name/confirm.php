@@ -43,7 +43,7 @@ $updater=new IdUpdater($pdo,$u_name,$new_unique_name);
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
+    <?=$page->renderJqueryResource()?>
 <style>
 .font_red{
     color:#FF0000;
