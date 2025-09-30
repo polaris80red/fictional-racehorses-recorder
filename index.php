@@ -21,7 +21,7 @@ $page->is_editable=SESSION::isLoggedIn();
 </head>
 <body>
 <header>
- <?php $page->printHeaderNavigation(); ?>
+<?php $page->printHeaderNavigation(); ?>
 <h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
