@@ -99,7 +99,7 @@ class Page{
             $links[]=$this->renderStylesheetLink('style/color.css');
         }
         $links[]=$this->renderStylesheetLink('user/style.css');
-        return implode("\n",$links);
+        return implode("",$links);
     }
     /**
      * パスにアプリルートのパスを付与してスタイルシートのlinkを表示
@@ -119,7 +119,7 @@ class Page{
         return $this->renderScriptLinkRaw($this->to_app_root_path.$path);
     }
     protected function renderScriptLinkRaw(string $src){
-        return "<script src=\"{$src}\"></script>";
+        return "<script src=\"{$src}\"></script>\n";
     }
     protected function renderVendorStylesheetLink(string $path){
         return $this->renderStylesheetLink('vendor/'.$path);
@@ -134,12 +134,12 @@ class Page{
             $tags[]=$this->renderVendorScriptLink(VENDOR_Jquery_FILE);   
             $tags[]=$this->renderVendorScriptLink(VENDOR_Jquery_UI_DIR.'/jquery-ui.min.js');
         }else{
-            $tags[]=CDN_Jquery_UI_CSS_TAG;
-            $tags[]=CDN_Jquery_TAG;
-            $tags[]=CDN_Jquery_UI_JS_TAG;
+            $tags[]=CDN_Jquery_UI_CSS_TAG."\n";
+            $tags[]=CDN_Jquery_TAG."\n";
+            $tags[]=CDN_Jquery_UI_JS_TAG."\n";
         }
         $tags[]=$this->renderVendorScriptLink(VENDOR_Jquery_DatePicker_FILE);
-        return implode("\n",$tags);
+        return implode("",$tags);
     }
     /**
      * titleタグ用のテキストを取得する
@@ -163,7 +163,7 @@ class Page{
      */
     public function getMetaNoindex(){
         if($this->noindex||FORCE_NOINDEX){
-            return '<meta name="robots" content="noindex, nofollow">';
+            return '<meta name="robots" content="noindex, nofollow">'."\n";
         }
         return '';
     }
