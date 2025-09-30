@@ -65,7 +65,7 @@ $title="スペシャル出馬表紹介文：{$race->race_name} 今週の注目�
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
 <style>
 p {font-size:90%;}
 </style>

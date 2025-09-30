@@ -64,7 +64,7 @@ $title=(function($pageTitle)use($race){
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
 <style>
 td.race_result_column{
     min-width:135px;

@@ -65,7 +65,7 @@ if($page->error_exists){
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
 <style>
 table{
 	border-collapse:collapse;

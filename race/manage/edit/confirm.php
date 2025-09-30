@@ -50,7 +50,7 @@ $page->title.="（".($is_edit_mode?"編集":"新規")."）";
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
 </head>
 <body>
 <header>

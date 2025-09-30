@@ -18,7 +18,7 @@ $currentUser=Session::currentUser();
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
 <style>
     th { background-color: #EEE; }
     td a { text-decoration: none; }

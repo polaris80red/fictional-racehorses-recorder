@@ -110,7 +110,7 @@ $flag = $stmt->execute();
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
 <style>
 td:nth-child(3){ text-align:center;}
 td:nth-child(5){ text-align:center;}
