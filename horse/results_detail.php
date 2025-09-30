@@ -98,8 +98,8 @@ $title=(function($pageTitle)use($horse){
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink("js/functions.js"); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
 <style>
 .horse_base_data th{ min-width:80px; }
 .horse_base_data td{ min-width:160px; }

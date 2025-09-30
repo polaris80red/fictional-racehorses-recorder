@@ -22,8 +22,8 @@ $pdo=getPDO();
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink('js/functions.js'); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
 <style>
 </style>
 </head>
@@ -47,6 +47,6 @@ $pdo=getPDO();
 <footer>
 <?php $page->printFooterHomeLink(); ?>
 </footer>
-<?php $page->printScriptLink('js/race_search_form.js'); ?>
+<?=$page->renderScriptLink('js/race_search_form.js')?>
 </body>
 </html>

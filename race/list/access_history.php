@@ -76,8 +76,8 @@ try{
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink('js/functions.js'); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
 <style>
 td:nth-child(4){
     text-align:center;
@@ -148,6 +148,6 @@ if(!$date_sort){
 <footer>
 <?php $page->printFooterHomeLink(); ?>
 </footer>
-<?php $page->printScriptLink('js/race_search_form.js'); ?>
+<?=$page->renderScriptLink('js/race_search_form.js')?>
 </body>
 </html>

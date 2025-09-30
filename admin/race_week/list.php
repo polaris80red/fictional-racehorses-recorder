@@ -25,8 +25,8 @@ $race_category_age = $race_category_age_table->getPage($pdo,$search_page,true);
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink('js/functions.js'); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
 <style>
     tr.boundary_week { background-color: #fffbd2ff; }
     td.select_box_disabled { background-color: #EEE; }

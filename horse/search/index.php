@@ -33,8 +33,8 @@ $horse_id_is_visibled = filter_var($search->horse_id_is_visibled,FILTER_VALIDATE
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink('js/functions.js'); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
 <style>
 .horse_search_results th a {
     text-decoration: none;

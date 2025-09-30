@@ -42,8 +42,8 @@ if($year!==''){
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink('js/functions.js'); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
 <style>
 td.grade{ text-align:center;}
 td.race_course_name { text-align: center; }
@@ -99,7 +99,7 @@ $search->current_page_results_count=count($table_rows);
 <footer>
 <?php $page->printFooterHomeLink(); ?>
 </footer>
-<?php $page->printScriptLink('js/race_search_form.js'); ?>
+<?=$page->renderScriptLink('js/race_search_form.js')?>
 <script>
 function toggleIdList() {
     const $targets = $('input[type="checkbox"][name^="id_list"]');

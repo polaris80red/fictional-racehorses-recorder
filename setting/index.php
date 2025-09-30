@@ -23,8 +23,8 @@ $story_list=WorldStory::getAll($pdo);
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
     <?=$page->renderBaseStylesheetLinks()?>
-    <?php $page->printJqueryResource(); ?>
-    <?php $page->printScriptLink('js/functions.js'); ?>
+    <?=$page->renderJqueryResource()?>
+    <?=$page->renderScriptLink("js/functions.js")?>
 <style>
     th { background-color: #EEE;}
     select{
@@ -340,6 +340,6 @@ function save_check_tgl(mode=''){
   }
 }
 </script>
-<?php $page->printScriptLink('js/race_search_form.js'); ?>
+<?=$page->renderScriptLink('js/race_search_form.js')?>
 </body>
 </html>
