@@ -57,7 +57,7 @@ if($login_disable_status){ header($errorHeader);}
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
     <style>
         th{ background-color: #EEE; }
     </style>

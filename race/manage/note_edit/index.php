@@ -76,7 +76,7 @@ switch($setting->age_view_mode){
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
     <?php $page->printJqueryResource(); ?>
     <?php $page->printScriptLink("js/functions.js"); ?>
     <style>

@@ -52,7 +52,7 @@ $updater->execute();
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
 </head>
 <body>
 <header>

@@ -87,32 +87,33 @@ class Page{
     /**
      * 基本的なスタイルシートLinkのセットをprint
      */
-    public function printBaseStylesheetLinks(){
-        $this->printStylesheetLink('style/main.css');
+    public function renderBaseStylesheetLinks(){
+        $links=[];
+        $links[]=$this->renderStylesheetLink('style/main.css');
         if(isset($this->theme)){
             $css_files=$this->theme->getCssFiles();
             foreach($css_files as $file_path){
-                $this->printStylesheetLink("themes/".$this->theme->getName()."/$file_path");
+                $links[]=$this->renderStylesheetLink("themes/".$this->theme->getName()."/$file_path");
             }
         }else{
-            $this->printStylesheetLink('style/color.css');
+            $links[]=$this->renderStylesheetLink('style/color.css');
         }
-        $this->printStylesheetLink('user/style.css');
-        return $this;
+        $links[]=$this->renderStylesheetLink('user/style.css');
+        return implode("\n",$links);
     }
     /**
      * パスにアプリルートのパスを付与してスタイルシートのlinkを表示
+     * @param string $path スタイルシートファイルのアプリルートからのパス
      */
-    public function printStylesheetLink(string $path){
-        $this->printStylesheetLinkRaw($this->to_app_root_path.$path);
-        return $this;
+    protected function renderStylesheetLink(string $path){
+        return $this->renderStylesheetLinkRaw($this->to_app_root_path.$path);
     }
     /**
      * 完全なパスでスタイルシートのlinkを表示
+     * @param string $href Linkタグのhref属性の内容
      */
-    public function printStylesheetLinkRaw(string $href){
-        print "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$href}\">\n";
-        return $this;
+    protected function renderStylesheetLinkRaw(string $href){
+        return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$href}\">\n";
     }
     public function printScriptLink(string $path){
         $this->printScriptLinkRaw($this->to_app_root_path.$path);
@@ -122,9 +123,8 @@ class Page{
         print "<script src=\"{$src}\"></script>\n";
         return $this;
     }
-    protected function printVendorStylesheetLink(string $path){
-        $this->printStylesheetLink('vendor/'.$path);
-        return $this;
+    protected function renderVendorStylesheetLink(string $path){
+        return $this->renderStylesheetLink('vendor/'.$path);
     }
     protected function printVendorScriptLink(string $path){
         $this->printScriptLink('vendor/'.$path);
@@ -132,7 +132,7 @@ class Page{
     }
     public function printJqueryResource(){
         if(USE_LOCAL_JQUERY_FILE){
-            $this->printVendorStylesheetLink(VENDOR_Jquery_UI_DIR.'/jquery-ui.min.css');
+            print $this->renderVendorStylesheetLink(VENDOR_Jquery_UI_DIR.'/jquery-ui.min.css');
             $this->printVendorScriptLink(VENDOR_Jquery_FILE);   
             $this->printVendorScriptLink(VENDOR_Jquery_UI_DIR.'/jquery-ui.min.js');
         }else{
@@ -323,7 +323,7 @@ $url=$this->to_app_root_path."race/list/access_history.php";
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$this->ForceNoindex()->getMetaNoindex();?>
-    <?php $this->printBaseStylesheetLinks(); ?>
+    <?=$this->renderBaseStylesheetLinks()?>
 <style>
 </style>
 </head>

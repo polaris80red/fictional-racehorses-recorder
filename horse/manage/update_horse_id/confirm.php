@@ -59,7 +59,7 @@ if($page->error_exists){
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
     <?php $page->printJqueryResource(); ?>
 <style>
 .font_red{

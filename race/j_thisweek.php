@@ -65,7 +65,7 @@ $title="出走馬情報：{$race->race_name} 今週の注目レース";
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
-    <?php $page->printBaseStylesheetLinks(); ?>
+    <?=$page->renderBaseStylesheetLinks()?>
 <style>
 p {font-size:90%;}
 </style>
