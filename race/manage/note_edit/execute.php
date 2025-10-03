@@ -20,16 +20,15 @@ if(empty($_POST['race_id'])){
 }
 $race_id=filter_input(INPUT_POST,'race_id');
 # レース情報取得
-$race = new Race($pdo, $race_id);
-if(!$race->record_exists){
-    $page->error_msgs[]="レース情報取得失敗";
-    $page->error_msgs[]="入力ID：{$race_id}";
+$race=Race::getByRaceId($pdo, $race_id);
+if(!$race){
+    $page->addErrorMsg("レース情報取得失敗\n入力ID：{$race_id}");
     header("HTTP/1.1 404 Not Found");
     $page->printCommonErrorPage();
     exit;
 }
 // 暫定的な編集権限判定（TODO: 他の処理を行クラス使用に揃える）
-if(!Session::currentUser()->canEditRace(Race::getByRaceId($pdo,$race_id))){
+if(!Session::currentUser()->canEditRace($race)){
     header("HTTP/1.1 403 Forbidden");
     $page->addErrorMsg("レース情報の編集権限がありません");
     $page->printCommonErrorPage();
@@ -86,10 +85,15 @@ if((string)$race->after_note!==$input_after_note){
     $race->after_note=$input_after_note;
     $after_is_changed = $has_change = true;
 }
+if(!$race->validate()){
+    $page->addErrorMsgArray($race->errorMessages);
+    $page->printCommonErrorPage();
+    exit;
+}
 if($prev_is_changed||$after_is_changed){
     $race->updated_by=Session::currentUser()->getId();
     $race->updated_at=PROCESS_STARTED_AT;
-    $race->UpdateExec($pdo);
+    Race::UpdateFromRowObj($pdo,$race);
 }
 
 // レース個別結果の前後メモの更新処理
