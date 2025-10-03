@@ -13,35 +13,37 @@ $csrf_token=new FormCsrfToken();
 $race_id=(string)filter_input(INPUT_POST,'race_id');
 $is_edit_mode=filter_input(INPUT_POST,'edit_mode')?1:0;
 $horse_id=(string)filter_input(INPUT_POST,'horse_id')?:'';// 登録後に馬戦績登録時
-# 対象取得
-$race= new Race();
 $pdo= getPDO();
-
-if($race_id!=''){
-    if($race->setRaceId($race_id)===false){
-        $page->addErrorMsgArray($race->error_msgs);
-        $page->printCommonErrorPage();
-        exit;
+do{
+    $race=false;
+    if($is_edit_mode==1 && $race_id===''){
+        $page->addErrorMsg("編集モードですが対象が指定されていません");
     }
-    $race->setDataById($pdo,$race_id);
-    if($is_edit_mode==0 && $race->record_exists){
-        $page->addErrorMsg('新規モードで重複IDあり');
-        $page->printCommonErrorPage();
-        exit;
+    if($race_id!=''){
+        $race=Race::getByRaceId($pdo,$race_id);
+        if($is_edit_mode==0 && $race!==false){
+            $page->addErrorMsg('新規モードで重複IDあり');
+            break;
+        }
+        if($is_edit_mode==1){
+            if($race===false){
+                $page->addErrorMsg("編集対象の取得に失敗");
+                break;
+            }else if(!Session::currentUser()->canEditRace($race)){
+                $page->addErrorMsg("編集権限がありません");
+                break;
+            }
+        }
     }
-    // 暫定的な編集権限判定（TODO: 他の処理を行クラス使用に揃える）
-    if($is_edit_mode==1 && !Session::currentUser()->canEditRace(Race::getByRaceId($pdo,$race_id))){
-        header("HTTP/1.1 403 Forbidden");
-        $page->addErrorMsg("編集権限がありません");
-        $page->printCommonErrorPage();
-        exit;
+    if($race===false){
+        $race=new RaceRow();
     }
-}
-if($race->setDataByPost()==false){
-    $page->addErrorMsgArray($race->error_msgs);
-    $page->printCommonErrorPage();
-    exit;
-}
+    $race->setFromPost();
+    if(!$race->validate()){
+        $page->addErrorMsgArray($race->errorMessages);
+    }
+}while(false);
+$page->renderErrorsAndExitIfAny();
 $page->title.="（".($is_edit_mode?"編集":"新規")."）";
 ?><!DOCTYPE html>
 <html lang="ja">

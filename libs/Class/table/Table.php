@@ -163,7 +163,6 @@ abstract class Table{
             $stmt->execute();
             return true;
         }catch (Exception $e){
-            echo "<pre>"; var_dump($stmt->debugDumpParams());echo "</pre>";
             ELog::error(__CLASS__.__METHOD__,[$stmt,$e]);
             return false;
         }
