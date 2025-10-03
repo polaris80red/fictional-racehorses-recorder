@@ -22,7 +22,7 @@ foreach($posted_race_list as $key => $posted_race){
     if(empty($posted_race['save'])){
         continue;
     }
-    $race_obj=new Race($pdo,$posted_race['orig_id']);
+    $race_obj=Race::getByRaceId($pdo,$posted_race['orig_id']);
     $race_obj->race_id= $posted_race['new_id']??'';
     if($posted_race['new_id']!=='' && (new Race($pdo,$posted_race['new_id']))->record_exists){
         $race_obj->race_id='';
@@ -41,7 +41,7 @@ foreach($posted_race_list as $key => $posted_race){
 }
 $insert_id_list=[];
 foreach($insert_objs as $race){
-    $race->InsertExec($pdo);
+    Race::InsertFromRowObj($pdo,$race);
     $insert_id_list[]=$race->race_id;
 }
 $data=(function($pdo,$id_list){
