@@ -24,16 +24,6 @@ do{
         $page->addErrorMsg('新レースID未入力');
         break;
     }
-    $old_id_checker=new Race();
-    if($old_id_checker->setRaceId($race_result_id)===false){
-        $page->addErrorMsgArray($old_id_checker->error_msgs);
-    }
-    $new_id_checker=new Race();
-    if($new_id_checker->setRaceId($new_race_result_id)===false){
-        $page->addErrorMsgArray($new_id_checker->error_msgs);
-    }
-    if($page->error_exists){ break; }
-
     $race_data=Race::getByRaceId($pdo,$race_result_id);
     if(!$race_data){
         header("HTTP/1.1 404 Not Found");
@@ -45,6 +35,11 @@ do{
         header("HTTP/1.1 403 Forbidden");
         $page->addErrorMsg("編集権限がありません");
         break;
+    }
+    $race_data->race_id=$new_race_result_id;
+    if(!$race_data->validate()){
+        $page->addErrorMsg('新IDエラー');
+        $page->addErrorMsgArray($race_data->errorMessages);
     }
     $new_id_race_data=Race::getByRaceId($pdo,$new_race_result_id);
     if($new_id_race_data){
