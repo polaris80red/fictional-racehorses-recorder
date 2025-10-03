@@ -22,10 +22,9 @@ if(empty($_POST['race_id'])){
 }
 $race_id=filter_input(INPUT_POST,'race_id');
 # レース情報取得
-$race = new Race($pdo, $race_id);
-if(!$race->record_exists){
-    $page->error_msgs[]="レース情報取得失敗";
-    $page->error_msgs[]="入力ID：{$race_id}";
+$race=Race::getByRaceId($pdo,$race_id);
+if(!$race){
+    $page->addErrorMsg("レース情報取得失敗\n入力ID：{$race_id}");
     header("HTTP/1.1 404 Not Found");
     $page->printCommonErrorPage();
     exit;
@@ -79,7 +78,7 @@ if((string)$race->after_note!==$input_after_note){
     $race->after_note=$input_after_note;
     $after_is_changed = $has_change = true;
 }
-if(!$race->varidate()){
+if(!$race->validate()){
     $has_error=true;
 }
 $additionalData=[];
@@ -171,8 +170,8 @@ foreach($table_data as $key=>$data){
         <input type="hidden" name="after_note" value="<?=h($race->after_note)?>">
     </td>
 </tr>
-<?php if($race->error_exists):?>
-    <tr><td colspan="2" style="color:red;"><?=nl2br(h(implode("\n",$race->error_msgs)))?></td></tr>
+<?php if($race->hasErrors):?>
+    <tr><td colspan="2" style="color:red;"><?=nl2br(h(implode("\n",$race->errorMessages)))?></td></tr>
 <?php endif;?>
 <?php foreach ($table_data as $key => $data):?>
     <?php
