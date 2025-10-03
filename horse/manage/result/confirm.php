@@ -84,7 +84,7 @@ do{
         if($next_race_id!=''){
             $next_race_results=new RaceResults();
             $next_race_results->setDataById($pdo,$next_race_id,$input->horse_id);
-            $next_race = new Race($pdo,$next_race_id);
+            $next_race = Race::getByRaceId($pdo,$next_race_id);
         }
     }
 }while(false);

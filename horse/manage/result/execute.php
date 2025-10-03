@@ -155,7 +155,7 @@ if($sp_result && $sp_result->is_registration_only){
 <hr>
 <div>
 <?php
-$race_result=new Race($pdo,$input->race_id);
+$race_result=Race::getByRaceId($pdo,$input->race_id);
 ?>
 <?php if($race_result->date!=''): ?>
 <?=(new MkTagA('同日のレース一覧',APP_ROOT_REL_PATH.'race/list/in_date.php?date='.urlencode($race_result->date)))?><br>
