@@ -138,7 +138,7 @@ class RaceRow extends TableRow {
         $this->sex_category_id=filter_input(INPUT_POST,'sex_category_id');
         $this->weather=filter_input(INPUT_POST,'weather')?:filter_input(INPUT_POST,'weather_select');
 
-        $this->track_condition=filter_input(INPUT_POST,'track_condition')?:filter_input(INPUT_POST,'track_condition_select');
+        $this->track_condition=filter_input(INPUT_POST,'track_condition')?:filter_input(INPUT_POST,'track_condition_select')?:'';
 
         $this->note=filter_input(INPUT_POST,'note');
 

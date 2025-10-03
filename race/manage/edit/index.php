@@ -14,48 +14,56 @@ $pdo= getPDO();
 $race_id=(string)filter_input(INPUT_GET,'race_id');
 $is_edit_mode=filter_input(INPUT_GET,'edit_mode')?1:0;
 $horse_id=(string)filter_input(INPUT_GET,'horse_id')?:'';// 登録後に馬戦績登録時
-$race= new Race(); 
-if($race_id===''){
-    $is_edit_mode=0;
-    $race->world_id=$setting->world_id;
-} else {
-    # 対象取得
-    $race->setDataById($pdo,$race_id);
-}
-if($is_edit_mode==0 && $race_id==''){
-    // 新規登録かつID指定引継ぎではない場合
-    $race->date=(string)filter_input(INPUT_GET,'date');
-    if($race->date!==''){
-        //正規日付が指定されている場合は正規日付を基に年月を設定する
-        $datetime=new DateTime($race->date);
-        $race->year=$datetime->format('Y');
-        $race->month=$datetime->format('m');
-        $race->week_id=getWeekByDate($race->date);
-    }else{
-        $race->year=(string)filter_input(INPUT_GET,'year');
-        $race->month=(string)filter_input(INPUT_GET,'month');
-        $race->week_id=filter_input(INPUT_GET,'week_id',FILTER_VALIDATE_INT)?:0;
-        // 月が指定されていない場合は週の設定値を優先する
-        if($race->month=='' && $race->week_id){
-            $week_obj=RaceWeek::getById($pdo,$race->week_id);
-            $race->month=$week_obj?$week_obj->month:'';
+
+do{
+    $race=false;
+    if($is_edit_mode==1 && $race_id===''){
+        $page->addErrorMsg("編集モードですが対象が指定されていません");
+    }
+    if($race_id!=''){
+        $race=Race::getByRaceId($pdo,$race_id);
+        if($is_edit_mode==1){
+            if($race===false){
+                $page->addErrorMsg("編集対象の取得に失敗");
+                break;
+            }else if(!Session::currentUser()->canEditRace($race)){
+                $page->addErrorMsg("編集権限がありません");
+                break;
+            }
         }
     }
-
-    $race->race_course_name=(string)filter_input(INPUT_GET,'race_course_name');
-}
-if($is_edit_mode==0 && $race_id!=''){
-    // 新規登録かつID指定複写の場合の一部項目初期化
-    $race->previous_note='';
-    $race->after_note='';
-}
-// 暫定的な編集権限判定（TODO: 他の処理を行クラス使用に揃える）
-if($is_edit_mode==1 && !Session::currentUser()->canEditRace(Race::getByRaceId($pdo,$race_id))){
-    header("HTTP/1.1 403 Forbidden");
-    $page->addErrorMsg("編集権限がありません");
-    $page->printCommonErrorPage();
-    exit;
-}
+    if($race===false){
+        $race=new RaceRow();
+        $race->world_id=$setting->world_id;
+    }
+    if($is_edit_mode==0 && $race_id==''){
+        // 新規登録かつID指定引継ぎではない場合
+        $race->date=(string)filter_input(INPUT_GET,'date');
+        if($race->date!==''){
+            //正規日付が指定されている場合は正規日付を基に年月を設定する
+            $datetime=new DateTime($race->date);
+            $race->year=$datetime->format('Y');
+            $race->month=$datetime->format('m');
+            $race->week_id=getWeekByDate($race->date);
+        }else{
+            $race->year=(string)filter_input(INPUT_GET,'year');
+            $race->month=(string)filter_input(INPUT_GET,'month');
+            $race->week_id=filter_input(INPUT_GET,'week_id',FILTER_VALIDATE_INT)?:0;
+            // 月が指定されていない場合は週の設定値を優先する
+            if($race->month=='' && $race->week_id){
+                $week_obj=RaceWeek::getById($pdo,$race->week_id);
+                $race->month=$week_obj?$week_obj->month:'';
+            }
+        }
+        $race->race_course_name=(string)filter_input(INPUT_GET,'race_course_name');
+    }
+    if($is_edit_mode==0 && $race){
+        // 新規登録かつID指定複写の場合の一部項目初期化
+        $race->previous_note='';
+        $race->after_note='';
+    }
+}while(false);
+$page->renderErrorsAndExitIfAny();
 
 $world_list=World::getAll($pdo);
 $sex_category_list=RaceCategorySex::getAll($pdo);
