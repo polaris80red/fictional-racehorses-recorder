@@ -41,3 +41,8 @@ $url_param=['session_is_not_update'=>1,'search_detail_tgl_status'=>'open'];
 <?php endif; ?>
 <hr>
 <a href="<?=h(InAppUrl::to('race/list/access_history.php'))?>">最近アクセスしたレースの一覧</a><br>
+<?php if(ENABLE_ACCESS_COUNTER): ?>
+<hr>
+累計アクセスランキング：<a href="<?=h(InAppUrl::to('ranking/horse.php',['limit'=>20]))?>">競走馬</a>
+｜<a href="<?=h(InAppUrl::to('ranking/race.php',['limit'=>20]))?>">レース結果</a><br>
+<?php endif; ?>
