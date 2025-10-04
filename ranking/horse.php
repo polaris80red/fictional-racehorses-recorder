@@ -60,6 +60,7 @@ $page->renderErrorsAndExitIfAny();
     <?=$page->renderJqueryResource()?>
     <?=$page->renderScriptLink("js/functions.js")?>
 <style>
+    td.col_number,
     td.col_count { text-align: right; }
 </style>
 </head>
@@ -72,15 +73,18 @@ $page->renderErrorsAndExitIfAny();
 <hr class="no-css-fallback">
 <table class="admin-master-list">
 <tr>
+    <th></th>
     <th>馬名</th>
     <th class="col_count">回数</th>
     <th>最新アクセス</th>
 </tr>
+<?php $i=0; ?>
 <?php foreach($tableData as $row): ?>
 <?php
     $horse=(new HorseRow)->setFromArray($row,Horse::TABLE."__");
 ?>
 <tr>
+    <td class="col_number"><?=h(++$i);?></td>
     <td class=""><a href="<?=h(InAppUrl::to('horse/',['horse_id'=>$horse->horse_id]))?>"><?=h(($horse->name_ja?:$horse->name_en)?:ANNONYMOUS_HORSE_NAME);?></a></td>
     <td class="col_count"><?=h($row['view_count']);?></td>
     <?php
