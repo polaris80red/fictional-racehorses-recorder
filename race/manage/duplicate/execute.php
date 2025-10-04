@@ -24,7 +24,8 @@ foreach($posted_race_list as $key => $posted_race){
     }
     $race_obj=Race::getByRaceId($pdo,$posted_race['orig_id']);
     $race_obj->race_id= $posted_race['new_id']??'';
-    if($posted_race['new_id']!=='' && (new Race($pdo,$posted_race['new_id']))->record_exists){
+    $existsRaceObj=Race::getByRaceId($pdo,$posted_race['new_id']);
+    if($posted_race['new_id']!=='' && $existsRaceObj!==false){
         $race_obj->race_id='';
     }
     $race_obj->world_id=$world_id;
