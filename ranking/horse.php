@@ -83,7 +83,10 @@ $page->renderErrorsAndExitIfAny();
 <tr>
     <td class=""><a href="<?=h(InAppUrl::to('horse/',['horse_id'=>$horse->horse_id]))?>"><?=h(($horse->name_ja?:$horse->name_en)?:ANNONYMOUS_HORSE_NAME);?></a></td>
     <td class="col_count"><?=h($row['view_count']);?></td>
-    <td class=""><?=h($row['last_access']);?></td>
+    <?php
+        $last_access_dt=DateTime::createFromFormat('Y-m-d H:i:s',$row['last_access']);
+    ?>
+    <td class=""><?=h(!$last_access_dt?'':$last_access_dt->format('Y/m/d H:i'));?></td>
 </tr>
 <?php endforeach; ?>
 </table>
