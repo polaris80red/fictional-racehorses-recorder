@@ -5,7 +5,7 @@ InAppUrl::init(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
-$page->title="アクセスランキング｜競走馬";
+$page->title="累計アクセスランキング｜競走馬";
 $page->ForceNoindex();
 
 $session=new Session();
