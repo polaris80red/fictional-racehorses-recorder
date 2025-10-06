@@ -63,31 +63,22 @@ fictional-racehorses-recorder 架空競走馬戦績管理ツール
 - 上記から「datepicker-ja.js」をダウンロードし、vendorディレクトリに配置してください。
 
 ## 導入手順3
-### データベースの初期テーブルの作成
-使用するデータベースに対して、 **_setup/sql/** 以下のディレクトリに同梱している.sqlファイルをインポートしてください。
-
-**テーブルの構築**：
-最初に **_setup/sql/create_tables/** ディレクトリ内の21個の.sqlファイルをインポートしてください。必須のテーブルを空で作成します。
-
-**基本的なマスタデータの導入**：
-続いて **_setup/sql/data/** ディレクトリ内の.sqlファイルをインポートしてください。基本的なマスタデータを登録します。
-- **mst_affiliation.sql**：所属マスタ
-- **mst_affiliation__optional_nar.sql**：(オプション)所属マスタの各地方競馬
-    - [地方競馬 データ情報](https://www.keiba.go.jp/KeibaWeb/DataRoom/DataRoomTop) の所属場プルダウン順）
-- **mst_race_category_age.sql**：レース年齢条件マスタ(必須)
-- **mst_race_category_sex.sql**：レース性別条件マスタ(必須)
-- **mst_race_course.sql**：レース場マスタ(推奨)
-- **mst_race_course__optuonal_nar.sql**：(オプション)レース場マスタの地方競馬場
-    - [月別開催日程｜地方競馬情報サイト](https://www.keiba.go.jp/KeibaWeb/MonthlyConveneInfo/MonthlyConveneInfoTop) の地方競馬サイトの開催日程表の順
-- **mst_race_course__optuonal_other.sql**：(オプション)レース場マスタの一部国名
-    - [海外競馬の勝馬投票券（馬券）発売のルール-JRA](https://www.jra.go.jp/keiba/overseas/rule/) の国コード順に一部の国名
-- **mst_race_grade.sql**：レース格付マスタ(推奨)
-- **mst_race_special_results.sql**：レース特殊結果マスタ(推奨)
-- **mst_race_week.sql**：レース週マスタ(必須)
-- **mst_themes.sql**：テーママスタ
+### データベースの初期設定
+- 設置したディレクトリの下位の_setup/installerをブラウザで開いてください。インストーラーページのログイン画面が開きます。
+  - URL例：```localhost/fictional-racehorses-recorder/_setup/installer/```
+  - 設定ファイルと同じ管理者ID・パスワードでログインしてください。（初期値はadminと空、変更した場合はその設定値）
+- 「**1.未作成のテーブルを作成する**」ページを開くと、必要なテーブルの作成が実行されます。
+- 「**2.基本的なマスタデータのインポート**」ページを開くと、必要なマスタデータのインポートが実行されます。
 
 ## 導入手順4
+ここまでの手順で、ページ自体が使用可能になります。
+
+- URL例：```localhost/fictional-racehorses-recorder/```
+
 競走馬・レースデータの登録には、ワールドを作成・選択しておく必要があります。
+
+ログイン情報はデフォルトだとユーザー：```admin```・パスワードは空です。
+上記設定ファイルの ```ADMINISTRATOR_USER``` と```ADMINISTRATOR_PASS``` が該当の設定項目です。
 
 ### ワールド設定の作成
 レースや競走馬のデータはワールドに所属し、検索などでは選択中のワールドの項目だけに絞り込まれます。
@@ -98,6 +89,29 @@ fictional-racehorses-recorder 架空競走馬戦績管理ツール
 ### ストーリー設定の作成
 - プルダウンの選択起点になる年度やプルダウンの範囲などの表示設定が可能です。
 - 「登録完了時にデフォルト設定を以下の設定で上書きする」もオンにしておくと、登録完了時点で、ログインしていないときにも適用するシステム全体の初期設定に、作成したストーリー設定を指定します。
+
+## (手順3の参考)インストーラーを使わないテーブル構築とマスタ内訳
+直接SQLを実行する場合、使用するデータベースに対して、 **_setup/sql/** 以下のディレクトリに同梱している.sqlファイルをインポートしてください。
+
+**テーブルの構築**：
+最初に **_setup/sql/create_tables/** ディレクトリ内の21個の.sqlファイルをインポートしてください。必須のテーブルを空で作成します。
+
+**基本的なマスタデータの導入**：
+続いて **_setup/sql/data/** ディレクトリ内の.sqlファイルをインポートしてください。基本的なマスタデータを登録します。
+- **mst_affiliation.sql**：所属マスタ
+- **mst_affiliation__optional_nar.sql**：(オプション)所属マスタの各地方競馬
+    - [地方競馬 データ情報](https://www.keiba.go.jp/KeibaWeb/DataRoom/DataRoomTop) の所属場プルダウン順）
+- **mst_race_category_age.sql**：レース年齢条件マスタ
+- **mst_race_category_sex.sql**：レース性別条件マスタ
+- **mst_race_course.sql**：レース場マスタの中央10場
+- **mst_race_course__optuonal_nar.sql**：レース場マスタの地方競馬場
+    - [月別開催日程｜地方競馬情報サイト](https://www.keiba.go.jp/KeibaWeb/MonthlyConveneInfo/MonthlyConveneInfoTop) の地方競馬サイトの開催日程表の順
+- **mst_race_course__optuonal_other.sql**：レース場マスタの一部国名
+    - [海外競馬の勝馬投票券（馬券）発売のルール-JRA](https://www.jra.go.jp/keiba/overseas/rule/) の国コード順に一部の国名
+- **mst_race_grade.sql**：レース格付マスタ
+- **mst_race_special_results.sql**：レース特殊結果マスタ
+- **mst_race_week.sql**：レース週マスタ
+- **mst_themes.sql**：テーママスタ
 
 # 製作者
 author: **polaris80red**
