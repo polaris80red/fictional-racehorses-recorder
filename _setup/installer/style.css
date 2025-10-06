@@ -1,0 +1,49 @@
+body {
+	background-color: #EEEEEE;
+	margin: 0;
+}
+main {
+	background-color: #FFFFFF;
+}
+header,footer,main{
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+main{
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+}
+.no-css-fallback{
+	display: none;
+}
+h1{
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+	font-size: 1.4em;
+}
+h2{
+	font-size: 1.4em;
+}
+table{
+	border-collapse:collapse;
+    font-size: 80%;
+}
+th { background-color: #EEEEEE; }
+table, tr, th, td{
+	border:solid 1px #333333;
+}
+th,td{
+	padding-left:0.3em;
+	padding-right:0.3em;
+}
+td.col_number{
+	text-align: right;
+}
+div.error_message_box{
+	color:#CC0000;
+	border: solid 1px #666666;
+	max-width: 640px;
+	margin-bottom: 0.5em;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
