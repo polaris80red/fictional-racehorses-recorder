@@ -107,6 +107,7 @@ class Setting{
             if(file_exists(DISPLAY_CONFIG_JSON_PATH)){
                 $setting=json_decode(file_get_contents(DISPLAY_CONFIG_JSON_PATH));
                 $this->setByStdClass($setting);
+                $this->saveToSessionAll();
             }
         }else{
             // データベースから取得する
@@ -116,12 +117,12 @@ class Setting{
                 if($setting!==false){
                     $this->setByStdClass($setting);
                 }
+                $this->saveToSessionAll();
             } catch (Exception $e) {
                 $this->errorMessages[]="データベースからの表示設定取得に失敗しました";
                 $this->hasErrors=true;
             }
         }
-        $this->saveToSessionAll();
     }
     public function setDefault(){
         $this->year_select_min_diff=2;
