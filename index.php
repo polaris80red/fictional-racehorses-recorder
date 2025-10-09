@@ -14,7 +14,7 @@ if($setting->hasErrors){
     $page->setErrorReturnLink('インストーラーへ移動',InAppUrl::to(Routes::INSTALLER));
     $page->addErrorMsg('表示設定エラー');
     $page->addErrorMsgArray($setting->errorMessages);
-    $page->addErrorMsg('テーブルが未作成の可能性があります');
+    $page->addErrorMsg('必要なテーブルが未作成の可能性があります');
 }
 $page->renderErrorsAndExitIfAny();
 ?><!DOCTYPE html>

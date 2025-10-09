@@ -51,7 +51,7 @@ do{
     } catch (PDOException $e) {
         $page->setErrorReturnLink('インストーラーへ移動',InAppUrl::to(Routes::INSTALLER));
         $page->addErrorMsg('ユーザー取得エラー');
-        $page->addErrorMsg('テーブルが未作成の可能性があります');
+        $page->addErrorMsg('必要なテーブルが未作成の可能性があります');
         break;
     }
     /**
