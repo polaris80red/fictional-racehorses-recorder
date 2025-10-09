@@ -118,7 +118,7 @@ class Setting{
                     $this->setByStdClass($setting);
                 }
                 $this->saveToSessionAll();
-            } catch (Exception $e) {
+            } catch (PDOException $e) {
                 $this->errorMessages[]="データベースからの表示設定取得に失敗しました";
                 $this->hasErrors=true;
             }

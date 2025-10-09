@@ -11,7 +11,7 @@ $session->login_return_url='';
 // 暫定でログイン＝編集可能
 $page->is_editable=SESSION::isLoggedIn();
 if($setting->hasErrors){
-    $page->setErrorReturnLink('インストーラーへ移動','./_setup/installer/login.php');
+    $page->setErrorReturnLink('インストーラーへ移動',InAppUrl::to(Routes::INSTALLER));
     $page->addErrorMsg('表示設定エラー');
     $page->addErrorMsgArray($setting->errorMessages);
     $page->addErrorMsg('テーブルが未作成の可能性があります');
