@@ -10,6 +10,13 @@ $session=new Session();
 $session->login_return_url='';
 // 暫定でログイン＝編集可能
 $page->is_editable=SESSION::isLoggedIn();
+if($setting->hasErrors){
+    $page->setErrorReturnLink('インストーラーへ移動','./_setup/installer/login.php');
+    $page->addErrorMsg('表示設定エラー');
+    $page->addErrorMsgArray($setting->errorMessages);
+    $page->addErrorMsg('テーブルが未作成の可能性があります');
+}
+$page->renderErrorsAndExitIfAny();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>

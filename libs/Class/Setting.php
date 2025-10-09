@@ -84,6 +84,8 @@ class Setting{
         'm'=>'月まで',
         'none'=>'非表示',
     ];
+    public bool $hasErrors=false;
+    public array $errorMessages=[];
     public function __construct(bool $activateToSession = true ){
         if(!$activateToSession){ return false; }
         $this->setDefault();
@@ -109,9 +111,14 @@ class Setting{
         }else{
             // データベースから取得する
             // TODO: $pdoを外から渡すように全箇所変更
-            $setting=(new ConfigTable(getPDO()))->getAllParams();
-            if($setting!==false){
-                $this->setByStdClass($setting);
+            try {
+                $setting=(new ConfigTable(getPDO()))->getAllParams();
+                if($setting!==false){
+                    $this->setByStdClass($setting);
+                }
+            } catch (Exception $e) {
+                $this->errorMessages[]="データベースからの表示設定取得に失敗しました";
+                $this->hasErrors=true;
             }
         }
         $this->saveToSessionAll();
