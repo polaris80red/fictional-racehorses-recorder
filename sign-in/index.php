@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once dirname(__DIR__).'/libs/init.php';
+InAppUrl::init(1);
 $page=new Page(1);
 $setting=new Setting();
 $page->setSetting($setting);
@@ -42,13 +43,21 @@ do{
         }
     }
     $LoginAttemptIp=new LoginAttemptIp($pdo,$_SERVER['REMOTE_ADDR']);
-    $LoginAttemptIpRow=$LoginAttemptIp->get();
+    try {
+        $LoginAttemptIpRow=$LoginAttemptIp->get();
+    } catch (PDOException $e) {
+        $page->setErrorReturnLink('インストーラーへ移動',InAppUrl::to(Routes::INSTALLER));
+        $page->addErrorMsg('データベース処理エラー');
+        $page->addErrorMsg('必要なテーブルが未作成の可能性があります');
+        break;
+    }
     $until=DateTime::createFromFormat('Y-m-d H:i:s',$LoginAttemptIpRow['login_locked_until']??'');
     if(LOGIN_IP_LOCK_DURATION_MINUTES && $until && $until>$nowDateTime){
         $login_disable_status ="同一IPログイン連続失敗のためログインを制限しています。\n";
         $login_disable_status.="（".$until->format('Y-m-d H:i:s')."まで）";
     }
 }while(false);
+$page->renderErrorsAndExitIfAny();
 if($login_disable_status){ header($errorHeader);}
 ?><!DOCTYPE html>
 <html lang="ja">
