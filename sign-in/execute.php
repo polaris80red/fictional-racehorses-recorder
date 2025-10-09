@@ -46,7 +46,14 @@ do{
         $page->addErrorMsg('ユーザー名未入力');
         break;
     }
-    $user=Users::getByUsername($pdo,$id);
+    try {
+        $user=Users::getByUsername($pdo,$id);
+    } catch (PDOException $e) {
+        $page->setErrorReturnLink('インストーラーへ移動',InAppUrl::to(Routes::INSTALLER));
+        $page->addErrorMsg('ユーザー取得エラー');
+        $page->addErrorMsg('テーブルが未作成の可能性があります');
+        break;
+    }
     /**
      * ログイン成功・失敗時のユーザーレコード更新処理クラス
      */
