@@ -59,9 +59,8 @@ foreach ($race_history as $key => $data){
     $posted_race=isset($posted_race_list[$data->race_id])?(object)$posted_race_list[$data->race_id]:false;
     if($posted_race===false){ continue; }
 
-    $race_result= new RaceResults();
-    $result = $race_result->setDataById($pdo,$data->race_id,$horse_id);
-    if(!$result){
+    $race_result= RaceResults::getRowByIds($pdo,$data->race_id,$horse_id);
+    if(!$race_result){
         continue;
     }
     $row_has_change=false;
@@ -174,7 +173,7 @@ foreach ($race_history as $key => $data){
         $race_result->is_affliationed_nar=$nar_override;
         $changed->is_affliationed_nar = $row_has_change = $has_change = true;
     }
-    if($row_has_change && !$race_result->varidate()){
+    if($row_has_change && !$race_result->validate()){
         // 変更点がある場合、エラーチェック
         $has_error=true;
     }
@@ -359,8 +358,8 @@ td.is_affliationed_nar{ text-align:center; }
     <input type="hidden" name="race[<?=h($data->race_id)?>][is_affliationed_nar]" value="<?=h($race_result->is_affliationed_nar)?>">
 </td>
 </tr>
-<?php if($race_result->error_exists):?>
-    <tr><td colspan="<?=$colSpan?>" style="color:red;"><?=nl2br(h(implode("\n",$race_result->error_msgs)))?></td></tr>
+<?php if($race_result->hasErrors):?>
+    <tr><td colspan="<?=$colSpan?>" style="color:red;"><?=nl2br(h(implode("\n",$race_result->errorMessages)))?></td></tr>
 <?php endif;?>
 <?php endforeach; ?>
 </table>
