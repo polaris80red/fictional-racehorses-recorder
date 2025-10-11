@@ -48,7 +48,7 @@ do{
             $page->addErrorMsg("編集モードですが競走馬IDが指定されていません");
             break;
         }
-        if($horse_id===''){
+        if($race_id===''){
             $page->addErrorMsg("編集モードですがレース結果IDが指定されていません");
             break;
         }
