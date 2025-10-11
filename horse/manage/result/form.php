@@ -75,11 +75,7 @@ do{
         $next_race = Race::getByRaceId($pdo,$next_race_id);
     }
 }while(false);
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
-
+$page->renderErrorsAndExitIfAny();
 ?><!DOCTYPE html>
 <html>
 <head>
