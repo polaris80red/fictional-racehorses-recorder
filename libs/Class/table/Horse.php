@@ -3,42 +3,6 @@ class Horse extends Table{
     public const TABLE = 'dat_horse';
     public const UNIQUE_KEY_COLUMN="horse_id";
     public const ROW_CLASS = HorseRow::class;
-
-    public $record_exists = false;
-    public $error_exists = false;
-    public $error_msgs =[];
-
-    public $horse_id ='';
-    public $world_id =0;
-    public $name_ja ='';
-    public $name_en ='';
-    public $birth_year =null;
-    public $birth_month=null;
-    public $birth_day_of_month=null;
-    public $sex =0;
-    public $color ='';
-    public $tc ='';
-    public $trainer_name =null;
-    public $training_country ='JPN';
-    public $owner_name =null;
-    public $breeder_name =null;
-    public $breeding_country ='';
-    public $is_affliationed_nar =0;
-    public $sire_id =null;
-    public $sire_name ='';
-    public $mare_id =null;
-    public $mare_name ='';
-    public $bms_name ='';
-    public $is_sire_or_dam =0;
-    public $meaning ='';
-    public $note ='';
-    public $profile ='';
-    public $is_enabled =1;
-    public $created_at =null;
-    public $updated_at =null;
-
-    public function __construct(){
-    }
     /**
      * 行クラス形式用の暫定的な新しい取得処理
      */
