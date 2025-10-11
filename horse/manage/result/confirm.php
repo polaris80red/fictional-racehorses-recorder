@@ -20,8 +20,6 @@ $input->race_id=filter_input(INPUT_POST,'race_id');
 $input->horse_id=filter_input(INPUT_POST,'horse_id');
 
 $next_race_id=filter_input(INPUT_POST,'next_race_id');
-$next_race_results=null;
-
 $pdo= getPDO();
 do{
     if($input->race_id==""){
@@ -77,12 +75,10 @@ do{
             $page->addErrorMsg("対象馬は生年未登録です");
         }
     }
-    if(!$is_edit_mode){
-        if($next_race_id!=''){
-            $next_race_results=new RaceResults();
-            $next_race_results->setDataById($pdo,$next_race_id,$input->horse_id);
-            $next_race = Race::getByRaceId($pdo,$next_race_id);
-        }
+    $next_race_results=false;
+    if(!$is_edit_mode && $next_race_id!=''){
+        $next_race_results = RaceResults::getRowByIds($pdo,$next_race_id,$input->horse_id);
+        $next_race = Race::getByRaceId($pdo,$next_race_id);
     }
 }while(false);
 $input->varidate();
@@ -272,7 +268,7 @@ switch($input->is_affliationed_nar){
     <th>未登録の前走</th>
     <td><?php HTPrint::HiddenAndText('non_registered_prev_race_number',$input->non_registered_prev_race_number); ?></td>
 </tr>
-<?php if($next_race_results!=null && $next_race_results->record_exists && $next_race_results->non_registered_prev_race_number>0): ?>
+<?php if($next_race_results!==false && $next_race_results->non_registered_prev_race_number>0): ?>
 <tr>
     <th rowspan="3">次走から<br>未登録自動減算</th>
     <td><?php HTPrint::HiddenAndText('next_race_id',$next_race_results->race_id); ?></td>
