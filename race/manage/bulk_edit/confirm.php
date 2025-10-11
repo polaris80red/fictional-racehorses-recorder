@@ -67,9 +67,8 @@ foreach($table_data as $key => $data){
 
     $horse=$data->horseRow;
     $raceResult=$data->resultRow;
-    $newResult= new RaceResults();
-    $result = $newResult->setDataById($pdo,$race_id,$horse->horse_id);
-    if(!$result){
+    $newResult= RaceResults::getRowByIds($pdo,$race_id,$horse->horse_id);
+    if(!$newResult){
         continue;
     }
     if(!isset($_POST['race'][$horse->horse_id])){
@@ -217,7 +216,7 @@ foreach($table_data as $key => $data){
             $changed['syuutoku'] = $has_change = true;
         }
     }
-    if(!$newResult->varidate()){
+    if(!$newResult->validate()){
         $has_error=true;
     }
     $addData->newResult=$newResult;
@@ -247,7 +246,7 @@ foreach($table_data as $key => $data){
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <form action="execute.php" method="post">
-<?php $colSpan=20; ?>
+<?php $colSpan=21; ?>
 <table class="race_results">
 <tr>
     <th>枠</th>
@@ -369,8 +368,8 @@ foreach($table_data as $key => $data){
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][syuutoku]" value="<?=h($newResult->syuutoku)?>">
         </td>
     </tr>
-    <?php if($newResult->error_exists):?>
-        <tr><td colspan="<?=$colSpan?>" style="color:red;"><?=nl2br(h(implode("\n",$newResult->error_msgs)))?></td></tr>
+    <?php if($newResult->hasErrors):?>
+        <tr><td colspan="<?=$colSpan?>" style="color:red;"><?=nl2br(h(implode("\n",$newResult->errorMessages)))?></td></tr>
     <?php endif;?>
 <?php endforeach;?>
 </table>

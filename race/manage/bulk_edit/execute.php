@@ -87,6 +87,7 @@ $has_change=false;
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <form action="confirm.php" method="post">
+<?php $colSpan=21; ?>
 <table class="race_results">
 <tr>
     <th>枠</th>
@@ -113,9 +114,8 @@ $has_change=false;
         $has_change=false;
         $horse=$data->horseRow;
         $raceResult=$data->resultRow;
-        $newResult= new RaceResults();
-        $result = $newResult->setDataById($pdo,$race_id,$horse->horse_id);
-        if(!$result){
+        $newResult= RaceResults::getRowByIds($pdo,$race_id,$horse->horse_id);
+        if(!$newResult){
             continue;
         }
         if(!isset($_POST['race'][$horse->horse_id])){
@@ -263,11 +263,11 @@ $has_change=false;
                 $changed['syuutoku'] = $has_change = true;
             }
         }
-        if($has_change===true){
+        if($has_change===true && $newResult->validate()){
             $pdo->beginTransaction();
             try{
                 $newResult->updated_at=PROCESS_STARTED_AT;
-                $newResult->UpdateExec($pdo);
+                RaceResults::UpdateFromRowObj($pdo,$newResult);
                 $pdo->commit();
             }catch(Exception $e){
                 $pdo->rollBack();
@@ -365,6 +365,9 @@ $has_change=false;
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][syuutoku]" value="<?=h($newResult->syuutoku)?>">
         </td>
     </tr>
+    <?php if($newResult->hasErrors):?>
+        <tr><td colspan="<?=$colSpan?>" style="color:red;"><?=nl2br(h(implode("\n",$newResult->errorMessages)))?></td></tr>
+    <?php endif;?>
 <?php endforeach;?>
 </table>
 </form>
