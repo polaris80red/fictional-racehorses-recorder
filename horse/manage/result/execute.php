@@ -10,7 +10,6 @@ $page->ForceNoindex();
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
-$input = new RaceResults();
 $is_edit_mode = filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOL);
 $race_id=filter_input(INPUT_POST,'race_id');
 $horse_id=filter_input(INPUT_POST,'horse_id');
