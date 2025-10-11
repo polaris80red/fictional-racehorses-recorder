@@ -14,58 +14,48 @@ $csrf_token=new FormCsrfToken();
 $is_error=0;
 $error_msgs=[];
 
-$input = new RaceResults();
 $is_edit_mode = filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOL);
-$input->race_id=filter_input(INPUT_POST,'race_id');
-$input->horse_id=filter_input(INPUT_POST,'horse_id');
+$race_id=filter_input(INPUT_POST,'race_id');
+$horse_id=filter_input(INPUT_POST,'horse_id');
 
 $next_race_id=filter_input(INPUT_POST,'next_race_id');
 $pdo= getPDO();
 do{
-    if($input->race_id==""){
+    if($race_id==""){
         $page->addErrorMsg("レースID未指定。");
     }
-    if($input->horse_id==""){
+    if($horse_id==""){
         $page->addErrorMsg("競走馬ID未指定。");
     }
     if($page->error_exists){ break; }
-
-    $input->setDataByForm(INPUT_POST);
-    if( // 着順と降着前着順が設定されていて、降着前のほうが着順が大きい
-        intval($input->result_before_demotion)>0 &&
-        intval($input->result_number)>0 &&
-        $input->result_number<=$input->result_before_demotion
-        ){
-            $page->addErrorMsg("降着前着順が入力されていますが、降着で同値または着順が高くなっています\n（{$input->result_before_demotion}→{$input->result_number}）");
-    }
-    $old_horse_result= new RaceResults();
-    $old_horse_result->setDataById(
-        $pdo,
-        $input->race_id,
-        $input->horse_id);
-
-    $horse=Horse::getByHorseId($pdo, $input->horse_id);
+    $horse=Horse::getByHorseId($pdo, $horse_id);
     if($horse && !Session::currentUser()->canEditHorse($horse)){
         header("HTTP/1.1 403 Forbidden");
         $page->addErrorMsg("編集権限がありません");
         break;
     }
-    $race=Race::getByRaceId($pdo, $input->race_id);
+    $race=Race::getByRaceId($pdo, $race_id);
+    $input=RaceResults::getRowByIds($pdo,$race_id,$horse_id);
     if($is_edit_mode){
-        if(!$old_horse_result->record_exists){
+        // 編集モードの場合
+        if(!$input){
             $page->addErrorMsg("編集対象のレース結果が存在しません。");
             break;
         }
     }else{
-        if($old_horse_result->record_exists){
+        // 新規登録モードの場合
+        if($input!==false){
             $page->addErrorMsg("結果が既に存在します");
             break;
         }
+        $input=new RaceResultsRow();
         if(!$race){
             $page->addErrorMsg("存在しないレースID");
+            break;
         }
         if(!$horse){
             $page->addErrorMsg("存在しない競走馬ID");
+            break;
         }
         if($horse->world_id!==$race->world_id){
             $page->addErrorMsg("競走馬とレース情報のワールドが一致していません");
@@ -75,20 +65,17 @@ do{
             $page->addErrorMsg("対象馬は生年未登録です");
         }
     }
+    $input->setFromPost();
     $next_race_results=false;
     if(!$is_edit_mode && $next_race_id!=''){
-        $next_race_results = RaceResults::getRowByIds($pdo,$next_race_id,$input->horse_id);
+        $next_race_results = RaceResults::getRowByIds($pdo,$next_race_id,$horse_id);
         $next_race = Race::getByRaceId($pdo,$next_race_id);
     }
+    if(!$input->validate()){
+        $page->addErrorMsgArray($input->errorMessages);
+    }
 }while(false);
-$input->varidate();
-if($input->error_exists){
-    $page->addErrorMsgArray($input->error_msgs);
-}
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
+$page->renderErrorsAndExitIfAny();
 ?><!DOCTYPE html>
 <html>
 <head>
