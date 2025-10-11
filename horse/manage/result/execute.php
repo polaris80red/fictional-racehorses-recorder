@@ -12,56 +12,52 @@ if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $input = new RaceResults();
 $is_edit_mode = filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOL);
-$input->race_id=filter_input(INPUT_POST,'race_id');
-$input->horse_id=filter_input(INPUT_POST,'horse_id');
+$race_id=filter_input(INPUT_POST,'race_id');
+$horse_id=filter_input(INPUT_POST,'horse_id');
 
 $next_race_id=filter_input(INPUT_POST,'next_race_id');
-$next_race=null;
-
-$input->setDataByForm(INPUT_POST);
+$pdo= getPDO();
 do{
     if(!(new FormCsrfToken())->isValid()){
         ELog::error($page->title.": CSRFトークンエラー");
         $page->addErrorMsg("登録編集フォームまで戻り、内容確認からやりなおしてください（CSRFトークンエラー）");
         break;
     }
-    if($input->race_id==""){
+    if($race_id==""){
         $page->addErrorMsg("レースID未指定。");
     }
-    if($input->horse_id==""){
+    if($horse_id==""){
         $page->addErrorMsg("競走馬ID未指定。");
     }
     if($page->error_exists){ break; }
-
-    $pdo= getPDO();
-    $old_horse_result= new RaceResults();
-    $old_horse_result->setDataById(
-        $pdo,
-        $input->race_id,
-        $input->horse_id);
-
-    $horse=Horse::getByHorseId($pdo, $input->horse_id);
+    $horse=Horse::getByHorseId($pdo, $horse_id);
     if($horse && !Session::currentUser()->canEditHorse($horse)){
         header("HTTP/1.1 403 Forbidden");
         $page->addErrorMsg("編集権限がありません");
         break;
     }
-    $race=Race::getByRaceId($pdo, $input->race_id);
+    $race=Race::getByRaceId($pdo, $race_id);
+    $input=RaceResults::getRowByIds($pdo,$race_id,$horse_id);
     if($is_edit_mode){
-        if(!$old_horse_result->record_exists){
+        // 編集モードの場合
+        if(!$input){
             $page->addErrorMsg("編集対象のレース結果が存在しません。");
             break;
         }
     }else{
-        if($old_horse_result->record_exists){
+        // 新規登録モードの場合
+        if($input!==false){
             $page->addErrorMsg("結果が既に存在します");
             break;
         }
+        $input=new RaceResultsRow();
         if(!$race){
             $page->addErrorMsg("存在しないレースID");
+            break;
         }
         if(!$horse){
             $page->addErrorMsg("存在しない競走馬ID");
+            break;
         }
         if($horse->world_id!==$race->world_id){
             $page->addErrorMsg("競走馬とレース情報のワールドが一致していません");
@@ -71,52 +67,45 @@ do{
             $page->addErrorMsg("対象馬は生年未登録です");
         }
     }
-    if(!$input->varidate()){
-        $page->addErrorMsgArray($input->error_msgs);
+    $input->setFromPost();
+    $next_race_results=false;
+    if(!$is_edit_mode && $next_race_id!=''){
+        $next_race_results = RaceResults::getRowByIds($pdo,$next_race_id,$horse_id);
+        $next_race = Race::getByRaceId($pdo,$next_race_id);
+    }
+    if(!$input->validate()){
+        $page->addErrorMsgArray($input->errorMessages);
+        break;
     }
     $input->updated_at=PROCESS_STARTED_AT;
     if($is_edit_mode){
-        if(!$old_horse_result->record_exists){
-            $page->addErrorMsg("対象のレース結果が存在しません。");
-            break;
-        }
-        $input->UpdateExec($pdo);
+        RaceResults::UpdateFromRowObj($pdo,$input);
     }else{
-        if($old_horse_result->record_exists){
-            $page->addErrorMsg("結果が既に存在します");
-            break;
-        }
         $input->created_at=PROCESS_STARTED_AT;
         $pdo->beginTransaction();
         try{
-            $result = $input->InsertExec($pdo);
+            RaceResults::InsertFromRowObj($pdo,$input);
             // 空き区間への追加なら未登録数を減算
-            if($next_race_id!=''){
-                $next_race=new RaceResults();
-                $next_race->setDataById($pdo,$next_race_id,$input->horse_id);
-                $next_race->updated_at=PROCESS_STARTED_AT;
-                if($next_race->record_exists){
-                    $next_race->SubtractionNonRegisteredPrevRaceNumber($pdo);
-                }
+            if($next_race_results!==false){
+                RaceResults::SubtractionNonRegisteredPrevRaceNumber($pdo,$next_race_id,$input->horse_id,PROCESS_STARTED_AT);
             }
             $pdo->commit();
         }catch(Exception $e){
             $pdo->rollBack();
-            $page->debug_dump_var[]=$e;
-            $page->printCommonErrorPage();
+            $page->addErrorMsg('データベース処理エラー');
+            $page->addErrorMsg(print_r($e,true));
+            break;
         }
     }
     // 最後に開いた馬を結果登録した馬に更新
-    $session->latest_horse=[
-        'id'=>$input->horse_id,
-        'name'=>$horse->name_ja?:$horse->name_en,
-    ];
+    if($horse){
+        $session->latest_horse=[
+            'id'=>$input->horse_id,
+            'name'=>$horse->name_ja?:$horse->name_en,
+        ];
+    }
 }while(false);
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
-
+$page->renderErrorsAndExitIfAny();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>

@@ -61,9 +61,9 @@ class RaceResultsRow extends TableRow {
     public $corner_3 ='';
     public $corner_4 ='';
     public $f_time =null;
-    public $h_weight ='';
+    public $h_weight =null;
     public $odds =null;
-    public $favourite =0;
+    public $favourite =null;
     public $earnings =null;
     public $syuutoku =null;
     public $sex =0;
@@ -140,7 +140,7 @@ class RaceResultsRow extends TableRow {
         if($this->result_number==0){
             $this->result_number = (int)filter_input(INPUT_POST,'result_number_select');
         }
-        if($this->result_number==0){ $this->result_number==null; }
+        if($this->result_number==0){ $this->result_number=null; }
         $this->result_order=filter_input(INPUT_POST,'result_order',FILTER_VALIDATE_INT)?:null;
 
         $this->result_before_demotion = (int)filter_input(INPUT_POST,'result_before_demotion');
@@ -151,7 +151,7 @@ class RaceResultsRow extends TableRow {
         if($this->horse_number==0){
             $this->horse_number = (int)filter_input(INPUT_POST,'horse_number_select');
         }
-        if($this->horse_number==0){ $this->horse_number==null; }
+        if($this->horse_number==0){ $this->horse_number=null; }
         $this->jockey_name = filter_input(INPUT_POST,'jockey')?:null;
         $this->handicap = filter_input(INPUT_POST,'handicap');
         $this->odds = filter_input(INPUT_POST,'odds')?:null;
@@ -159,7 +159,7 @@ class RaceResultsRow extends TableRow {
         if($this->favourite==0){
             $this->favourite = (int)filter_input(INPUT_POST,'favourite_select');
         }
-        if($this->favourite==0){ $this->favourite==null; }
+        if($this->favourite==0){ $this->favourite=null; }
         $this->time = filter_input(INPUT_POST,'time');
         $this->margin = filter_input(INPUT_POST,'margin');
 
@@ -170,7 +170,7 @@ class RaceResultsRow extends TableRow {
 
         $this->f_time = filter_input(INPUT_POST,'f_time');
 
-        $this->h_weight = filter_input(INPUT_POST,'h_weight');
+        $this->h_weight = filter_input(INPUT_POST,'h_weight',FILTER_VALIDATE_INT)?:null;
         $this->earnings = (int)filter_input(INPUT_POST,'earnings',FILTER_VALIDATE_INT)?:null;
         $this->syuutoku = (int)filter_input(INPUT_POST,'syuutoku',FILTER_VALIDATE_INT)?:null;
         $this->sex = filter_input(INPUT_POST,'sex');
@@ -187,7 +187,7 @@ class RaceResultsRow extends TableRow {
 
         $this->jra_thisweek_horse_1 = filter_input(INPUT_POST,'jra_thisweek_horse_1');
         $this->jra_thisweek_horse_2 = filter_input(INPUT_POST,'jra_thisweek_horse_2');
-        $this->jra_thisweek_horse_sort_number = filter_input(INPUT_POST,'jra_thisweek_horse_sort_number');
+        $this->jra_thisweek_horse_sort_number = filter_input(INPUT_POST,'jra_thisweek_horse_sort_number',FILTER_VALIDATE_INT)?:null;
         $this->jra_sps_comment = filter_input(INPUT_POST,'jra_sps_comment');
         return;
     }
