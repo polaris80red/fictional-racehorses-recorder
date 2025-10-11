@@ -87,6 +87,7 @@ td.is_affliationed_nar{ text-align:center; }
 <?php include (new TemplateImporter('horse/horse_page-header.inc.php'));?>
 <form>
 <table class="horse_history">
+<?php $colSpan=19; ?>
 <tr>
     <th><?=$setting->horse_record_date==='umm'?'時期':'年月'?></th>
     <th>開催</th>
@@ -119,9 +120,8 @@ $sex_gelding_override=false;
     $posted_race=isset($posted_race_list[$data->race_id])?(object)$posted_race_list[$data->race_id]:false;
     if($posted_race===false){ continue; }
 
-    $race_result= new RaceResults();
-    $result = $race_result->setDataById($pdo,$data->race_id,$horse_id);
-    if(!$result){
+    $race_result= RaceResults::getRowByIds($pdo,$data->race_id,$horse_id);
+    if(!$race_result){
         continue;
     }
     $has_change=false;
@@ -231,9 +231,11 @@ $sex_gelding_override=false;
         // 変更箇所がない場合はスキップする
         continue;
     }
-    $race_result->updated_at=PROCESS_STARTED_AT;
-    $race_result->UpdateExec($pdo);
-    ELog::debug("bulk_edit| horse:{$horse_id}, race:{$race_result->race_id}");
+    if($race_result->validate()){
+        $race_result->updated_at=PROCESS_STARTED_AT;
+        RaceResults::UpdateFromRowObj($pdo,$race_result);
+        ELog::debug("bulk_edit| horse:{$horse_id}, race:{$race_result->race_id}");
+    }
     if($data->is_registration_only==1){
         $tr_class->add('disabled_row');
     }
@@ -334,6 +336,9 @@ $sex_gelding_override=false;
     <input type="hidden" name="race[<?=h($data->race_id)?>][is_affliationed_nar]" value="<?=h($race_result->is_affliationed_nar)?>">
 </td>
 </tr>
+<?php if($race_result->hasErrors):?>
+    <tr><td colspan="<?=$colSpan?>" style="color:red;"><?=nl2br(h(implode("\n",$race_result->errorMessages)))?></td></tr>
+<?php endif;?>
 <?php endforeach; ?>
 </table>
 </form>
