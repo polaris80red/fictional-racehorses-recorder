@@ -1,6 +1,7 @@
 <?php
 class RaceResults extends Table{
     public const TABLE="dat_race_results";
+    public const UNIQUE_KEY_COLUMN="number";
     public const ROW_CLASS = RaceResultsRow::class;
 
     public $record_exists=false;
@@ -85,7 +86,7 @@ class RaceResults extends Table{
      * レースIDと競走馬IDで結果行を取得
      */
     public static function getRowByIds($pdo, string $raceId, string $horseId){
-        $target_columns=(self::ROW_CLASS)::getColumnNames('number');
+        $target_columns=(self::ROW_CLASS)::getColumnNames();
         $sql_select_columns_part=(new SqlMakeColumnNames($target_columns))->quotedString();
 
         $sql ="SELECT {$sql_select_columns_part} FROM `".self::TABLE;
@@ -306,7 +307,7 @@ class RaceResults extends Table{
         $stmt->bindValue(':updated_at', $this->updated_at, PDO::PARAM_STR);
         return $stmt;
     }
-    public function SubtractionNonRegisteredPrevRaceNumber(PDO $pdo){
+    public static function SubtractionNonRegisteredPrevRaceNumber(PDO $pdo, string $race_id, string $horse_id, string|null $updated_at=null){
         $tbl=self::TABLE;
         $sql=<<<END
         UPDATE `{$tbl}`
@@ -316,9 +317,9 @@ class RaceResults extends Table{
         WHERE `race_id` LIKE :race_id AND `horse_id` LIKE :horse_id;
         END;
         $stmt=$pdo->prepare($sql);
-        $stmt->bindValue(":updated_at",$this->updated_at,PDO::PARAM_STR);
-        $stmt->bindValue(":race_id",SqlValueNormalizer::escapeLike($this->race_id),PDO::PARAM_STR);
-        $stmt->bindValue(":horse_id",SqlValueNormalizer::escapeLike($this->horse_id),PDO::PARAM_STR);
+        $stmt->bindValue(":updated_at",$updated_at,PDO::PARAM_STR);
+        $stmt->bindValue(":race_id",SqlValueNormalizer::escapeLike($race_id),PDO::PARAM_STR);
+        $stmt->bindValue(":horse_id",SqlValueNormalizer::escapeLike($horse_id),PDO::PARAM_STR);
         return $stmt->execute();
     }
 }
