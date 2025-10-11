@@ -3,7 +3,7 @@
  * 競走馬ページ上部の馬名など情報行
  * @var Page $page
  * @var Setting $setting
- * @var Horse $horse
+ * @var HorseRow $horse
  */
 ?><div style="float:left">
     <?php $horse_main_name=($horse->name_ja?:($horse->name_en===''?ANNONYMOUS_HORSE_NAME:''));?>
