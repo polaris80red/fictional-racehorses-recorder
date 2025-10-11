@@ -10,11 +10,11 @@ $page->ForceNoindex();
 $session=new Session();
 if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
-$race_result_id=(string)filter_input(INPUT_GET,'race_id');
+$race_id=(string)filter_input(INPUT_GET,'race_id');
 $horse_id=(string)filter_input(INPUT_GET,'horse_id');
 $result_number=filter_input(INPUT_GET,'result_number');
 
-$is_edit_mode=filter_input(INPUT_GET,'edit_mode')?1:0;
+$is_edit_mode=filter_input(INPUT_GET,'edit_mode',FILTER_VALIDATE_BOOL);
 
 $next_race_id=filter_input(INPUT_GET,'next_race_id');
 $next_race_data=null;
@@ -24,23 +24,17 @@ $form_data->result_number=$result_number;
 
 # 対象取得
 $pdo= getPDO();
-$horse=false;
-if($horse_id){
-    $horse=Horse::getByHorseId($pdo, $horse_id);
-}
-$race=false;
-if($race_result_id){
-    $race=Race::getByRaceId($pdo, $race_result_id);
-}
+$horse=!$horse_id ? false : Horse::getByHorseId($pdo, $horse_id);
+$race =!$race_id ? false : Race::getByRaceId($pdo, $race_id);
 do{
     if($horse_id!=='' && !$horse){
         // 競走馬ID指定ありでレコード無し
         $page->addErrorMsg("存在しない競走馬ID｜$horse_id");
         break;
     }
-    if($race_result_id!=='' && !$race){
+    if($race_id!=='' && !$race){
         // レースID指定ありでレコード無し
-        $page->addErrorMsg("存在しないレース結果ID｜$race_result_id");
+        $page->addErrorMsg("存在しないレース結果ID｜$race_id");
         break;
     }
     if($horse && !Session::currentUser()->canEditHorse($horse)){
@@ -59,15 +53,15 @@ do{
             break;
         }
     }
-    if($horse_id!=='' && $race_result_id!==''){
+    if($horse_id!=='' && $race_id!==''){
         // レースと馬が両方指定されている状態のとき
-        $result=$form_data->setDataById($pdo,$race_result_id,$horse_id);
+        $result=$form_data->setDataById($pdo,$race_id,$horse_id);
         if($result && !$is_edit_mode){
-            $page->addErrorMsg("登録予定のレース個別結果が既に存在します｜$race_result_id|$horse_id");
+            $page->addErrorMsg("登録予定のレース個別結果が既に存在します｜$race_id|$horse_id");
             break;
         }
         if(!$result && $is_edit_mode){
-            $page->addErrorMsg("編集対象のレース個別結果が存在しません｜$race_result_id|$horse_id");
+            $page->addErrorMsg("編集対象のレース個別結果が存在しません｜$race_id|$horse_id");
             break;
         }
         if($horse->world_id!==$race->world_id){
@@ -100,24 +94,24 @@ if($page->error_exists){
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?=h($page->title)?><?=h($is_edit_mode?"(編集)":"") ?></h1>
+<h1 class="page_title"><?=h($page->title)?><?=h($is_edit_mode?"(編集)":"")?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
 <form action="./confirm.php" method="post">
 <div style="margin-bottom: 2px;">
     <input type="submit" value="登録・編集　内容確認">
-    <input type="hidden" name="edit_mode" value="<?php echo ($is_edit_mode)?1:0; ?>">
+    <input type="hidden" name="edit_mode" value="<?=h($is_edit_mode?1:0)?>">
 </div>
 <table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
-    <?php if(empty($race_result_id)): ?>
+    <?php if(empty($race_id)): ?>
     <th>レースID</th>
-    <td class="in_input" colspan="2"><input type="text" name="race_id" value="<?php echo $race_result_id; ?>" class="required" required></td>
+    <td class="in_input" colspan="2"><input type="text" name="race_id" value="<?php echo $race_id; ?>" class="required" required></td>
     <?php else: ?>
     <th>レース名称</th>
     <td colspan="2">
-        <?php HTPrint::Hidden('race_id',$race_result_id); ?>
+        <?php HTPrint::Hidden('race_id',$race_id); ?>
         <?=h(($race->year?:"")." ".($race->race_name?:""))?>
     </td>
     <?php endif; ?>
@@ -512,7 +506,7 @@ function randomSet(){
 </script>
 <?php if($is_edit_mode && Session::currentUser()->canDeleteRaceResult($horse)): ?>
 <form action="./delete/" method="post" style="text-align:right;">
-<input type="hidden" name="race_id" value="<?=h($race_result_id)?>">
+<input type="hidden" name="race_id" value="<?=h($race_id)?>">
 <input type="hidden" name="horse_id" value="<?=h($horse_id)?>">
 <input type="submit" value="レース結果詳細データ削除確認" style="color:red;">
 </form>
