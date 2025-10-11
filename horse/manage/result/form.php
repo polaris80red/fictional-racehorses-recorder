@@ -22,6 +22,7 @@ $next_race_data=null;
 # 対象取得
 $pdo= getPDO();
 do{
+    $form_data=false;
     $horse=!$horse_id ? false : Horse::getByHorseId($pdo, $horse_id);
     if($horse_id!=='' && !$horse){
         // 競走馬ID指定ありでレコード無し
@@ -67,7 +68,7 @@ do{
             break;
         }
     }
-    $form_data = $form_data ?? new RaceResultsRow();
+    $form_data = $form_data ?: new RaceResultsRow();
     if(!$is_edit_mode && $result_number>0){
         $form_data->result_number=$result_number;
     }
