@@ -82,6 +82,25 @@ class RaceResults extends Table{
     public function __construct(){
     }
     /**
+     * レースIDと競走馬IDで結果行を取得
+     */
+    public static function getRowByIds($pdo, string $raceId, string $horseId){
+        $target_columns=(self::ROW_CLASS)::getColumnNames('number');
+        $sql_select_columns_part=(new SqlMakeColumnNames($target_columns))->quotedString();
+
+        $sql ="SELECT {$sql_select_columns_part} FROM `".self::TABLE;
+        $sql.="` WHERE `race_id` LIKE :race_id AND `horse_id` LIKE :horse_id LIMIT 1;";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':race_id', SqlValueNormalizer::escapeLike($raceId), PDO::PARAM_STR);
+        $stmt->bindValue(':horse_id', SqlValueNormalizer::escapeLike($horseId), PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($result==false){
+            return false;
+        }
+        return (new (static::ROW_CLASS))->setFromArray($result);
+    }
+    /**
      * キーでデータベースから取得
      */
     public function setDataById($pdo, string $race_id, string $horse_id){

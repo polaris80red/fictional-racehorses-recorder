@@ -69,9 +69,9 @@ do{
             break;
         }
     }
+    $next_race_data=false;
     if(!$is_edit_mode && $next_race_id!=''){
-        $next_race_data = new RaceResults();
-        $next_race_data->setDataById($pdo,$next_race_id,$horse_id);
+        $next_race_data = RaceResults::getRowByIds($pdo,$next_race_id,$horse_id);
         $next_race = Race::getByRaceId($pdo,$next_race_id);
     }
 }while(false);
@@ -317,7 +317,7 @@ $page->renderErrorsAndExitIfAny();
     <td class="in_input"><input type="number" name="non_registered_prev_race_number" style="width: 3em;" value="<?=h((int)$form_data->non_registered_prev_race_number)?>">走以上</td>
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=non_registered_prev_race_number]');"></td>
 </tr>
-<?php if($next_race_data!=null && $next_race_data->record_exists && $next_race_data->non_registered_prev_race_number>0): ?>
+<?php if($next_race_data !== false && $next_race_data->non_registered_prev_race_number>0): ?>
 <tr>
     <th rowspan="3">次走から<br>未登録を<br>自動減算</th>
     <td><?=h($next_race_data->race_id)?><input type="hidden" name="next_race_id" value="<?=h($next_race_data->race_id)?>"></td>
