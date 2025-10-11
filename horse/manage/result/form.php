@@ -12,26 +12,23 @@ if(!Session::isLoggedIn()){ $page->exitToHome(); }
 
 $race_id=(string)filter_input(INPUT_GET,'race_id');
 $horse_id=(string)filter_input(INPUT_GET,'horse_id');
-$result_number=filter_input(INPUT_GET,'result_number');
+$result_number=filter_input(INPUT_GET,'result_number',FILTER_VALIDATE_INT);
 
 $is_edit_mode=filter_input(INPUT_GET,'edit_mode',FILTER_VALIDATE_BOOL);
 
 $next_race_id=filter_input(INPUT_GET,'next_race_id');
 $next_race_data=null;
 
-$form_data= new RaceResults();
-$form_data->result_number=$result_number;
-
 # 対象取得
 $pdo= getPDO();
-$horse=!$horse_id ? false : Horse::getByHorseId($pdo, $horse_id);
-$race =!$race_id ? false : Race::getByRaceId($pdo, $race_id);
 do{
+    $horse=!$horse_id ? false : Horse::getByHorseId($pdo, $horse_id);
     if($horse_id!=='' && !$horse){
         // 競走馬ID指定ありでレコード無し
         $page->addErrorMsg("存在しない競走馬ID｜$horse_id");
         break;
     }
+    $race =!$race_id ? false : Race::getByRaceId($pdo, $race_id);
     if($race_id!=='' && !$race){
         // レースID指定ありでレコード無し
         $page->addErrorMsg("存在しないレース結果ID｜$race_id");
@@ -55,12 +52,13 @@ do{
     }
     if($horse_id!=='' && $race_id!==''){
         // レースと馬が両方指定されている状態のとき
-        $result=$form_data->setDataById($pdo,$race_id,$horse_id);
-        if($result && !$is_edit_mode){
-            $page->addErrorMsg("登録予定のレース個別結果が既に存在します｜$race_id|$horse_id");
-            break;
-        }
-        if(!$result && $is_edit_mode){
+        $form_data=RaceResults::getRowByIds($pdo,$race_id,$horse_id);
+        if(!$is_edit_mode){
+            if($form_data){
+                $page->addErrorMsg("登録予定のレース個別結果が既に存在します｜$race_id|$horse_id");
+                break;
+            }
+        }else if(!$form_data){
             $page->addErrorMsg("編集対象のレース個別結果が存在しません｜$race_id|$horse_id");
             break;
         }
@@ -68,6 +66,10 @@ do{
             $page->addErrorMsg("競走馬とレース情報のワールドが一致していません");
             break;
         }
+    }
+    $form_data = $form_data ?? new RaceResultsRow();
+    if(!$is_edit_mode && $result_number>0){
+        $form_data->result_number=$result_number;
     }
     $next_race_data=false;
     if(!$is_edit_mode && $next_race_id!=''){
