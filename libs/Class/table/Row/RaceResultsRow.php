@@ -91,6 +91,13 @@ class RaceResultsRow extends TableRow {
         $this->varidateInt($this->result_order,'表示順補正',0,99);
         $this->validateStrLength($this->result_text,'特殊結果',8);
         $this->varidateInt($this->result_before_demotion,'降着前入線順',0,99);
+        if( // 着順と降着前着順が設定されていて、降着前のほうが着順が大きい
+            intval($this->result_before_demotion)>0 &&
+            intval($this->result_number)>0 &&
+            $this->result_number<=$this->result_before_demotion
+            ){
+                $this->addErrorMessage("降着前着順が入力されていますが、降着で同値または着順が高くなっています\n（{$this->result_before_demotion}→{$this->result_number}）");
+        }
         $this->varidateInt($this->frame_number,'枠番',0,99);
         $this->varidateInt($this->horse_number,'馬番',0,99);
         $this->validateStrLength($this->jockey_name,'騎手名',32);
@@ -127,6 +134,8 @@ class RaceResultsRow extends TableRow {
      * $_POSTからセットする
      */
     public function setFromPost(){
+        $this->race_id=filter_input(INPUT_POST,'race_id');
+        $this->horse_id=filter_input(INPUT_POST,'horse_id');
         $this->result_number = (int)filter_input(INPUT_POST,'result_number');
         if($this->result_number==0){
             $this->result_number = (int)filter_input(INPUT_POST,'result_number_select');
