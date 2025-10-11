@@ -85,10 +85,9 @@ $additionalData=[];
 foreach($table_data as $key=>$data){
     $horse=$data->horseRow;
     $raceResult=$data->resultRow;
-    $newResult= new RaceResults();
+    $newResult= RaceResults::getRowByIds($pdo,$race_id,$horse->horse_id);
     $addData=new stdClass;
-    $result = $newResult->setDataById($pdo,$race_id,$horse->horse_id);
-    if(!$result){
+    if(!$newResult){
         continue;
     }
     if(!isset($_POST['race'][$horse->horse_id])){
@@ -112,7 +111,7 @@ foreach($table_data as $key=>$data){
             $changed['race_after_note'] = $has_change = true;
         }
     }
-    if(!$newResult->varidate()){
+    if(!$newResult->validate()){
         $has_error=true;
     }
     $addData->newResult=$newResult;
@@ -202,8 +201,8 @@ foreach($table_data as $key=>$data){
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][race_after_note]" value="<?=h($newResult->race_after_note)?>">
         </td>
     </tr>
-    <?php if($newResult->error_exists):?>
-        <tr><td colspan="2" style="color:red;"><?=nl2br(h(implode("\n",$newResult->error_msgs)))?></td></tr>
+    <?php if($newResult->hasErrors):?>
+        <tr><td colspan="2" style="color:red;"><?=nl2br(h(implode("\n",$newResult->errorMessages)))?></td></tr>
     <?php endif;?>
 <?php endforeach;?>
 </table>

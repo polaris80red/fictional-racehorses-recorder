@@ -102,10 +102,9 @@ foreach($table_data as $key => $data){
     $has_change=false;
     $horse=$data->horseRow;
     $raceResult=$data->resultRow;
-    $newResult= new RaceResults();
+    $newResult= RaceResults::getRowByIds($pdo,$race_id,$horse->horse_id);
     $addData=new stdClass;
-    $result = $newResult->setDataById($pdo,$race_id,$horse->horse_id);
-    if(!$result){
+    if(!$newResult){
         continue;
     }
     if(!isset($_POST['race'][$horse->horse_id])){
@@ -137,11 +136,11 @@ foreach($table_data as $key => $data){
             }
         }
     }
-    if($has_change===true){
+    if($has_change===true && $newResult->validate()){
         $pdo->beginTransaction();
         try{
             $newResult->updated_at=PROCESS_STARTED_AT;
-            $newResult->UpdateExec($pdo);
+            RaceResults::UpdateFromRowObj($pdo,$newResult);
             $pdo->commit();
         }catch(Exception $e){
             $pdo->rollBack();
@@ -245,6 +244,9 @@ foreach($table_data as $key => $data){
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][race_after_note]" value="<?=h($newResult->race_after_note)?>">
         </td>
     </tr>
+    <?php if($newResult->hasErrors):?>
+        <tr><td colspan="2" style="color:red;"><?=nl2br(h(implode("\n",$newResult->errorMessages)))?></td></tr>
+    <?php endif;?>
 <?php endforeach;?>
 </table>
 </form>
