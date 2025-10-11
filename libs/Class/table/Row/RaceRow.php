@@ -146,7 +146,7 @@ class RaceRow extends TableRow {
 
         $this->after_note=filter_input(INPUT_POST,'after_note');
 
-        $this->number_of_starters=filter_input(INPUT_POST,'number_of_starters');
+        $this->number_of_starters=filter_input(INPUT_POST,'number_of_starters')?:null;
         $this->is_jra=filter_input(INPUT_POST,'is_jra');
         $this->is_nar=filter_input(INPUT_POST,'is_nar');
         $date=(string)filter_input(INPUT_POST,'date');
