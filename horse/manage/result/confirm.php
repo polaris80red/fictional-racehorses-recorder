@@ -15,10 +15,7 @@ $is_error=0;
 $error_msgs=[];
 
 $input = new RaceResults();
-$is_edit_mode = 0;
-if(filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOLEAN)){
-    $is_edit_mode = 1;
-}
+$is_edit_mode = filter_input(INPUT_POST,'edit_mode',FILTER_VALIDATE_BOOL);
 $input->race_id=filter_input(INPUT_POST,'race_id');
 $input->horse_id=filter_input(INPUT_POST,'horse_id');
 
@@ -56,7 +53,7 @@ do{
         break;
     }
     $race=Race::getByRaceId($pdo, $input->race_id);
-    if($is_edit_mode==1){
+    if($is_edit_mode){
         if(!$old_horse_result->record_exists){
             $page->addErrorMsg("編集対象のレース結果が存在しません。");
             break;
