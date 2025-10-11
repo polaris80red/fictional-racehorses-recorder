@@ -14,12 +14,7 @@ $delete_confirm_check=filter_input(INPUT_POST,'delete_confirm_check',FILTER_VALI
 $race_id=filter_input(INPUT_POST,'race_id');
 $horse_id=filter_input(INPUT_POST,'horse_id');
 
-$horse_race_result= new RaceResults();
-$horse_race_result->race_id=$race_id;
-$horse_race_result->horse_id=$horse_id;
-
 $pdo= getPDO();
-# 対象取得
 do{
     if(!$delete_confirm_check){
         $page->addErrorMsg("確認チェックボックスがオンになっていません");
@@ -33,7 +28,8 @@ do{
         $page->addErrorMsg("競走馬ID未指定");
         break;
     }
-    if(!$horse_race_result->setDataById($pdo, $race_id, $horse_id)){
+    $horse_race_result = RaceResults::getRowByIds($pdo, $race_id, $horse_id);
+    if(!$horse_race_result){
         $page->addErrorMsg("存在しないレース結果");
         break;
     }
@@ -52,9 +48,15 @@ if($page->error_exists){
     $page->printCommonErrorPage();
     exit;
 }else{
+    $pdo->beginTransaction();
     try {
-        $pdo->beginTransaction();
-        $horse_race_result->DeleteExec($pdo);
+        $escaped_horse_id=SqlValueNormalizer::escapeLike($horse_id);
+        $escaped_race_id=SqlValueNormalizer::escapeLike($race_id);
+        $sql="DELETE FROM `".RaceResults::TABLE."` WHERE `horse_id` LIKE :horse_id AND `race_id` LIKE :race_id;";
+        $stmt1=$pdo->prepare($sql);
+        $stmt1->bindValue(':horse_id',$escaped_horse_id,PDO::PARAM_STR);
+        $stmt1->bindValue(':race_id',$escaped_race_id,PDO::PARAM_STR);
+        $stmt1->execute();
         $pdo->commit();
     } catch(Exception $e) {
         $pdo->rollback();
@@ -83,10 +85,10 @@ if($page->error_exists){
 <?php if($page->error_exists):?>
 エラー
 <?php else:?>
-<?=h($horse_race_result->horse_id)?>のレース結果を削除しました。
+<?=h($horse_id)?>のレース結果を削除しました。
 <?php endif; ?>
 <hr>
-<a href="<?=h(APP_ROOT_REL_PATH."horse/?horse_id=".$horse_race_result->horse_id);?>">馬データへ移動</a><br>
+<a href="<?=h(APP_ROOT_REL_PATH."horse/?horse_id=".$horse_id);?>">馬データへ移動</a><br>
 <hr class="no-css-fallback">
 </main>
 <footer>

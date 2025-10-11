@@ -13,12 +13,7 @@ if(!Session::isLoggedIn()){ $page->exitToHome(); }
 $race_id=filter_input(INPUT_POST,'race_id');
 $horse_id=filter_input(INPUT_POST,'horse_id');
 
-$horse_race_result= new RaceResults();
-$horse_race_result->race_id=$race_id;
-$horse_race_result->horse_id=$horse_id;
-
 $pdo= getPDO();
-# 対象取得
 do{
     if(empty($race_id)){
         $page->addErrorMsg("レースID未指定");
@@ -28,11 +23,12 @@ do{
         $page->addErrorMsg("競走馬ID未指定");
         break;
     }
-    if(!$horse_race_result->setDataById($pdo, $race_id, $horse_id)){
+    $horse_race_result = RaceResults::getRowByIds($pdo, $race_id, $horse_id);
+    if(!$horse_race_result){
         $page->addErrorMsg("存在しないレース結果");
         break;
     }
-    $horse=Horse::getByHorseId($pdo, $horse_race_result->horse_id);
+    $horse=Horse::getByHorseId($pdo, $horse_id);
     if(!$horse){
         $page->addErrorMsg("競走馬取得エラー");
         break;
@@ -42,7 +38,7 @@ do{
         $page->addErrorMsg("削除権限がありません");
         break;
     }
-    $race=Race::getByRaceId($pdo, $horse_race_result->race_id);
+    $race=Race::getByRaceId($pdo, $race_id);
 }while(false);
 if($page->error_exists){
     $page->printCommonErrorPage();
@@ -74,7 +70,7 @@ if($page->error_exists){
 <table class="edit-form-table">
 <tr>
     <th>レースID</th>
-    <td><?php HTPrint::HiddenAndText('race_id',$horse_race_result->race_id); ?></td>
+    <td><?php HTPrint::HiddenAndText('race_id',$race_id); ?></td>
 </tr>
 <tr>
     <th>レース名</th>
@@ -82,7 +78,7 @@ if($page->error_exists){
 </tr>
 <tr>
     <th>競走馬ID</th>
-    <td><?php HTPrint::HiddenAndText('horse_id',$horse_race_result->horse_id); ?></td>
+    <td><?php HTPrint::HiddenAndText('horse_id',$horse_id); ?></td>
 </tr>
 <tr>
     <th>競走馬名</th>
