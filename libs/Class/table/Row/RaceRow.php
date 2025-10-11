@@ -57,7 +57,7 @@ class RaceRow extends TableRow {
     public $number_of_starters =null;
     public $is_jra =1;
     public $is_nar =0;
-    public $date ='';
+    public $date =null;
     public $is_tmp_date =1;
     public $year =null;
     public $month =null;
@@ -149,9 +149,10 @@ class RaceRow extends TableRow {
         $this->number_of_starters=filter_input(INPUT_POST,'number_of_starters');
         $this->is_jra=filter_input(INPUT_POST,'is_jra');
         $this->is_nar=filter_input(INPUT_POST,'is_nar');
-        $this->date=filter_input(INPUT_POST,'date');
+        $date=(string)filter_input(INPUT_POST,'date');
+        if($date===''){ $this->date = null; }
         $datetime=null;
-        if($this->date!=''){
+        if($this->date!=null){
             $datetime=new dateTime($this->date);
         }
         if(empty($this->year) && $datetime){
