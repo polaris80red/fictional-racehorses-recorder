@@ -40,14 +40,11 @@ do{
     }
     $race=Race::getByRaceId($pdo, $race_id);
 }while(false);
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}
+$page->renderErrorsAndExitIfAny();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php echo $page->title; ?></title>
+    <title><?=h($page->renderTitle())?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -62,7 +59,7 @@ if($page->error_exists){
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title" style="color:red;"><?php echo $page->title; ?></h1>
+<h1 class="page_title" style="color:red;"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
@@ -74,7 +71,7 @@ if($page->error_exists){
 </tr>
 <tr>
     <th>レース名</th>
-    <td><?php echo $race->year." ".$race->race_name; ?></td>
+    <td><?=h($race->year." ".$race->race_name)?></td>
 </tr>
 <tr>
     <th>競走馬ID</th>
@@ -82,13 +79,7 @@ if($page->error_exists){
 </tr>
 <tr>
     <th>競走馬名</th>
-     <td><?php
-if($horse->name_ja){
-    echo $horse->name_ja;
-} else{
-    echo $horse->name_en?:"";
-}
-?></td>
+     <td><?=h($horse->name_ja?:($horse->name_en?:''))?></td>
 </tr>
 </table>
 <hr>

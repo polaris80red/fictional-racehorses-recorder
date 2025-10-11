@@ -43,11 +43,6 @@ do{
         $page->addErrorMsg("削除権限がありません");
         break;
     }
-}while(false);
-if($page->error_exists){
-    $page->printCommonErrorPage();
-    exit;
-}else{
     $pdo->beginTransaction();
     try {
         $escaped_horse_id=SqlValueNormalizer::escapeLike($horse_id);
@@ -63,11 +58,12 @@ if($page->error_exists){
         $page->addErrorMsg('データベース処理エラー');
         $page->addErrorMsg(print_r($e,true));
     }
-}
+}while(false);
+$page->renderErrorsAndExitIfAny();
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title><?php echo $page->title; ?></title>
+    <title><?=h($page->renderTitle())?></title>
     <meta charset="UTF-8">
     <meta http-equiv="content-language" content="ja">
     <?=$page->getMetaNoindex()?>
@@ -78,15 +74,11 @@ if($page->error_exists){
 <body>
 <header>
 <?php $page->printHeaderNavigation(); ?>
-<h1 class="page_title"><?php echo $page->title; ?></h1>
+<h1 class="page_title"><?=h($page->title)?></h1>
 </header>
 <main id="content">
 <hr class="no-css-fallback">
-<?php if($page->error_exists):?>
-エラー
-<?php else:?>
 <?=h($horse_id)?>のレース結果を削除しました。
-<?php endif; ?>
 <hr>
 <a href="<?=h(APP_ROOT_REL_PATH."horse/?horse_id=".$horse_id);?>">馬データへ移動</a><br>
 <hr class="no-css-fallback">
