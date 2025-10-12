@@ -86,9 +86,9 @@ class RaceRow extends TableRow {
         if(empty($this->world_id)){
             $this->addErrorMessage('ワールドID未設定');
         }
-        $this->varidateInt($this->race_number,'レース番号',0,99);
+        $this->validateInt($this->race_number,'レース番号',0,99);
         $this->validateStrLength($this->course_type,'コース区分',2);
-        $this->varidateInt($this->distance,'距離',0,10000);
+        $this->validateInt($this->distance,'距離',0,10000);
         if(empty($this->race_name)){
             $this->addErrorMessage('レース名未設定');
         }
@@ -99,14 +99,14 @@ class RaceRow extends TableRow {
         $this->validateStrLength($this->age,'馬齢条件',50);
         $this->validateStrLength($this->weather,'天候',10);
         $this->validateStrLength($this->track_condition,'馬場状態',100);
-        $this->varidateInt($this->number_of_starters,'頭数',0,99);
+        $this->validateInt($this->number_of_starters,'頭数',0,99);
         if(strval($this->year)===''){
             $this->addErrorMessage('年未設定');
         }
         if($this->month==0){
             $this->addErrorMessage('月未設定');
         }
-        $this->varidateInt($this->month,'月',1,12);
+        $this->validateInt($this->month,'月',1,12);
         if($this->week_id==0){
             $this->addErrorMessage('週未設定');
         }

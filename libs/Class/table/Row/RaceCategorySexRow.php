@@ -26,7 +26,7 @@ class RaceCategorySexRow extends TableRow {
         $this->validateStrLength($this->name,'名称',50);
         $this->validateStrLength($this->short_name_3,'3字略名',3);
         $this->validateStrLength($this->umm_category,'擬人化用名称',16);
-        $this->varidateInt($this->sort_number,'表示順補正');
+        $this->validateInt($this->sort_number,'表示順補正');
         return !$this->hasErrors;
     }
 }

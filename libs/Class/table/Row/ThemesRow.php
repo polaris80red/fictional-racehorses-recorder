@@ -25,8 +25,8 @@ class ThemesRow extends TableRow {
     {
         $this->validateStrLength($this->name,'名称',32);
         $this->validateStrLength($this->dir_name,'ディレクトリ名',100);
-        $this->varidateInt($this->sort_priority,'表示順優先度');
-        $this->varidateInt($this->sort_number,'表示順補正');
+        $this->validateInt($this->sort_priority,'表示順優先度');
+        $this->validateInt($this->sort_number,'表示順補正');
         return !$this->hasErrors;
     }
 }

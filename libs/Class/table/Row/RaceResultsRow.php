@@ -87,10 +87,10 @@ class RaceResultsRow extends TableRow {
      */
     public function validate(): bool
     {
-        $this->varidateInt($this->result_number,'着順',0,99);
-        $this->varidateInt($this->result_order,'表示順補正',0,99);
+        $this->validateInt($this->result_number,'着順',0,99);
+        $this->validateInt($this->result_order,'表示順補正',0,99);
         $this->validateStrLength($this->result_text,'特殊結果',8);
-        $this->varidateInt($this->result_before_demotion,'降着前入線順',0,99);
+        $this->validateInt($this->result_before_demotion,'降着前入線順',0,99);
         if( // 着順と降着前着順が設定されていて、降着前のほうが着順が大きい
             intval($this->result_before_demotion)>0 &&
             intval($this->result_number)>0 &&
@@ -98,30 +98,30 @@ class RaceResultsRow extends TableRow {
             ){
                 $this->addErrorMessage("降着前着順が入力されていますが、降着で同値または着順が高くなっています\n（{$this->result_before_demotion}→{$this->result_number}）");
         }
-        $this->varidateInt($this->frame_number,'枠番',0,99);
-        $this->varidateInt($this->horse_number,'馬番',0,99);
+        $this->validateInt($this->frame_number,'枠番',0,99);
+        $this->validateInt($this->horse_number,'馬番',0,99);
         $this->validateStrLength($this->jockey_name,'騎手名',32);
         $this->validateStrLength($this->handicap,'斤量',4);
         $this->validateStrLength($this->odds,'単勝オッズ',6);
         $this->validateStrLength($this->time,'タイム',7);
         $this->validateStrLength($this->margin,'着差',5);
         
-        $this->varidateInt($this->corner_1,'コーナー通過順位1',0,99);
-        $this->varidateInt($this->corner_2,'コーナー通過順位2',0,99);
-        $this->varidateInt($this->corner_3,'コーナー通過順位3',0,99);
-        $this->varidateInt($this->corner_4,'コーナー通過順位4',0,99);
-        $this->varidateInt($this->favourite,'人気',0,99);
+        $this->validateInt($this->corner_1,'コーナー通過順位1',0,99);
+        $this->validateInt($this->corner_2,'コーナー通過順位2',0,99);
+        $this->validateInt($this->corner_3,'コーナー通過順位3',0,99);
+        $this->validateInt($this->corner_4,'コーナー通過順位4',0,99);
+        $this->validateInt($this->favourite,'人気',0,99);
 
         $this->validateStrLength($this->f_time,'上り3f(平地)／平均1f(障害)',4);
-        $this->varidateInt($this->h_weight,'馬体重',0,2000);
+        $this->validateInt($this->h_weight,'馬体重',0,2000);
         $this->validateStrLength($this->tc,'所属',10);
         $this->validateStrLength($this->trainer_name,'調教師名',32);
         $this->validateStrLength($this->training_country,'調教国コード',3);
         $this->validateStrLength($this->owner_name,'馬主名',50);
         
-        $this->varidateInt($this->earnings,'賞金',0,null);
-        $this->varidateInt($this->syuutoku,'収得賞金',0,null);
-        $this->varidateInt($this->non_registered_prev_race_number,'未登録前走',0,30);
+        $this->validateInt($this->earnings,'賞金',0,null);
+        $this->validateInt($this->syuutoku,'収得賞金',0,null);
+        $this->validateInt($this->non_registered_prev_race_number,'未登録前走',0,30);
 
         $this->validateStrLength($this->race_previous_note,'レース前メモ',10000);
         $this->validateStrLength($this->race_after_note,'レース後メモ',10000);
