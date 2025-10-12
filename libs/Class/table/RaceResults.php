@@ -22,6 +22,9 @@ class RaceResults extends Table{
         }
         return (new (static::ROW_CLASS))->setFromArray($result);
     }
+    /**
+     * 未登録前走を減らす
+     */
     public static function SubtractionNonRegisteredPrevRaceNumber(PDO $pdo, string $race_id, string $horse_id, string|null $updated_at=null){
         $tbl=self::TABLE;
         $sql=<<<END
