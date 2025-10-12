@@ -38,7 +38,7 @@ trait TableRowValidate{
     /**
      * 整数の範囲チェック
      */
-    protected function varidateInt($target_value, string $name, int|null $min = null, int|null $max=null){
+    protected function validateInt($target_value, string $name, int|null $min = null, int|null $max=null){
         $value=(int)$target_value;
         if($min!==null){
             if($value<$min){

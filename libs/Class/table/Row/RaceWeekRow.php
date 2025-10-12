@@ -26,10 +26,10 @@ class RaceWeekRow extends TableRow {
     public function validate(): bool
     {
         $this->validateStrLength($this->name,'名称',50);
-        $this->varidateInt($this->month,'月',1,12);
-        $this->varidateInt($this->month_grouping,'月',0,129);
-        $this->varidateInt($this->umm_month_turn,'ターン',0,4);
-        $this->varidateInt($this->sort_number,'表示順補正');
+        $this->validateInt($this->month,'月',1,12);
+        $this->validateInt($this->month_grouping,'月',0,129);
+        $this->validateInt($this->umm_month_turn,'ターン',0,4);
+        $this->validateInt($this->sort_number,'表示順補正');
         return !$this->hasErrors;
     }
 }

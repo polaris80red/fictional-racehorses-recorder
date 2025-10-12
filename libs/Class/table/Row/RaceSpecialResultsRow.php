@@ -31,7 +31,7 @@ class RaceSpecialResultsRow extends TableRow {
         $this->validateStrLength($this->unique_name,'キー名称',8);
         $this->validateStrLength($this->name,'名称',50);
         $this->validateStrLength($this->short_name_2,'2字略名',2);
-        $this->varidateInt($this->sort_number,'表示順補正');
+        $this->validateInt($this->sort_number,'表示順補正');
         return !$this->hasErrors;
     }
 }

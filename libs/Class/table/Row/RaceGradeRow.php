@@ -34,7 +34,7 @@ class RaceGradeRow extends TableRow {
         $this->validateStrLength($this->search_grade,'検索用略名',8);
         $this->validateStrLength($this->category,'結果画面などの大分類',50);
         $this->validateStrLength($this->css_class,'CSSクラス',50);
-        $this->varidateInt($this->sort_number,'表示順補正');
+        $this->validateInt($this->sort_number,'表示順補正');
         return !$this->hasErrors;
     }
 }
