@@ -3,9 +3,6 @@ abstract class Table{
     private const TABLE ='';
     private const UNIQUE_KEY_COLUMN='';
     protected const DEFAULT_ORDER_BY='';
-    protected const STR_COLUMNS=[];
-    protected const INT_COLUMNS=[];
-    public $record_exists = false;
 
     // __toString可能なインスタンスとしてクォート済みテーブル名を取得する
     public static function QuotedTable(string $table_name = ''){
@@ -82,63 +79,6 @@ abstract class Table{
         $stmt->bindValue(':unique_key',$unique_key_value,$pdo_param_mode);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-    /**
-     * メンバ変数と共通の名前のカラムを配列で指定して一括バインド
-     */
-    protected function BindValuesFromThis($stmt, array $targets,$mode){
-        foreach($targets as $val){
-            $stmt->bindValue(":{$val}", $this->{$val}, $mode);
-        }
-        return $stmt;
-    }
-    // 競走馬・レースなど改修までの暫定
-    /**
-     * エラーメッセージを追加してエラー有りフラグをオンにする
-     */
-    public $error_msgs=[];
-    public $error_exists=false;
-    protected function addErrorMessages(string $message){
-        $this->error_msgs[]=$message;
-        $this->error_exists=true;
-        return;
-    }
-    /**
-     * 文字数チェック（エラー有無判定をテーブルクラスに持つクラス用の暫定）
-     */
-    protected function validateLength(string|null $target_value,string $name,int $max_length){
-        if($target_value===null){
-            return;
-        }
-        if(mb_strlen($target_value)>$max_length){
-            $this->addErrorMessages("{$name}は{$max_length}文字以内で設定してください。");
-        }
-        return;
-    }
-    /**
-     * 整数の範囲チェック
-     */
-    protected function varidateInt($target_value, string $name, int|null $min = null, int|null $max=null){
-        $value=(int)$target_value;
-        if($min!==null){
-            if($value<$min){
-                $this->addErrorMessages("{$name}は{$min}以上を指定してください。");
-                return;
-            }
-        }else if($value<-2147483647){
-            $this->addErrorMessages("{$name}は-2147483647以上を指定してください。");
-            return;
-        }
-        if($max!==null){
-            if($value>$max){
-                $this->addErrorMessages("{$name}は{$max}以下を指定してください。");
-                return;
-            }
-        }else if($value>2147483647){
-            $this->addErrorMessages("{$name}は2147483647以下を指定してください。");
-            return;
-        }
-        return;
     }
     // 行クラスを使用する新形式対応
     public const ROW_CLASS = TableRow::class;
