@@ -150,10 +150,11 @@ class RaceRow extends TableRow {
         $this->is_jra=filter_input(INPUT_POST,'is_jra');
         $this->is_nar=filter_input(INPUT_POST,'is_nar');
         $date=(string)filter_input(INPUT_POST,'date');
-        if($date===''){ $this->date = null; }
-        $datetime=null;
-        if($this->date!=null){
-            $datetime=new dateTime($this->date);
+        $datetime=$date===''?false:DateTime::createFromFormat('Y-m-d',$date);
+        if($datetime){
+            $this->date = $datetime->format('Y-m-d');
+        }else{
+            $this->date = null;
         }
         if(empty($this->year) && $datetime){
             $this->year=$datetime->format('Y');
