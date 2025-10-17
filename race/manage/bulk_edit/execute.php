@@ -341,7 +341,7 @@ $has_change=false;
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][tc]" value="<?=h($newResult->tc)?>">
         </td>
         <td class="<?=($changed['trainer_name']??false)?'changed':''?>">
-            <?=h($newResult->tc)?>
+            <?=h($newResult->trainer_name)?>
             <input type="hidden" name="race[<?=h($horse->horse_id)?>][trainer_name]" value="<?=h($newResult->trainer_name)?>">
         </td>
         <td class="<?=($changed['h_weight']??false)?'changed':''?>">
