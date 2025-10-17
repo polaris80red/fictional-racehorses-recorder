@@ -24,6 +24,12 @@ if(empty($_GET['race_id'])){
     $page->printCommonErrorPage();
     exit;
 }
+$sortMode=filter_input(INPUT_GET,'sort');
+$sortModeList=[
+    'results',
+    'horse',
+];
+$sortMode=in_array($sortMode,$sortModeList)?$sortMode:'results';
 $race_id=filter_input(INPUT_GET,'race_id');
 # レース情報取得
 $race = Race::getByRaceId($pdo, $race_id);
@@ -47,13 +53,30 @@ $turn=$week_data->umm_month_turn;
 
 $resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
 $resultsGetter->pageIsEditable=$page->is_editable;
-$resultsGetter->addOrderParts([
-    "`r_results`.`frame_number` IS NULL",
-    "`r_results`.`frame_number` ASC",
-    "`r_results`.`horse_number` IS NULL",
-    "`r_results`.`horse_number` ASC",
-    "`horse`.`name_en` ASC",
-]);
+$orderPartsList=[
+    'results'=>[
+        "`r_results`.`result_number` IS NULL",
+        "`r_results`.`result_number` ASC",
+        "`r_results`.`result_order` IS NULL",
+        "`r_results`.`result_order` ASC",
+        "`spr`.`sort_number` IS NULL",
+        "`spr`.`sort_number` ASC",
+        "`r_results`.`result_text` ASC",
+        "`r_results`.`frame_number` IS NULL",
+        "`r_results`.`frame_number` ASC",
+        "`r_results`.`horse_number` IS NULL",
+        "`r_results`.`horse_number` ASC",
+    ],
+    'horse'=>[
+        "`r_results`.`frame_number` IS NULL",
+        "`r_results`.`frame_number` ASC",
+        "`r_results`.`horse_number` IS NULL",
+        "`r_results`.`horse_number` ASC",
+    ],
+];
+$orderParts=$orderPartsList[$sortMode]??$orderPartsList['results'];
+$orderParts[]="`horse`.`name_en` ASC";
+$resultsGetter->addOrderParts($orderParts);
 $table_data=$resultsGetter->getTableData();
 $hasThisweek=$resultsGetter->hasThisweek;
 $hasSps=$resultsGetter->hasSps;

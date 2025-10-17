@@ -44,6 +44,13 @@ $turn=$week_data->umm_month_turn;
 $resultsGetter=new RaceResultsGetter($pdo,$race_id,$race->year);
 $resultsGetter->pageIsEditable=$page->is_editable;
 $resultsGetter->addOrderParts([
+    "`r_results`.`result_number` IS NULL",
+    "`r_results`.`result_number` ASC",
+    "`r_results`.`result_order` IS NULL",
+    "`r_results`.`result_order` ASC",
+    "`spr`.`sort_number` IS NULL",
+    "`spr`.`sort_number` ASC",
+    "`r_results`.`result_text` ASC",
     "`r_results`.`frame_number` IS NULL",
     "`r_results`.`frame_number` ASC",
     "`r_results`.`horse_number` IS NULL",
