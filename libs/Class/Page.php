@@ -250,6 +250,8 @@ $url=$this->to_app_root_path."race/list/access_history.php";
             'age_reset'=>1,
             'distance'=>'',
             'search_detail_tgl_status'=>'close',
+            'min_year'=>'',
+            'max_year'=>'',
             'session_is_not_update'=>1,
         ];
         $url =$this->to_race_list_path.'?'.http_build_query($url_params);
