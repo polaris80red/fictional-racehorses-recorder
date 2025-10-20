@@ -115,6 +115,8 @@ switch($setting->age_view_mode){
     <th>所属</th>
     <th>厩舎</th>
     <th>調教</th>
+    <th>賞金</th>
+    <th>収得</th>
     <th>性別</th>
     <th>地方区分</th>
 </tr><?php
@@ -247,6 +249,12 @@ $latest_race_is_exists=false; ?>
 </td>
 <td class="in_input">
     <input type="text" name="race[<?=h($data->race_id)?>][training_country]" style="width: 2.5em;" value="<?=h($data->training_country)?>" placeholder="国">
+</td>
+<td class="in_input">
+    <input type="number" name="race[<?=h($data->race_id)?>][earnings]" style="width: 4em;" value="<?=h($data->earnings)?>" placeholder="万円">
+</td>
+<td class="in_input">
+    <input type="number" name="race[<?=h($data->race_id)?>][syuutoku]" style="width: 4em;" value="<?=h($data->syuutoku)?>" placeholder="万円">
 </td>
 <?php $s_radio=MkTagInput::Radio("race[".$data->race_id."][sex]"); ?>
 <td class="sex">
