@@ -77,6 +77,8 @@ foreach ($race_history as $key => $data){
         'tc',
         'trainer_name',
         'training_country',
+        'earnings',
+        'syuutoku',
         'sex',
         'is_affliationed_nar',
     ],false);
@@ -144,6 +146,14 @@ foreach ($race_history as $key => $data){
         $race_result->training_country=$posted_race->training_country?:null;
         $changed->training_country = $row_has_change = $has_change = true;
     }
+    if((int)$race_result->earnings!==(int)$posted_race->earnings){
+        $race_result->earnings=$posted_race->earnings?:null;
+        $changed->earnings = $row_has_change = $has_change = true;
+    }
+    if((int)$race_result->syuutoku!==(int)$posted_race->syuutoku){
+        $race_result->syuutoku=$posted_race->syuutoku?:null;
+        $changed->syuutoku = $row_has_change = $has_change = true;
+    }
     if((int)$race_result->sex!==(int)$posted_race->sex||$sex_gelding_override){
         $race_result->sex=$posted_race->sex;
         if($race_result->sex==3){
@@ -207,6 +217,8 @@ td.favourite{ text-align:right; }
 td.result_number{ text-align:right;}
 td.result_order{ text-align:right; }
 td.result_before_demotion{ text-align:right; }
+td.earnings{ text-align:right; }
+td.syuutoku{ text-align:right; }
 td.sex{ text-align:center; }
 td.is_affliationed_nar{ text-align:center; }
 </style>
@@ -224,7 +236,7 @@ td.is_affliationed_nar{ text-align:center; }
 <input type="submit" value="一括変更を実行"<?=($has_change && !$has_error)?'':' disabled'?>>
 <input type="hidden" name="horse_id" value="<?=h($horse_id)?>">
 <table class="horse_history">
-<?php $colSpan=19; ?>
+<?php $colSpan=21; ?>
 <tr>
     <th><?=$setting->horse_record_date==='umm'?'時期':'年月'?></th>
     <th>開催</th>
@@ -243,6 +255,8 @@ td.is_affliationed_nar{ text-align:center; }
     <th>所属</th>
     <th>厩舎</th>
     <th>調教国</th>
+    <th>賞金</th>
+    <th>収得</th>
     <th>性別</th>
     <th>地方区分</th>
 </tr>
@@ -347,6 +361,14 @@ td.is_affliationed_nar{ text-align:center; }
 <td class="training_country <?=!$changed->training_country?'':'changed'?>">
     <?=h($race_result->training_country)?>
     <input type="hidden" name="race[<?=h($data->race_id)?>][training_country]" value="<?=h($race_result->training_country)?>">
+</td>
+<td class="earnings <?=!$changed->earnings?'':'changed'?>">
+    <?=h($race_result->earnings)?>
+    <input type="hidden" name="race[<?=h($data->race_id)?>][earnings]" value="<?=h($race_result->earnings)?>">
+</td>
+<td class="syuutoku <?=!$changed->syuutoku?'':'changed'?>">
+    <?=h($race_result->syuutoku)?>
+    <input type="hidden" name="race[<?=h($data->race_id)?>][syuutoku]" value="<?=h($race_result->syuutoku)?>">
 </td>
 <td class="sex <?=!$changed->sex?'':'changed'?>">
     <?=h($race_result->sex==0?'元':($race_result->sex==1?'牡':'セ'))?>
