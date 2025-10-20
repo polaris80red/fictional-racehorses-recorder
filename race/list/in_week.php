@@ -276,9 +276,11 @@ $prev_week_id=0;
         $class=new Imploader(' ');
         $class->add($raceGrade->css_class??'');
         if($race->is_enabled===0){ $class->add('disabled_row'); }
+        $dateTime=($race->date===null)?false:DateTime::createFromFormat('Y-m-d',$race->date);
+        $dateStrMD=$dateTime===false?'':$dateTime->format('m/d');
     ?>
     <tr class="<?=$class?>">
-        <td><?=is_null($race->date)?'':(new DateTime($race->date))->format('m/d')?></td>
+        <td><?=($race->is_tmp_date||$dateTime===false)?'':(new MkTagA($dateStrMD,$page->getDateRaceListUrl($race->date)))?></td>
         <td><?=h($raceCourse->short_name??$race->race_course_name)?></td>
         <td><?=h($race->race_number?:"")?></td>
         <td><?=h($race->course_type.$race->distance)?></td>
