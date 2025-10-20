@@ -87,7 +87,6 @@ td.is_affliationed_nar{ text-align:center; }
 <main id="content">
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('horse/horse_page-header.inc.php'));?>
-<form>
 <table class="horse_history">
 <?php $colSpan=21; ?>
 <tr>
@@ -288,76 +287,60 @@ $sex_gelding_override=false;
 <td class="race_course_name"><?=$a_tag?></td>
 <td class="grade"><?=h(($grade->short_name??'')?:$race->grade)?></td>
 <td class="race_name"><?=h($race->race_short_name?:$race->race_name)?></td>
-<td class="frame_number <?=!$changed->frame_number?'':'changed'?>"><?=h($race_result->frame_number)?>
-    <input type="hidden" name="race[<?=h($race->race_id)?>][frame_number]" style="width: 2.5em;" value="<?=h($race_result->frame_number)?>">
+<td class="frame_number <?=!$changed->frame_number?'':'changed'?>">
+    <?=h($race_result->frame_number)?>
 </td>
-<td class="horse_number <?=!$changed->horse_number?'':'changed'?>"><?=h($race_result->horse_number)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][horse_number]" style="width: 2.5em;" value="<?=h($race_result->horse_number)?>">
+<td class="horse_number <?=!$changed->horse_number?'':'changed'?>">
+    <?=h($race_result->horse_number)?>
 </td>
 <td class="favourite <?=!$changed->favourite?'':'changed'?>">
     <?=h($race_result->favourite)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][favourite]" style="width: 2.5em;" value="<?=h($race_result->favourite)?>">
 </td>
 <td class="result_number <?=!$changed->result_number?'':'changed'?>">
     <?=h($race_result->result_number)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][result_number]" value="<?=h($race_result->result_number)?>">
 </td>
 <td class="result_text <?=!$changed->result_text?'':'changed'?>">
     <?=h($race_result->result_text)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][result_text]" value="<?=h($race_result->result_text)?>">
 </td>
 <td class="result_order <?=!$changed->result_order?'':'changed'?>">
     <?=h($race_result->result_order)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][result_order]" value="<?=h($race_result->result_order)?>">
 </td>
 <td class="result_before_demotion <?=!$changed->result_before_demotion?'':'changed'?>">
     <?=h($race_result->result_before_demotion?($race_result->result_before_demotion.'位入線'):'')?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][result_before_demotion]" value="<?=h($race_result->result_before_demotion)?>">
 </td>
 <td class="<?=!$changed->jockey?'':'changed'?>">
     <?=h($race_result->jockey_name)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][jockey]" value="<?=h($race_result->jockey_name)?>">
 </td>
 <td class="handicap <?=!$changed->handicap?'':'changed'?>">
     <?=h($race_result->handicap)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][handicap]" value="<?=h($race_result->handicap)?>">
 </td>
 <td class="time <?=!$changed->time?'':'changed'?>">
     <?=h($race_result->time)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][time]" value="<?=h($race_result->time)?>">
 </td>
 <td class="h_weight <?=!$changed->h_weight?'':'changed'?>">
     <?=h($race_result->h_weight)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][h_weight]" value="<?=h($race_result->h_weight)?>">
 </td>
 <td class="tc <?=!$changed->tc?'':'changed'?>">
     <?=h($race_result->tc)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][tc]" value="<?=h($race_result->tc)?>">
 </td>
 <td class="trainer_name <?=!$changed->trainer?'':'changed'?>">
     <?=h($race_result->trainer_name)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][trainer_name]" value="<?=h($race_result->trainer_name)?>">
 </td>
 <td class="training_country <?=!$changed->training_country?'':'changed'?>">
     <?=h($race_result->training_country)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][training_country]" value="<?=h($race_result->training_country)?>">
 </td>
 <td class="earnings <?=!$changed->earnings?'':'changed'?>">
     <?=h($race_result->earnings)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][earnings]" value="<?=h($race_result->earnings)?>">
 </td>
 <td class="syuutoku <?=!$changed->syuutoku?'':'changed'?>">
     <?=h($race_result->syuutoku)?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][syuutoku]" value="<?=h($race_result->syuutoku)?>">
 </td>
 <td class="sex <?=!$changed->sex?'':'changed'?>">
     <?=h($race_result->sex==0?'元':($race_result->sex==1?'牡':'セ'))?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][sex]" value="<?=h($race_result->sex)?>">
 </td>
 <?php $n_radio=MkTagInput::Radio("race[".$data->race_id."][is_affliationed_nar]"); ?>
 <td class="is_affliationed_nar <?=!$changed->is_affliationed_nar?'':'changed'?>">
     <?=h($race_result->is_affliationed_nar==0?'なし':($race_result->is_affliationed_nar==1?'[地]':'(地)'))?>
-    <input type="hidden" name="race[<?=h($data->race_id)?>][is_affliationed_nar]" value="<?=h($race_result->is_affliationed_nar)?>">
 </td>
 </tr>
 <?php if($race_result->hasErrors):?>
@@ -365,7 +348,6 @@ $sex_gelding_override=false;
 <?php endif;?>
 <?php endforeach; ?>
 </table>
-</form>
 <hr>
 [<a href="<?=InAppUrl::to("horse/",['horse_id'=>$horse_id])?>">競走馬ページへ戻る</a>]
 <a id="under_results_table"></a>
