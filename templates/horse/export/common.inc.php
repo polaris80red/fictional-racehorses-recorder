@@ -5,7 +5,8 @@
  * /horse/export/の内容部
  */
 ?><?php
-if(filter_input(INPUT_GET,'mode')==='sample'){
+$inputMode=filter_input(INPUT_GET,'mode');
+if($inputMode==='sample'){
     // このように手前で割り込んで分岐してexitすると簡単
     header('Content-Type: application/json');
     $arr=[
