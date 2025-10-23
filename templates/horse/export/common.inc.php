@@ -15,6 +15,9 @@ if($inputMode==='sample'){
     ];
     echo json_encode($arr,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
     exit;
+}else if($inputMode==='hpm_json'){
+    include __DIR__.'/common__t3_hpm_json.inc.php';
+    exit;
 }
 header('Content-Type: text/plain');
 $text=<<<EOL

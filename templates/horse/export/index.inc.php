@@ -17,6 +17,10 @@
                 ])))?></li>
         </ul>
     </li>
+    <li><?=(new MkTagA('競走馬・オリウマ プロフィールメーカー','./common.php?'.http_build_query([
+                'horse_id'=>$horse->horse_id,
+                'mode'=>'hpm_json',
+                ])))?><br>Tank-x3氏の「<a href="https://tank-x3.github.io/Horses_Profiles_Maker/index.html">競走馬・オリウマ プロフィールメーカー</a>」のデータ保存JSONファイルを再現したJSON文字列を出力します。<br></li>
     <li><?=(new MkTagA('汎用エクスポート（カスタマイズ用）','./common.php?'.http_build_query([
                 'horse_id'=>$horse->horse_id,
                 ])))?></li>
