@@ -132,13 +132,14 @@ if($search->limit>0){
     }
     ?><td><?=$a_tag?></td>
     <?php
-        if($row['birth_year']>0){
-            $birth_year_str=$setting->getBirthYearFormat($row['birth_year'],false);
-            $a_tag=new MkTagA($birth_year_str);
-            if($row['birth_year']!=='' && $search->birth_year===''){
-                $a_tag->href("./?".$search->getUrlParam($search_reset_array)."&birth_year=".$row['birth_year']);
-            }
+    $a_tag=new MkTagA();
+    if($row['birth_year']>0){
+        $birth_year_str=$setting->getBirthYearFormat($row['birth_year'],false);
+        $a_tag->setLinkText($birth_year_str);
+        if($row['birth_year']!=='' && $search->birth_year===''){
+            $a_tag->href("./?".$search->getUrlParam($search_reset_array)."&birth_year=".$row['birth_year']);
         }
+    }
     ?><td><?=$a_tag?></td>
     <td><a><?=h($row['color'])?></a></td>
     <td><a><?=h(sex2String($row['sex']))?></a></td>
