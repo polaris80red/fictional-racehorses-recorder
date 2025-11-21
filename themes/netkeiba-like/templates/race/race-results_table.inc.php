@@ -199,7 +199,7 @@ $i=0;
         <?php if($page->is_editable): ?>
             <?php
             $editTag=new MkTagA('編');
-            if(Session::currentUser()->canHorseEdit($horse)){
+            if(Session::currentUser()->canEditHorse($horse)){
                 $editTag->href($url)->title('編集');            
             }
             ?>
