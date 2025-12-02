@@ -86,10 +86,13 @@
         }
     }
     $trainerLine[]=$trainer;
-    if(!empty($data['tc'])){
-        $trainerLine[]="（{$data['tc']}）";
-    }else{
-        $trainerLine[]="（{$data['horse_tc']}）";
+    // 中央競馬または地方競馬の場合のみ所属を表示する（外国馬に所属国を表示しない）
+    if($training_country==='' || $training_country==='JPN'){
+        if(!empty($data['tc'])){
+            $trainerLine[]="（{$data['tc']}）";
+        }else{
+            $trainerLine[]="（{$data['horse_tc']}）";
+        }
     }
 ?>
 <?=h(implode('',$trainerLine))?><br>
