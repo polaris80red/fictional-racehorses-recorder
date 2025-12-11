@@ -222,7 +222,7 @@ th{
 </tr>
 <tr>
     <th>備考</th>
-    <td class="in_input">
+    <td>
         <?=nl2br(h($horse->note))?>&nbsp;
         <?php HTPrint::Hidden('note',$horse->note); ?>
     </td>
@@ -240,7 +240,7 @@ th{
     <th>プロフィール</th>
 <tr>
 </tr>
-    <td class="in_input" style="max-width: 300px;">
+    <td style="max-width: 300px;">
         <?=nl2br(h($horse->profile))?>&nbsp;
         <?php HTPrint::Hidden('profile',$horse->profile); ?>
     </td>
