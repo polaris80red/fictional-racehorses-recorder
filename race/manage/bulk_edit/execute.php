@@ -24,12 +24,6 @@ if(empty($_POST['race_id'])){
     $page->printCommonErrorPage();
     exit;
 }
-$sortMode=filter_input(INPUT_POST,'sort');
-$sortModeList=[
-    'results',
-    'horse',
-];
-$sortMode=in_array($sortMode,$sortModeList)?$sortMode:'results';
 $race_id=filter_input(INPUT_POST,'race_id');
 # レース情報取得
 $race = Race::getByRaceId($pdo, $race_id);
@@ -40,6 +34,12 @@ if(!$race){
     $page->printCommonErrorPage();
     exit;
 }
+$sortMode=filter_input(INPUT_POST,'sort');
+$sortModeList=[
+    'results',
+    'horse',
+];
+$sortMode=in_array($sortMode,$sortModeList)?$sortMode:'results';
 if(!Session::currentUser()->canEditOtherHorse()){
     // ほかのユーザーの競走馬の記録を編集できる権限がない場合は一括編集不可
     header("HTTP/1.1 403 Forbidden");
