@@ -2,7 +2,10 @@
 /**
  * レースページ下部の編集メニュー
  * @var RaceRow $race
+ * @var string|null $sortMode 一括編集の表示順制御
  */
+?><?php
+$sortMode=$sortMode??'';
 ?><hr>
 <input type="button" id="edit_tgl" value="編集" style="<?=!EDIT_MENU_TOGGLE?'display:none;':''?>">
 <input type="hidden" id="hiddden_race_id" value="<?=h($race->race_id)?>">
@@ -30,7 +33,11 @@ $canEditRace=$currentUser->canEditRace($race);
                  * @var int $rowNumber レースの結果行数
                  */
                 $a_tag=new MkTagA('レース個別結果一括編集');
-                $a_tag->href(($rowNumber??0)>0?InAppUrl::to('race/manage/bulk_edit/',['race_id'=>$race->race_id,'edit_mode'=>1]):'');
+                $a_tag->href(($rowNumber??0)>0?InAppUrl::to('race/manage/bulk_edit/',[
+                    'race_id'=>$race->race_id,
+                    'sort'=>$sortMode==='horse'?'horse':'',
+                    'edit_mode'=>1
+                    ]):'');
             ?>
             <td><?=$a_tag?></td>
             <?php $url=InAppUrl::to('race/manage/note_edit/',['race_id'=>$race->race_id,'edit_mode'=>1]);?>
