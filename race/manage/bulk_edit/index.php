@@ -106,6 +106,7 @@ switch($setting->age_view_mode){
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <form action="confirm.php" method="post">
+<input type="hidden" name="sort" value="<?=$sortMode?>">
 <table class="race_results">
 <tr>
     <th>枠</th>
