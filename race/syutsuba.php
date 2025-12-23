@@ -232,6 +232,7 @@ $latest_horse_exists=false;
 <?=implode('｜',$line)?>
 </div>
 <?php if($page->is_editable): ?>
+    <?php $sortMode='horse'; ?>
     <?php include (new TemplateImporter('race/race_page-edit_menu.inc.php'));?>
 <?php endif; ?>
 <hr class="no-css-fallback">
