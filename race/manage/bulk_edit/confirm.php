@@ -269,6 +269,7 @@ foreach($table_data as $key => $data){
 <hr class="no-css-fallback">
 <?php include (new TemplateImporter('race/race_page-content_header.inc.php'));?>
 <form action="execute.php" method="post">
+<input type="hidden" name="sort" value="<?=$sortMode?>">
 <?php $colSpan=21; ?>
 <table class="race_results">
 <tr>
