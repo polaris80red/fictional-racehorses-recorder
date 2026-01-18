@@ -301,7 +301,7 @@ switch($input->is_affliationed_nar){
 </tr>
 <tr><th colspan="2">スペシャル出馬表紹介</th></tr>
 <tr>
-    <td colspan="2"><?=nl2br(h($input->jra_sps_comment))?></td>
+    <td colspan="2" style="max-width: 300px;"><?=nl2br(h($input->jra_sps_comment))?></td>
 </tr>
 </table>
 </form>
