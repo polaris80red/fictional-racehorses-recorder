@@ -343,7 +343,7 @@ $grades=RaceGrade::getForSelectbox($pdo);
     <?php
     foreach($weeks as $row){
         $class="race_week race_week_m{$row['month']} race_week_id{$row['id']}";
-        if($row['month_grouping']%10===0){
+        if($row['month_grouping']%10<=1){
             $class.=" race_week_m".((int)$row['month']-1);
         }
         if($row['month_grouping']%10>=5){
