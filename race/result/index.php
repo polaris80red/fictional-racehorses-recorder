@@ -145,7 +145,9 @@ $title=(function($pageTitle)use($race){
         <tr>
             <th>日付</th>
             <?php
-            $a_tag=new MkTagA($race->date.($race->date&&$race->is_tmp_date?'(仮)':''));
+            $datetime=new DateTime($race->date);
+            $weekdaynum=$datetime->format('w');
+            $a_tag=new MkTagA($race->date.($race->date&&$race->is_tmp_date?'(仮)':"(".getWeekDayJa($weekdaynum).")"));
             if(!$race->is_tmp_date){
                 $a_tag->href($page->getDateRaceListUrl($race->date));
             }
