@@ -123,8 +123,7 @@ function getWeekByDate($input_date){
 
     // 東京大賞典などは最終週に補正
     if($month===12 && $day>28){
-        echo 52;
-        exit;
+        return 52;
     }
     // 金杯周辺を補正
     if($month===1){
