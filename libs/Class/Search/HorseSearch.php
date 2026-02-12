@@ -5,6 +5,7 @@ class HorseSearch extends Search{
     public $sire_name='';
     public $mare_name='';
     public $bms_name='';
+    public $tc='';
     public $trainer='';
     public $sire_id='';
     public $mare_id='';
@@ -41,6 +42,7 @@ class HorseSearch extends Search{
             $this->setSessionAndParam('sire_name','');
             $this->setSessionAndParam('mare_name','');
             $this->setSessionAndParam('bms_name','');
+            $this->setSessionAndParam('tc','');
             $this->setSessionAndParam('trainer','');
             $this->setSessionAndParam('sire_id','');
             $this->setSessionAndParam('mare_id','');
@@ -74,6 +76,10 @@ class HorseSearch extends Search{
         if($bms_name!=''){ $bms_name = trim($bms_name); }
         $this->bms_name=$bms_name;
 
+        $tc=$this->getSessionOrGet('tc');
+        if($tc!=''){ $tc = trim($tc); }
+        $this->tc=$tc;
+
         $trainer=$this->getSessionOrGet('trainer');
         if($trainer!=''){ $trainer = trim($trainer); }
         $this->trainer=$trainer;
@@ -92,7 +98,7 @@ class HorseSearch extends Search{
 
         $this->setToSessionByParamNameArray([
             'keyword','birth_year',
-            'sire_name','mare_name','bms_name','trainer',
+            'sire_name','mare_name','bms_name','tc','trainer',
             'sire_id','mare_id','search_text',
             'limit','page','order','horse_id_is_visibled',
             'null_birth_year'
@@ -106,6 +112,7 @@ class HorseSearch extends Search{
             $this->setSessionAndParam('sire_name','');
             $this->setSessionAndParam('mare_name','');
             $this->setSessionAndParam('bms_name','');
+            $this->setSessionAndParam('tc','');
             $this->setSessionAndParam('trainer','');
             $this->setSessionAndParam('sire_id','');
             $this->setSessionAndParam('mare_id','');
@@ -141,6 +148,10 @@ class HorseSearch extends Search{
         if($bms_name!=''){ $bms_name = trim($bms_name); }
         $this->bms_name=$bms_name;
 
+        $tc=$this->getBySession('tc');
+        if($tc!=''){ $tc = trim($tc); }
+        $this->tc=$tc;
+
         $trainer=$this->getBySession('trainer');
         if($trainer!=''){ $trainer = trim($trainer); }
         $this->trainer=$trainer;
@@ -164,6 +175,7 @@ class HorseSearch extends Search{
             $this->setSessionAndParam('sire_name','');
             $this->setSessionAndParam('mare_name','');
             $this->setSessionAndParam('bms_name','');
+            $this->setSessionAndParam('tc','');
             $this->setSessionAndParam('trainer','');
             $this->setSessionAndParam('sire_id','');
             $this->setSessionAndParam('mare_id','');
@@ -207,6 +219,10 @@ class HorseSearch extends Search{
         if($bms_name!=''){ $bms_name = trim($bms_name); }
         $this->bms_name=$bms_name;
 
+        $tc=filter_input(INPUT_GET,'tc');
+        if($tc!=''){ $tc = trim($tc); }
+        $this->tc=$tc;
+
         $trainer=filter_input(INPUT_GET,'trainer');
         if($trainer!=''){ $trainer = trim($trainer); }
         $this->trainer=$trainer;
@@ -241,7 +257,7 @@ class HorseSearch extends Search{
 
         $this->setToSessionByParamNameArray([
             'keyword','birth_year',
-            'sire_name','mare_name','bms_name','trainer',
+            'sire_name','mare_name','bms_name','tc','trainer',
             'sire_id','mare_id',
             'search_text',
             'limit','page','order','horse_id_is_visibled',
@@ -251,7 +267,7 @@ class HorseSearch extends Search{
     public function getUrlParam(array $remove_param_name_array=[]){
         $param_name_array=[
             'keyword','birth_year',
-            'sire_name','mare_name','bms_name','trainer',
+            'sire_name','mare_name','bms_name','tc','trainer',
             'sire_id','mare_id',
             'search_text',
             'limit','page','order','horse_id_is_visibled',
@@ -334,6 +350,10 @@ class HorseSearch extends Search{
             ]).')';
             $pre_bind->add(':bms_name', "%{$this->bms_name}%", PDO::PARAM_STR);
         }
+        if($this->tc!=''){
+            $where_parts[]='h.`tc` LIKE :tc';
+            $pre_bind->add(':tc', "%{$this->tc}%", PDO::PARAM_STR);
+        }
         if($this->trainer!=''){
             $where_parts[]='h.`trainer_name` LIKE :trainer';
             $pre_bind->add(':trainer', "%{$this->trainer}%", PDO::PARAM_STR);
@@ -402,6 +422,9 @@ class HorseSearch extends Search{
         }
         if($this->bms_name){
             $params[]="母父名[".$this->bms_name."]";
+        }
+        if($this->tc){
+            $params[]="所属[".$this->tc."]";
         }
         if($this->trainer){
             $params[]="厩舎[".$this->trainer."]";
@@ -479,6 +502,10 @@ class HorseSearch extends Search{
     <tr><th>母父名</th>
         <td><input type="text" name="bms_name" value="<?=h($this->bms_name)?>" placeholder="母父名" onchange="clearElmVal('*[name=mare_id]');"></td>
         <td><input type="button" value="クリア" onclick="clearElmVal('*[name=bms_name]');"></td>
+    </tr>
+    <tr><th>所属</th>
+        <td><input type="text" name="tc" value="<?=h($this->tc)?>" placeholder="所属"></td>
+        <td><input type="button" value="クリア" onclick="clearElmVal('*[name=tc]');"></td>
     </tr>
     <tr><th>厩舎</th>
         <td><input type="text" name="trainer" value="<?=h($this->trainer)?>" placeholder="厩舎・調教師"></td>
