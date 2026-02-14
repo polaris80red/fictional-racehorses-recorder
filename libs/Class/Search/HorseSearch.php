@@ -301,7 +301,7 @@ class HorseSearch extends Search{
             $sql_parts[]='ON trainer.unique_name = `h`.`trainer_name`';
         if($this->search_text!=''){
             $sql_parts[]='LEFT JOIN `'.HorseTag::TABLE.'` AS t';
-            $sql_parts[]='ON h.horse_id LIKE t.horse_id';
+            $sql_parts[]='ON h.horse_id LIKE t.horse_id AND t.is_enabled=1';
 
             $where_parts[]='t.tag_text LIKE :tag';
             $pre_bind->add(':tag', $this->search_text, PDO::PARAM_STR);
