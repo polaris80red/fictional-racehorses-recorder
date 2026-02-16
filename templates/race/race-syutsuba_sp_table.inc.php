@@ -86,12 +86,17 @@
         }
     }
     $trainerLine[]=$trainer;
-    // 中央競馬または地方競馬の場合のみ所属を表示する（外国馬に所属国を表示しない）
-    if($training_country==='' || $training_country==='JPN'){
-        if(!empty($data['tc'])){
-            $trainerLine[]="（{$data['tc']}）";
-        }else{
-            $trainerLine[]="（{$data['horse_tc']}）";
+    if($data['is_jra']==0 && $data['is_nar']==0){
+        // 海外レースの場合、調教師名の後に調教国を表示
+        $trainerLine[]="（".(($data['training_country']?:$data['horse_training_country'])?:'JPN')."）";
+    }else{
+        // 国内レースの場合、中央競馬または地方競馬の場合のみ所属を表示する（外国馬に所属国を表示しない）
+        if($training_country==='' || $training_country==='JPN'){
+            if(!empty($data['tc'])){
+                $trainerLine[]="（{$data['tc']}）";
+            }else{
+                $trainerLine[]="（{$data['horse_tc']}）";
+            }
         }
     }
 ?>
