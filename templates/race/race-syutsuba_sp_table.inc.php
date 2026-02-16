@@ -65,7 +65,7 @@
     $aTag->addClass('horse_name');
     $horse_name_line[]=$aTag->__toString();
     if($data['is_jra']==0 && $data['is_nar']==0){
-        $horse_name_line[]="<span style=\"\"> (".($data['training_country']?:$data['horse_training_country']).")</span> ";
+        $horse_name_line[]="<span style=\"\"> (".($data['breeding_country']?:'JPN').")</span> ";
     }
     ?>
     <?=implode('',$horse_name_line)?><br>
