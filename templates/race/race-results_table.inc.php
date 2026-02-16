@@ -129,7 +129,7 @@ $i=0;
             }
             $a_tag=new MkTagA($horse->name_ja?:$horse->name_en);
             $a_tag->href(InAppUrl::to('horse/',['horse_id'=>$horse->horse_id]));
-            $country=($race->is_jra==0 && $race->is_nar==0)?"<span>(".h($data->trainingCountry).")</span> ":'';
+            $country=($race->is_jra==0 && $race->is_nar==0)?"<span>(".h($horse->breeding_country?:'JPN').")</span> ":'';
         ?>
         <td class="horse_name"><?=implode(' ',[$marks,$a_tag,$country])?></td>
         <?php
@@ -175,6 +175,10 @@ $i=0;
         <?php if(!$mode_umm): ?>
             <td style="<?=$data->trainerRow->is_anonymous?'color:#999;':''?>">
                 <?=h($data->trainerName??'')?>
+                <?php
+                    $country_tag=($race->is_jra==0 && $race->is_nar==0)?"<span>(".h($data->trainingCountry?:'JPN').")</span> ":'';
+                ?>
+                <?=$country_tag?>
             </td>
         <?php endif; ?>
         <td class="col_favourite favourite_<?=h($raceResult->favourite)?>">
