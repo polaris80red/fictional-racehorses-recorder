@@ -231,7 +231,7 @@ $ym_dt=new DateTime($race_result->year."-".str_pad(($week_row->month),2,'0',STR_
     <th>収得賞金</th><td><?=h(ifZero2Empty($input->syuutoku))?>万円</td>
 </tr>
 </table>
-<table class="edit-form-table floatLeft">
+<table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>性別上書</th>
     <td><?php
@@ -284,6 +284,8 @@ switch($input->is_affliationed_nar){
     <th>後メモ</th>
     <td style="max-width: 250px;"><?=nl2br(h($input->race_after_note))?></td>
 </tr>
+</table>
+<table class="edit-form-table floatLeft">
 <tr>
     <th colspan="2">今週の注目レース</th>
 </tr>

@@ -205,7 +205,7 @@ if($is_error!==0){
     <td><?php HTPrint::HiddenAndText('syuutoku',$input->syuutoku?:''); ?>万円</td>
 </tr>
 </table>
-<table class="edit-form-table floatLeft">
+<table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>性別</th>
     <td><?php
@@ -282,6 +282,8 @@ switch($input->is_affliationed_nar){
         <?php HTPrint::Hidden('race_after_note',$input->race_after_note); ?>
     </td>
 </tr>
+</table>
+<table class="edit-form-table floatLeft">
 <tr>
     <th colspan="2">今週の注目レース</th>
 </tr>
