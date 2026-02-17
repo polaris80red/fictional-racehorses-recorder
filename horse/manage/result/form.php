@@ -273,7 +273,7 @@ $page->renderErrorsAndExitIfAny();
     <td class="in_input"><input type="button" value="クリア" onclick="clearElmVal('*[name=syuutoku]');"></td>
 </tr>
 </table>
-<table class="edit-form-table floatLeft">
+<table class="edit-form-table floatLeft" style="margin-right: 4px;">
 <tr>
     <th>性別上書</th>
     <td>
@@ -353,6 +353,8 @@ $page->renderErrorsAndExitIfAny();
     </td>
 </tr>
 <?php $is_grade_race = in_array($race->grade??null,['G1','G2','G3','Jpn1','Jpn2','Jpn3']) ?>
+</table>
+<table class="edit-form-table floatLeft">
 <tr>
     <th colspan="3">今週の注目レース</th>
 </tr>
