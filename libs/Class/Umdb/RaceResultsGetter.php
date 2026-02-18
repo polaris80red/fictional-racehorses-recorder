@@ -103,7 +103,10 @@ class RaceResultsGetter{
             if($raceResult->race_after_note){
                 $this->hasAfterNote=true;
             }
-            if($raceResult->jra_thisweek_horse_1||$raceResult->jra_thisweek_horse_2){
+            if(
+                $raceResult->jra_thisweek_horse_1||$raceResult->jra_thisweek_horse_2
+                ||$raceResult->jra_thisweek_horse_26_title||$raceResult->jra_thisweek_horse_26_1
+                ){
                 $this->hasThisweek=true;
             }
             if($raceResult->jra_sps_comment){
