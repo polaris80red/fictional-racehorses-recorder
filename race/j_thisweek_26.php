@@ -134,9 +134,10 @@ p {font-size:90%;}
 </div>
 <?php
     $text_list=explode("\n",str_replace(["\r","\r\n"],"\n",$result->jra_thisweek_horse_26_1??''));
+    $text_list=array_diff($text_list,['']);
     $list=[];
     foreach($text_list as $val){
-        $list[]="<li>".h($val?:'……')."</li>";
+        $list[]="<li>".h(trim($val)?:'……')."</li>";
     }
 ?>
 <ul>
