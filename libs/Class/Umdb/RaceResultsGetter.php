@@ -12,7 +12,6 @@ class RaceResultsGetter{
     public bool $pageIsEditable=false;
     public bool $hasPreviousNote=false;
     public bool $hasAfterNote=false;
-    public bool $hasThisweek=false;
     public bool $hasThisweek25=false;
     public bool $hasThisweek26=false;
     public bool $hasSps=false;
@@ -104,12 +103,6 @@ class RaceResultsGetter{
             }
             if($raceResult->race_after_note){
                 $this->hasAfterNote=true;
-            }
-            if(
-                $raceResult->jra_thisweek_horse_1||$raceResult->jra_thisweek_horse_2
-                ||$raceResult->jra_thisweek_horse_26_title||$raceResult->jra_thisweek_horse_26_1
-                ){
-                $this->hasThisweek=true;
             }
             if($raceResult->jra_thisweek_horse_1||$raceResult->jra_thisweek_horse_2){
                 $this->hasThisweek25=true;
