@@ -99,7 +99,7 @@ p {font-size:90%;}
     $result=$data->resultRow;
     $sex_str=sex2String($result->sex?:$horse->sex);
     $age=$horse->birth_year==null?'':$race->year-$horse->birth_year;
-    if(empty($result->jra_thisweek_horse_1)&&empty($result->jra_thisweek_horse_2)&&$result->jra_thisweek_horse_sort_number==0){ continue; }
+    if(empty($result->jra_thisweek_horse_26_title)&&empty($result->jra_thisweek_horse_26_1)&&$result->jra_thisweek_horse_sort_number==0){ continue; }
 ?><section style="border: solid 1px #CCC; padding: 0.2em 0.5em; max-width: 940px;margin-top: 8px;">
 <div><?php if(false && $page->is_editable): ?>
 <a href="<?=$page->to_app_root_path?>race/horse_jra_article/form.php?race_id=<?=h($race_id)?>&horse_id=<?=h($horse->horse_id)?>">■</a>
