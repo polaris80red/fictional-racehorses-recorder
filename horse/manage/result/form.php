@@ -359,6 +359,16 @@ $page->renderErrorsAndExitIfAny();
     <th colspan="3">今週の注目レース</th>
 </tr>
 <tr>
+    <th>並び順</th>
+    <td class="in_input" colspan="2">
+        <input type="number" name="jra_thisweek_horse_sort_number" style="width:6em;" value="<?=h($form_data->jra_thisweek_horse_sort_number)?>">
+        <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_thisweek_horse_sort_number]');">
+    </td>
+</tr>
+<tr>
+    <th colspan="3">25年フォーマット</th>
+</tr>
+<tr>
     <th>(火)<?php if($is_grade_race):?><br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_1]','今週の注目レース（火曜日）');"><?php endif; ?></th>
     <td class="in_input" colspan="2">
         <?php if($is_grade_race):?>
@@ -381,10 +391,24 @@ $page->renderErrorsAndExitIfAny();
     </td>
 </tr>
 <tr>
-    <th>並び順</th>
+    <th colspan="3">26年フォーマット</th>
+</tr>
+<tr>
+    <th>見出し</th>
     <td class="in_input" colspan="2">
-        <input type="number" name="jra_thisweek_horse_sort_number" style="width:6em;" value="<?=h($form_data->jra_thisweek_horse_sort_number)?>">
-        <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_thisweek_horse_sort_number]');">
+        <input type="text" name="jra_thisweek_horse_26_title" style="width: 15em;" value="<?=h($form_data->jra_thisweek_horse_26_title)?>">
+        <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_thisweek_horse_26_title]');">
+    </td>
+</tr>
+<tr>
+    <th>本文<?php if($is_grade_race):?><br><input type="button" value="クリア" onclick="confirmAndClearElmVal('*[name=jra_thisweek_horse_26_1]','今週の注目レース（本文）');"><?php endif; ?></th>
+    <td class="in_input" colspan="2">
+        <?php if($is_grade_race):?>
+            <textarea name="jra_thisweek_horse_26_1" style="width: 20em; min-height:5.5em;"><?=h($form_data->jra_thisweek_horse_26_1)?></textarea>
+        <?php else:?>
+            <textarea name="jra_thisweek_horse_26_1" style="width: 20em; min-height:1em;" disabled><?=h($form_data->jra_thisweek_horse_26_1)?></textarea>
+            <?php HTPrint::Hidden('jra_thisweek_horse_26_1',$form_data->jra_thisweek_horse_26_1) ?>
+        <?php endif;?>
     </td>
 </tr>
 <tr>

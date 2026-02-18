@@ -44,6 +44,8 @@ CREATE TABLE `dat_race_results` (
   `jra_thisweek_horse_1` text DEFAULT NULL COMMENT '出走馬情報(火)(ここに注目)',
   `jra_thisweek_horse_2` text DEFAULT NULL COMMENT '出走馬情報(木)',
   `jra_thisweek_horse_sort_number` tinyint(4) DEFAULT NULL COMMENT '出走馬情報表示順',
+  `jra_thisweek_horse_26_title` text DEFAULT NULL COMMENT '今週の注目レース2026年フォーマットの見出し',
+  `jra_thisweek_horse_26_1` text DEFAULT NULL COMMENT '今週の注目レース2026年フォーマットの本文',
   `jra_sps_comment` text DEFAULT NULL COMMENT 'スペシャル出馬表',
   `is_enabled` tinyint(4) NOT NULL DEFAULT 1 COMMENT '論理削除用フラグ',
   `created_by` int(11) DEFAULT NULL COMMENT '作成者',

@@ -39,6 +39,8 @@ class RaceResultsRow extends TableRow {
         'race_after_note',
         'jra_thisweek_horse_1',
         'jra_thisweek_horse_2',
+        'jra_thisweek_horse_26_title',
+        'jra_thisweek_horse_26_1',
         'jra_sps_comment',
         'created_at',
         'updated_at',
@@ -78,6 +80,8 @@ class RaceResultsRow extends TableRow {
     public $jra_thisweek_horse_1 ='';
     public $jra_thisweek_horse_2 ='';
     public $jra_thisweek_horse_sort_number =null;
+    public $jra_thisweek_horse_26_title ='';
+    public $jra_thisweek_horse_26_1 ='';
     public $jra_sps_comment ='';
     public $created_at =null;
     public $updated_at =null;
@@ -127,6 +131,8 @@ class RaceResultsRow extends TableRow {
         $this->validateStrLength($this->race_after_note,'レース後メモ',10000);
         $this->validateStrLength($this->jra_thisweek_horse_1,'出走馬情報(火曜)',500);
         $this->validateStrLength($this->jra_thisweek_horse_2,'出走馬情報(木曜)',500);
+        $this->validateStrLength($this->jra_thisweek_horse_26_title,'出走馬情報タイトル',20);
+        $this->validateStrLength($this->jra_thisweek_horse_26_title,'出走馬情報本文',200);
         $this->validateStrLength($this->jra_sps_comment,'スペシャル出馬表紹介',200);
         return !$this->hasErrors;
     }
@@ -188,6 +194,8 @@ class RaceResultsRow extends TableRow {
         $this->jra_thisweek_horse_1 = filter_input(INPUT_POST,'jra_thisweek_horse_1');
         $this->jra_thisweek_horse_2 = filter_input(INPUT_POST,'jra_thisweek_horse_2');
         $this->jra_thisweek_horse_sort_number = filter_input(INPUT_POST,'jra_thisweek_horse_sort_number',FILTER_VALIDATE_INT)?:null;
+        $this->jra_thisweek_horse_26_title = filter_input(INPUT_POST,'jra_thisweek_horse_26_title');
+        $this->jra_thisweek_horse_26_1 = filter_input(INPUT_POST,'jra_thisweek_horse_26_1');
         $this->jra_sps_comment = filter_input(INPUT_POST,'jra_sps_comment');
         return;
     }

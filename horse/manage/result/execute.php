@@ -290,6 +290,13 @@ switch($input->is_affliationed_nar){
     <th colspan="2">今週の注目レース</th>
 </tr>
 <tr>
+    <th>並び順</th>
+    <td><?=h($input->jra_thisweek_horse_sort_number)?></td>
+</tr>
+<tr>
+    <th colspan="2">25年フォーマット</th>
+</tr>
+<tr>
     <th>(火)</th>
     <td style="max-width: 250px;"><?=nl2br(h($input->jra_thisweek_horse_1))?></td>
 </tr>
@@ -298,8 +305,15 @@ switch($input->is_affliationed_nar){
     <td style="max-width: 250px;"><?=nl2br(h($input->jra_thisweek_horse_2))?></td>
 </tr>
 <tr>
-    <th>並び順</th>
-    <td><?=h($input->jra_thisweek_horse_sort_number)?></td>
+    <th colspan="2">26年フォーマット</th>
+</tr>
+<tr>
+    <th>見出し</th>
+    <td style="max-width: 250px;"><?=nl2br(h($input->jra_thisweek_horse_26_title))?></td>
+</tr>
+<tr>
+    <th>本文</th>
+    <td style="max-width: 250px;"><?=nl2br(h($input->jra_thisweek_horse_26_1))?></td>
 </tr>
 <tr><th colspan="2">スペシャル出馬表紹介</th></tr>
 <tr>
