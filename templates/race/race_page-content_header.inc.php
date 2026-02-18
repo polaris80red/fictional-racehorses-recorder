@@ -120,7 +120,8 @@ print_h(" {$race->course_type}{$race->distance}m");
 | <a href="<?=h(InAppUrl::to('race/syutsuba.php',['race_id'=>$race_id]))?>" title="NK出馬表">出馬表</a>
 | <a href="<?=h(InAppUrl::to('race/syutsuba_sp.php',['race_id'=>$race_id]))?>" title="Jスペシャル出馬表">出馬表(4走)</a>
 <?php if(in_array($race->grade,['G1','G2','G3','Jpn1','Jpn2','Jpn3','重賞']) && $hasThisweek): ?>
-| <a href="<?=h(InAppUrl::to('race/j_thisweek.php',['race_id'=>$race_id]))?>" title="J今週の注目レース・出走馬情報">出走馬情報</a>
+| <a href="<?=h(InAppUrl::to('race/j_thisweek_26.php',['race_id'=>$race_id]))?>" title="J今週の注目レース・出走馬情報">出走馬情報</a>
+<a href="<?=h(InAppUrl::to('race/j_thisweek.php',['race_id'=>$race_id]))?>" title="J今週の注目レース・出走馬情報(25年まで形式)">□</a>
 <?php endif; ?>
 <?php if(in_array($race->grade,['G1','Jpn1']) && $hasSps): ?>
 | <a href="<?=h(InAppUrl::to('race/j_thisweek_sps.php',['race_id'=>$race_id]))?>" title="Jスペシャル出馬表紹介文">出馬表コメント</a>
