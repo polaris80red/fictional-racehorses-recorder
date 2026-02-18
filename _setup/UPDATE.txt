@@ -15,3 +15,7 @@ Windows環境では空フォルダで上書きしても既存ファイルは残�
 - _setup/sql/create_tables/の下記２つの.sqlを実行してテーブルを作成してください。
   - mst_users.sql
   - sys_login_attempt_ip.sql
+
+## ■ v0.3.0 未満のバージョンからアップデートする場合
+- データベースの dat_race_results テーブルに jra_thisweek_horse_26_title および jra_thisweek_horse_26_1 カラムがない場合、v0.3.0未満のバージョンです。
+- _setup/sql/update/の from_before_v_0_3_0__dat_race_results.sql を実行してください。
