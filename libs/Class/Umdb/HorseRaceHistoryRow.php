@@ -85,7 +85,8 @@ class HorseRaceHistoryRow{
     public $r_name_ja;
     public $r_name_en;
 
-    public $has_jra_thisweek=false;
+    public $has_jra_thisweek_25=false;
+    public $has_jra_thisweek_26=false;
     
     // 特殊結果のマスタ版略称
     public $special_result_short_name_2;
