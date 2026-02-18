@@ -146,7 +146,10 @@ class SyutsubaTableGetter {
             if($data['jra_sps_comment']){
                 $this->hasSps=true;
             }
-            if($data['jra_thisweek_horse_1']||$data['jra_thisweek_horse_2']){
+            if(
+                $data['jra_thisweek_horse_1']||$data['jra_thisweek_horse_2']
+                ||$data['jra_thisweek_horse_26_title']||$data['jra_thisweek_horse_26_1']
+                ){
                 $this->hasThisweek=true;
             }
             
