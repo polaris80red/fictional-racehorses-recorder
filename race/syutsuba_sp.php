@@ -50,7 +50,8 @@ $turn=$week_data->umm_month_turn;
 $rr_count=4;
 $syutsuba_getter=new SyutsubaTableGetter($pdo);
 $table_data=$syutsuba_getter->getSyutsubaData($race, $rr_count);
-$hasThisweek=$syutsuba_getter->hasThisweek;
+$hasThisweek25=$syutsuba_getter->hasThisweek25;
+$hasThisweek26=$syutsuba_getter->hasThisweek26;
 $hasSps=$syutsuba_getter->hasSps;
 
 $title=(function($pageTitle)use($race){

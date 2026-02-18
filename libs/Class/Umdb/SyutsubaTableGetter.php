@@ -2,7 +2,8 @@
 class SyutsubaTableGetter {
     private PDO $pdo;
     public bool $hasSps =false;
-    public bool $hasThisweek =false;
+    public bool $hasThisweek25=false;
+    public bool $hasThisweek26=false;
 
     public function __construct(PDO $pdo) {
         $this->pdo = $pdo;
@@ -146,11 +147,11 @@ class SyutsubaTableGetter {
             if($data['jra_sps_comment']){
                 $this->hasSps=true;
             }
-            if(
-                $data['jra_thisweek_horse_1']||$data['jra_thisweek_horse_2']
-                ||$data['jra_thisweek_horse_26_title']||$data['jra_thisweek_horse_26_1']
-                ){
-                $this->hasThisweek=true;
+            if($data['jra_thisweek_horse_1']||$data['jra_thisweek_horse_2']){
+                $this->hasThisweek25=true;
+            }
+            if($data['jra_thisweek_horse_26_title']||$data['jra_thisweek_horse_26_1']){
+                $this->hasThisweek26=true;
             }
             
             $horse_id=$data['horse_id'];

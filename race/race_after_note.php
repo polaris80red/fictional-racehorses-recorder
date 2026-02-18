@@ -55,7 +55,8 @@ $resultsGetter->addOrderParts([
     "`horse`.`name_en` ASC",
 ]);
 $table_data=$resultsGetter->getTableData();
-$hasThisweek=$resultsGetter->hasThisweek;
+$hasThisweek25=$resultsGetter->hasThisweek25;
+$hasThisweek26=$resultsGetter->hasThisweek26;
 $hasSps=$resultsGetter->hasSps;
 if(!$resultsGetter->hasAfterNote && !$race->after_note){
     $page->error_return_url=InAppUrl::to('race/syutsuba.php',['race_id'=>$race_id]);
