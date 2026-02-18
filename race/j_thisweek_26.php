@@ -69,6 +69,15 @@ $title="出走馬情報：{$race->race_name} 今週の注目レース";
     <?=$page->renderBaseStylesheetLinks()?>
 <style>
 p {font-size:90%;}
+.tw26_text_box{
+    padding-bottom: 0.25em;
+}
+.tw26_text_box li{
+    margin-top: 0.5em;
+}
+.tw26_title_box{
+    margin-left:1em;
+}
 </style>
 </head>
 <body>
@@ -128,8 +137,8 @@ p {font-size:90%;}
 母：<?=h($horse->mare_name?:"□□□□□□")?><br>
 母の父：<?=h($horse->bms_name?:"□□□□□□")?><br></p>
 </div>
-<div style="background-color:<?=h($text_background_color)?>;color:#333;border:solid 1px #CCC;max-width:550px;">
-<div style="background-color:<?=h($title_background_color)?>;color:#FFF;max-width:200px;">
+<div class="tw26_text_box" style="background-color:<?=h($text_background_color)?>;color:#333;max-width:550px;">
+<div class="tw26_title_box" style="background-color:<?=h($title_background_color)?>;color:#FFF;max-width:200px;">
     <div style="padding: 5px 20px 5px;"><?=h($result->jra_thisweek_horse_26_title?:"……")?></div>
 </div>
 <?php
