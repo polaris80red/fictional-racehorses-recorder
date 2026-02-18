@@ -13,6 +13,8 @@ class RaceResultsGetter{
     public bool $hasPreviousNote=false;
     public bool $hasAfterNote=false;
     public bool $hasThisweek=false;
+    public bool $hasThisweek25=false;
+    public bool $hasThisweek26=false;
     public bool $hasSps=false;
     public int $rowNumber=0;
 
@@ -108,6 +110,12 @@ class RaceResultsGetter{
                 ||$raceResult->jra_thisweek_horse_26_title||$raceResult->jra_thisweek_horse_26_1
                 ){
                 $this->hasThisweek=true;
+            }
+            if($raceResult->jra_thisweek_horse_1||$raceResult->jra_thisweek_horse_2){
+                $this->hasThisweek25=true;
+            }
+            if($raceResult->jra_thisweek_horse_26_title||$raceResult->jra_thisweek_horse_26_1){
+                $this->hasThisweek26=true;
             }
             if($raceResult->jra_sps_comment){
                 $this->hasSps=true;

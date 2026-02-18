@@ -45,9 +45,10 @@ $resultsGetter->addOrderParts([
     "`horse`.`name_en` ASC",
 ]);
 $table_data=$resultsGetter->getTableData();
-$hasThisweek=$resultsGetter->hasThisweek;
+$hasThisweek25=$resultsGetter->hasThisweek25;
+$hasThisweek26=$resultsGetter->hasThisweek26;
 $hasSps=$resultsGetter->hasSps;
-if(!$hasThisweek){
+if(!$hasThisweek25){
     $page->error_return_url=InAppUrl::to('race/syutsuba.php',['race_id'=>$race_id]);
     $page->error_return_link_text="出馬表に戻る";
     $page->error_msgs[]="出走馬情報が未登録のレースです";

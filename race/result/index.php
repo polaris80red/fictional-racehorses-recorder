@@ -64,7 +64,8 @@ $resultsGetter->addOrderParts([
     "`r_results`.`result_text` ASC",
 ]);
 $table_data=$resultsGetter->getTableData();
-$hasThisweek=$resultsGetter->hasThisweek;
+$hasThisweek25=$resultsGetter->hasThisweek25;
+$hasThisweek26=$resultsGetter->hasThisweek26;
 $hasSps=$resultsGetter->hasSps;
 $rowNumber=$resultsGetter->rowNumber;
 
