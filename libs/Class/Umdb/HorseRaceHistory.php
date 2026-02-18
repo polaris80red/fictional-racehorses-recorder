@@ -117,6 +117,8 @@ class HorseRaceHistory implements Iterator{
             ,`race_results`.`race_after_note`
             ,`race_results`.`jra_thisweek_horse_1`
             ,`race_results`.`jra_thisweek_horse_2`
+            ,`race_results`.`jra_thisweek_horse_26_title`
+            ,`race_results`.`jra_thisweek_horse_26_1`
             ,`race_results`.`tc`
             ,`race_results`.`trainer_name`
             ,`race_results`.`training_country`
@@ -199,7 +201,10 @@ class HorseRaceHistory implements Iterator{
         $row->r_name_en=$data['r_name_en'] =isset($res['name_en'])?$res['name_en']:"";
 
         if($data['jra_thisweek_horse_1']||$data['jra_thisweek_horse_2']){
-            $row->has_jra_thisweek = true;
+            $row->has_jra_thisweek_25 = true;
+        }
+        if($data['jra_thisweek_horse_26_title']||$data['jra_thisweek_horse_26_1']){
+            $row->has_jra_thisweek_26 = true;
         }
         # レース数カウント
         if($data['result_number']===1){
