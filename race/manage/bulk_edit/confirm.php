@@ -74,7 +74,6 @@ $orderParts=$orderPartsList[$sortMode]??$orderPartsList['results'];
 $orderParts[]="`horse`.`name_en` ASC";
 $resultsGetter->addOrderParts($orderParts);
 $table_data=$resultsGetter->getTableData();
-$hasThisweek=$resultsGetter->hasThisweek;
 $hasSps=$resultsGetter->hasSps;
 $mode_umm=false;
 switch($setting->age_view_mode){
