@@ -361,8 +361,13 @@ $page->renderErrorsAndExitIfAny();
 <tr>
     <th>並び順</th>
     <td class="in_input" colspan="2">
-        <input type="number" name="jra_thisweek_horse_sort_number" style="width:6em;" value="<?=h($form_data->jra_thisweek_horse_sort_number)?>">
-        <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_thisweek_horse_sort_number]');">
+        <?php if($is_grade_race):?>
+            <input type="number" name="jra_thisweek_horse_sort_number" style="width:6em;" value="<?=h($form_data->jra_thisweek_horse_sort_number)?>">
+            <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_thisweek_horse_sort_number]');">
+        <?php else:?>
+            <input type="number" name="" style="width:6em;" value="<?=h($form_data->jra_thisweek_horse_sort_number)?>" disabled>
+            <?php HTPrint::Hidden('jra_thisweek_horse_sort_number',$form_data->jra_thisweek_horse_sort_number) ?>
+        <?php endif;?>
     </td>
 </tr>
 <tr>
@@ -396,8 +401,13 @@ $page->renderErrorsAndExitIfAny();
 <tr>
     <th>見出し</th>
     <td class="in_input" colspan="2">
-        <input type="text" name="jra_thisweek_horse_26_title" style="width: 15em;" value="<?=h($form_data->jra_thisweek_horse_26_title)?>">
-        <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_thisweek_horse_26_title]');">
+        <?php if($is_grade_race):?>
+            <input type="text" name="jra_thisweek_horse_26_title" style="width: 15em;" value="<?=h($form_data->jra_thisweek_horse_26_title)?>">
+            <input type="button" value="クリア" onclick="clearElmVal('*[name=jra_thisweek_horse_26_title]');">
+        <?php else:?>
+            <input type="text" name="jra_thisweek_horse_26_title" style="width: 15em;" value="<?=h($form_data->jra_thisweek_horse_26_title)?>" disabled>
+            <?php HTPrint::Hidden('jra_thisweek_horse_26_title',$form_data->jra_thisweek_horse_26_title) ?>
+        <?php endif;?>
     </td>
 </tr>
 <tr>
