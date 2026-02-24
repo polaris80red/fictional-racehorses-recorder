@@ -57,7 +57,8 @@ $resultsGetter->addOrderParts([
     "`horse`.`name_en` ASC",
 ]);
 $table_data=$resultsGetter->getTableData();
-$hasThisweek=$resultsGetter->hasThisweek;
+$hasThisweek25=$resultsGetter->hasThisweek25;
+$hasThisweek26=$resultsGetter->hasThisweek26;
 $hasSps=$resultsGetter->hasSps;
 $mode_umm=false;
 switch($setting->age_view_mode){
