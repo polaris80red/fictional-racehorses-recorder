@@ -31,6 +31,7 @@ class HorseSearch extends Search{
     public const ORDER_BIRTH‗YEAR__ASC='birth_year__asc';
     public const ORDER_BIRTH‗YEAR__DESC='birth_year__desc';
     public const ORDER_ID__ASC='id__asc';
+    public const ORDER_NAME_EN__ASC='name_en__asc';
 
     public function __construct(){
     }
@@ -384,8 +385,13 @@ class HorseSearch extends Search{
             default:
                 break;
         }
-        $order_parts[]="h.`name_ja` ASC";
-        $order_parts[]="h.`name_en` ASC";
+        if($this->order===self::ORDER_NAME_EN__ASC){
+            $order_parts[]="h.`name_en` ASC";
+            $order_parts[]="h.`name_ja` ASC";
+        }else{
+            $order_parts[]="h.`name_ja` ASC";
+            $order_parts[]="h.`name_en` ASC";
+        }
         if(count($order_parts)>0){
             $sql_parts[]="ORDER BY ".implode(', ',$order_parts);
         }

@@ -85,7 +85,16 @@ if($search->limit>0){
     $a_tag->print();
     ?></th>
     <?php if($en_name_is_visibled): ?>
-    <th>欧字</th>
+    <th><?php
+    $a_tag=new MkTagA("欧字");
+    if($search->order!=HorseSearch::ORDER_NAME_EN__ASC){
+        $a_tag->href("./?".$search->getUrlParam(['order'])."&order=".HorseSearch::ORDER_NAME_EN__ASC);
+    }else{
+        // 欧字馬名順を選択中
+        $a_tag->addClass('selected_order');
+    }
+    $a_tag->print();
+    ?></th>
     <?php endif; /* /$en_name_is_visibled */ ?>
     <th><?php
     $a_tag=new MkTagA($setting->birth_year_mode===0?"生年":"世代");
