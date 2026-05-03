@@ -24,7 +24,7 @@ if(count($search_results)===1 && $search->executed_by_form){
     redirect_exit(InAppUrl::to('horse/',['horse_id'=>$id]));
 }
 $horse_id_is_visibled = filter_var($search->horse_id_is_visibled,FILTER_VALIDATE_BOOLEAN);
-
+$en_name_is_visibled=true;
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -84,6 +84,9 @@ if($search->limit>0){
     }
     $a_tag->print();
     ?></th>
+    <?php if($en_name_is_visibled): ?>
+    <th>欧字</th>
+    <?php endif; /* /$en_name_is_visibled */ ?>
     <th><?php
     $a_tag=new MkTagA($setting->birth_year_mode===0?"生年":"世代");
     if($search->order!=HorseSearch::ORDER_BIRTH‗YEAR__ASC){
@@ -125,12 +128,35 @@ if($search->limit>0){
 <tr>
     <?php if($horse_id_is_visibled): ?><td><?=h($row['horse_id'])?></td><?php endif; ?>
     <?php
-    $name=$row['name_ja']?:$row['name_en'];
-    $a_tag = new MkTagA($name?:ANNONYMOUS_HORSE_NAME,InAppUrl::to('horse',['horse_id'=>$row['horse_id']]));
+    $a_tag=new MkTagA();
+    $name=$row['name_ja'];
     if(!$name){
+        if($en_name_is_visibled){
+            if(!$row['name_en']){
+                $name=ANNONYMOUS_HORSE_NAME;
+            }
+        }else{
+            $name=$row['name_en']?:ANNONYMOUS_HORSE_NAME;
+        }
+    }
+    if($name){
+        $a_tag->setLinkText($name);
+        $a_tag->href(InAppUrl::to('horse',['horse_id'=>$row['horse_id']]));
+    }else{
         $a_tag->title("競走馬ID：{$row['horse_id']}");
     }
     ?><td><?=$a_tag?></td>
+    <?php if($en_name_is_visibled): ?>
+    <?php
+    $a_tag=new MkTagA();
+    if($row['name_en']){
+        $a_tag->setLinkText($row['name_en']);
+        $a_tag->href(InAppUrl::to('horse',['horse_id'=>$row['horse_id']]));
+    }else{
+        $a_tag->title("競走馬ID：{$row['horse_id']}");
+    }
+    ?><td><?=$a_tag?></td>
+    <?php endif; /* /$en_name_is_visibled */ ?>
     <?php
     $a_tag=new MkTagA();
     if($row['birth_year']>0){
