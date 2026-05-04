@@ -212,6 +212,8 @@ if($search->limit>0){
             $url ="./?".$search->getUrlParam($search_reset_array);
             $url.="&".(new UrlParams(['mare_name'=>$row['mare_name'],'order'=>'birth_year__asc']));
             (new MkTagA($row['mare_name'],$url))->print();
+        }else if($row['bms_name']){
+            print_h(ANNONYMOUS_HORSE_NAME);
         }
     ?></td>
     <td><?php
