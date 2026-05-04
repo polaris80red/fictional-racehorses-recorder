@@ -70,7 +70,7 @@
     <?php endif; ?>
     <?php
         $a_tag_sanku=new MkTagA('産駒');
-        $a_tag_sanku->setStyles(['display'=>'inline-block','float'=>'right;']);
+        $a_tag_sanku->setStyles(['display'=>'inline-block','float'=>'right;','margin-left'=>'0.5em']);
     ?>
     <tr>
         <th>父</th>
