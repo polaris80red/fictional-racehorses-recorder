@@ -2,6 +2,8 @@
 /** 
  * 競走馬ページ上部の情報表テンプレート
  * @var Page $page
+ * @var PDO $pdo
+ * @var HorseRow $horse
 */
 ?><table class="horse_base_data">
     <tr>
