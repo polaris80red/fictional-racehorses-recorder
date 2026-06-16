@@ -9,7 +9,7 @@ class HorseTag extends Table{
     public function __construct(PDO $pdo) {
         $this->pdo=$pdo;
     }
-    private const SEPARATOR=["　","\r","\n",",","、","_","#"];
+    private const SEPARATOR=["　","\r","\n",",","、","#"];
     public static function TagsStrToArray(string $tags_text){
         $tags_text=str_replace(self::SEPARATOR," ",$tags_text);
         return array_diff(explode(" ",$tags_text),['']);
